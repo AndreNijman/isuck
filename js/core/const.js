@@ -83,7 +83,9 @@
     'shieldCount'
   ]
 
-  IS.MULT_KEYS = ['damage', 'fireDelay', 'range', 'shotSpeed', 'speed', 'tearSize', 'bombDamage']
+  // 'tears' multiplies the tears/second stat directly (the game states fire-rate
+  // changes that way: "x0.51 tears"); 'fireDelay' multiplies the derived delay.
+  IS.MULT_KEYS = ['damage', 'tears', 'fireDelay', 'range', 'shotSpeed', 'speed', 'tearSize', 'bombDamage']
 
   IS.GRANT_KEYS = [
     'maxHearts', 'heal', 'soul', 'black', 'bone', 'eternal', 'gold', 'rotten',

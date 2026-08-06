@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ISUCK">
+  <meta name="application-name" content="ISUCK">
+  <meta name="theme-color" content="#120f0e">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="ISUCK is a free roguelike you play in your browser: twin-stick tears, 700+ items, 30+ characters, alternate floor paths and a basement full of bosses. A from-scratch homage to The Binding of Isaac: Repentance — no engine, no sprite sheets, nothing to download.">
+  <title>ISUCK — Free Browser Roguelike</title>
+  <link rel="canonical" href="https://andrenijman.github.io/isuck/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ISUCK">
+  <meta property="og:title" content="ISUCK — Free Browser Roguelike">
+  <meta property="og:description" content="A from-scratch browser roguelike in the shape of The Binding of Isaac: Repentance. 700+ items, 30+ characters, alternate paths, hundreds of enemies and bosses. Free, no download.">
+  <meta property="og:url" content="https://andrenijman.github.io/isuck/">
+  <meta property="og:image" content="https://andrenijman.github.io/isuck/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ISUCK — Free Browser Roguelike">
+  <meta name="twitter:description" content="A from-scratch browser roguelike in the shape of The Binding of Isaac: Repentance. 700+ items, 30+ characters, alternate paths, hundreds of enemies and bosses. Free, no download.">
+  <meta name="twitter:image" content="https://andrenijman.github.io/isuck/og-image.png">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "ISUCK",
+    "url": "https://andrenijman.github.io/isuck/",
+    "description": "A free, from-scratch browser roguelike in the shape of The Binding of Isaac: Repentance. Twin-stick shooting through procedurally laid-out floors, with over 700 collectibles, 30-plus playable characters, alternate floor paths, item pools, devil and angel deals, curses, challenges and hundreds of enemies and bosses. Every sprite is drawn in code and every sound is synthesised.",
+    "genre": ["Roguelike", "Action", "Shooter"],
+    "playMode": "SinglePlayer",
+    "gamePlatform": "Web browser",
+    "applicationCategory": "Game",
+    "operatingSystem": "Any",
+    "inLanguage": "en",
+    "image": "https://andrenijman.github.io/isuck/og-image.png",
+    "author": { "@type": "Person", "name": "Andre Nijman", "url": "https://andrenijman.com/" },
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock" }
+  }
+  </script>
+
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Real prose behind the canvas so crawlers see words, not an empty element. -->
+  <header class="sr-only">
+    <h1>ISUCK — free browser roguelike</h1>
+    <p>
+      A from-scratch roguelike by <a href="https://andrenijman.com/">Andre Nijman</a>,
+      built in the shape of <em>The Binding of Isaac: Repentance</em> by Edmund
+      McMillen and Nicalis. Descend through the Basement, the Caves, the Depths and
+      the Womb — or take the Downpour, the Mines, the Mausoleum and the Corpse
+      instead — fighting through procedurally laid-out rooms with over seven
+      hundred collectibles, thirty-plus playable characters, item pools, devil and
+      angel deals, curses, challenges, transformations and hundreds of enemies and
+      bosses.
+    </p>
+    <p>
+      There is no engine and there are no asset files: every sprite is drawn with
+      canvas paths at runtime and every sound is synthesised in WebAudio. It is
+      free, has no ads, and needs no download.
+    </p>
+    <p>
+      Controls: WASD to move, arrow keys to shoot, E for your active item, Q for
+      your card or pill, Space to drop a bomb, Tab for the map, Escape to pause.
+      A gamepad works too.
+    </p>
+  </header>
+
+  <div id="shell">
+    <canvas id="game" width="1280" height="720" aria-label="ISUCK game screen"></canvas>
+    <div id="boot">
+      <div class="boot-title">ISUCK</div>
+      <div class="boot-note">loading the basement…</div>
+    </div>
+    <noscript>
+      <p class="noscript">ISUCK needs JavaScript. It is one page of code and no downloads — turning it on is the whole install.</p>
+    </noscript>
+  </div>
+
+  <!-- core -->
+  <script src="js/core/const.js"></script>
+  <script src="js/core/math.js"></script>
+  <script src="js/core/rng.js"></script>
+  <script src="js/core/save.js"></script>
+  <script src="js/core/audio.js"></script>
+  <script src="js/core/input.js"></script>
+  <script src="js/core/fx.js"></script>
+
+  <!-- engine -->
+  <script src="js/engine/entity.js"></script>
+  <script src="js/engine/tears.js"></script>
+  <script src="js/engine/player.js"></script>
+  <script src="js/engine/familiar.js"></script>
+  <script src="js/engine/enemy.js"></script>
+  <script src="js/engine/boss.js"></script>
+  <script src="js/engine/room.js"></script>
+  <script src="js/engine/pool.js"></script>
+  <script src="js/engine/floor.js"></script>
+  <script src="js/engine/interact.js"></script>
+  <script src="js/engine/progress.js"></script>
+  <script src="js/engine/ctx.js"></script>
+
+  <!-- content -->
+  <script src="js/data/items-1.js"></script>
+  <script src="js/data/items-2.js"></script>
+  <script src="js/data/items-3.js"></script>
+  <script src="js/data/items-4.js"></script>
+  <script src="js/data/items-5.js"></script>
+  <script src="js/data/items-6.js"></script>
+  <script src="js/data/items-7.js"></script>
+  <script src="js/data/items-8.js"></script>
+  <script src="js/data/trinkets-1.js"></script>
+  <script src="js/data/trinkets-2.js"></script>
+  <script src="js/data/cards.js"></script>
+  <script src="js/data/pills.js"></script>
+  <script src="js/data/familiars.js"></script>
+  <script src="js/data/characters.js"></script>
+  <script src="js/data/enemies-1.js"></script>
+  <script src="js/data/enemies-2.js"></script>
+  <script src="js/data/enemies-3.js"></script>
+  <script src="js/data/enemies-4.js"></script>
+  <script src="js/data/bosses-1.js"></script>
+  <script src="js/data/bosses-2.js"></script>
+  <script src="js/data/bosses-3.js"></script>
+  <script src="js/data/bosses-4.js"></script>
+  <script src="js/data/floors.js"></script>
+  <script src="js/data/rooms-basement.js"></script>
+  <script src="js/data/rooms-caves.js"></script>
+  <script src="js/data/rooms-depths.js"></script>
+  <script src="js/data/rooms-womb.js"></script>
+  <script src="js/data/rooms-alt.js"></script>
+  <script src="js/data/rooms-special.js"></script>
+  <script src="js/data/challenges.js"></script>
+  <script src="js/data/achievements.js"></script>
+
+  <!-- render -->
+  <script src="js/render/sprites-core.js"></script>
+  <script src="js/render/sprites-enemies.js"></script>
+  <script src="js/render/sprites-bosses.js"></script>
+  <script src="js/render/sprites-items.js"></script>
+  <script src="js/render/backdrop.js"></script>
+  <script src="js/render/render.js"></script>
+  <script src="js/render/hud.js"></script>
+
+  <!-- ui -->
+  <script src="js/ui/widgets.js"></script>
+  <script src="js/ui/screens-title.js"></script>
+  <script src="js/ui/screens-select.js"></script>
+  <script src="js/ui/screens-meta.js"></script>
+  <script src="js/ui/screens-run.js"></script>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
