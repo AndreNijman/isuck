@@ -363,9 +363,24 @@ IS.boot()                             // called on DOMContentLoaded
 IS.go(screenName, args)
 IS.startRun(opts)                     // {charId, seed, challengeId, greed}
 IS.endRun(reason, goal)
-IS.state                              // {screen, run, paused, time, frame}
+IS.state                              // {screen, run, paused, time, frame, ctx}
 IS.canvas, IS.g                       // the canvas + 2d context
+IS.simulate(opts)                     // headless auto-play, see below
 ```
+
+Two requirements the test harness depends on — treat them as part of the contract:
+
+1. **`IS.state.ctx` must hold the live ctx for the current run**, refreshed each
+   frame. `tools/smoke.mjs` drives the game through it; without it the harness
+   cannot reach the engine.
+2. **`IS.simulate(opts)` must run a whole run with no canvas, no audio and no
+   input**, stepping the fixed timestep in a plain loop:
+   `IS.simulate({ charId, seed, maxFloors, maxSeconds, policy })` → a result
+   object `{ floorsCleared, depth, died, seconds, itemsTaken, error }`. A crude
+   built-in `policy` (walk toward the nearest enemy, fire at it, take the
+   trapdoor when the room is clear) is enough — `tools/balance.mjs` runs a few
+   hundred seeded runs through it to prove floors are completable and nothing
+   throws deep into a run. It must work when `window` is undefined.
 
 Run shape:
 ```js

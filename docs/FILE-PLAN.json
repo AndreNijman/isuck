@@ -11,7 +11,9 @@
         "docs/FILE-PLAN.json",
         "js/core/const.js",
         "tools/state.mjs",
-        "RESUME.md"
+        "RESUME.md",
+        "tools/build-reference.mjs",
+        "docs/WORKFLOWS.md"
       ]
     },
     {
@@ -106,6 +108,8 @@
       "id": "P5",
       "title": "Validation + test harness",
       "files": [
+        "tools/loader.mjs",
+        "tools/cdp.mjs",
         "tools/validate-content.mjs",
         "tools/smoke.mjs",
         "tools/balance.mjs",

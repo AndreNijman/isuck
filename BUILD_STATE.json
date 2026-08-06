@@ -2,27 +2,30 @@
   "project": "isuck",
   "generated": "derived-from-disk",
   "git": {
-    "head": null
+    "head": "f21c13b",
+    "branch": "master",
+    "dirty": true,
+    "remote": null
   },
   "phases": [
     {
       "id": "P0",
       "title": "Contract",
-      "done": 6,
-      "total": 6,
+      "done": 8,
+      "total": 8,
       "complete": true
     },
     {
       "id": "P1",
       "title": "Core + engine spine",
-      "done": 0,
+      "done": 1,
       "total": 18,
       "complete": false
     },
     {
       "id": "P2",
       "title": "Render + UI + boot",
-      "done": 0,
+      "done": 2,
       "total": 15,
       "complete": false
     },
@@ -43,8 +46,8 @@
     {
       "id": "P5",
       "title": "Validation + test harness",
-      "done": 0,
-      "total": 4,
+      "done": 4,
+      "total": 6,
       "complete": false
     },
     {
@@ -144,11 +147,6 @@
       "state": "missing"
     },
     {
-      "phase": "P1",
-      "file": "js/engine/ctx.js",
-      "state": "missing"
-    },
-    {
       "phase": "P2",
       "file": "js/render/sprites-core.js",
       "state": "missing"
@@ -211,16 +209,6 @@
     {
       "phase": "P2",
       "file": "js/main.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P2",
-      "file": "index.html",
-      "state": "missing"
-    },
-    {
-      "phase": "P2",
-      "file": "style.css",
       "state": "missing"
     },
     {
@@ -380,16 +368,6 @@
     },
     {
       "phase": "P5",
-      "file": "tools/validate-content.mjs",
-      "state": "missing"
-    },
-    {
-      "phase": "P5",
-      "file": "tools/smoke.mjs",
-      "state": "missing"
-    },
-    {
-      "phase": "P5",
       "file": "tools/balance.mjs",
       "state": "missing"
     },
@@ -448,8 +426,7 @@
       "js/engine/pool.js",
       "js/engine/floor.js",
       "js/engine/interact.js",
-      "js/engine/progress.js",
-      "js/engine/ctx.js"
+      "js/engine/progress.js"
     ],
     "P2": [
       "js/render/sprites-core.js",
@@ -464,9 +441,7 @@
       "js/ui/screens-select.js",
       "js/ui/screens-meta.js",
       "js/ui/screens-run.js",
-      "js/main.js",
-      "index.html",
-      "style.css"
+      "js/main.js"
     ],
     "P3": [
       "js/data/items-1.js",
@@ -504,8 +479,6 @@
       "js/data/achievements.js"
     ],
     "P5": [
-      "tools/validate-content.mjs",
-      "tools/smoke.mjs",
       "tools/balance.mjs",
       "tools/card-shot.js"
     ],
