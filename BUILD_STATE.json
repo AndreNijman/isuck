@@ -1,0 +1,522 @@
+{
+  "project": "isuck",
+  "generated": "derived-from-disk",
+  "git": {
+    "head": null
+  },
+  "phases": [
+    {
+      "id": "P0",
+      "title": "Contract",
+      "done": 6,
+      "total": 6,
+      "complete": true
+    },
+    {
+      "id": "P1",
+      "title": "Core + engine spine",
+      "done": 0,
+      "total": 18,
+      "complete": false
+    },
+    {
+      "id": "P2",
+      "title": "Render + UI + boot",
+      "done": 0,
+      "total": 15,
+      "complete": false
+    },
+    {
+      "id": "P3",
+      "title": "Content: collectibles",
+      "done": 0,
+      "total": 14,
+      "complete": false
+    },
+    {
+      "id": "P4",
+      "title": "Content: world",
+      "done": 0,
+      "total": 17,
+      "complete": false
+    },
+    {
+      "id": "P5",
+      "title": "Validation + test harness",
+      "done": 0,
+      "total": 4,
+      "complete": false
+    },
+    {
+      "id": "P6",
+      "title": "Ship",
+      "done": 0,
+      "total": 6,
+      "complete": false
+    }
+  ],
+  "currentPhase": "P1",
+  "currentPhaseTitle": "Core + engine spine",
+  "missing": [
+    {
+      "phase": "P1",
+      "file": "js/core/math.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P1",
+      "file": "js/core/rng.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P1",
+      "file": "js/core/save.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P1",
+      "file": "js/core/input.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P1",
+      "file": "js/core/audio.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P1",
+      "file": "js/core/fx.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P1",
+      "file": "js/engine/entity.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P1",
+      "file": "js/engine/tears.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P1",
+      "file": "js/engine/player.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P1",
+      "file": "js/engine/familiar.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P1",
+      "file": "js/engine/enemy.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P1",
+      "file": "js/engine/boss.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P1",
+      "file": "js/engine/room.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P1",
+      "file": "js/engine/pool.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P1",
+      "file": "js/engine/floor.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P1",
+      "file": "js/engine/interact.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P1",
+      "file": "js/engine/progress.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P1",
+      "file": "js/engine/ctx.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P2",
+      "file": "js/render/sprites-core.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P2",
+      "file": "js/render/sprites-enemies.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P2",
+      "file": "js/render/sprites-bosses.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P2",
+      "file": "js/render/sprites-items.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P2",
+      "file": "js/render/backdrop.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P2",
+      "file": "js/render/render.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P2",
+      "file": "js/render/hud.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P2",
+      "file": "js/ui/widgets.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P2",
+      "file": "js/ui/screens-title.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P2",
+      "file": "js/ui/screens-select.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P2",
+      "file": "js/ui/screens-meta.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P2",
+      "file": "js/ui/screens-run.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P2",
+      "file": "js/main.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P2",
+      "file": "index.html",
+      "state": "missing"
+    },
+    {
+      "phase": "P2",
+      "file": "style.css",
+      "state": "missing"
+    },
+    {
+      "phase": "P3",
+      "file": "js/data/items-1.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P3",
+      "file": "js/data/items-2.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P3",
+      "file": "js/data/items-3.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P3",
+      "file": "js/data/items-4.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P3",
+      "file": "js/data/items-5.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P3",
+      "file": "js/data/items-6.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P3",
+      "file": "js/data/items-7.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P3",
+      "file": "js/data/items-8.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P3",
+      "file": "js/data/trinkets-1.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P3",
+      "file": "js/data/trinkets-2.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P3",
+      "file": "js/data/cards.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P3",
+      "file": "js/data/pills.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P3",
+      "file": "js/data/characters.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P3",
+      "file": "js/data/familiars.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P4",
+      "file": "js/data/enemies-1.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P4",
+      "file": "js/data/enemies-2.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P4",
+      "file": "js/data/enemies-3.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P4",
+      "file": "js/data/enemies-4.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P4",
+      "file": "js/data/bosses-1.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P4",
+      "file": "js/data/bosses-2.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P4",
+      "file": "js/data/bosses-3.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P4",
+      "file": "js/data/bosses-4.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P4",
+      "file": "js/data/floors.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P4",
+      "file": "js/data/rooms-basement.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P4",
+      "file": "js/data/rooms-caves.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P4",
+      "file": "js/data/rooms-depths.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P4",
+      "file": "js/data/rooms-womb.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P4",
+      "file": "js/data/rooms-alt.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P4",
+      "file": "js/data/rooms-special.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P4",
+      "file": "js/data/challenges.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P4",
+      "file": "js/data/achievements.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P5",
+      "file": "tools/validate-content.mjs",
+      "state": "missing"
+    },
+    {
+      "phase": "P5",
+      "file": "tools/smoke.mjs",
+      "state": "missing"
+    },
+    {
+      "phase": "P5",
+      "file": "tools/balance.mjs",
+      "state": "missing"
+    },
+    {
+      "phase": "P5",
+      "file": "tools/card-shot.js",
+      "state": "missing"
+    },
+    {
+      "phase": "P6",
+      "file": "README.md",
+      "state": "missing"
+    },
+    {
+      "phase": "P6",
+      "file": "robots.txt",
+      "state": "missing"
+    },
+    {
+      "phase": "P6",
+      "file": "sitemap.xml",
+      "state": "missing"
+    },
+    {
+      "phase": "P6",
+      "file": "manifest.webmanifest",
+      "state": "missing"
+    },
+    {
+      "phase": "P6",
+      "file": "og-image.png",
+      "state": "missing"
+    },
+    {
+      "phase": "P6",
+      "file": "shots/card.png",
+      "state": "missing"
+    }
+  ],
+  "missingByPhase": {
+    "P0": [],
+    "P1": [
+      "js/core/math.js",
+      "js/core/rng.js",
+      "js/core/save.js",
+      "js/core/input.js",
+      "js/core/audio.js",
+      "js/core/fx.js",
+      "js/engine/entity.js",
+      "js/engine/tears.js",
+      "js/engine/player.js",
+      "js/engine/familiar.js",
+      "js/engine/enemy.js",
+      "js/engine/boss.js",
+      "js/engine/room.js",
+      "js/engine/pool.js",
+      "js/engine/floor.js",
+      "js/engine/interact.js",
+      "js/engine/progress.js",
+      "js/engine/ctx.js"
+    ],
+    "P2": [
+      "js/render/sprites-core.js",
+      "js/render/sprites-enemies.js",
+      "js/render/sprites-bosses.js",
+      "js/render/sprites-items.js",
+      "js/render/backdrop.js",
+      "js/render/render.js",
+      "js/render/hud.js",
+      "js/ui/widgets.js",
+      "js/ui/screens-title.js",
+      "js/ui/screens-select.js",
+      "js/ui/screens-meta.js",
+      "js/ui/screens-run.js",
+      "js/main.js",
+      "index.html",
+      "style.css"
+    ],
+    "P3": [
+      "js/data/items-1.js",
+      "js/data/items-2.js",
+      "js/data/items-3.js",
+      "js/data/items-4.js",
+      "js/data/items-5.js",
+      "js/data/items-6.js",
+      "js/data/items-7.js",
+      "js/data/items-8.js",
+      "js/data/trinkets-1.js",
+      "js/data/trinkets-2.js",
+      "js/data/cards.js",
+      "js/data/pills.js",
+      "js/data/characters.js",
+      "js/data/familiars.js"
+    ],
+    "P4": [
+      "js/data/enemies-1.js",
+      "js/data/enemies-2.js",
+      "js/data/enemies-3.js",
+      "js/data/enemies-4.js",
+      "js/data/bosses-1.js",
+      "js/data/bosses-2.js",
+      "js/data/bosses-3.js",
+      "js/data/bosses-4.js",
+      "js/data/floors.js",
+      "js/data/rooms-basement.js",
+      "js/data/rooms-caves.js",
+      "js/data/rooms-depths.js",
+      "js/data/rooms-womb.js",
+      "js/data/rooms-alt.js",
+      "js/data/rooms-special.js",
+      "js/data/challenges.js",
+      "js/data/achievements.js"
+    ],
+    "P5": [
+      "tools/validate-content.mjs",
+      "tools/smoke.mjs",
+      "tools/balance.mjs",
+      "tools/card-shot.js"
+    ],
+    "P6": [
+      "README.md",
+      "robots.txt",
+      "sitemap.xml",
+      "manifest.webmanifest",
+      "og-image.png",
+      "shots/card.png"
+    ]
+  },
+  "gates": "not-run (pass --gates)"
+}

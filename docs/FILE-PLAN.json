@@ -1,0 +1,136 @@
+{
+  "project": "isuck",
+  "note": "The master build plan. tools/state.mjs derives BUILD_STATE.json from this file plus what is actually on disk, so a resumed session never has to trust a summary. Every workflow reads the missing-file list from BUILD_STATE.json and only dispatches work for what is missing or failing.",
+  "phases": [
+    {
+      "id": "P0",
+      "title": "Contract",
+      "files": [
+        "ARCHITECTURE.md",
+        "docs/ENGINE-API.md",
+        "docs/FILE-PLAN.json",
+        "js/core/const.js",
+        "tools/state.mjs",
+        "RESUME.md"
+      ]
+    },
+    {
+      "id": "P1",
+      "title": "Core + engine spine",
+      "files": [
+        "js/core/math.js",
+        "js/core/rng.js",
+        "js/core/save.js",
+        "js/core/input.js",
+        "js/core/audio.js",
+        "js/core/fx.js",
+        "js/engine/entity.js",
+        "js/engine/tears.js",
+        "js/engine/player.js",
+        "js/engine/familiar.js",
+        "js/engine/enemy.js",
+        "js/engine/boss.js",
+        "js/engine/room.js",
+        "js/engine/pool.js",
+        "js/engine/floor.js",
+        "js/engine/interact.js",
+        "js/engine/progress.js",
+        "js/engine/ctx.js"
+      ]
+    },
+    {
+      "id": "P2",
+      "title": "Render + UI + boot",
+      "files": [
+        "js/render/sprites-core.js",
+        "js/render/sprites-enemies.js",
+        "js/render/sprites-bosses.js",
+        "js/render/sprites-items.js",
+        "js/render/backdrop.js",
+        "js/render/render.js",
+        "js/render/hud.js",
+        "js/ui/widgets.js",
+        "js/ui/screens-title.js",
+        "js/ui/screens-select.js",
+        "js/ui/screens-meta.js",
+        "js/ui/screens-run.js",
+        "js/main.js",
+        "index.html",
+        "style.css"
+      ]
+    },
+    {
+      "id": "P3",
+      "title": "Content: collectibles",
+      "files": [
+        "js/data/items-1.js",
+        "js/data/items-2.js",
+        "js/data/items-3.js",
+        "js/data/items-4.js",
+        "js/data/items-5.js",
+        "js/data/items-6.js",
+        "js/data/items-7.js",
+        "js/data/items-8.js",
+        "js/data/trinkets-1.js",
+        "js/data/trinkets-2.js",
+        "js/data/cards.js",
+        "js/data/pills.js",
+        "js/data/characters.js",
+        "js/data/familiars.js"
+      ]
+    },
+    {
+      "id": "P4",
+      "title": "Content: world",
+      "files": [
+        "js/data/enemies-1.js",
+        "js/data/enemies-2.js",
+        "js/data/enemies-3.js",
+        "js/data/enemies-4.js",
+        "js/data/bosses-1.js",
+        "js/data/bosses-2.js",
+        "js/data/bosses-3.js",
+        "js/data/bosses-4.js",
+        "js/data/floors.js",
+        "js/data/rooms-basement.js",
+        "js/data/rooms-caves.js",
+        "js/data/rooms-depths.js",
+        "js/data/rooms-womb.js",
+        "js/data/rooms-alt.js",
+        "js/data/rooms-special.js",
+        "js/data/challenges.js",
+        "js/data/achievements.js"
+      ]
+    },
+    {
+      "id": "P5",
+      "title": "Validation + test harness",
+      "files": [
+        "tools/validate-content.mjs",
+        "tools/smoke.mjs",
+        "tools/balance.mjs",
+        "tools/card-shot.js"
+      ]
+    },
+    {
+      "id": "P6",
+      "title": "Ship",
+      "files": [
+        "README.md",
+        "robots.txt",
+        "sitemap.xml",
+        "manifest.webmanifest",
+        "og-image.png",
+        "shots/card.png"
+      ],
+      "deploy": [
+        "repo-created",
+        "pages-enabled",
+        "game-pushed",
+        "card-added-to-games-site",
+        "games-site-pushed",
+        "live-verified"
+      ]
+    }
+  ]
+}
