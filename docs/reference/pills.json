@@ -1,0 +1,521 @@
+[
+ {
+  "num": 0,
+  "id": "bad-gas",
+  "name": "Bad Gas",
+  "kind": "pill",
+  "lines": [
+   "Isaac farts and poisons nearby enemies"
+  ],
+  "info": "Isaac farts and poisons nearby enemies"
+ },
+ {
+  "num": 1,
+  "id": "bad-trip",
+  "name": "Bad Trip",
+  "kind": "pill",
+  "lines": [
+   "Deals 1 heart of damage to Isaac",
+   "Becomes a Full Health pill at 1 heart or less"
+  ],
+  "info": "Deals 1 heart of damage to Isaac · Becomes a Full Health pill at 1 heart or less"
+ },
+ {
+  "num": 2,
+  "id": "balls-of-steel",
+  "name": "Balls of Steel",
+  "kind": "pill",
+  "lines": [
+   "+2 Soul Hearts"
+  ],
+  "info": "+2 Soul Hearts"
+ },
+ {
+  "num": 3,
+  "id": "bombs-are-key",
+  "name": "Bombs are Key",
+  "kind": "pill",
+  "lines": [
+   "Swaps Isaac's number of bombs and keys",
+   "Golden bombs and keys are also swapped"
+  ],
+  "info": "Swaps Isaac's number of bombs and keys · Golden bombs and keys are also swapped"
+ },
+ {
+  "num": 4,
+  "id": "explosive-diarrhea",
+  "name": "Explosive Diarrhea",
+  "kind": "pill",
+  "lines": [
+   "Isaac quickly spawns 5 lit bombs"
+  ],
+  "info": "Isaac quickly spawns 5 lit bombs"
+ },
+ {
+  "num": 5,
+  "id": "full-health",
+  "name": "Full Health",
+  "kind": "pill",
+  "lines": [
+   "Fully heals all heart containers"
+  ],
+  "info": "Fully heals all heart containers"
+ },
+ {
+  "num": 6,
+  "id": "health-down",
+  "name": "Health Down",
+  "kind": "pill",
+  "lines": [
+   "↓ -1 Health",
+   "Becomes a Health Up pill at 0 or 1 heart containers"
+  ],
+  "info": "↓ -1 Health · Becomes a Health Up pill at 0 or 1 heart containers"
+ },
+ {
+  "num": 7,
+  "id": "health-up",
+  "name": "Health Up",
+  "kind": "pill",
+  "lines": [
+   "↑ +1 Empty heart container"
+  ],
+  "info": "↑ +1 Empty heart container"
+ },
+ {
+  "num": 8,
+  "id": "i-found-pills",
+  "name": "I Found Pills",
+  "kind": "pill",
+  "lines": [
+   "No effect"
+  ],
+  "info": "No effect"
+ },
+ {
+  "num": 9,
+  "id": "puberty",
+  "name": "Puberty",
+  "kind": "pill",
+  "lines": [
+   "No effect",
+   "Eating 3 grants the Adult transformation:",
+   "↑ +1 Health"
+  ],
+  "info": "No effect · Eating 3 grants the Adult transformation: · ↑ +1 Health"
+ },
+ {
+  "num": 10,
+  "id": "pretty-fly",
+  "name": "Pretty Fly",
+  "kind": "pill",
+  "lines": [
+   "+1 Fly orbital"
+  ],
+  "info": "+1 Fly orbital"
+ },
+ {
+  "num": 11,
+  "id": "range-down",
+  "name": "Range Down",
+  "kind": "pill",
+  "lines": [
+   "↓ -1 Range"
+  ],
+  "info": "↓ -1 Range"
+ },
+ {
+  "num": 12,
+  "id": "range-up",
+  "name": "Range Up",
+  "kind": "pill",
+  "lines": [
+   "↑ +1.25 Range"
+  ],
+  "info": "↑ +1.25 Range"
+ },
+ {
+  "num": 13,
+  "id": "speed-down",
+  "name": "Speed Down",
+  "kind": "pill",
+  "lines": [
+   "↓ -0.12 Speed"
+  ],
+  "info": "↓ -0.12 Speed"
+ },
+ {
+  "num": 14,
+  "id": "speed-up",
+  "name": "Speed Up",
+  "kind": "pill",
+  "lines": [
+   "↑ +0.15 Speed"
+  ],
+  "info": "↑ +0.15 Speed"
+ },
+ {
+  "num": 15,
+  "id": "tears-down",
+  "name": "Tears Down",
+  "kind": "pill",
+  "lines": [
+   "↓ -0.28 Tears"
+  ],
+  "info": "↓ -0.28 Tears"
+ },
+ {
+  "num": 16,
+  "id": "tears-up",
+  "name": "Tears Up",
+  "kind": "pill",
+  "lines": [
+   "↑ +0.35 Tears"
+  ],
+  "info": "↑ +0.35 Tears"
+ },
+ {
+  "num": 17,
+  "id": "luck-down",
+  "name": "Luck Down",
+  "kind": "pill",
+  "lines": [
+   "↓ -1 Luck"
+  ],
+  "info": "↓ -1 Luck"
+ },
+ {
+  "num": 18,
+  "id": "luck-up",
+  "name": "Luck Up",
+  "kind": "pill",
+  "lines": [
+   "↑ +1 Luck"
+  ],
+  "info": "↑ +1 Luck"
+ },
+ {
+  "num": 19,
+  "id": "telepills",
+  "name": "Telepills",
+  "kind": "pill",
+  "lines": [
+   "Teleports Isaac to a random room",
+   "Small chance to teleport Isaac to the I AM ERROR room"
+  ],
+  "info": "Teleports Isaac to a random room · Small chance to teleport Isaac to the I AM ERROR room"
+ },
+ {
+  "num": 20,
+  "id": "48-hour-energy",
+  "name": "48 Hour Energy!",
+  "kind": "pill",
+  "lines": [
+   "Fully recharges the active item",
+   "Spawns 1-2 batteries"
+  ],
+  "info": "Fully recharges the active item · Spawns 1-2 batteries"
+ },
+ {
+  "num": 21,
+  "id": "hematemesis",
+  "name": "Hematemesis",
+  "kind": "pill",
+  "lines": [
+   "Drains all but one heart container",
+   "Spawns 1-4 Red Hearts"
+  ],
+  "info": "Drains all but one heart container · Spawns 1-4 Red Hearts"
+ },
+ {
+  "num": 22,
+  "id": "paralysis",
+  "name": "Paralysis",
+  "kind": "pill",
+  "lines": [
+   "Prevents Isaac from moving and shooting for 2 seconds"
+  ],
+  "info": "Prevents Isaac from moving and shooting for 2 seconds"
+ },
+ {
+  "num": 23,
+  "id": "i-can-see-forever",
+  "name": "I can see forever!",
+  "kind": "pill",
+  "lines": [
+   "Opens all secret room entrances on the floor"
+  ],
+  "info": "Opens all secret room entrances on the floor"
+ },
+ {
+  "num": 24,
+  "id": "pheromones",
+  "name": "Pheromones",
+  "kind": "pill",
+  "lines": [
+   "Charms all enemies in the room"
+  ],
+  "info": "Charms all enemies in the room"
+ },
+ {
+  "num": 25,
+  "id": "amnesia",
+  "name": "Amnesia",
+  "kind": "pill",
+  "lines": [
+   "Hides the map for the floor"
+  ],
+  "info": "Hides the map for the floor"
+ },
+ {
+  "num": 26,
+  "id": "lemon-party",
+  "name": "Lemon Party",
+  "kind": "pill",
+  "lines": [
+   "Spawns a large puddle on the ground which damages enemies"
+  ],
+  "info": "Spawns a large puddle on the ground which damages enemies"
+ },
+ {
+  "num": 27,
+  "id": "r-u-a-wizard",
+  "name": "R U A Wizard?",
+  "kind": "pill",
+  "lines": [
+   "Isaac shoots diagonally for 30 seconds"
+  ],
+  "info": "Isaac shoots diagonally for 30 seconds"
+ },
+ {
+  "num": 28,
+  "id": "percs",
+  "name": "Percs!",
+  "kind": "pill",
+  "lines": [
+   "Reduces all damage taken to half a heart for the room"
+  ],
+  "info": "Reduces all damage taken to half a heart for the room"
+ },
+ {
+  "num": 29,
+  "id": "addicted",
+  "name": "Addicted!",
+  "kind": "pill",
+  "lines": [
+   "Increases all damage taken to a full heart for the room"
+  ],
+  "info": "Increases all damage taken to a full heart for the room"
+ },
+ {
+  "num": 30,
+  "id": "re-lax",
+  "name": "Re-Lax",
+  "kind": "pill",
+  "lines": [
+   "Isaac spawns poop behind him for 2 seconds"
+  ],
+  "info": "Isaac spawns poop behind him for 2 seconds"
+ },
+ {
+  "num": 31,
+  "id": "item-31",
+  "name": "???",
+  "kind": "pill",
+  "lines": [
+   "Curse of the Maze effect for the floor"
+  ],
+  "info": "Curse of the Maze effect for the floor"
+ },
+ {
+  "num": 32,
+  "id": "one-makes-you-larger",
+  "name": "One makes you larger",
+  "kind": "pill",
+  "lines": [
+   "Increases Isaac's size",
+   "Doesn't affect his hitbox"
+  ],
+  "info": "Increases Isaac's size · Doesn't affect his hitbox"
+ },
+ {
+  "num": 33,
+  "id": "one-makes-you-small",
+  "name": "One makes you small",
+  "kind": "pill",
+  "lines": [
+   "Decreases Isaac's size",
+   "Also decreases his hitbox"
+  ],
+  "info": "Decreases Isaac's size · Also decreases his hitbox"
+ },
+ {
+  "num": 34,
+  "id": "infested",
+  "name": "Infested!",
+  "kind": "pill",
+  "lines": [
+   "Spawns 1 blue spider for each poop in the room"
+  ],
+  "info": "Spawns 1 blue spider for each poop in the room"
+ },
+ {
+  "num": 35,
+  "id": "infested-35",
+  "name": "Infested?",
+  "kind": "pill",
+  "lines": [
+   "Spawn 1 blue spider for each enemy in the room",
+   "Spawns 1-3 blue spiders if there are no enemies in the room"
+  ],
+  "info": "Spawn 1 blue spider for each enemy in the room · Spawns 1-3 blue spiders if there are no enemies in the room"
+ },
+ {
+  "num": 36,
+  "id": "power-pill",
+  "name": "Power Pill!",
+  "kind": "pill",
+  "lines": [
+   "Receive for 6.5 seconds:",
+   "Invincibility",
+   "Isaac can't shoot but deals 40 contact damage per second",
+   "Killing 2 enemies heals half a heart",
+   "Fears all enemies in the room"
+  ],
+  "info": "Receive for 6.5 seconds: · Invincibility · Isaac can't shoot but deals 40 contact damage per second · Killing 2 enemies heals half a heart · Fears all enemies in the room"
+ },
+ {
+  "num": 37,
+  "id": "retro-vision",
+  "name": "Retro Vision",
+  "kind": "pill",
+  "lines": [
+   "Pixelates the screen for 30 seconds"
+  ],
+  "info": "Pixelates the screen for 30 seconds"
+ },
+ {
+  "num": 38,
+  "id": "friends-till-the-end",
+  "name": "Friends Till The End!",
+  "kind": "pill",
+  "lines": [
+   "Spawns 3 blue flies"
+  ],
+  "info": "Spawns 3 blue flies"
+ },
+ {
+  "num": 39,
+  "id": "x-lax",
+  "name": "X-Lax",
+  "kind": "pill",
+  "lines": [
+   "Spawns a pool of slippery creep"
+  ],
+  "info": "Spawns a pool of slippery creep"
+ },
+ {
+  "num": 40,
+  "id": "somethings-wrong",
+  "name": "Something's wrong...",
+  "kind": "pill",
+  "lines": [
+   "Spawns a pool of slowing creep"
+  ],
+  "info": "Spawns a pool of slowing creep"
+ },
+ {
+  "num": 41,
+  "id": "im-drowsy",
+  "name": "I'm Drowsy...",
+  "kind": "pill",
+  "lines": [
+   "Slows Isaac and all enemies in the room"
+  ],
+  "info": "Slows Isaac and all enemies in the room"
+ },
+ {
+  "num": 42,
+  "id": "im-excited",
+  "name": "I'm Excited!!",
+  "kind": "pill",
+  "lines": [
+   "Speeds up Isaac and all enemies in the room",
+   "Triggers again after 30 and 60 seconds"
+  ],
+  "info": "Speeds up Isaac and all enemies in the room · Triggers again after 30 and 60 seconds"
+ },
+ {
+  "num": 43,
+  "id": "gulp",
+  "name": "Gulp!",
+  "kind": "pill",
+  "lines": [
+   "Consumes Isaac's trinket and grants its effects permanently"
+  ],
+  "info": "Consumes Isaac's trinket and grants its effects permanently"
+ },
+ {
+  "num": 44,
+  "id": "horf",
+  "name": "Horf!",
+  "kind": "pill",
+  "lines": [
+   "Shoots one Ipecac tear"
+  ],
+  "info": "Shoots one Ipecac tear"
+ },
+ {
+  "num": 45,
+  "id": "feels-like-im-walking-on-sunshine",
+  "name": "Feels like I'm walking on sunshine!",
+  "kind": "pill",
+  "lines": [
+   "Receive for 6 seconds:",
+   "Invincibility",
+   "Isaac can't shoot (No contact damage)"
+  ],
+  "info": "Receive for 6 seconds: · Invincibility · Isaac can't shoot (No contact damage)"
+ },
+ {
+  "num": 46,
+  "id": "vurp",
+  "name": "Vurp!",
+  "kind": "pill",
+  "lines": [
+   "Spawns the last pill used before Vurp!"
+  ],
+  "info": "Spawns the last pill used before Vurp!"
+ },
+ {
+  "num": 47,
+  "id": "shot-speed-down",
+  "name": "Shot speed Down",
+  "kind": "pill",
+  "lines": [
+   "↓ -0.15 Shot speed"
+  ],
+  "info": "↓ -0.15 Shot speed"
+ },
+ {
+  "num": 48,
+  "id": "shot-speed-up",
+  "name": "Shot speed Up",
+  "kind": "pill",
+  "lines": [
+   "↑ +0.15 Shot speed"
+  ],
+  "info": "↑ +0.15 Shot speed"
+ },
+ {
+  "num": 49,
+  "id": "experimental-pill",
+  "name": "Experimental Pill",
+  "kind": "pill",
+  "lines": [
+   "↑ Increases 1 random stat",
+   "↓ Decreases 1 random stat"
+  ],
+  "info": "↑ Increases 1 random stat · ↓ Decreases 1 random stat"
+ }
+]

@@ -1,0 +1,1738 @@
+[
+ {
+  "num": 645,
+  "id": "tinytoma",
+  "name": "Tinytoma",
+  "kind": "collectible",
+  "lines": [
+   "Large orbital that blocks shots",
+   "Deals 3.5 contact damage per second",
+   "Splits into smaller versions of itself upon taking 3 hits",
+   "The smaller versions break into blue spiders",
+   "Respawns 5 seconds after fully disappearing"
+  ],
+  "info": "Large orbital that blocks shots · Deals 3.5 contact damage per second · Splits into smaller versions of itself upon taking 3 hits · The smaller versions break into blue spiders · Respawns 5 seconds after fully disappearing",
+  "dlc": "Antibirth",
+  "trackerText": "Orbital, splits into blue spiders on hit",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "baby-shop"
+  ]
+ },
+ {
+  "num": 646,
+  "id": "brimstone-bombs",
+  "name": "Brimstone Bombs",
+  "kind": "collectible",
+  "lines": [
+   "+5 Bombs",
+   "Isaac's bombs release a 4-way blood beam",
+   "The beams don't hurt Isaac"
+  ],
+  "info": "+5 Bombs · Isaac's bombs release a 4-way blood beam · The beams don't hurt Isaac",
+  "dlc": "Repentance",
+  "trackerText": "+5 bombs, bombs now do a Krampus cross effect on explosion",
+  "pools": [
+   "devil",
+   "greed-devil",
+   "bomb-bum"
+  ]
+ },
+ {
+  "num": 647,
+  "id": "4-5-volt",
+  "name": "4.5 Volt",
+  "kind": "collectible",
+  "lines": [
+   "Clearing rooms no longer charges active items",
+   "Dealing damage to enemies slowly fills up the charge bar",
+   "Damage needed per charge increases each floor"
+  ],
+  "info": "Clearing rooms no longer charges active items · Dealing damage to enemies slowly fills up the charge bar · Damage needed per charge increases each floor",
+  "dlc": "Repentance",
+  "trackerText": "Active items now only charge based on damage dealt",
+  "pools": [
+   "shop",
+   "battery-bum",
+   "greed-shop"
+  ]
+ },
+ {
+  "num": 648,
+  "id": "item-648",
+  "name": "",
+  "kind": "collectible",
+  "lines": [
+   "<Item does not exist>"
+  ],
+  "info": "<Item does not exist>",
+  "pools": []
+ },
+ {
+  "num": 649,
+  "id": "fruity-plum",
+  "name": "Fruity Plum",
+  "kind": "collectible",
+  "lines": [
+   "Propels herself diagonally around the room, firing tears in her path that deal 3 damage",
+   "Deals 6 contact damage per second"
+  ],
+  "info": "Propels herself diagonally around the room, firing tears in her path that deal 3 damage · Deals 6 contact damage per second",
+  "transforms": [
+   "fly"
+  ],
+  "dlc": "Repentance",
+  "trackerText": "Baby Plum familiar that propel itself diagonally by shooting tears",
+  "pools": [
+   "treasure",
+   "key-master",
+   "greed-treasure",
+   "crane-game",
+   "baby-shop"
+  ]
+ },
+ {
+  "num": 650,
+  "id": "plum-flute",
+  "name": "Plum Flute",
+  "kind": "collectible",
+  "lines": [
+   "Summons a friendly Baby Plum in the room for 10 seconds"
+  ],
+  "info": "Summons a friendly Baby Plum in the room for 10 seconds",
+  "transforms": [
+   "fly"
+  ],
+  "active": true,
+  "dlc": "Repentance",
+  "trackerText": "Spawns Baby Plum",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "ultra-secret"
+  ]
+ },
+ {
+  "num": 651,
+  "id": "star-of-bethlehem",
+  "name": "Star of Bethlehem",
+  "kind": "collectible",
+  "lines": [
+   "Slowly travels from the first room of the floor to the Boss Room",
+   "Moves faster if you're ahead of it, and slower if you're behind it",
+   "Standing in its aura grants:",
+   "↑ x2.5 Tears multiplier",
+   "↑ x1.8 Damage multiplier",
+   "Homing tears",
+   "50% chance to ignore damage"
+  ],
+  "info": "Slowly travels from the first room of the floor to the Boss Room · Moves faster if you're ahead of it, and slower if you're behind it · Standing in its aura grants: · ↑ x2.5 Tears multiplier · ↑ x1.8 Damage multiplier · Homing tears · 50% chance to ignore damage",
+  "dlc": "Repentance",
+  "trackerText": "A star that moves from starting room to boss room with a Hallowed Ground aura (tears/dmg up + chance to block damage)",
+  "pools": [
+   "angel",
+   "greed-angel"
+  ]
+ },
+ {
+  "num": 652,
+  "id": "cube-baby",
+  "name": "Cube Baby",
+  "kind": "collectible",
+  "lines": [
+   "Can be kicked around by walking into it",
+   "Slows and deals up to 17.5 contact damage depending on speed",
+   "Freezes enemies it kills"
+  ],
+  "info": "Can be kicked around by walking into it · Slows and deals up to 17.5 contact damage depending on speed · Freezes enemies it kills",
+  "transforms": [
+   "conjoined"
+  ],
+  "dlc": "Repentance",
+  "trackerText": "A frozen baby familiar that can be kicked",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 653,
+  "id": "vade-retro",
+  "name": "Vade Retro",
+  "kind": "collectible",
+  "lines": [
+   "Holding the item causes non-ghost enemies to spawn small red ghosts on death",
+   "Using the item causes the ghosts to explode",
+   "Using the item also kills any ghost enemies (including bosses) that have less than 50% HP left"
+  ],
+  "info": "Holding the item causes non-ghost enemies to spawn small red ghosts on death · Using the item causes the ghosts to explode · Using the item also kills any ghost enemies (including bosses) that have less than 50% HP left",
+  "active": true,
+  "dlc": "Repentance",
+  "trackerText": "Spawns a little red ghost for each enemy killed and explode when you use the active item again",
+  "pools": [
+   "angel",
+   "greed-angel"
+  ]
+ },
+ {
+  "num": 654,
+  "id": "false-phd",
+  "name": "False PHD",
+  "kind": "collectible",
+  "lines": [
+   "+1 Black Heart",
+   "Identifies all pills",
+   "Converts all good pills into bad pills",
+   "↑ Eating a stat down pill grants +0.6 damage",
+   "Eating other bad pills spawns a Black Heart"
+  ],
+  "info": "+1 Black Heart · Identifies all pills · Converts all good pills into bad pills · ↑ Eating a stat down pill grants +0.6 damage · Eating other bad pills spawns a Black Heart",
+  "stats": {
+   "black": 1
+  },
+  "dlc": "Repentance",
+  "trackerText": "Good pills become bad or neutral pill. Stat down pill grants a dmg up, other bad pills gives a black heart",
+  "pools": [
+   "devil",
+   "red-chest",
+   "curse",
+   "greed-curse",
+   "greed-devil",
+   "ultra-secret"
+  ]
+ },
+ {
+  "num": 655,
+  "id": "spin-to-win",
+  "name": "Spin to Win",
+  "kind": "collectible",
+  "lines": [
+   "Passively grants an orbital that blocks enemy shots and deals 10.5 contact damage per second",
+   "Using the item grants:",
+   "↑ +0.5 Speed",
+   "Increases speed and damage of orbitals"
+  ],
+  "info": "Passively grants an orbital that blocks enemy shots and deals 10.5 contact damage per second · Using the item grants: · ↑ +0.5 Speed · Increases speed and damage of orbitals",
+  "active": true,
+  "dlc": "Repentance",
+  "trackerText": "A spinning familiar, holding use key gives +0.5 speed + orbitals spin faster and deal more dmg",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "crane-game"
+  ]
+ },
+ {
+  "num": 656,
+  "id": "damocles-656",
+  "name": "Damocles",
+  "kind": "collectible",
+  "lines": [
+   "Hangs a sword above Isaac's head, which doubles all pedestal items",
+   "Does not double items that have a price or come from chests",
+   "After taking any damage, the sword has an extremely low chance to instantly kill Isaac every frame",
+   "Invincibility effects can prevent the death"
+  ],
+  "info": "Hangs a sword above Isaac's head, which doubles all pedestal items · Does not double items that have a price or come from chests · After taking any damage, the sword has an extremely low chance to instantly kill Isaac every frame · Invincibility effects can prevent the death",
+  "dlc": "Antibirth",
+  "trackerText": "Double item pedestals, chance of permanent death after the first hit when activated",
+  "pools": []
+ },
+ {
+  "num": 657,
+  "id": "vasculitis",
+  "name": "Vasculitis",
+  "kind": "collectible",
+  "lines": [
+   "Enemies explode into tears upon death, which inherit the effects upon death"
+  ],
+  "info": "Enemies explode into tears upon death, which inherit the effects upon death",
+  "dlc": "Repentance",
+  "trackerText": "Killed enemies shot blood tears in random directions",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "ultra-secret"
+  ]
+ },
+ {
+  "num": 658,
+  "id": "giant-cell",
+  "name": "Giant Cell",
+  "kind": "collectible",
+  "lines": [
+   "Taking damage spawns a Minisaac",
+   "Minisaacs chase and shoot at nearby enemies"
+  ],
+  "info": "Taking damage spawns a Minisaac · Minisaacs chase and shoot at nearby enemies",
+  "dlc": "Repentance",
+  "trackerText": "Spawn mini Isaacs that follow you and attack enemies when hit",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 659,
+  "id": "tropicamide",
+  "name": "Tropicamide",
+  "kind": "collectible",
+  "lines": [
+   "↑ +2.5 Range",
+   "↑ +0.22 Tear size"
+  ],
+  "info": "↑ +2.5 Range · ↑ +0.22 Tear size",
+  "stats": {
+   "range": 1.5
+  },
+  "dlc": "Repentance",
+  "trackerText": "Tear size up",
+  "pools": [
+   "boss",
+   "greed-boss"
+  ]
+ },
+ {
+  "num": 660,
+  "id": "card-reading",
+  "name": "Card Reading",
+  "kind": "collectible",
+  "lines": [
+   "Spawns two portals in the first room of each floor",
+   "Leaving the room despawns the portals",
+   "Red: Boss Room",
+   "Yellow: Item Room",
+   "Blue: Secret Room"
+  ],
+  "info": "Spawns two portals in the first room of each floor · Leaving the room despawns the portals · Red: Boss Room · Yellow: Item Room · Blue: Secret Room",
+  "dlc": "Repentance",
+  "trackerText": "Spawn 2 of 3 different portals in starting room (red goes to boss room, yellow to treasure room, blue to secret room)",
+  "pools": [
+   "shop"
+  ]
+ },
+ {
+  "num": 661,
+  "id": "quints",
+  "name": "Quints",
+  "kind": "collectible",
+  "lines": [
+   "Killing an enemy spawns a stationary familiar in its place",
+   "Caps at 5 familiars"
+  ],
+  "info": "Killing an enemy spawns a stationary familiar in its place · Caps at 5 familiars",
+  "transforms": [
+   "conjoined"
+  ],
+  "dlc": "Repentance",
+  "trackerText": "Killed enemies drop a baby familiar that stays in place and shoot in the same direction as the player",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "baby-shop"
+  ]
+ },
+ {
+  "num": 662,
+  "id": "item-662",
+  "name": "",
+  "kind": "collectible",
+  "lines": [
+   "<Item does not exist>"
+  ],
+  "info": "<Item does not exist>",
+  "pools": []
+ },
+ {
+  "num": 663,
+  "id": "tooth-and-nail",
+  "name": "Tooth and Nail",
+  "kind": "collectible",
+  "lines": [
+   "1 second of invincibility every 6 seconds",
+   "Isaac flashes right before the effect triggers"
+  ],
+  "info": "1 second of invincibility every 6 seconds · Isaac flashes right before the effect triggers",
+  "dlc": "Repentance",
+  "trackerText": "Transforms the player into a spiked stone statue for 1 sec every 5 sec, invincibility + contact dmg on statue form",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 664,
+  "id": "binge-eater",
+  "name": "Binge Eater",
+  "kind": "collectible",
+  "lines": [
+   "↑ +1 Health",
+   "Full health",
+   "Item pedestals cycle between their item and a food item",
+   "Picking up a food item grants:",
+   "Heal 2 hearts",
+   "↑ Temporary +3.6 damage",
+   "↑ 2 permanent stat ups (depending on the food)",
+   "↓ -0.03 speed"
+  ],
+  "info": "↑ +1 Health · Full health · Item pedestals cycle between their item and a food item · Picking up a food item grants: · Heal 2 hearts · ↑ Temporary +3.6 damage · ↑ 2 permanent stat ups (depending on the food) · ↓ -0.03 speed",
+  "stats": {
+   "maxHearts": 1
+  },
+  "dlc": "Repentance",
+  "trackerText": "For each item you'll see, a food item is proposed. Food items give 2 stat ups and a temporary dmg up",
+  "pools": [
+   "secret",
+   "greed-secret"
+  ]
+ },
+ {
+  "num": 665,
+  "id": "guppys-eye",
+  "name": "Guppy's Eye",
+  "kind": "collectible",
+  "lines": [
+   "Reveals the contents of chests, sacks, shopkeepers, and fireplaces before they're opened or destroyed"
+  ],
+  "info": "Reveals the contents of chests, sacks, shopkeepers, and fireplaces before they're opened or destroyed",
+  "transforms": [
+   "guppy"
+  ],
+  "dlc": "Repentance",
+  "trackerText": "Shows the content of chests and fires",
+  "pools": [
+   "devil",
+   "red-chest",
+   "greed-devil"
+  ]
+ },
+ {
+  "num": 666,
+  "id": "item-666",
+  "name": "",
+  "kind": "collectible",
+  "lines": [
+   "<Item does not exist>"
+  ],
+  "info": "<Item does not exist>",
+  "pools": []
+ },
+ {
+  "num": 667,
+  "id": "strawman",
+  "name": "Strawman",
+  "kind": "collectible",
+  "lines": [
+   "+1 Bomb",
+   "Spawns Keeper as a second character",
+   "When he dies, spawns blue spiders and permanently removes Strawman and any item that he has picked up from the inventory",
+   "Devil Room items cost coins while Strawman is alive",
+   "Strawman can pick up story items"
+  ],
+  "info": "+1 Bomb · Spawns Keeper as a second character · When he dies, spawns blue spiders and permanently removes Strawman and any item that he has picked up from the inventory · Devil Room items cost coins while Strawman is alive · Strawman can pick up story items",
+  "dlc": "Repentance",
+  "trackerText": "A Keeper familiar that acts as a second player and has its own HP and items",
+  "pools": [
+   "secret",
+   "greed-shop",
+   "greed-secret"
+  ]
+ },
+ {
+  "num": 668,
+  "id": "dads-note",
+  "name": "Dad's Note",
+  "kind": "collectible",
+  "lines": [
+   "Begins the Ascent",
+   "Trinkets left in previous Treasure or Boss Rooms turn into Cracked Keys"
+  ],
+  "info": "Begins the Ascent · Trinkets left in previous Treasure or Boss Rooms turn into Cracked Keys",
+  "dlc": "Repentance",
+  "trackerText": "Sends you on the backwards path, no gameplay effect",
+  "pools": []
+ },
+ {
+  "num": 669,
+  "id": "sausage",
+  "name": "Sausage",
+  "kind": "collectible",
+  "lines": [
+   "↑ +1 Health",
+   "↑ +0.2 Speed",
+   "↑ +0.5 Tears",
+   "↑ +0.5 Damage",
+   "↑ +2.5 Range",
+   "↑ +0.16 Shot speed",
+   "↑ +1 Luck",
+   "Full health",
+   "↑ +6.9% Devil/Angel Room chance",
+   "↑ +6.9% Planetarium chance"
+  ],
+  "info": "↑ +1 Health · ↑ +0.2 Speed · ↑ +0.5 Tears · ↑ +0.5 Damage · ↑ +2.5 Range · ↑ +0.16 Shot speed · ↑ +1 Luck · Full health · ↑ +6.9% Devil/Angel Room chance · ↑ +6.9% Planetarium chance",
+  "stats": {
+   "tears": 0.5,
+   "damage": 0.5,
+   "range": 1.5,
+   "shotSpeed": 0.16,
+   "speed": 0.2,
+   "luck": 1,
+   "maxHearts": 1
+  },
+  "dlc": "Antibirth",
+  "trackerText": "Full heal",
+  "pools": [
+   "secret",
+   "greed-secret"
+  ]
+ },
+ {
+  "num": 670,
+  "id": "options",
+  "name": "Options?",
+  "kind": "collectible",
+  "lines": [
+   "Allows Isaac to choose from two different room clear rewards"
+  ],
+  "info": "Allows Isaac to choose from two different room clear rewards",
+  "dlc": "Repentance",
+  "trackerText": "Can choose between two room reward pickups",
+  "pools": [
+   "shop"
+  ]
+ },
+ {
+  "num": 671,
+  "id": "candy-heart",
+  "name": "Candy Heart",
+  "kind": "collectible",
+  "lines": [
+   "↑ Healing with Red Hearts grants random permanent stat ups",
+   "Spawns a Red Heart"
+  ],
+  "info": "↑ Healing with Red Hearts grants random permanent stat ups · Spawns a Red Heart",
+  "dlc": "Repentance",
+  "trackerText": "Minor random stat up for every red heart picked up",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "ultra-secret"
+  ]
+ },
+ {
+  "num": 672,
+  "id": "a-pound-of-flesh",
+  "name": "A Pound of Flesh",
+  "kind": "collectible",
+  "lines": [
+   "Devil Room items cost coins",
+   "Shop items cost hearts",
+   "Consumables in Shops are surrounded by spikes"
+  ],
+  "info": "Devil Room items cost coins · Shop items cost hearts · Consumables in Shops are surrounded by spikes",
+  "dlc": "Repentance",
+  "trackerText": "Devil deals cost money, shop items cost hearts, shop pickups require to take damage",
+  "pools": [
+   "devil",
+   "demon-beggar"
+  ]
+ },
+ {
+  "num": 673,
+  "id": "redemption",
+  "name": "Redemption",
+  "kind": "collectible",
+  "lines": [
+   "Entering a new floor after visiting a Devil Room and not taking any item/pickup grants:",
+   "↑ +1 Damage",
+   "+1 Soul Heart"
+  ],
+  "info": "Entering a new floor after visiting a Devil Room and not taking any item/pickup grants: · ↑ +1 Damage · +1 Soul Heart",
+  "dlc": "Repentance",
+  "trackerText": "Dmg up + half soul heart at the start of next floor if you took nothing in the devil deal",
+  "pools": []
+ },
+ {
+  "num": 674,
+  "id": "spirit-shackles",
+  "name": "Spirit Shackles",
+  "kind": "collectible",
+  "lines": [
+   "Taking fatal damage transforms Isaac into a ghost chained to his dead body and allows him to continue to fight with half a heart",
+   "If the ghost survives, Isaac revives after 10 seconds",
+   "Must be recharged by picking up a Soul Heart"
+  ],
+  "info": "Taking fatal damage transforms Isaac into a ghost chained to his dead body and allows him to continue to fight with half a heart · If the ghost survives, Isaac revives after 10 seconds · Must be recharged by picking up a Soul Heart",
+  "dlc": "Repentance",
+  "trackerText": "On death, turn into Forgotten's Soul chained to a dead Blue Baby, revives if still alive after 10 sec",
+  "pools": [
+   "secret",
+   "greed-shop",
+   "greed-secret"
+  ]
+ },
+ {
+  "num": 675,
+  "id": "cracked-orb",
+  "name": "Cracked Orb",
+  "kind": "collectible",
+  "lines": [
+   "Taking damage:",
+   "Unlocks all locked doors in the room",
+   "Reveals a random room on the map",
+   "Destroys all tinted and crawlspace rocks"
+  ],
+  "info": "Taking damage: · Unlocks all locked doors in the room · Reveals a random room on the map · Destroys all tinted and crawlspace rocks",
+  "dlc": "Repentance",
+  "trackerText": "On hit: reveal a random room, open adjacent locked/secret rooms, break tinted rocks or rocks that hides a ladder",
+  "pools": [
+   "treasure",
+   "secret",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 676,
+  "id": "empty-heart",
+  "name": "Empty Heart",
+  "kind": "collectible",
+  "lines": [
+   "+1 Empty heart container when at 1 Red Heart or less at the start of a new floor"
+  ],
+  "info": "+1 Empty heart container when at 1 Red Heart or less at the start of a new floor",
+  "dlc": "Repentance",
+  "trackerText": "Grants an empty heart container if you enter a new floor with 1 red heart or less",
+  "pools": [
+   "treasure",
+   "demon-beggar",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 677,
+  "id": "astral-projection",
+  "name": "Astral Projection",
+  "kind": "collectible",
+  "lines": [
+   "Taking damage in an uncleared room grants for the fight:",
+   "Spectral tears",
+   "Flight",
+   "Negates the next damage taken",
+   "Stops time for 2 seconds",
+   "Greatly increases speed and fire rate for 2 seconds"
+  ],
+  "info": "Taking damage in an uncleared room grants for the fight: · Spectral tears · Flight · Negates the next damage taken · Stops time for 2 seconds · Greatly increases speed and fire rate for 2 seconds",
+  "dlc": "Repentance",
+  "trackerText": "On hit: stop time and turn into the lost. Revert into original char on hit or room clear",
+  "pools": [
+   "treasure",
+   "secret",
+   "greed-treasure",
+   "greed-secret"
+  ]
+ },
+ {
+  "num": 678,
+  "id": "c-section",
+  "name": "C Section",
+  "kind": "collectible",
+  "lines": [
+   "Replaces Isaac's tears with a charge attack that shoots homing, spectral fetus tears",
+   "Fetus tears deal about 2.8x Isaac's damage per second"
+  ],
+  "info": "Replaces Isaac's tears with a charge attack that shoots homing, spectral fetus tears · Fetus tears deal about 2.8x Isaac's damage per second",
+  "dlc": "Repentance",
+  "trackerText": "Shoot fetus tears",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 679,
+  "id": "lil-abaddon",
+  "name": "Lil Abaddon",
+  "kind": "collectible",
+  "lines": [
+   "Familiar that charges and unleashes a Maw of the Void circle",
+   "It deals 52.5 damage over 1 second"
+  ],
+  "info": "Familiar that charges and unleashes a Maw of the Void circle · It deals 52.5 damage over 1 second",
+  "transforms": [
+   "conjoined"
+  ],
+  "dlc": "Repentance",
+  "trackerText": "Familiar that fires a Maw of the Void ring",
+  "pools": [
+   "devil",
+   "greed-devil",
+   "baby-shop"
+  ]
+ },
+ {
+  "num": 680,
+  "id": "montezumas-revenge",
+  "name": "Montezuma's Revenge",
+  "kind": "collectible",
+  "lines": [
+   "Firing charges up a short-ranged high damage backwards beam",
+   "Does not replace Isaac's tears"
+  ],
+  "info": "Firing charges up a short-ranged high damage backwards beam · Does not replace Isaac's tears",
+  "transforms": [
+   "poop"
+  ],
+  "dlc": "Repentance",
+  "trackerText": "Fires a short diarrhea Brimstone backwards",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 681,
+  "id": "lil-portal",
+  "name": "Lil Portal",
+  "kind": "collectible",
+  "lines": [
+   "Deals contact damage and flies forward",
+   "Consumes pickups in its path",
+   "Each pickup consumed increases its size, damage, and spawns a blue fly",
+   "Consuming four pickups spawns a portal to an unexplored room"
+  ],
+  "info": "Deals contact damage and flies forward · Consumes pickups in its path · Each pickup consumed increases its size, damage, and spawns a blue fly · Consuming four pickups spawns a portal to an unexplored room",
+  "dlc": "Repentance",
+  "trackerText": "A familiar that spawns a portal to an unexplored room if it absorbed enough pickups",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 682,
+  "id": "worm-friend",
+  "name": "Worm Friend",
+  "kind": "collectible",
+  "lines": [
+   "Sometimes bursts out of the ground and grabs an enemy",
+   "Grabbed enemies take 8 damage per second, are slowed and cannot move"
+  ],
+  "info": "Sometimes bursts out of the ground and grabs an enemy · Grabbed enemies take 8 damage per second, are slowed and cannot move",
+  "dlc": "Repentance",
+  "trackerText": "A tentacle that lurks underground and randomly grabs an enemy",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "ultra-secret",
+   "baby-shop"
+  ]
+ },
+ {
+  "num": 683,
+  "id": "bone-spurs",
+  "name": "Bone Spurs",
+  "kind": "collectible",
+  "lines": [
+   "Enemies spawn bone shards on death",
+   "Bones block projectiles and deal contact damage"
+  ],
+  "info": "Enemies spawn bone shards on death · Bones block projectiles and deal contact damage",
+  "dlc": "Repentance",
+  "trackerText": "Killed enemies spawn bone chunks",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 684,
+  "id": "hungry-soul",
+  "name": "Hungry Soul",
+  "kind": "collectible",
+  "lines": [
+   "Killing an enemy has a 33% chance to spawn a ghost",
+   "Ghosts chase enemies, deal contact damage and explode after 5 seconds",
+   "Isaac doesn't take damage from the explosion"
+  ],
+  "info": "Killing an enemy has a 33% chance to spawn a ghost · Ghosts chase enemies, deal contact damage and explode after 5 seconds · Isaac doesn't take damage from the explosion",
+  "dlc": "Repentance",
+  "trackerText": "Killed enemies have a chance to spawn a homing soul that chases enemies and attack them",
+  "pools": [
+   "devil",
+   "greed-devil",
+   "ultra-secret"
+  ]
+ },
+ {
+  "num": 685,
+  "id": "jar-of-wisps",
+  "name": "Jar of Wisps",
+  "kind": "collectible",
+  "lines": [
+   "Spawns a random wisp",
+   "Spawns one additional wisp with each use, up to 12"
+  ],
+  "info": "Spawns a random wisp · Spawns one additional wisp with each use, up to 12",
+  "active": true,
+  "dlc": "Repentance",
+  "trackerText": "Spawns a random wisp + another random wisp for every past uses (up to 12)",
+  "pools": [
+   "angel",
+   "greed-angel"
+  ]
+ },
+ {
+  "num": 686,
+  "id": "soul-locket",
+  "name": "Soul Locket",
+  "kind": "collectible",
+  "lines": [
+   "↑ Picking up Soul Hearts grants random permanent stat ups",
+   "Spawns a Soul Heart"
+  ],
+  "info": "↑ Picking up Soul Hearts grants random permanent stat ups · Spawns a Soul Heart",
+  "stats": {
+   "soul": 1
+  },
+  "dlc": "Repentance",
+  "trackerText": "Minor random stat up for every soul heart picked up",
+  "pools": [
+   "angel",
+   "greed-angel"
+  ]
+ },
+ {
+  "num": 687,
+  "id": "friend-finder",
+  "name": "Friend Finder",
+  "kind": "collectible",
+  "lines": [
+   "Spawns a random friendly monster that mimics Isaac's movements and attacks"
+  ],
+  "info": "Spawns a random friendly monster that mimics Isaac's movements and attacks",
+  "active": true,
+  "dlc": "Repentance",
+  "trackerText": "Spawns a random controllable friendly enemy",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "crane-game"
+  ]
+ },
+ {
+  "num": 688,
+  "id": "inner-child",
+  "name": "Inner Child",
+  "kind": "collectible",
+  "lines": [
+   "+1 Life",
+   "Upon death:",
+   "Respawns Isaac in the same room with half a heart",
+   "↑ +0.2 Speed",
+   "↑ Massive size down"
+  ],
+  "info": "+1 Life · Upon death: · Respawns Isaac in the same room with half a heart · ↑ +0.2 Speed · ↑ Massive size down",
+  "dlc": "Repentance",
+  "trackerText": "+1 life. On revive, explode and turn into a tiny version of Isaac with higher speed",
+  "pools": [
+   "secret",
+   "greed-shop",
+   "greed-secret"
+  ]
+ },
+ {
+  "num": 689,
+  "id": "glitched-crown",
+  "name": "Glitched Crown",
+  "kind": "collectible",
+  "lines": [
+   "Item pedestals quickly cycle between 5 random items"
+  ],
+  "info": "Item pedestals quickly cycle between 5 random items",
+  "dlc": "Repentance",
+  "trackerText": "Pedestals rapidly cycle between 5 random items",
+  "pools": [
+   "secret",
+   "greed-shop",
+   "greed-secret"
+  ]
+ },
+ {
+  "num": 690,
+  "id": "belly-jelly",
+  "name": "Belly Jelly",
+  "kind": "collectible",
+  "lines": [
+   "Enemies bounce off of Isaac",
+   "50% chance to negate contact damage",
+   "50% chance to deflect enemy projectiles"
+  ],
+  "info": "Enemies bounce off of Isaac · 50% chance to negate contact damage · 50% chance to deflect enemy projectiles",
+  "dlc": "Repentance",
+  "trackerText": "Chance to reflect shots and negate contact damage, bouncing the enemies instead",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 691,
+  "id": "sacred-orb",
+  "name": "Sacred Orb",
+  "kind": "collectible",
+  "lines": [
+   "Prevents Quality / items from spawning",
+   "Quality items have a 33% chance to be rerolled"
+  ],
+  "info": "Prevents Quality / items from spawning · Quality items have a 33% chance to be rerolled",
+  "transforms": [
+   "seraphim"
+  ],
+  "dlc": "Repentance",
+  "trackerText": "Prevents quality 0 and 1 items from appearing. 33% chance for quality 2 items to be rerolled",
+  "pools": [
+   "angel",
+   "secret",
+   "greed-shop",
+   "greed-angel",
+   "greed-secret"
+  ]
+ },
+ {
+  "num": 692,
+  "id": "sanguine-bond",
+  "name": "Sanguine Bond",
+  "kind": "collectible",
+  "lines": [
+   "Spawns a set of spikes in the Devil Room",
+   "Taking damage on the spikes grants:",
+   "35%: Nothing",
+   "33%: ↑ +0.5 Damage",
+   "15%: 6 pennies",
+   "10%: 2 Black Hearts",
+   "5%: Random Devil item",
+   "2%: Leviathan transformation"
+  ],
+  "info": "Spawns a set of spikes in the Devil Room · Taking damage on the spikes grants: · 35%: Nothing · 33%: ↑ +0.5 Damage · 15%: 6 pennies · 10%: 2 Black Hearts · 5%: Random Devil item · 2%: Leviathan transformation",
+  "dlc": "Repentance",
+  "trackerText": "Spikes in front of devil statue, taking damage on them can yield various rewards",
+  "pools": [
+   "devil",
+   "curse",
+   "greed-shop",
+   "greed-curse",
+   "greed-devil",
+   "ultra-secret"
+  ]
+ },
+ {
+  "num": 693,
+  "id": "the-swarm",
+  "name": "The Swarm",
+  "kind": "collectible",
+  "lines": [
+   "Grants 8 orbital flies",
+   "Clearing a room spawns a new fly",
+   "Flies turn into blue flies after blocking a shot"
+  ],
+  "info": "Grants 8 orbital flies · Clearing a room spawns a new fly · Flies turn into blue flies after blocking a shot",
+  "transforms": [
+   "fly"
+  ],
+  "dlc": "Repentance",
+  "trackerText": "Grants a halo of fly orbitals, turn them into blue flies on hit, +1 orbital fly per room clear",
+  "pools": [
+   "treasure",
+   "key-master",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 694,
+  "id": "heartbreak",
+  "name": "Heartbreak",
+  "kind": "collectible",
+  "lines": [
+   "↑ +0.25 Damage for each Broken Heart",
+   "+3 Broken Hearts",
+   "Every fatal hit grants +2 Broken Hearts",
+   "Isaac dies at 12 Broken Hearts"
+  ],
+  "info": "↑ +0.25 Damage for each Broken Heart · +3 Broken Hearts · Every fatal hit grants +2 Broken Hearts · Isaac dies at 12 Broken Hearts",
+  "stats": {
+   "damage": 0.75
+  },
+  "dlc": "Repentance",
+  "trackerText": "Add 3 broken hearts",
+  "pools": [
+   "devil",
+   "curse",
+   "greed-curse",
+   "greed-devil",
+   "ultra-secret"
+  ]
+ },
+ {
+  "num": 695,
+  "id": "bloody-gust",
+  "name": "Bloody Gust",
+  "kind": "collectible",
+  "lines": [
+   "When taking damage, receive for the floor:",
+   "↑ Speed up",
+   "↑ Fire rate up",
+   "Caps at +1.02 speed and +3 fire rate"
+  ],
+  "info": "When taking damage, receive for the floor: · ↑ Speed up · ↑ Fire rate up · Caps at +1.02 speed and +3 fire rate",
+  "dlc": "Repentance",
+  "trackerText": "Tears and speed up on hit (resets every floor)",
+  "pools": [
+   "treasure",
+   "devil",
+   "greed-treasure",
+   "greed-devil",
+   "ultra-secret"
+  ]
+ },
+ {
+  "num": 696,
+  "id": "salvation",
+  "name": "Salvation",
+  "kind": "collectible",
+  "lines": [
+   "Isaac is surrounded by a halo",
+   "Enemies that stand in the halo for too long are hit by a cross-shaped beam of light",
+   "Taking damage increases the size of the halo for the floor"
+  ],
+  "info": "Isaac is surrounded by a halo · Enemies that stand in the halo for too long are hit by a cross-shaped beam of light · Taking damage increases the size of the halo for the floor",
+  "transforms": [
+   "seraphim"
+  ],
+  "dlc": "Repentance",
+  "trackerText": "Grants an aura that makes enemies exploding in a cross of lightbeams after few seconds in it, gets bigger on hit, shrinks upon entering new floor",
+  "pools": [
+   "angel",
+   "greed-angel"
+  ]
+ },
+ {
+  "num": 697,
+  "id": "vanishing-twin",
+  "name": "Vanishing Twin",
+  "kind": "collectible",
+  "lines": [
+   "Entering a boss room spawns a clone of the boss",
+   "Defeating the clone spawns an extra item",
+   "The clone is slower and has 75% health"
+  ],
+  "info": "Entering a boss room spawns a clone of the boss · Defeating the clone spawns an extra item · The clone is slower and has 75% health",
+  "dlc": "Repentance",
+  "trackerText": "Familiar that turns into a hostile copy of any boss encountered, boss rooms yield double rewards",
+  "pools": [
+   "secret",
+   "curse"
+  ]
+ },
+ {
+  "num": 698,
+  "id": "twisted-pair",
+  "name": "Twisted Pair",
+  "kind": "collectible",
+  "lines": [
+   "Two familiars that shoot tears with the same stats and effects as Isaac",
+   "They deal 37.5% of Isaac's damage"
+  ],
+  "info": "Two familiars that shoot tears with the same stats and effects as Isaac · They deal 37.5% of Isaac's damage",
+  "transforms": [
+   "conjoined"
+  ],
+  "dlc": "Repentance",
+  "trackerText": "Gives two small demons that copy the player's tears (37.5% of player's dmg for each demon)",
+  "pools": [
+   "devil",
+   "greed-devil",
+   "baby-shop"
+  ]
+ },
+ {
+  "num": 699,
+  "id": "azazels-rage",
+  "name": "Azazel's Rage",
+  "kind": "collectible",
+  "lines": [
+   "Clearing 4 rooms fires a large Brimstone beam upon entering the next room"
+  ],
+  "info": "Clearing 4 rooms fires a large Brimstone beam upon entering the next room",
+  "dlc": "Repentance",
+  "trackerText": "Builds rage every time a room is cleared, fires a large Brimstone at full rage upon entering next room",
+  "pools": [
+   "devil",
+   "greed-devil"
+  ]
+ },
+ {
+  "num": 700,
+  "id": "echo-chamber",
+  "name": "Echo Chamber",
+  "kind": "collectible",
+  "lines": [
+   "Using a rune, card or pill also uses a copy of the last 3 runes/cards/pills used after picking up Echo Chamber"
+  ],
+  "info": "Using a rune, card or pill also uses a copy of the last 3 runes/cards/pills used after picking up Echo Chamber",
+  "dlc": "Repentance",
+  "trackerText": "Every time a card/pill is used, it also trigger all previous pill/cards used",
+  "pools": [
+   "secret",
+   "greed-shop",
+   "greed-secret",
+   "ultra-secret"
+  ]
+ },
+ {
+  "num": 701,
+  "id": "isaacs-tomb",
+  "name": "Isaac's Tomb",
+  "kind": "collectible",
+  "lines": [
+   "Spawns an Old Chest at the start of every floor",
+   "Old Chests require a key to unlock and can contain Soul Hearts, trinkets or Mom, Dad and Angel items"
+  ],
+  "info": "Spawns an Old Chest at the start of every floor · Old Chests require a key to unlock and can contain Soul Hearts, trinkets or Mom, Dad and Angel items",
+  "dlc": "Repentance",
+  "trackerText": "Chest appears in the starting room of each floor, gives at random: 3 soul hearts, 3 trinkets, Old Chest item, Angel item",
+  "pools": [
+   "secret",
+   "greed-shop",
+   "greed-secret"
+  ]
+ },
+ {
+  "num": 702,
+  "id": "vengeful-spirit",
+  "name": "Vengeful Spirit",
+  "kind": "collectible",
+  "lines": [
+   "Taking damage spawns an orbital wisp",
+   "Wisps shoot tears, do not block shots and disappear on the next floor",
+   "Caps at 6 wisps"
+  ],
+  "info": "Taking damage spawns an orbital wisp · Wisps shoot tears, do not block shots and disappear on the next floor · Caps at 6 wisps",
+  "dlc": "Repentance",
+  "trackerText": "Spawns an invincible red wisp every time the player takes damage, wisps disappear on next floor",
+  "pools": [
+   "devil",
+   "curse",
+   "greed-curse",
+   "greed-devil",
+   "ultra-secret"
+  ]
+ },
+ {
+  "num": 703,
+  "id": "esau-jr",
+  "name": "Esau Jr.",
+  "kind": "collectible",
+  "lines": [
+   "Swaps between the current character and Esau Jr.",
+   "Esau Jr. has 3 Black Hearts, +2 Damage, flight, and random items equal to the number of items the player has the first time this item is used",
+   "Characters have independent items and health",
+   "Dying as either character ends the run"
+  ],
+  "info": "Swaps between the current character and Esau Jr. · Esau Jr. has 3 Black Hearts, +2 Damage, flight, and random items equal to the number of items the player has the first time this item is used · Characters have independent items and health · Dying as either character ends the run",
+  "active": true,
+  "dlc": "Repentance",
+  "trackerText": "Toggle between current char and a mini Esau that starts with high damage and 3 black hearts and has its own items",
+  "pools": [
+   "treasure",
+   "secret",
+   "greed-treasure",
+   "greed-shop",
+   "greed-secret",
+   "ultra-secret"
+  ]
+ },
+ {
+  "num": 704,
+  "id": "berserk",
+  "name": "Berserk!",
+  "kind": "collectible",
+  "lines": [
+   "Charges with damage dealt",
+   "Receive for 5 seconds:",
+   "↑ +0.4 Speed",
+   "↓ x0.5 Fire rate multiplier",
+   "↑ +2 Fire rate",
+   "↑ +3 Damage",
+   "Restricts attacks to a melee that reflects shots",
+   "Each kill increases the duration by 1 second and grants brief invincibility"
+  ],
+  "info": "Charges with damage dealt · Receive for 5 seconds: · ↑ +0.4 Speed · ↓ x0.5 Fire rate multiplier · ↑ +2 Fire rate · ↑ +3 Damage · Restricts attacks to a melee that reflects shots · Each kill increases the duration by 1 second and grants brief invincibility",
+  "active": true,
+  "dlc": "Repentance",
+  "trackerText": "Temporary +3 dmg and melee attack. This item charge by damaging enemies",
+  "pools": [
+   "devil",
+   "greed-devil",
+   "ultra-secret"
+  ]
+ },
+ {
+  "num": 705,
+  "id": "dark-arts",
+  "name": "Dark Arts",
+  "kind": "collectible",
+  "lines": [
+   "Receive for 1 second (or until shooting):↑ +1 Speed",
+   "Isaac can pass through enemies/projectiles and paralyzes them",
+   "When the effect ends, damages paralyzed enemies, removes paralyzed projectiles and creates a blast at Isaac's location",
+   "The attacks and blast are more powerful the more enemies/projectiles have been hit"
+  ],
+  "info": "Receive for 1 second (or until shooting):↑ +1 Speed · Isaac can pass through enemies/projectiles and paralyzes them · When the effect ends, damages paralyzed enemies, removes paralyzed projectiles and creates a blast at Isaac's location · The attacks and blast are more powerful the more enemies/projectiles have been hit",
+  "active": true,
+  "dlc": "Repentance",
+  "trackerText": "Turn into shadow form, phase through enemies to deal damage 2 sec after, more damage dodged = more dmg up",
+  "pools": [
+   "devil",
+   "greed-devil",
+   "ultra-secret"
+  ]
+ },
+ {
+  "num": 706,
+  "id": "abyss",
+  "name": "Abyss",
+  "kind": "collectible",
+  "lines": [
+   "Consumes all item pedestals in the room and spawns a locust familiar for each one",
+   "Locusts deal Isaac's damage 2-3 times an attack",
+   "Some items spawn a special locust when consumed"
+  ],
+  "info": "Consumes all item pedestals in the room and spawns a locust familiar for each one · Locusts deal Isaac's damage 2-3 times an attack · Some items spawn a special locust when consumed",
+  "active": true,
+  "dlc": "Repentance",
+  "trackerText": "Destroys any item in the room and turn it into permanent red locusts that attack by dashing at enemies",
+  "pools": [
+   "devil",
+   "greed-devil",
+   "ultra-secret"
+  ]
+ },
+ {
+  "num": 707,
+  "id": "supper",
+  "name": "Supper",
+  "kind": "collectible",
+  "lines": [
+   "↑ +1 Health",
+   "Heals 1 heart"
+  ],
+  "info": "↑ +1 Health · Heals 1 heart",
+  "stats": {
+   "maxHearts": 1
+  },
+  "healthOnly": true,
+  "dlc": "Repentance",
+  "pools": [
+   "boss",
+   "beggar",
+   "greed-boss"
+  ]
+ },
+ {
+  "num": 708,
+  "id": "stapler",
+  "name": "Stapler",
+  "kind": "collectible",
+  "lines": [
+   "↑ +1 Damage",
+   "All of Isaac's tears are shot from the right eye"
+  ],
+  "info": "↑ +1 Damage · All of Isaac's tears are shot from the right eye",
+  "stats": {
+   "damage": 1
+  },
+  "dlc": "Repentance",
+  "trackerText": "Tears only come out from the player's right eye",
+  "pools": [
+   "boss",
+   "golden-chest",
+   "greed-boss"
+  ]
+ },
+ {
+  "num": 709,
+  "id": "suplex",
+  "name": "Suplex!",
+  "kind": "collectible",
+  "lines": [
+   "Isaac dashes in the direction he moves",
+   "Dashing into an enemy or boss picks it up and slams it into the ground",
+   "Slam deals damage and spawns rock waves based on Isaac's size",
+   "You're invincible during the dash and slam"
+  ],
+  "info": "Isaac dashes in the direction he moves · Dashing into an enemy or boss picks it up and slams it into the ground · Slam deals damage and spawns rock waves based on Isaac's size · You're invincible during the dash and slam",
+  "active": true,
+  "dlc": "Repentance",
+  "trackerText": "Dash into an enemy, grab it and slam it on the ground",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "crane-game"
+  ]
+ },
+ {
+  "num": 710,
+  "id": "bag-of-crafting",
+  "name": "Bag of Crafting",
+  "kind": "collectible",
+  "lines": [
+   "Collects up to 8 pickups which cannot be dropped",
+   "Using the item with 8 pickups in the bag crafts an item",
+   "Item quality is based on the quality of the pickups"
+  ],
+  "info": "Collects up to 8 pickups which cannot be dropped · Using the item with 8 pickups in the bag crafts an item · Item quality is based on the quality of the pickups",
+  "active": true,
+  "dlc": "Repentance",
+  "trackerText": "Take pickups to transform them into items",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 711,
+  "id": "flip",
+  "name": "Flip",
+  "kind": "collectible",
+  "lines": [
+   "Entering a room with item pedestals displays a ghostly second item on the pedestals",
+   "Using the item flips the real and ghostly item",
+   "Using Flip after taking the first item allows Isaac to pick up the other item",
+   "Ghostly items alone on pedestals disappear after leaving the room"
+  ],
+  "info": "Entering a room with item pedestals displays a ghostly second item on the pedestals · Using the item flips the real and ghostly item · Using Flip after taking the first item allows Isaac to pick up the other item · Ghostly items alone on pedestals disappear after leaving the room",
+  "active": true,
+  "dlc": "Repentance",
+  "trackerText": "Switch between tainted Lazarus and dead Lazarus, they both have their own inventory and stats",
+  "pools": [
+   "secret",
+   "curse",
+   "greed-shop",
+   "greed-curse",
+   "greed-secret",
+   "ultra-secret"
+  ]
+ },
+ {
+  "num": 712,
+  "id": "lemegeton",
+  "name": "Lemegeton",
+  "kind": "collectible",
+  "lines": [
+   "Spawns an orbital that grants a random item's effect",
+   "The items have a 25% chance to be from the current room's item pool and 75% chance to be from a random item pool"
+  ],
+  "info": "Spawns an orbital that grants a random item's effect · The items have a 25% chance to be from the current room's item pool and 75% chance to be from a random item pool",
+  "transforms": [
+   "bookworm"
+  ],
+  "active": true,
+  "dlc": "Repentance",
+  "trackerText": "Spawn an item wisp that grants the effect of a random passive item until it dies",
+  "pools": [
+   "devil",
+   "library",
+   "greed-devil"
+  ]
+ },
+ {
+  "num": 713,
+  "id": "sumptorium",
+  "name": "Sumptorium",
+  "kind": "collectible",
+  "lines": [
+   "Removes half a heart and creates a clot",
+   "Clots copy Isaac's tears",
+   "Each type of heart generates a clot with different HP, damage and tear effect"
+  ],
+  "info": "Removes half a heart and creates a clot · Clots copy Isaac's tears · Each type of heart generates a clot with different HP, damage and tear effect",
+  "active": true,
+  "dlc": "Repentance",
+  "trackerText": "Convert back Lil Clots into hearts",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 714,
+  "id": "recall",
+  "name": "Recall",
+  "kind": "collectible",
+  "lines": [
+   "Retrieves the Forgotten's body from any distance",
+   "The Soul is invincible while the Forgotten is returning"
+  ],
+  "info": "Retrieves the Forgotten's body from any distance · The Soul is invincible while the Forgotten is returning",
+  "active": true,
+  "dlc": "Repentance",
+  "trackerText": "Sends back tainted Forgotten's body to the owner",
+  "pools": []
+ },
+ {
+  "num": 715,
+  "id": "hold",
+  "name": "Hold",
+  "kind": "collectible",
+  "lines": [
+   "Using the item when empty stores the next poop inside",
+   "Using the item with a poop inside uses that poop"
+  ],
+  "info": "Using the item when empty stores the next poop inside · Using the item with a poop inside uses that poop",
+  "active": true,
+  "dlc": "Repentance",
+  "trackerText": "Allows you to stock a Tainted Blue Baby poop and throw it later",
+  "pools": []
+ },
+ {
+  "num": 716,
+  "id": "keepers-sack",
+  "name": "Keeper's Sack",
+  "kind": "collectible",
+  "lines": [
+   "Spawns 3 coins and 1 key",
+   "Spending 3 coins grants either:",
+   "↑ +0.03 Speed",
+   "↑ +0.5 Damage",
+   "↑ +0.25 Range"
+  ],
+  "info": "Spawns 3 coins and 1 key · Spending 3 coins grants either: · ↑ +0.03 Speed · ↑ +0.5 Damage · ↑ +0.25 Range",
+  "dlc": "Repentance",
+  "trackerText": "+1 key and +3 coins, gives a dmg/range/speed bonus that scales with the amount of money spent in shops",
+  "pools": [
+   "shop",
+   "secret",
+   "greed-treasure",
+   "greed-secret"
+  ]
+ },
+ {
+  "num": 717,
+  "id": "keepers-kin",
+  "name": "Keeper's Kin",
+  "kind": "collectible",
+  "lines": [
+   "Rocks and other obstacles spawn 2 blue spiders when destroyed",
+   "Rocks can occasionally spawn blue spiders in hostile rooms"
+  ],
+  "info": "Rocks and other obstacles spawn 2 blue spiders when destroyed · Rocks can occasionally spawn blue spiders in hostile rooms",
+  "transforms": [
+   "spider"
+  ],
+  "dlc": "Repentance",
+  "trackerText": "Rocks drop 1-3 spiders when destroyed, rocks can spawn blue spider in room with enemies in it",
+  "pools": [
+   "treasure",
+   "secret",
+   "greed-treasure",
+   "greed-secret"
+  ]
+ },
+ {
+  "num": 718,
+  "id": "item-718",
+  "name": "",
+  "kind": "collectible",
+  "lines": [
+   "<Item does not exist>"
+  ],
+  "info": "<Item does not exist>",
+  "pools": []
+ },
+ {
+  "num": 719,
+  "id": "keepers-box",
+  "name": "Keeper's Box",
+  "kind": "collectible",
+  "lines": [
+   "Spawns a random Shop item/pickup to be purchased"
+  ],
+  "info": "Spawns a random Shop item/pickup to be purchased",
+  "active": true,
+  "dlc": "Repentance",
+  "trackerText": "Spawns a random shop item",
+  "pools": [
+   "shop",
+   "secret",
+   "greed-treasure",
+   "greed-secret",
+   "wooden-chest"
+  ]
+ },
+ {
+  "num": 720,
+  "id": "everything-jar",
+  "name": "Everything Jar",
+  "kind": "collectible",
+  "lines": [
+   "Spawns pickups based on the number of charges",
+   "Charge Rewards:",
+   "1: 2: 3: 4:",
+   "5: 6: 7: 8:",
+   "9: 10: 11:",
+   "Triggers a powerful random effect at 12 charges"
+  ],
+  "info": "Spawns pickups based on the number of charges · Charge Rewards: · 1: 2: 3: 4: · 5: 6: 7: 8: · 9: 10: 11: · Triggers a powerful random effect at 12 charges",
+  "active": true,
+  "dlc": "Repentance",
+  "trackerText": "Can be used anytime, various rewards depending on charge level",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "crane-game"
+  ]
+ },
+ {
+  "num": 721,
+  "id": "tmtrainer",
+  "name": "TMTRAINER",
+  "kind": "collectible",
+  "lines": [
+   "Causes all future items to be glitched",
+   "Glitched items have completely random effects"
+  ],
+  "info": "Causes all future items to be glitched · Glitched items have completely random effects",
+  "dlc": "Repentance",
+  "trackerText": "Causes all future items become glitched, giving fully randomized effects",
+  "pools": [
+   "secret",
+   "greed-treasure",
+   "greed-shop",
+   "greed-secret"
+  ]
+ },
+ {
+  "num": 722,
+  "id": "anima-sola",
+  "name": "Anima Sola",
+  "kind": "collectible",
+  "lines": [
+   "Chains down the nearest enemy for 5 seconds",
+   "Chained enemies cannot move or attack"
+  ],
+  "info": "Chains down the nearest enemy for 5 seconds · Chained enemies cannot move or attack",
+  "active": true,
+  "dlc": "Repentance",
+  "trackerText": "Summons chains around nearest enemy and temporarily prevent it from moving",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "greed-shop"
+  ]
+ },
+ {
+  "num": 723,
+  "id": "spindown-dice",
+  "name": "Spindown Dice",
+  "kind": "collectible",
+  "lines": [
+   "Rerolls all items in the room by decreasing their internal ID by one"
+  ],
+  "info": "Rerolls all items in the room by decreasing their internal ID by one",
+  "active": true,
+  "dlc": "Repentance",
+  "trackerText": "Rerolls each item in the room into the item before it in numerical ID order",
+  "pools": [
+   "treasure",
+   "secret",
+   "greed-treasure",
+   "greed-shop",
+   "greed-secret",
+   "crane-game"
+  ]
+ },
+ {
+  "num": 724,
+  "id": "hypercoagulation",
+  "name": "Hypercoagulation",
+  "kind": "collectible",
+  "lines": [
+   "Taking damage drops a half or full Red Heart depending on how much Isaac lost",
+   "The hearts launch out and despawn after 1.5 seconds"
+  ],
+  "info": "Taking damage drops a half or full Red Heart depending on how much Isaac lost · The hearts launch out and despawn after 1.5 seconds",
+  "dlc": "Repentance",
+  "trackerText": "On hit, spawns half a red heart that quickly disappears. Spawned heart's velocity increase the more you take damage",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "ultra-secret"
+  ]
+ },
+ {
+  "num": 725,
+  "id": "ibs",
+  "name": "IBS",
+  "kind": "collectible",
+  "lines": [
+   "Dealing enough damage causes Isaac to flash red",
+   "Releasing the fire button while Isaac is flashing either:",
+   "Throws a random poop",
+   "Creates buffing creep",
+   "Farts a poison cloud",
+   "Spawns 5 live bombs"
+  ],
+  "info": "Dealing enough damage causes Isaac to flash red · Releasing the fire button while Isaac is flashing either: · Throws a random poop · Creates buffing creep · Farts a poison cloud · Spawns 5 live bombs",
+  "dlc": "Repentance",
+  "trackerText": "Causes you to throw a random type of poop at random intervals + chance to have Explosive Diarrhea when standing still",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 726,
+  "id": "hemoptysis",
+  "name": "Hemoptysis",
+  "kind": "collectible",
+  "lines": [
+   "Double-tapping a fire button makes Isaac sneeze blood",
+   "The sneeze deals 1.5x Isaac's damage",
+   "1 second cooldown",
+   "Affected enemies take extra damage from Brimstone beams"
+  ],
+  "info": "Double-tapping a fire button makes Isaac sneeze blood · The sneeze deals 1.5x Isaac's damage · 1 second cooldown · Affected enemies take extra damage from Brimstone beams",
+  "dlc": "Repentance",
+  "trackerText": "Double tap to sneeze on enemies, dealing x1.5 dmg",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "ultra-secret"
+  ]
+ },
+ {
+  "num": 727,
+  "id": "ghost-bombs",
+  "name": "Ghost Bombs",
+  "kind": "collectible",
+  "lines": [
+   "+5 Bombs",
+   "Isaac's bombs spawn ghosts that chase enemies",
+   "Ghosts deal 2x Isaac's damage per second and explode after 10 seconds"
+  ],
+  "info": "+5 Bombs · Isaac's bombs spawn ghosts that chase enemies · Ghosts deal 2x Isaac's damage per second and explode after 10 seconds",
+  "dlc": "Repentance",
+  "trackerText": "+5 bombs, bombs spawn a friendly white soul which hunt down enemies",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "bomb-bum"
+  ]
+ },
+ {
+  "num": 728,
+  "id": "gello",
+  "name": "Gello",
+  "kind": "collectible",
+  "lines": [
+   "A demon familiar bursts out of Isaac for the room",
+   "The demon shoots towards the nearest enemy, mimicing Isaac's tears, stats and effects",
+   "Its tears deal 75% of Isaac's damage"
+  ],
+  "info": "A demon familiar bursts out of Isaac for the room · The demon shoots towards the nearest enemy, mimicing Isaac's tears, stats and effects · Its tears deal 75% of Isaac's damage",
+  "active": true,
+  "dlc": "Repentance",
+  "trackerText": "A baby that come from your belly and deals x3 dmg when it hit enemies, can also shoot tears",
+  "pools": [
+   "treasure",
+   "devil",
+   "greed-treasure",
+   "greed-devil",
+   "ultra-secret"
+  ]
+ },
+ {
+  "num": 729,
+  "id": "decap-attack",
+  "name": "Decap Attack",
+  "kind": "collectible",
+  "lines": [
+   "Throws Isaac's head in a direction",
+   "The head deals contact damage and shoots tears from where it lands",
+   "Using the item again or stepping on the head reattaches it"
+  ],
+  "info": "Throws Isaac's head in a direction · The head deals contact damage and shoots tears from where it lands · Using the item again or stepping on the head reattaches it",
+  "active": true,
+  "dlc": "Repentance",
+  "trackerText": "Throw your head to deal 24 damage",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 730,
+  "id": "glass-eye",
+  "name": "Glass Eye",
+  "kind": "collectible",
+  "lines": [
+   "↑ +0.75 Damage",
+   "↑ +1 Luck"
+  ],
+  "info": "↑ +0.75 Damage · ↑ +1 Luck",
+  "stats": {
+   "damage": 0.75,
+   "luck": 1
+  },
+  "dlc": "Repentance",
+  "pools": [
+   "boss",
+   "golden-chest",
+   "greed-boss",
+   "crane-game"
+  ]
+ },
+ {
+  "num": 731,
+  "id": "stye",
+  "name": "Stye",
+  "kind": "collectible",
+  "lines": [
+   "↑ x1.28 Damage multiplier for the right eye",
+   "↑ +6.5 Range for the right eye",
+   "↓ -0.3 Shot speed for the right eye"
+  ],
+  "info": "↑ x1.28 Damage multiplier for the right eye · ↑ +6.5 Range for the right eye · ↓ -0.3 Shot speed for the right eye",
+  "dlc": "Repentance",
+  "trackerText": "Damage up on the right eye",
+  "pools": [
+   "boss",
+   "greed-boss"
+  ]
+ },
+ {
+  "num": 732,
+  "id": "moms-ring",
+  "name": "Mom's Ring",
+  "kind": "collectible",
+  "lines": [
+   "↑ +1 Damage",
+   "Spawns a random rune or soul stone"
+  ],
+  "info": "↑ +1 Damage · Spawns a random rune or soul stone",
+  "stats": {
+   "damage": 1
+  },
+  "transforms": [
+   "mom"
+  ],
+  "dlc": "Repentance",
+  "trackerText": "Gives a random rune",
+  "pools": [
+   "golden-chest",
+   "moms-chest",
+   "greed-shop"
+  ]
+ }
+]

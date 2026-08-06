@@ -1,0 +1,1790 @@
+[
+ {
+  "num": 369,
+  "id": "continuum",
+  "name": "Continuum",
+  "kind": "collectible",
+  "lines": [
+   "↑ +3 Range",
+   "Spectral tears",
+   "Tears can travel through one side of the screen and come out the other side"
+  ],
+  "info": "↑ +3 Range · Spectral tears · Tears can travel through one side of the screen and come out the other side",
+  "stats": {
+   "range": 3,
+   "rangeHeight": 1.5
+  },
+  "dlc": "Afterbirth",
+  "trackerText": "Tears wrap around the screen, spectral tears",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 370,
+  "id": "mr-dolly",
+  "name": "Mr. Dolly",
+  "kind": "collectible",
+  "lines": [
+   "↑ +0.7 Tears",
+   "↑ +2.5 Range",
+   "Spawns 3 random hearts"
+  ],
+  "info": "↑ +0.7 Tears · ↑ +2.5 Range · Spawns 3 random hearts",
+  "stats": {
+   "tears": 0.72,
+   "range": 1.5,
+   "rangeHeight": 0.5
+  },
+  "dlc": "Afterbirth",
+  "trackerText": "Spawn 3 red/soul/black hearts at random",
+  "pools": [
+   "boss",
+   "golden-chest",
+   "greed-boss",
+   "crane-game"
+  ]
+ },
+ {
+  "num": 371,
+  "id": "curse-of-the-tower",
+  "name": "Curse of the Tower",
+  "kind": "collectible",
+  "lines": [
+   "Taking damage spawns 6 Troll Bombs",
+   "The Troll Bombs inherit Isaac's bomb effects"
+  ],
+  "info": "Taking damage spawns 6 Troll Bombs · The Troll Bombs inherit Isaac's bomb effects",
+  "dlc": "Afterbirth",
+  "trackerText": "Spawns 6 troll bombs when hit",
+  "pools": [
+   "treasure",
+   "red-chest",
+   "curse",
+   "greed-treasure",
+   "greed-curse"
+  ]
+ },
+ {
+  "num": 372,
+  "id": "charged-baby",
+  "name": "Charged Baby",
+  "kind": "collectible",
+  "lines": [
+   "Every 30 seconds while in an uncleared room, the familiar can:",
+   "Spawn a Battery (max 2 per room)",
+   "Add one charge to the active item (max 2 per room)",
+   "Petrify all enemies in the room"
+  ],
+  "info": "Every 30 seconds while in an uncleared room, the familiar can: · Spawn a Battery (max 2 per room) · Add one charge to the active item (max 2 per room) · Petrify all enemies in the room",
+  "dlc": "Afterbirth",
+  "trackerText": "Occasionally spawns a Little Battery, adds a charge, or petrifies all enemies",
+  "pools": [
+   "shop",
+   "battery-bum",
+   "greed-shop",
+   "baby-shop"
+  ]
+ },
+ {
+  "num": 373,
+  "id": "dead-eye",
+  "name": "Dead Eye",
+  "kind": "collectible",
+  "lines": [
+   "↑ Consecutive tear hits on enemies grant +25% damage (max +100%)",
+   "Missing has a chance to reset the multiplier"
+  ],
+  "info": "↑ Consecutive tear hits on enemies grant +25% damage (max +100%) · Missing has a chance to reset the multiplier",
+  "dlc": "Afterbirth",
+  "trackerText": "Dmg increases when you hit enemies (up to 2x), every miss has a chance to reset",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "ultra-secret"
+  ]
+ },
+ {
+  "num": 374,
+  "id": "holy-light",
+  "name": "Holy Light",
+  "kind": "collectible",
+  "lines": [
+   "10% chance to shoot holy tears, which spawn a beam of light on hit",
+   "50% chance at 9 luck",
+   "The beams deals 3x Isaac's damage"
+  ],
+  "info": "10% chance to shoot holy tears, which spawn a beam of light on hit · 50% chance at 9 luck · The beams deals 3x Isaac's damage",
+  "transforms": [
+   "seraphim"
+  ],
+  "dlc": "Afterbirth",
+  "trackerText": "Chance to shoot tears that spawn beams of light (3x dmg)",
+  "pools": [
+   "treasure",
+   "angel",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 375,
+  "id": "host-hat",
+  "name": "Host Hat",
+  "kind": "collectible",
+  "lines": [
+   "Grants immunity to explosions and falling projectiles",
+   "20% chance to reflect enemy shots"
+  ],
+  "info": "Grants immunity to explosions and falling projectiles · 20% chance to reflect enemy shots",
+  "dlc": "Afterbirth",
+  "trackerText": "Explosion immunity, chance to deflect enemy projectiles",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 376,
+  "id": "restock",
+  "name": "Restock",
+  "kind": "collectible",
+  "lines": [
+   "Buying an item from a Shop restocks it instantly",
+   "Restocked items increase in price each time"
+  ],
+  "info": "Buying an item from a Shop restocks it instantly · Restocked items increase in price each time",
+  "dlc": "Afterbirth",
+  "trackerText": "Purchased items in shop are renewed but the more you buy them, the more the price increases",
+  "pools": [
+   "shop",
+   "beggar"
+  ]
+ },
+ {
+  "num": 377,
+  "id": "bursting-sack",
+  "name": "Bursting Sack",
+  "kind": "collectible",
+  "lines": [
+   "Spider enemies no longer target or deal contact damage to Isaac"
+  ],
+  "info": "Spider enemies no longer target or deal contact damage to Isaac",
+  "transforms": [
+   "spider"
+  ],
+  "dlc": "Afterbirth",
+  "trackerText": "Immunity to contact damage from spiders",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 378,
+  "id": "no-2",
+  "name": "No. 2",
+  "kind": "collectible",
+  "lines": [
+   "Holding a fire button for 2.35 seconds spawns a lit Butt Bomb"
+  ],
+  "info": "Holding a fire button for 2.35 seconds spawns a lit Butt Bomb",
+  "transforms": [
+   "poop"
+  ],
+  "dlc": "Afterbirth",
+  "trackerText": "Spawns a butt bomb after 3 seconds of uninterrupted firing",
+  "pools": [
+   "treasure",
+   "shell-game",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 379,
+  "id": "pupula-duplex",
+  "name": "Pupula Duplex",
+  "kind": "collectible",
+  "lines": [
+   "↑ x2 Tear size",
+   "Spectral tears"
+  ],
+  "info": "↑ x2 Tear size · Spectral tears",
+  "dlc": "Afterbirth",
+  "trackerText": "Wide tears, spectral tears",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 380,
+  "id": "pay-to-play",
+  "name": "Pay To Play",
+  "kind": "collectible",
+  "lines": [
+   "+5 Coins",
+   "Locked blocks, doors and chests must be opened with coins instead of keys"
+  ],
+  "info": "+5 Coins · Locked blocks, doors and chests must be opened with coins instead of keys",
+  "dlc": "Afterbirth",
+  "trackerText": "+5 coins, doors that take keys take coins instead",
+  "pools": [
+   "shop",
+   "greed-treasure",
+   "greed-shop"
+  ]
+ },
+ {
+  "num": 381,
+  "id": "edens-blessing",
+  "name": "Eden's Blessing",
+  "kind": "collectible",
+  "lines": [
+   "↑ +0.7 Tears",
+   "Grants a random item at the start of the next run"
+  ],
+  "info": "↑ +0.7 Tears · Grants a random item at the start of the next run",
+  "stats": {
+   "tears": 0.72
+  },
+  "dlc": "Afterbirth",
+  "trackerText": "Extra random item at the start of the next run",
+  "pools": [
+   "treasure"
+  ]
+ },
+ {
+  "num": 382,
+  "id": "friendly-ball",
+  "name": "Friendly Ball",
+  "kind": "collectible",
+  "lines": [
+   "Can be thrown at enemies to capture them",
+   "Using the item after capturing an enemy spawns the capture as a friendly companion",
+   "Walking over the ball after a capture instantly recharges the item"
+  ],
+  "info": "Can be thrown at enemies to capture them · Using the item after capturing an enemy spawns the capture as a friendly companion · Walking over the ball after a capture instantly recharges the item",
+  "active": true,
+  "dlc": "Afterbirth",
+  "trackerText": "Captures an enemy",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "crane-game"
+  ]
+ },
+ {
+  "num": 383,
+  "id": "tear-detonator",
+  "name": "Tear Detonator",
+  "kind": "collectible",
+  "lines": [
+   "Splits all of Isaac's tears currently on screen in a circle of 6 tears"
+  ],
+  "info": "Splits all of Isaac's tears currently on screen in a circle of 6 tears",
+  "active": true,
+  "dlc": "Afterbirth",
+  "trackerText": "Makes your on-screen tears split",
+  "pools": [
+   "shop",
+   "greed-treasure",
+   "crane-game"
+  ]
+ },
+ {
+  "num": 384,
+  "id": "lil-gurdy",
+  "name": "Lil Gurdy",
+  "kind": "collectible",
+  "lines": [
+   "Launches and bounces around the room with speed based on charge amount",
+   "Deals 5-20 contact damage per hit depending on speed"
+  ],
+  "info": "Launches and bounces around the room with speed based on charge amount · Deals 5-20 contact damage per hit depending on speed",
+  "dlc": "Afterbirth",
+  "trackerText": "Familiar (charge to fire)",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "baby-shop"
+  ]
+ },
+ {
+  "num": 385,
+  "id": "bumbo",
+  "name": "Bumbo",
+  "kind": "collectible",
+  "lines": [
+   "Picks up nearby coins",
+   "Levels up after getting 6, 12, and 24 coins",
+   "Lv2: Chance to spawn item after room clears",
+   "Lv3: Shoots tears that can spawn coins on hit",
+   "Lv4: Chases enemies, occasionally dropping bombs, can spawn item on coin pickup"
+  ],
+  "info": "Picks up nearby coins · Levels up after getting 6, 12, and 24 coins · Lv2: Chance to spawn item after room clears · Lv3: Shoots tears that can spawn coins on hit · Lv4: Chases enemies, occasionally dropping bombs, can spawn item on coin pickup",
+  "dlc": "Afterbirth",
+  "trackerText": "Familiar, eats coins to level up, can shoot and attack enemies",
+  "pools": [
+   "treasure",
+   "beggar",
+   "baby-shop"
+  ]
+ },
+ {
+  "num": 386,
+  "id": "d12",
+  "name": "D12",
+  "kind": "collectible",
+  "lines": [
+   "Rerolls any obstacle into another random obstacle (e.g. poop, pots, TNT, red poop, stone blocks etc.)",
+   "Small chance to reroll obstacles into buttons, killswitches, crawlspaces or trapdoors"
+  ],
+  "info": "Rerolls any obstacle into another random obstacle (e.g. poop, pots, TNT, red poop, stone blocks etc.) · Small chance to reroll obstacles into buttons, killswitches, crawlspaces or trapdoors",
+  "active": true,
+  "dlc": "Afterbirth",
+  "trackerText": "Rerolls obstacles (rocks, etc.)",
+  "pools": [
+   "treasure",
+   "greed-shop",
+   "crane-game"
+  ]
+ },
+ {
+  "num": 387,
+  "id": "censer",
+  "name": "Censer",
+  "kind": "collectible",
+  "lines": [
+   "Familiar surrounded by a huge aura of light that slows down enemies and projectiles in it"
+  ],
+  "info": "Familiar surrounded by a huge aura of light that slows down enemies and projectiles in it",
+  "dlc": "Afterbirth",
+  "trackerText": "Aura slows enemies",
+  "pools": [
+   "angel",
+   "greed-angel"
+  ]
+ },
+ {
+  "num": 388,
+  "id": "key-bum",
+  "name": "Key Bum",
+  "kind": "collectible",
+  "lines": [
+   "Picks up nearby keys",
+   "Spawns random chests in return"
+  ],
+  "info": "Picks up nearby keys · Spawns random chests in return",
+  "transforms": [
+   "super-bum"
+  ],
+  "dlc": "Afterbirth",
+  "trackerText": "Turns keys into chests",
+  "pools": [
+   "treasure",
+   "secret",
+   "key-master",
+   "baby-shop"
+  ]
+ },
+ {
+  "num": 389,
+  "id": "rune-bag",
+  "name": "Rune Bag",
+  "kind": "collectible",
+  "lines": [
+   "Spawns a random rune or Soul Stone every 7-8 rooms"
+  ],
+  "info": "Spawns a random rune or Soul Stone every 7-8 rooms",
+  "dlc": "Afterbirth",
+  "trackerText": "Spawns a rune every few rooms cleared",
+  "pools": [
+   "treasure",
+   "secret",
+   "greed-treasure",
+   "greed-secret"
+  ]
+ },
+ {
+  "num": 390,
+  "id": "seraphim",
+  "name": "Seraphim",
+  "kind": "collectible",
+  "lines": [
+   "Shoots Sacred Heart tears",
+   "Deals 10 damage per tear"
+  ],
+  "info": "Shoots Sacred Heart tears · Deals 10 damage per tear",
+  "transforms": [
+   "conjoined"
+  ],
+  "dlc": "Afterbirth",
+  "trackerText": "Familiar (10 dmg, homing tears)",
+  "pools": [
+   "treasure",
+   "angel",
+   "greed-angel",
+   "baby-shop"
+  ]
+ },
+ {
+  "num": 391,
+  "id": "betrayal",
+  "name": "Betrayal",
+  "kind": "collectible",
+  "lines": [
+   "Enemies can hit each other with their projectiles, and start infighting"
+  ],
+  "info": "Enemies can hit each other with their projectiles, and start infighting",
+  "dlc": "Afterbirth",
+  "trackerText": "Charms all enemies when hit",
+  "pools": [
+   "treasure",
+   "devil",
+   "greed-treasure",
+   "greed-devil"
+  ]
+ },
+ {
+  "num": 392,
+  "id": "zodiac",
+  "name": "Zodiac",
+  "kind": "collectible",
+  "lines": [
+   "Grants a random zodiac item effect every floor"
+  ],
+  "info": "Grants a random zodiac item effect every floor",
+  "dlc": "Afterbirth",
+  "trackerText": "Random zodiac item each floor",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 393,
+  "id": "serpents-kiss",
+  "name": "Serpent's Kiss",
+  "kind": "collectible",
+  "lines": [
+   "15% chance to shoot poison tears",
+   "Poison enemies on contact",
+   "Enemies killed by contact poison have a 20% chance to drop a Black Heart on death"
+  ],
+  "info": "15% chance to shoot poison tears · Poison enemies on contact · Enemies killed by contact poison have a 20% chance to drop a Black Heart on death",
+  "dlc": "Afterbirth",
+  "trackerText": "Change to shoot a poison tears, poison touch, poisoned enemies from contact drop black hearts",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 394,
+  "id": "marked",
+  "name": "Marked",
+  "kind": "collectible",
+  "lines": [
+   "↑ +0.7 Tears",
+   "↑ +3 Range",
+   "Isaac automatically shoots tears at a movable red target on the ground",
+   "Familiars shoot towards the target too",
+   "You can stop shooting and reset the target's location by pressing the drop button ()"
+  ],
+  "info": "↑ +0.7 Tears · ↑ +3 Range · Isaac automatically shoots tears at a movable red target on the ground · Familiars shoot towards the target too · You can stop shooting and reset the target's location by pressing the drop button ()",
+  "stats": {
+   "tears": 0.72,
+   "range": 3,
+   "rangeHeight": 0.3
+  },
+  "dlc": "Afterbirth",
+  "trackerText": "Directed tears (also synergize with familiars)",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "ultra-secret"
+  ]
+ },
+ {
+  "num": 395,
+  "id": "tech-x",
+  "name": "Tech X",
+  "kind": "collectible",
+  "lines": [
+   "Isaac's tears are replaced by a chargeable laser ring",
+   "Ring size and damage increases up to 100% with charge time"
+  ],
+  "info": "Isaac's tears are replaced by a chargeable laser ring · Ring size and damage increases up to 100% with charge time",
+  "dlc": "Afterbirth",
+  "trackerText": "Charged laser ring tears",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "crane-game"
+  ]
+ },
+ {
+  "num": 396,
+  "id": "ventricle-razor",
+  "name": "Ventricle Razor",
+  "kind": "collectible",
+  "lines": [
+   "Creates up to two portals to travel between",
+   "Can be placed in different rooms"
+  ],
+  "info": "Creates up to two portals to travel between · Can be placed in different rooms",
+  "active": true,
+  "dlc": "Afterbirth",
+  "trackerText": "Creates portals for faster backtracking",
+  "pools": [
+   "shop"
+  ]
+ },
+ {
+  "num": 397,
+  "id": "tractor-beam",
+  "name": "Tractor Beam",
+  "kind": "collectible",
+  "lines": [
+   "↑ +1 Fire rate",
+   "↑ +2.5 Range",
+   "↑ +0.16 Shot speed",
+   "Isaac's tears always travel along a beam of light in front of him"
+  ],
+  "info": "↑ +1 Fire rate · ↑ +2.5 Range · ↑ +0.16 Shot speed · Isaac's tears always travel along a beam of light in front of him",
+  "stats": {
+   "tears": 1,
+   "range": 1.5,
+   "rangeHeight": 0.5,
+   "shotSpeed": 0.16
+  },
+  "dlc": "Afterbirth",
+  "trackerText": "Tears stay directly ahead of the player",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "crane-game"
+  ]
+ },
+ {
+  "num": 398,
+  "id": "gods-flesh",
+  "name": "God's Flesh",
+  "kind": "collectible",
+  "lines": [
+   "Tears have a 10% chance to shrink enemies",
+   "Shrunken enemies can be crushed and killed by walking over them"
+  ],
+  "info": "Tears have a 10% chance to shrink enemies · Shrunken enemies can be crushed and killed by walking over them",
+  "transforms": [
+   "fun-guy"
+  ],
+  "dlc": "Afterbirth",
+  "trackerText": "Chance to shoot shrinking tears, making them squishable",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 399,
+  "id": "maw-of-the-void",
+  "name": "Maw of the Void",
+  "kind": "collectible",
+  "lines": [
+   "Firing tears for 2.35 seconds and releasing the fire button creates a black brimstone ring around Isaac",
+   "It deals 30x Isaac's damage over 2 seconds"
+  ],
+  "info": "Firing tears for 2.35 seconds and releasing the fire button creates a black brimstone ring around Isaac · It deals 30x Isaac's damage over 2 seconds",
+  "transforms": [
+   "leviathan"
+  ],
+  "dlc": "Afterbirth",
+  "trackerText": "3 second charge for a black blood laser ring attack",
+  "pools": [
+   "devil",
+   "greed-devil",
+   "ultra-secret"
+  ]
+ },
+ {
+  "num": 400,
+  "id": "spear-of-destiny",
+  "name": "Spear of Destiny",
+  "kind": "collectible",
+  "lines": [
+   "Isaac holds a spear in front of him",
+   "The spear deals twice his damage and can fear enemies on contact"
+  ],
+  "info": "Isaac holds a spear in front of him · The spear deals twice his damage and can fear enemies on contact",
+  "dlc": "Afterbirth",
+  "trackerText": "Stationary weapon (2x damage / tick)",
+  "pools": [
+   "angel",
+   "greed-angel"
+  ]
+ },
+ {
+  "num": 401,
+  "id": "explosivo",
+  "name": "Explosivo",
+  "kind": "collectible",
+  "lines": [
+   "25% chance to shoot sticky tears",
+   "Sticky tears grow and explode after a few seconds, dealing Isaac's damage +60"
+  ],
+  "info": "25% chance to shoot sticky tears · Sticky tears grow and explode after a few seconds, dealing Isaac's damage +60",
+  "dlc": "Afterbirth",
+  "trackerText": "Chance to shoot sticky tears that will eventually explode",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 402,
+  "id": "chaos",
+  "name": "Chaos",
+  "kind": "collectible",
+  "lines": [
+   "All items are chosen from random item pools",
+   "Spawns 1-6 random pickups"
+  ],
+  "info": "All items are chosen from random item pools · Spawns 1-6 random pickups",
+  "dlc": "Afterbirth",
+  "trackerText": "All item pools are combined, higher chance to spawn item from a big pool",
+  "pools": [
+   "shop",
+   "secret",
+   "greed-shop",
+   "greed-secret"
+  ]
+ },
+ {
+  "num": 403,
+  "id": "spider-mod",
+  "name": "Spider Mod",
+  "kind": "collectible",
+  "lines": [
+   "Displays tear damage and health bars of all enemies",
+   "Inflicts random status effects to enemies on contact",
+   "Randomly spawns batteries or blue spiders"
+  ],
+  "info": "Displays tear damage and health bars of all enemies · Inflicts random status effects to enemies on contact · Randomly spawns batteries or blue spiders",
+  "transforms": [
+   "spider"
+  ],
+  "dlc": "Afterbirth",
+  "trackerText": "Enemies have health bars, shows damage dealt, inflicts random status effects to enemies, spawns batteries and blue spiders every few rooms cleared",
+  "pools": [
+   "shop",
+   "greed-shop",
+   "crane-game",
+   "baby-shop"
+  ]
+ },
+ {
+  "num": 404,
+  "id": "farting-baby",
+  "name": "Farting Baby",
+  "kind": "collectible",
+  "lines": [
+   "Blocks projectiles",
+   "When hit, 10% chance to fart and charm, poison or knockback enemies",
+   "The farts deal 5-6 damage"
+  ],
+  "info": "Blocks projectiles · When hit, 10% chance to fart and charm, poison or knockback enemies · The farts deal 5-6 damage",
+  "transforms": [
+   "conjoined"
+  ],
+  "dlc": "Afterbirth",
+  "trackerText": "Familiar that blocks shots, 10% chance to poison/knockback/charm per block",
+  "pools": [
+   "treasure",
+   "baby-shop"
+  ]
+ },
+ {
+  "num": 405,
+  "id": "gb-bug",
+  "name": "GB Bug",
+  "kind": "collectible",
+  "lines": [
+   "Throwable (double-tap shoot)",
+   "Rerolls enemies and pickups it comes in contact with"
+  ],
+  "info": "Throwable (double-tap shoot) · Rerolls enemies and pickups it comes in contact with",
+  "dlc": "Afterbirth",
+  "trackerText": "Familiar that can be thrown to an enemy or a consumable to reroll it, once per room cleared",
+  "pools": [
+   "treasure",
+   "secret",
+   "greed-shop",
+   "greed-secret"
+  ]
+ },
+ {
+  "num": 406,
+  "id": "d8",
+  "name": "D8",
+  "kind": "collectible",
+  "lines": [
+   "Multiplies Isaac's damage, tears, range and speed stats by between x0.5 and x2",
+   "The multipliers are rerolled each use"
+  ],
+  "info": "Multiplies Isaac's damage, tears, range and speed stats by between x0.5 and x2 · The multipliers are rerolled each use",
+  "active": true,
+  "dlc": "Afterbirth",
+  "trackerText": "Rerolls your stats",
+  "pools": [
+   "treasure",
+   "greed-shop",
+   "crane-game"
+  ]
+ },
+ {
+  "num": 407,
+  "id": "purity",
+  "name": "Purity",
+  "kind": "collectible",
+  "lines": [
+   "↑ Boosts one of Isaac's stats depending on the color of the aura",
+   "Taking damage removes the effect, and grants a new effect in the next room",
+   "Yellow = ↑ +0.5 Speed",
+   "Blue = ↑ +2 Fire rate",
+   "Red = ↑ +4 Damage",
+   "Orange = ↑ +3 Range"
+  ],
+  "info": "↑ Boosts one of Isaac's stats depending on the color of the aura · Taking damage removes the effect, and grants a new effect in the next room · Yellow = ↑ +0.5 Speed · Blue = ↑ +2 Fire rate · Red = ↑ +4 Damage · Orange = ↑ +3 Range",
+  "dlc": "Afterbirth",
+  "trackerText": "Grants a stat up depending on the aura, red = dmg, blue = tears, orange = range, yellow = speed",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "greed-angel"
+  ]
+ },
+ {
+  "num": 408,
+  "id": "athame",
+  "name": "Athame",
+  "kind": "collectible",
+  "lines": [
+   "25% chance for a black brimstone ring to spawn around killed enemies",
+   "It deals 30x Isaac's damage over 2 seconds",
+   "+2.5% chance per luck"
+  ],
+  "info": "25% chance for a black brimstone ring to spawn around killed enemies · It deals 30x Isaac's damage over 2 seconds · +2.5% chance per luck",
+  "dlc": "Afterbirth",
+  "trackerText": "Black blood laser ring when hit",
+  "pools": [
+   "devil",
+   "curse",
+   "greed-curse",
+   "greed-devil"
+  ]
+ },
+ {
+  "num": 409,
+  "id": "empty-vessel",
+  "name": "Empty Vessel",
+  "kind": "collectible",
+  "lines": [
+   "+2 Black Hearts",
+   "When Isaac has no Red Hearts:",
+   "Flight",
+   "Every 40 seconds while in a hostile room, gain a shield for 10 seconds"
+  ],
+  "info": "+2 Black Hearts · When Isaac has no Red Hearts: · Flight · Every 40 seconds while in a hostile room, gain a shield for 10 seconds",
+  "stats": {
+   "black": 2
+  },
+  "dlc": "Afterbirth",
+  "trackerText": "Activate at one half red heart or less, gives flight, procs a shield when the seconds on the clock hits 00, 20 or 40 at least twice",
+  "pools": [
+   "devil",
+   "demon-beggar",
+   "greed-devil"
+  ]
+ },
+ {
+  "num": 410,
+  "id": "evil-eye",
+  "name": "Evil Eye",
+  "kind": "collectible",
+  "lines": [
+   "3.33% chance to shoot an eye",
+   "10% chance at 20 luck",
+   "The eye moves in a straight line and shoots tears in the same direction as Isaac"
+  ],
+  "info": "3.33% chance to shoot an eye · 10% chance at 20 luck · The eye moves in a straight line and shoots tears in the same direction as Isaac",
+  "dlc": "Afterbirth",
+  "trackerText": "Chance to shoot eye tears (that shoot tears as they travel)",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 411,
+  "id": "lusty-blood",
+  "name": "Lusty Blood",
+  "kind": "collectible",
+  "lines": [
+   "↑ +0.5 Damage for each enemy killed in the room",
+   "Caps at +5 Damage after 10 kills"
+  ],
+  "info": "↑ +0.5 Damage for each enemy killed in the room · Caps at +5 Damage after 10 kills",
+  "dlc": "Afterbirth",
+  "trackerText": "+0.5 dmg for the current room per enemy killed (max is 5 dmg)",
+  "pools": [
+   "treasure",
+   "devil",
+   "greed-treasure",
+   "greed-devil",
+   "ultra-secret"
+  ]
+ },
+ {
+  "num": 412,
+  "id": "cambion-conception",
+  "name": "Cambion Conception",
+  "kind": "collectible",
+  "lines": [
+   "Taking damage 15 times spawns a permanent demon familiar",
+   "After two familiars, it takes 30 instead of 15",
+   "Caps at 4 familiars"
+  ],
+  "info": "Taking damage 15 times spawns a permanent demon familiar · After two familiars, it takes 30 instead of 15 · Caps at 4 familiars",
+  "dlc": "Afterbirth",
+  "trackerText": "Chance to gain evil familiars when hit",
+  "pools": [
+   "devil",
+   "greed-devil",
+   "ultra-secret"
+  ]
+ },
+ {
+  "num": 413,
+  "id": "immaculate-conception",
+  "name": "Immaculate Conception",
+  "kind": "collectible",
+  "lines": [
+   "Picking up 15 hearts spawns a permanent angelic familiar and a Soul Heart",
+   "Caps at 5 familiars"
+  ],
+  "info": "Picking up 15 hearts spawns a permanent angelic familiar and a Soul Heart · Caps at 5 familiars",
+  "dlc": "Afterbirth",
+  "trackerText": "Gain a holy familiar and soul heart after each 15 heart pickups",
+  "pools": [
+   "angel",
+   "greed-angel"
+  ]
+ },
+ {
+  "num": 414,
+  "id": "more-options",
+  "name": "More Options",
+  "kind": "collectible",
+  "lines": [
+   "Allows Isaac to choose between 2 items in treasure rooms"
+  ],
+  "info": "Allows Isaac to choose between 2 items in treasure rooms",
+  "dlc": "Afterbirth",
+  "trackerText": "Choice of 2 or 3 items in each Treasure Room",
+  "pools": [
+   "shop"
+  ]
+ },
+ {
+  "num": 415,
+  "id": "crown-of-light",
+  "name": "Crown Of Light",
+  "kind": "collectible",
+  "lines": [
+   "+2 Soul Hearts",
+   "If Isaac has no damaged heart containers:",
+   "↑ x2 Damage multiplier",
+   "↓ -0.3 Shot speed",
+   "Taking any damage removes the effect for the room"
+  ],
+  "info": "+2 Soul Hearts · If Isaac has no damaged heart containers: · ↑ x2 Damage multiplier · ↓ -0.3 Shot speed · Taking any damage removes the effect for the room",
+  "stats": {
+   "soul": 2
+  },
+  "dlc": "Afterbirth",
+  "trackerText": "2x dmg when you have no empty red hearts",
+  "pools": [
+   "angel",
+   "greed-angel"
+  ]
+ },
+ {
+  "num": 416,
+  "id": "deep-pockets",
+  "name": "Deep Pockets",
+  "kind": "collectible",
+  "lines": [
+   "If clearing a room would yield no reward, spawns 1-3 coins",
+   "Increases the coin cap to 999"
+  ],
+  "info": "If clearing a room would yield no reward, spawns 1-3 coins · Increases the coin cap to 999",
+  "dlc": "Afterbirth",
+  "trackerText": "Increase your money cap to 999, spawns 1-3 coins when no rewards on room clear",
+  "pools": [
+   "shop",
+   "greed-treasure",
+   "greed-shop"
+  ]
+ },
+ {
+  "num": 417,
+  "id": "succubus",
+  "name": "Succubus",
+  "kind": "collectible",
+  "lines": [
+   "Bounces around the room surrounded by a damaging aura that deals 7.5-10 damage per second",
+   "↑ x1.5 Damage multiplier while standing in the aura"
+  ],
+  "info": "Bounces around the room surrounded by a damaging aura that deals 7.5-10 damage per second · ↑ x1.5 Damage multiplier while standing in the aura",
+  "dlc": "Afterbirth",
+  "trackerText": "Familiar, aura damages enemies, 1.5x dmg when standing in aura",
+  "pools": [
+   "devil",
+   "baby-shop"
+  ]
+ },
+ {
+  "num": 418,
+  "id": "fruit-cake",
+  "name": "Fruit Cake",
+  "kind": "collectible",
+  "lines": [
+   "Each one of Isaac's tears gets a different effect"
+  ],
+  "info": "Each one of Isaac's tears gets a different effect",
+  "dlc": "Afterbirth",
+  "trackerText": "Random tear effects that change constantly",
+  "pools": [
+   "treasure"
+  ]
+ },
+ {
+  "num": 419,
+  "id": "teleport-2-0",
+  "name": "Teleport 2.0",
+  "kind": "collectible",
+  "lines": [
+   "Teleports Isaac to a room that has not been cleared yet",
+   "Hierarchy: >>>>>>>> >>>>>>>"
+  ],
+  "info": "Teleports Isaac to a room that has not been cleared yet · Hierarchy: >>>>>>>> >>>>>>>",
+  "active": true,
+  "dlc": "Afterbirth",
+  "trackerText": "Teleports to an unexplored room (including Devil Room or I AM ERROR Room)",
+  "pools": [
+   "treasure",
+   "crane-game"
+  ]
+ },
+ {
+  "num": 420,
+  "id": "black-powder",
+  "name": "Black Powder",
+  "kind": "collectible",
+  "lines": [
+   "Walking in a circle draws a pentagram on the floor, which deals 130 damage over 4 seconds"
+  ],
+  "info": "Walking in a circle draws a pentagram on the floor, which deals 130 damage over 4 seconds",
+  "dlc": "Afterbirth",
+  "trackerText": "Walking in a circle makes a pentagram that does 10 dmg/tick",
+  "pools": [
+   "devil",
+   "demon-beggar",
+   "greed-devil"
+  ]
+ },
+ {
+  "num": 421,
+  "id": "kidney-bean",
+  "name": "Kidney Bean",
+  "kind": "collectible",
+  "lines": [
+   "Charms all enemies in close range"
+  ],
+  "info": "Charms all enemies in close range",
+  "active": true,
+  "dlc": "Afterbirth",
+  "trackerText": "Charms enemies",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "ultra-secret"
+  ]
+ },
+ {
+  "num": 422,
+  "id": "glowing-hourglass",
+  "name": "Glowing Hourglass",
+  "kind": "collectible",
+  "lines": [
+   "Brings Isaac back to the previous room and reverses all actions done in the room the item was used in",
+   "The rewind can be used three times per floor",
+   "Acts as The Hourglass when out of rewinds, which slows enemies down for 8 seconds"
+  ],
+  "info": "Brings Isaac back to the previous room and reverses all actions done in the room the item was used in · The rewind can be used three times per floor · Acts as The Hourglass when out of rewinds, which slows enemies down for 8 seconds",
+  "active": true,
+  "dlc": "Afterbirth",
+  "trackerText": "Rewinds the game state to the previous room",
+  "pools": [
+   "treasure",
+   "shop",
+   "crane-game"
+  ]
+ },
+ {
+  "num": 423,
+  "id": "circle-of-protection",
+  "name": "Circle of Protection",
+  "kind": "collectible",
+  "lines": [
+   "Surrounds Isaac with a large halo that deals his damage on contact per second",
+   "Chance to reflect enemy projectiles"
+  ],
+  "info": "Surrounds Isaac with a large halo that deals his damage on contact per second · Chance to reflect enemy projectiles",
+  "dlc": "Afterbirth",
+  "trackerText": "White ring damages enemies and has a chance to reflect projectiles",
+  "pools": [
+   "angel",
+   "greed-angel"
+  ]
+ },
+ {
+  "num": 424,
+  "id": "sack-head",
+  "name": "Sack Head",
+  "kind": "collectible",
+  "lines": [
+   "Pickups have a chance to be replaced with a sack:",
+   ": 10%, : 20%",
+   "Spawns a sack"
+  ],
+  "info": "Pickups have a chance to be replaced with a sack: · : 10%, : 20% · Spawns a sack",
+  "dlc": "Afterbirth",
+  "trackerText": "Pickups have a 33% chance to be replaced by a Sack, spawns a Sack on pickup",
+  "pools": [
+   "shop",
+   "secret",
+   "greed-secret"
+  ]
+ },
+ {
+  "num": 425,
+  "id": "night-light",
+  "name": "Night Light",
+  "kind": "collectible",
+  "lines": [
+   "Spawns a slowing cone of light in front of Isaac",
+   "Removes Curse of Darkness for the current floor"
+  ],
+  "info": "Spawns a slowing cone of light in front of Isaac · Removes Curse of Darkness for the current floor",
+  "dlc": "Afterbirth",
+  "trackerText": "Light cone slows enemies and projectiles",
+  "pools": [
+   "shop",
+   "greed-treasure",
+   "crane-game"
+  ]
+ },
+ {
+  "num": 426,
+  "id": "obsessed-fan",
+  "name": "Obsessed Fan",
+  "kind": "collectible",
+  "lines": [
+   "Mimics Isaac's movement on a 0.66 second delay",
+   "Deals 30 contact damage per second"
+  ],
+  "info": "Mimics Isaac's movement on a 0.66 second delay · Deals 30 contact damage per second",
+  "transforms": [
+   "fly"
+  ],
+  "dlc": "Afterbirth",
+  "trackerText": "Familiar, copies your movement, does contact damage",
+  "pools": [
+   "treasure",
+   "key-master",
+   "greed-treasure",
+   "baby-shop"
+  ]
+ },
+ {
+  "num": 427,
+  "id": "mine-crafter",
+  "name": "Mine Crafter",
+  "kind": "collectible",
+  "lines": [
+   "Spawns a pushable TNT barrel",
+   "Using the item a second time in the same room remotely detonates the barrel"
+  ],
+  "info": "Spawns a pushable TNT barrel · Using the item a second time in the same room remotely detonates the barrel",
+  "active": true,
+  "dlc": "Afterbirth",
+  "trackerText": "Spawns a TNT barrel that can explode if you re-use it even if the active is not charged",
+  "pools": [
+   "treasure",
+   "crane-game"
+  ]
+ },
+ {
+  "num": 428,
+  "id": "pjs",
+  "name": "PJs",
+  "kind": "collectible",
+  "lines": [
+   "Full health",
+   "+4 Soul Hearts"
+  ],
+  "info": "Full health · +4 Soul Hearts",
+  "stats": {
+   "soul": 4
+  },
+  "dlc": "Afterbirth",
+  "trackerText": "Full heal",
+  "pools": [
+   "boss",
+   "golden-chest",
+   "greed-boss"
+  ]
+ },
+ {
+  "num": 429,
+  "id": "head-of-the-keeper",
+  "name": "Head of the Keeper",
+  "kind": "collectible",
+  "lines": [
+   "Hitting an enemy with a tear has a 5% chance to spawn a Penny"
+  ],
+  "info": "Hitting an enemy with a tear has a 5% chance to spawn a Penny",
+  "dlc": "Afterbirth",
+  "trackerText": "Coin tears (chance to spawn coins upon hitting an enemy)",
+  "pools": []
+ },
+ {
+  "num": 430,
+  "id": "papa-fly",
+  "name": "Papa Fly",
+  "kind": "collectible",
+  "lines": [
+   "Mimics Isaac's movement on a 0.66 second delay",
+   "Shoots tears at nearby enemies that deal Isaac's damage"
+  ],
+  "info": "Mimics Isaac's movement on a 0.66 second delay · Shoots tears at nearby enemies that deal Isaac's damage",
+  "transforms": [
+   "fly"
+  ],
+  "dlc": "Afterbirth",
+  "trackerText": "Familiar, copies your movement, shoots at enemies",
+  "pools": [
+   "treasure",
+   "key-master",
+   "greed-treasure",
+   "baby-shop"
+  ]
+ },
+ {
+  "num": 431,
+  "id": "multidimensional-baby",
+  "name": "Multidimensional Baby",
+  "kind": "collectible",
+  "lines": [
+   "Mimics Isaac's movement on a 0.66 second delay",
+   "Tears that pass through it are doubled and gain a range + shot speed boost"
+  ],
+  "info": "Mimics Isaac's movement on a 0.66 second delay · Tears that pass through it are doubled and gain a range + shot speed boost",
+  "transforms": [
+   "conjoined"
+  ],
+  "dlc": "Afterbirth",
+  "trackerText": "Familiar, tears that pass through it get 2x dmg",
+  "pools": [
+   "treasure",
+   "devil",
+   "greed-treasure",
+   "greed-devil"
+  ]
+ },
+ {
+  "num": 432,
+  "id": "glitter-bombs",
+  "name": "Glitter Bombs",
+  "kind": "collectible",
+  "lines": [
+   "+5 Bombs",
+   "Bombs have a 63% chance to drop a random pickup and a 15% chance to charm enemies when they explode",
+   "The pickup spawn chance goes down by 1% for each spawn this floor"
+  ],
+  "info": "+5 Bombs · Bombs have a 63% chance to drop a random pickup and a 15% chance to charm enemies when they explode · The pickup spawn chance goes down by 1% for each spawn this floor",
+  "dlc": "Afterbirth",
+  "trackerText": "+5 bombs, bombs have a chance to drop pickups after exploding",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "bomb-bum"
+  ]
+ },
+ {
+  "num": 433,
+  "id": "my-shadow",
+  "name": "My Shadow",
+  "kind": "collectible",
+  "lines": [
+   "A small shadow follows Isaac",
+   "When an enemy touches the shadow a friendly black charger spawns for the room",
+   "The charger deals 8.7 damage per hit"
+  ],
+  "info": "A small shadow follows Isaac · When an enemy touches the shadow a friendly black charger spawns for the room · The charger deals 8.7 damage per hit",
+  "dlc": "Afterbirth",
+  "trackerText": "Spawns a friendly Charger when hit",
+  "pools": [
+   "devil",
+   "greed-devil"
+  ]
+ },
+ {
+  "num": 434,
+  "id": "jar-of-flies",
+  "name": "Jar of Flies",
+  "kind": "collectible",
+  "lines": [
+   "Killing an enemy adds a blue fly to the jar, up to 20 flies",
+   "Using the item releases all the flies"
+  ],
+  "info": "Killing an enemy adds a blue fly to the jar, up to 20 flies · Using the item releases all the flies",
+  "transforms": [
+   "fly"
+  ],
+  "active": true,
+  "dlc": "Afterbirth",
+  "trackerText": "Creates flies when you kill enemies (max 20)",
+  "pools": [
+   "shop",
+   "greed-treasure",
+   "greed-shop"
+  ]
+ },
+ {
+  "num": 435,
+  "id": "lil-loki",
+  "name": "Lil Loki",
+  "kind": "collectible",
+  "lines": [
+   "Shoots 4 tears in a cross pattern",
+   "Deals 3.5 damage per tear"
+  ],
+  "info": "Shoots 4 tears in a cross pattern · Deals 3.5 damage per tear",
+  "dlc": "Afterbirth",
+  "trackerText": "Familiar, shoots cross tears",
+  "pools": [
+   "treasure",
+   "ultra-secret",
+   "baby-shop"
+  ]
+ },
+ {
+  "num": 436,
+  "id": "milk",
+  "name": "Milk!",
+  "kind": "collectible",
+  "lines": [
+   "Taking damage grants a Tears up for the duration of the room"
+  ],
+  "info": "Taking damage grants a Tears up for the duration of the room",
+  "dlc": "Afterbirth",
+  "trackerText": "Familiar, +1 tear rate when hit",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 437,
+  "id": "d7",
+  "name": "D7",
+  "kind": "collectible",
+  "lines": [
+   "Restarts a room and respawns all enemies",
+   "Can be used to get multiple room clear rewards from a single room"
+  ],
+  "info": "Restarts a room and respawns all enemies · Can be used to get multiple room clear rewards from a single room",
+  "active": true,
+  "dlc": "Afterbirth",
+  "trackerText": "Respawns the current room",
+  "pools": [
+   "treasure",
+   "crane-game"
+  ]
+ },
+ {
+  "num": 438,
+  "id": "binky",
+  "name": "Binky",
+  "kind": "collectible",
+  "lines": [
+   "↑ +0.75 Tears",
+   "↑ Size down",
+   "+1 Soul Heart"
+  ],
+  "info": "↑ +0.75 Tears · ↑ Size down · +1 Soul Heart",
+  "stats": {
+   "tears": 0.77,
+   "soul": 1
+  },
+  "dlc": "Afterbirth",
+  "pools": [
+   "boss",
+   "golden-chest",
+   "greed-boss",
+   "crane-game"
+  ]
+ },
+ {
+  "num": 439,
+  "id": "moms-box",
+  "name": "Mom's Box",
+  "kind": "collectible",
+  "lines": [
+   "Spawns a random trinket",
+   "While held:",
+   "↑ +1 Luck",
+   "Doubles trinket effects"
+  ],
+  "info": "Spawns a random trinket · While held: · ↑ +1 Luck · Doubles trinket effects",
+  "stats": {
+   "luck": 1
+  },
+  "transforms": [
+   "mom"
+  ],
+  "active": true,
+  "dlc": "Afterbirth",
+  "trackerText": "Spawns a random trinket, doubles trinket effects while held",
+  "pools": [
+   "shop",
+   "moms-chest",
+   "greed-shop",
+   "crane-game",
+   "old-chest",
+   "wooden-chest"
+  ]
+ },
+ {
+  "num": 440,
+  "id": "kidney-stone",
+  "name": "Kidney Stone",
+  "kind": "collectible",
+  "lines": [
+   "Isaac occasionally stops firing and charges an attack that releases a burst of tears and a kidney stone"
+  ],
+  "info": "Isaac occasionally stops firing and charges an attack that releases a burst of tears and a kidney stone",
+  "stats": {
+   "rangeHeight": 2
+  },
+  "dlc": "Afterbirth",
+  "trackerText": "Grants extra charge attack every 25 seconds",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 441,
+  "id": "mega-blast",
+  "name": "Mega Blast",
+  "kind": "collectible",
+  "lines": [
+   "Fires a huge Mega Satan blood beam for 15 seconds",
+   "The beam persists between rooms and floors"
+  ],
+  "info": "Fires a huge Mega Satan blood beam for 15 seconds · The beam persists between rooms and floors",
+  "active": true,
+  "dlc": "Afterbirth",
+  "trackerText": "Huge blood laser for 15 seconds, lasts across rooms and floors",
+  "pools": [
+   "devil",
+   "greed-devil"
+  ]
+ },
+ {
+  "num": 442,
+  "id": "dark-princes-crown",
+  "name": "Dark Prince's Crown",
+  "kind": "collectible",
+  "lines": [
+   "While at 1 full Red Heart:",
+   "↑ +2 Fire rate",
+   "↑ +1.5 Range",
+   "↑ +0.2 Shot speed"
+  ],
+  "info": "While at 1 full Red Heart: · ↑ +2 Fire rate · ↑ +1.5 Range · ↑ +0.2 Shot speed",
+  "dlc": "Afterbirth+",
+  "trackerText": "+1.5 range, +2 tears and 0.2 shot speed when at exactly 1 red heart, tears up can go beyond soft cap",
+  "pools": [
+   "devil",
+   "curse",
+   "greed-curse",
+   "greed-devil"
+  ]
+ },
+ {
+  "num": 443,
+  "id": "apple",
+  "name": "Apple!",
+  "kind": "collectible",
+  "lines": [
+   "↑ +0.3 Tears",
+   "6.66% chance to shoot razor blades that deal 4x Isaac's damage",
+   "100% chance at 14 luck"
+  ],
+  "info": "↑ +0.3 Tears · 6.66% chance to shoot razor blades that deal 4x Isaac's damage · 100% chance at 14 luck",
+  "stats": {
+   "tears": 0.3
+  },
+  "dlc": "Afterbirth+",
+  "trackerText": "Chance to shoot razor blade tears (4x dmg)",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "ultra-secret"
+  ]
+ },
+ {
+  "num": 444,
+  "id": "lead-pencil",
+  "name": "Lead Pencil",
+  "kind": "collectible",
+  "lines": [
+   "Isaac shoots a cluster of tears every 15 tears"
+  ],
+  "info": "Isaac shoots a cluster of tears every 15 tears",
+  "dlc": "Afterbirth+",
+  "trackerText": "Fires a Monstro's Lung shot every 15 tears",
+  "pools": [
+   "treasure",
+   "golden-chest",
+   "greed-treasure",
+   "crane-game"
+  ]
+ },
+ {
+  "num": 445,
+  "id": "dog-tooth",
+  "name": "Dog Tooth",
+  "kind": "collectible",
+  "lines": [
+   "↑ +0.1 Speed",
+   "↑ +0.3 Damage",
+   "A wolf howls in rooms adjacent to a Secret/Super Secret Room",
+   "A dog barks in rooms with a crawlspace under a rock"
+  ],
+  "info": "↑ +0.1 Speed · ↑ +0.3 Damage · A wolf howls in rooms adjacent to a Secret/Super Secret Room · A dog barks in rooms with a crawlspace under a rock",
+  "stats": {
+   "damage": 0.3,
+   "speed": 0.1
+  },
+  "dlc": "Afterbirth+",
+  "trackerText": "Wolf howls when there is an adjacent Secret Room / Super Secret Room / Crawlspace",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 446,
+  "id": "dead-tooth",
+  "name": "Dead Tooth",
+  "kind": "collectible",
+  "lines": [
+   "While firing, Isaac is surrounded by a green aura that poisons enemies"
+  ],
+  "info": "While firing, Isaac is surrounded by a green aura that poisons enemies",
+  "dlc": "Afterbirth+",
+  "trackerText": "Poisonous aura",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 447,
+  "id": "linger-bean",
+  "name": "Linger Bean",
+  "kind": "collectible",
+  "lines": [
+   "Firing without pause for 7.5 seconds spawns a poop cloud",
+   "The cloud deals Isaac's damage 5 times a second",
+   "The cloud lasts 15 seconds and can be moved by shooting it"
+  ],
+  "info": "Firing without pause for 7.5 seconds spawns a poop cloud · The cloud deals Isaac's damage 5 times a second · The cloud lasts 15 seconds and can be moved by shooting it",
+  "dlc": "Afterbirth+",
+  "trackerText": "Spawns a poop cloud every 7.5 seconds (scales with dmg, 5 ticks / second)",
+  "pools": [
+   "treasure",
+   "beggar",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 448,
+  "id": "shard-of-glass",
+  "name": "Shard of Glass",
+  "kind": "collectible",
+  "lines": [
+   "Upon taking damage:",
+   "25% chance to spawn a Red Heart",
+   "Isaac bleeds, spewing tears in the direction he is shooting",
+   "The bleeding does half a Red Heart of damage every 20 seconds",
+   "The bleeding stops if a Red Heart is healed, all Red Hearts are empty, or the next damage would kill Isaac"
+  ],
+  "info": "Upon taking damage: · 25% chance to spawn a Red Heart · Isaac bleeds, spewing tears in the direction he is shooting · The bleeding does half a Red Heart of damage every 20 seconds · The bleeding stops if a Red Heart is healed, all Red Hearts are empty, or the next damage would kill Isaac",
+  "dlc": "Afterbirth+",
+  "trackerText": "On hit: leaves red creep, spews blood and lose half a red heart until you pick a red heart or you run out of red hearts",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 449,
+  "id": "metal-plate",
+  "name": "Metal Plate",
+  "kind": "collectible",
+  "lines": [
+   "+1 Soul Heart",
+   "Enemy bullets have a 25% chance to be reflected as concussive tears"
+  ],
+  "info": "+1 Soul Heart · Enemy bullets have a 25% chance to be reflected as concussive tears",
+  "stats": {
+   "soul": 1
+  },
+  "trackerText": "Chance to deflect enemy projectiles",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 450,
+  "id": "eye-of-greed",
+  "name": "Eye of Greed",
+  "kind": "collectible",
+  "lines": [
+   "Every 20 tears, Isaac shoots a coin tear that deals x1.5 +10 damage",
+   "Enemies hit with the coin get petrified and turn into gold",
+   "Killing a gold enemy drops 1-3 coins",
+   "Firing a coin tear costs 1 coin"
+  ],
+  "info": "Every 20 tears, Isaac shoots a coin tear that deals x1.5 +10 damage · Enemies hit with the coin get petrified and turn into gold · Killing a gold enemy drops 1-3 coins · Firing a coin tear costs 1 coin",
+  "dlc": "Afterbirth+",
+  "trackerText": "Shoots an extra coin tear every 20 tears (has Midas Touch effect)",
+  "pools": [
+   "secret",
+   "greed-treasure",
+   "greed-secret"
+  ]
+ },
+ {
+  "num": 451,
+  "id": "tarot-cloth",
+  "name": "Tarot Cloth",
+  "kind": "collectible",
+  "lines": [
+   "Spawns a card",
+   "Tarot card effects are doubled or enhanced"
+  ],
+  "info": "Spawns a card · Tarot card effects are doubled or enhanced",
+  "dlc": "Afterbirth+",
+  "trackerText": "Doubles the effect of tarot cards, spawns a random card/rune on pickup",
+  "pools": [
+   "shop",
+   "curse",
+   "greed-shop",
+   "greed-curse",
+   "greed-devil",
+   "crane-game"
+  ]
+ },
+ {
+  "num": 452,
+  "id": "varicose-veins",
+  "name": "Varicose Veins",
+  "kind": "collectible",
+  "lines": [
+   "Taking damage shoots 10 tears in a circle around Isaac",
+   "The tears deal Isaac's damage + 25",
+   "20% chance to activate the Anemic effect for 2 seconds"
+  ],
+  "info": "Taking damage shoots 10 tears in a circle around Isaac · The tears deal Isaac's damage + 25 · 20% chance to activate the Anemic effect for 2 seconds",
+  "dlc": "Afterbirth+",
+  "trackerText": "Shoots 10 tears (dmg + 25) when hit",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "ultra-secret"
+  ]
+ },
+ {
+  "num": 453,
+  "id": "compound-fracture",
+  "name": "Compound Fracture",
+  "kind": "collectible",
+  "lines": [
+   "↑ +1.5 Range",
+   "Tears shatter into 1-3 bone shards upon hitting anything"
+  ],
+  "info": "↑ +1.5 Range · Tears shatter into 1-3 bone shards upon hitting anything",
+  "stats": {
+   "range": 0.38
+  },
+  "dlc": "Afterbirth+",
+  "trackerText": "Tears split into 2 bone shards, each does 1/2 dmg",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 454,
+  "id": "polydactyly",
+  "name": "Polydactyly",
+  "kind": "collectible",
+  "lines": [
+   "Spawns a rune, card or pill on pickup",
+   "Allows Isaac to carry 2 runes/cards/pills"
+  ],
+  "info": "Spawns a rune, card or pill on pickup · Allows Isaac to carry 2 runes/cards/pills",
+  "dlc": "Afterbirth+",
+  "trackerText": "Can carry 2 cards/pills instead of 1, spawns 1 card/pill on pickup",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 455,
+  "id": "dads-lost-coin",
+  "name": "Dad's Lost Coin",
+  "kind": "collectible",
+  "lines": [
+   "↑ +2.5 Range",
+   "Spawns a Lucky Penny"
+  ],
+  "info": "↑ +2.5 Range · Spawns a Lucky Penny",
+  "stats": {
+   "range": 0.38
+  },
+  "dlc": "Afterbirth+",
+  "trackerText": "Spawns a lucky penny on pickup",
+  "pools": [
+   "boss",
+   "golden-chest",
+   "beggar",
+   "greed-boss",
+   "old-chest"
+  ]
+ },
+ {
+  "num": 456,
+  "id": "midnight-snack",
+  "name": "Midnight Snack",
+  "kind": "collectible",
+  "lines": [
+   "↑ +1 Health",
+   "Heals 1 heart"
+  ],
+  "info": "↑ +1 Health · Heals 1 heart",
+  "stats": {
+   "maxHearts": 1
+  },
+  "dlc": "Afterbirth+",
+  "pools": [
+   "boss",
+   "golden-chest",
+   "beggar",
+   "greed-boss"
+  ]
+ },
+ {
+  "num": 457,
+  "id": "cone-head",
+  "name": "Cone Head",
+  "kind": "collectible",
+  "lines": [
+   "+1 Soul Heart",
+   "20% chance to negate damage taken"
+  ],
+  "info": "+1 Soul Heart · 20% chance to negate damage taken",
+  "stats": {
+   "soul": 1
+  },
+  "dlc": "Afterbirth+",
+  "trackerText": "Chance to not take damage when hit",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 458,
+  "id": "belly-button",
+  "name": "Belly Button",
+  "kind": "collectible",
+  "lines": [
+   "Allows Isaac to carry 2 trinkets",
+   "Spawns a random trinket"
+  ],
+  "info": "Allows Isaac to carry 2 trinkets · Spawns a random trinket",
+  "dlc": "Afterbirth+",
+  "trackerText": "Can carry 2 trinkets instead of 1, spawns random trinket on pickup",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 459,
+  "id": "sinus-infection",
+  "name": "Sinus Infection",
+  "kind": "collectible",
+  "lines": [
+   "20% chance to shoot a sticky booger",
+   "Boogers deal Isaac's damage once a second and stick for 10 seconds",
+   "Not affected by luck"
+  ],
+  "info": "20% chance to shoot a sticky booger · Boogers deal Isaac's damage once a second and stick for 10 seconds · Not affected by luck",
+  "dlc": "Afterbirth+",
+  "trackerText": "Chance to shoot booger tears (dmg over time for 60 seconds)",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 460,
+  "id": "glaucoma",
+  "name": "Glaucoma",
+  "kind": "collectible",
+  "lines": [
+   "5% chance to shoot concussive tears",
+   "Makes the screen slightly darker"
+  ],
+  "info": "5% chance to shoot concussive tears · Makes the screen slightly darker",
+  "dlc": "Afterbirth+",
+  "trackerText": "Chance to shoot concussive tears",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ }
+]

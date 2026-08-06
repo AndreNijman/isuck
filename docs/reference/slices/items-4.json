@@ -1,0 +1,1850 @@
+[
+ {
+  "num": 277,
+  "id": "lil-haunt",
+  "name": "Lil Haunt",
+  "kind": "collectible",
+  "lines": [
+   "Chases and fears enemies",
+   "Deals 4 contact damage per second"
+  ],
+  "info": "Chases and fears enemies · Deals 4 contact damage per second",
+  "dlc": "Rebirth",
+  "trackerText": "Familiar (2 dmg / tick, chance to fear)",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "baby-shop"
+  ]
+ },
+ {
+  "num": 278,
+  "id": "dark-bum",
+  "name": "Dark Bum",
+  "kind": "collectible",
+  "lines": [
+   "Picks up nearby Red Hearts",
+   "Spawns a Black Heart, rune, card, pill, or spider for every 1.5 hearts picked up"
+  ],
+  "info": "Picks up nearby Red Hearts · Spawns a Black Heart, rune, card, pill, or spider for every 1.5 hearts picked up",
+  "transforms": [
+   "super-bum"
+  ],
+  "dlc": "Rebirth",
+  "trackerText": "Converts 1.5 red heart pickups to a black heart, spider, pill, card or rune",
+  "pools": [
+   "treasure",
+   "devil",
+   "demon-beggar",
+   "baby-shop"
+  ]
+ },
+ {
+  "num": 279,
+  "id": "big-fan",
+  "name": "Big Fan",
+  "kind": "collectible",
+  "lines": [
+   "Large orbital",
+   "Deals 30 contact damage per second"
+  ],
+  "info": "Large orbital · Deals 30 contact damage per second",
+  "transforms": [
+   "fly"
+  ],
+  "dlc": "Rebirth",
+  "trackerText": "Orbital (2 dmg / tick)",
+  "pools": [
+   "treasure",
+   "key-master",
+   "greed-treasure",
+   "baby-shop"
+  ]
+ },
+ {
+  "num": 280,
+  "id": "sissy-longlegs",
+  "name": "Sissy Longlegs",
+  "kind": "collectible",
+  "lines": [
+   "Randomly spawns blue spiders in hostile rooms",
+   "Charms enemies it comes in contact with"
+  ],
+  "info": "Randomly spawns blue spiders in hostile rooms · Charms enemies it comes in contact with",
+  "transforms": [
+   "spider"
+  ],
+  "dlc": "Rebirth",
+  "trackerText": "Spawns blue spiders, charms enemies upon contact",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "baby-shop"
+  ]
+ },
+ {
+  "num": 281,
+  "id": "punching-bag",
+  "name": "Punching Bag",
+  "kind": "collectible",
+  "lines": [
+   "Decoy familiar",
+   "Enemies target him instead of Isaac"
+  ],
+  "info": "Decoy familiar · Enemies target him instead of Isaac",
+  "dlc": "Rebirth",
+  "trackerText": "Familiar (decoy)",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "baby-shop"
+  ]
+ },
+ {
+  "num": 282,
+  "id": "how-to-jump",
+  "name": "How to Jump",
+  "kind": "collectible",
+  "lines": [
+   "Allows Isaac to jump over gaps and obstacles"
+  ],
+  "info": "Allows Isaac to jump over gaps and obstacles",
+  "transforms": [
+   "bookworm"
+  ],
+  "active": true,
+  "dlc": "Rebirth",
+  "trackerText": "Can jump over obstacles",
+  "pools": [
+   "treasure",
+   "library"
+  ]
+ },
+ {
+  "num": 283,
+  "id": "d100",
+  "name": "D100",
+  "kind": "collectible",
+  "lines": [
+   "Duplicates 1 pickup in the room",
+   "Rerolls Isaac's speed, tears, damage, range and passive items",
+   "Rerolls all pedestal items, pickups and rocks in the room",
+   "Restarts the room, respawns all enemies and devolves them"
+  ],
+  "info": "Duplicates 1 pickup in the room · Rerolls Isaac's speed, tears, damage, range and passive items · Rerolls all pedestal items, pickups and rocks in the room · Restarts the room, respawns all enemies and devolves them",
+  "active": true,
+  "dlc": "Rebirth",
+  "trackerText": "All dice effects at once (except Spindown Dice)",
+  "pools": [
+   "treasure",
+   "greed-shop",
+   "crane-game"
+  ]
+ },
+ {
+  "num": 284,
+  "id": "d4",
+  "name": "D4",
+  "kind": "collectible",
+  "lines": [
+   "Reroll all of Isaac's passive items"
+  ],
+  "info": "Reroll all of Isaac's passive items",
+  "active": true,
+  "dlc": "Rebirth",
+  "trackerText": "Rerolls current items",
+  "pools": [
+   "treasure",
+   "greed-shop",
+   "crane-game"
+  ]
+ },
+ {
+  "num": 285,
+  "id": "d10",
+  "name": "D10",
+  "kind": "collectible",
+  "lines": [
+   "Devolves all enemies in the room",
+   "For instance, all Red Flies become Black Flies"
+  ],
+  "info": "Devolves all enemies in the room · For instance, all Red Flies become Black Flies",
+  "active": true,
+  "dlc": "Rebirth",
+  "trackerText": "Rerolls enemies in the room",
+  "pools": [
+   "treasure",
+   "greed-shop",
+   "crane-game"
+  ]
+ },
+ {
+  "num": 286,
+  "id": "blank-card",
+  "name": "Blank Card",
+  "kind": "collectible",
+  "lines": [
+   "Triggers the effect of the card Isaac holds without using it"
+  ],
+  "info": "Triggers the effect of the card Isaac holds without using it",
+  "active": true,
+  "dlc": "Rebirth",
+  "trackerText": "Mimics the effect of the currently held card",
+  "pools": [
+   "shop",
+   "secret",
+   "greed-shop",
+   "greed-secret"
+  ]
+ },
+ {
+  "num": 287,
+  "id": "book-of-secrets",
+  "name": "Book of Secrets",
+  "kind": "collectible",
+  "lines": [
+   "Highlights tinted and crawlspace rocks in the room",
+   "Receive one of these effects for the floor:",
+   "Treasure Map",
+   "Compass",
+   "Blue Map",
+   "Only grants effects not already active",
+   "If all effects are active, grants X-Ray Vision"
+  ],
+  "info": "Highlights tinted and crawlspace rocks in the room · Receive one of these effects for the floor: · Treasure Map · Compass · Blue Map · Only grants effects not already active · If all effects are active, grants X-Ray Vision",
+  "transforms": [
+   "bookworm"
+  ],
+  "active": true,
+  "dlc": "Rebirth",
+  "trackerText": "Randomly get Treasure Map, Compass, or Blue Map for the floor",
+  "pools": [
+   "treasure",
+   "secret",
+   "library"
+  ]
+ },
+ {
+  "num": 288,
+  "id": "box-of-spiders",
+  "name": "Box of Spiders",
+  "kind": "collectible",
+  "lines": [
+   "Spawns 4-8 blue spiders"
+  ],
+  "info": "Spawns 4-8 blue spiders",
+  "transforms": [
+   "spider"
+  ],
+  "active": true,
+  "dlc": "Rebirth",
+  "trackerText": "Spawns 4-8 blue spiders",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 289,
+  "id": "red-candle",
+  "name": "Red Candle",
+  "kind": "collectible",
+  "lines": [
+   "Throws a red flame",
+   "It deals contact damage, blocks enemy tears, and disappears when it has dealt damage or blocked shots 4 times or after 10 seconds"
+  ],
+  "info": "Throws a red flame · It deals contact damage, blocks enemy tears, and disappears when it has dealt damage or blocked shots 4 times or after 10 seconds",
+  "active": true,
+  "dlc": "Rebirth",
+  "trackerText": "Shoots a flame that times out after ten seconds",
+  "pools": [
+   "shop",
+   "greed-shop",
+   "ultra-secret"
+  ]
+ },
+ {
+  "num": 290,
+  "id": "the-jar",
+  "name": "The Jar",
+  "kind": "collectible",
+  "lines": [
+   "Picking up Red Hearts while at full health stores up to 4 of them in the Jar",
+   "Using the item drops all stored hearts on the floor"
+  ],
+  "info": "Picking up Red Hearts while at full health stores up to 4 of them in the Jar · Using the item drops all stored hearts on the floor",
+  "active": true,
+  "dlc": "Rebirth",
+  "trackerText": "Stores red hearts for later",
+  "pools": [
+   "shop"
+  ]
+ },
+ {
+  "num": 291,
+  "id": "flush",
+  "name": "Flush!",
+  "kind": "collectible",
+  "lines": [
+   "Turns all non-boss enemies into poop",
+   "Instantly kills poop enemies and bosses",
+   "Extinguishes fire places and fills the room with water",
+   "Turns lava pits into walkable ground"
+  ],
+  "info": "Turns all non-boss enemies into poop · Instantly kills poop enemies and bosses · Extinguishes fire places and fills the room with water · Turns lava pits into walkable ground",
+  "transforms": [
+   "poop"
+  ],
+  "active": true,
+  "dlc": "Rebirth",
+  "trackerText": "Non-boss enemies turn to poop, instantly kills poop bosses",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 292,
+  "id": "satanic-bible",
+  "name": "Satanic Bible",
+  "kind": "collectible",
+  "lines": [
+   "+1 Black Heart",
+   "Using the item before a boss fight makes the boss reward a devil deal",
+   "Purchasing these devil deals has the same consequences as those in Devil Rooms",
+   "Does not affect item pedestals in The Void floor"
+  ],
+  "info": "+1 Black Heart · Using the item before a boss fight makes the boss reward a devil deal · Purchasing these devil deals has the same consequences as those in Devil Rooms · Does not affect item pedestals in The Void floor",
+  "transforms": [
+   "bookworm"
+  ],
+  "active": true,
+  "dlc": "Rebirth",
+  "trackerText": "On use: +1 black heart, transforms boss item into a devil deal",
+  "pools": [
+   "treasure",
+   "devil",
+   "library",
+   "greed-devil"
+  ]
+ },
+ {
+  "num": 293,
+  "id": "head-of-krampus",
+  "name": "Head of Krampus",
+  "kind": "collectible",
+  "lines": [
+   "Shoot a 4-way blood beam",
+   "They each deal 200 damage over 1.33 seconds"
+  ],
+  "info": "Shoot a 4-way blood beam · They each deal 200 damage over 1.33 seconds",
+  "active": true,
+  "dlc": "Rebirth",
+  "trackerText": "Create 4 blood lasers (190 dmg / laser)",
+  "pools": []
+ },
+ {
+  "num": 294,
+  "id": "butter-bean",
+  "name": "Butter Bean",
+  "kind": "collectible",
+  "lines": [
+   "Knocks back nearby enemies and projectiles",
+   "Enemies pushed into obstacles take 10 damage"
+  ],
+  "info": "Knocks back nearby enemies and projectiles · Enemies pushed into obstacles take 10 damage",
+  "active": true,
+  "dlc": "Rebirth",
+  "trackerText": "Knocks back enemies. If pushed enemies hit a wall, they take 10 dmg",
+  "pools": [
+   "treasure",
+   "beggar"
+  ]
+ },
+ {
+  "num": 295,
+  "id": "magic-fingers",
+  "name": "Magic Fingers",
+  "kind": "collectible",
+  "lines": [
+   "Deals 2x Isaac's damage + 10 to all enemies in the room",
+   "Costs 1 coin"
+  ],
+  "info": "Deals 2x Isaac's damage + 10 to all enemies in the room · Costs 1 coin",
+  "active": true,
+  "dlc": "Rebirth",
+  "trackerText": "Deals 2x + 10 dmg to the room, takes 1 coin per use, ignore +40 dmg from ipecac",
+  "pools": [
+   "treasure",
+   "shop"
+  ]
+ },
+ {
+  "num": 296,
+  "id": "converter",
+  "name": "Converter",
+  "kind": "collectible",
+  "lines": [
+   "Converts 1 Soul or Black Heart into 1 heart container"
+  ],
+  "info": "Converts 1 Soul or Black Heart into 1 heart container",
+  "active": true,
+  "dlc": "Rebirth",
+  "trackerText": "+1 red heart container, -1 soul/black hearts",
+  "pools": [
+   "shop"
+  ]
+ },
+ {
+  "num": 297,
+  "id": "pandoras-box",
+  "name": "Pandora's Box",
+  "kind": "collectible",
+  "lines": [
+   "Spawns rewards based on floor:",
+   "B1: 2; B2: 2 + 2",
+   "C1: Boss item; C2: C1 + 2",
+   "D1: 4; D2: 20",
+   "W1: 2 Boss items",
+   "W2: The Bible",
+   "???/Void: Nothing",
+   "Sheol: Devil item + 1",
+   "Cathe: Angel item + 1",
+   "Dark Room: Unlocks Moving Box",
+   "Chest: 1",
+   "Home: Red Key"
+  ],
+  "info": "Spawns rewards based on floor: · B1: 2; B2: 2 + 2 · C1: Boss item; C2: C1 + 2 · D1: 4; D2: 20 · W1: 2 Boss items · W2: The Bible · ???/Void: Nothing · Sheol: Devil item + 1 · Cathe: Angel item + 1 · Dark Room: Unlocks Moving Box · Chest: 1 · Home: Red Key",
+  "active": true,
+  "dlc": "Rebirth",
+  "trackerText": "B1: 2soul, B2: 2bomb+2key, C1: boss, C2: boss+2soul, D1: 4soul, D2: 20coin, W1: 2boss, W2: Bible, Sheol: devil+black, Cath: angel+white, Void/Hush/DR: nothing, Chest: coin, Home: Red Key",
+  "pools": [
+   "shop",
+   "red-chest",
+   "greed-shop"
+  ]
+ },
+ {
+  "num": 298,
+  "id": "unicorn-stump",
+  "name": "Unicorn Stump",
+  "kind": "collectible",
+  "lines": [
+   "Receive for 6 seconds:",
+   "↑ +0.28 Speed",
+   "Invincibility",
+   "Isaac can't shoot (No contact damage)"
+  ],
+  "info": "Receive for 6 seconds: · ↑ +0.28 Speed · Invincibility · Isaac can't shoot (No contact damage)",
+  "active": true,
+  "dlc": "Rebirth",
+  "trackerText": "Temporary invincibility",
+  "pools": [
+   "treasure"
+  ]
+ },
+ {
+  "num": 299,
+  "id": "taurus",
+  "name": "Taurus",
+  "kind": "collectible",
+  "lines": [
+   "↓ -0.3 Speed",
+   "↑ Slowly gain speed while in hostile rooms",
+   "At 2 speed, Isaac becomes invincible and deals contact damage",
+   "Afterwards, lose the Taurus speed boost for the room"
+  ],
+  "info": "↓ -0.3 Speed · ↑ Slowly gain speed while in hostile rooms · At 2 speed, Isaac becomes invincible and deals contact damage · Afterwards, lose the Taurus speed boost for the room",
+  "stats": {
+   "speed": -0.3
+  },
+  "dlc": "Rebirth",
+  "trackerText": "Speed increases until you unicorn",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 300,
+  "id": "aries",
+  "name": "Aries",
+  "kind": "collectible",
+  "lines": [
+   "↑ +0.25 Speed",
+   "Moving above 0.85 Speed makes Isaac immune to contact damage and deals 25 damage to enemies"
+  ],
+  "info": "↑ +0.25 Speed · Moving above 0.85 Speed makes Isaac immune to contact damage and deals 25 damage to enemies",
+  "stats": {
+   "speed": 0.25
+  },
+  "dlc": "Rebirth",
+  "trackerText": "18 contact dmg + prevent dmg contact if moving fast enough",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 301,
+  "id": "cancer",
+  "name": "Cancer",
+  "kind": "collectible",
+  "lines": [
+   "+3 Soul Hearts",
+   "Taking damage reduces all future damage in the room to half a heart"
+  ],
+  "info": "+3 Soul Hearts · Taking damage reduces all future damage in the room to half a heart",
+  "stats": {
+   "soul": 3
+  },
+  "dlc": "Rebirth",
+  "trackerText": "All dmg is reduced to half a heart (after getting hit in the room)",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 302,
+  "id": "leo",
+  "name": "Leo",
+  "kind": "collectible",
+  "lines": [
+   "Size up",
+   "Isaac can destroy rocks by walking into them"
+  ],
+  "info": "Size up · Isaac can destroy rocks by walking into them",
+  "dlc": "Rebirth",
+  "trackerText": "Crush rocks",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 303,
+  "id": "virgo",
+  "name": "Virgo",
+  "kind": "collectible",
+  "lines": [
+   "Taking damage have a 25% chance to make Isaac temporarily invincible",
+   "100% chance at 10 luck",
+   "Converts negative pills into positive ones"
+  ],
+  "info": "Taking damage have a 25% chance to make Isaac temporarily invincible · 100% chance at 10 luck · Converts negative pills into positive ones",
+  "dlc": "Rebirth",
+  "trackerText": "Chance of shield when hit, bad pills become good",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 304,
+  "id": "libra",
+  "name": "Libra",
+  "kind": "collectible",
+  "lines": [
+   "+6 coins, bombs and keys",
+   "Balances Isaac's stats",
+   "Future stat changes will be spread across all stats"
+  ],
+  "info": "+6 coins, bombs and keys · Balances Isaac's stats · Future stat changes will be spread across all stats",
+  "dlc": "Rebirth",
+  "trackerText": "Evens out stats, +6 bombs, +6 keys, +6 cents",
+  "pools": [
+   "treasure"
+  ]
+ },
+ {
+  "num": 305,
+  "id": "scorpio",
+  "name": "Scorpio",
+  "kind": "collectible",
+  "lines": [
+   "Poison tears"
+  ],
+  "info": "Poison tears",
+  "dlc": "Rebirth",
+  "trackerText": "Chance to shoot poison tears",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 306,
+  "id": "sagittarius",
+  "name": "Sagittarius",
+  "kind": "collectible",
+  "lines": [
+   "↑ +0.2 Speed",
+   "Piercing tears"
+  ],
+  "info": "↑ +0.2 Speed · Piercing tears",
+  "stats": {
+   "speed": 0.2
+  },
+  "dlc": "Rebirth",
+  "trackerText": "Piercing tears",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 307,
+  "id": "capricorn",
+  "name": "Capricorn",
+  "kind": "collectible",
+  "lines": [
+   "↑ +1 Health",
+   "↑ +0.1 Speed",
+   "↑ +0.5 Fire rate",
+   "↑ +0.5 Damage",
+   "↑ +0.75 Range",
+   "+1 coin, bomb and key",
+   "Heals 1 heart"
+  ],
+  "info": "↑ +1 Health · ↑ +0.1 Speed · ↑ +0.5 Fire rate · ↑ +0.5 Damage · ↑ +0.75 Range · +1 coin, bomb and key · Heals 1 heart",
+  "stats": {
+   "tears": 0.5,
+   "damage": 0.5,
+   "range": 0.75,
+   "speed": 0.1,
+   "maxHearts": 1
+  },
+  "dlc": "Rebirth",
+  "trackerText": "+1 coin, +1 bomb, +1 key",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 308,
+  "id": "aquarius",
+  "name": "Aquarius",
+  "kind": "collectible",
+  "lines": [
+   "Isaac leaves a trail of creep",
+   "The creep deals 666% of Isaac's damage per second and inherits his tear effects"
+  ],
+  "info": "Isaac leaves a trail of creep · The creep deals 666% of Isaac's damage per second and inherits his tear effects",
+  "dlc": "Rebirth",
+  "trackerText": "Makes a trail of creep that inherit the player's tears effects and damage",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 309,
+  "id": "pisces",
+  "name": "Pisces",
+  "kind": "collectible",
+  "lines": [
+   "↑ +0.5 Fire rate",
+   "↑ +0.12 Tear size",
+   "Increases tear knockback"
+  ],
+  "info": "↑ +0.5 Fire rate · ↑ +0.12 Tear size · Increases tear knockback",
+  "stats": {
+   "tears": 0.5
+  },
+  "dlc": "Rebirth",
+  "trackerText": "Knockback tears",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 310,
+  "id": "eves-mascara",
+  "name": "Eve's Mascara",
+  "kind": "collectible",
+  "lines": [
+   "↑ x2 Damage multiplier",
+   "↓ x0.66 Tears multiplier",
+   "↓ -0.5 Shot speed"
+  ],
+  "info": "↑ x2 Damage multiplier · ↓ x0.66 Tears multiplier · ↓ -0.5 Shot speed",
+  "stats": {
+   "tearsMult": 0.66,
+   "damageMult": 2,
+   "shotSpeed": -0.5
+  },
+  "dlc": "Rebirth",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 311,
+  "id": "judas-shadow",
+  "name": "Judas' Shadow",
+  "kind": "collectible",
+  "lines": [
+   "When dead, respawn as Dark Judas with a x2 damage multiplier"
+  ],
+  "info": "When dead, respawn as Dark Judas with a x2 damage multiplier",
+  "dlc": "Rebirth",
+  "trackerText": "+1 life (will respawn as Dark Judas with a 2.0 dmg multiplier)",
+  "pools": [
+   "devil",
+   "greed-devil"
+  ]
+ },
+ {
+  "num": 312,
+  "id": "maggys-bow",
+  "name": "Maggy's Bow",
+  "kind": "collectible",
+  "lines": [
+   "↑ +1 Health",
+   "Heals 1 heart",
+   "All Red Hearts heal double their value"
+  ],
+  "info": "↑ +1 Health · Heals 1 heart · All Red Hearts heal double their value",
+  "stats": {
+   "maxHearts": 1
+  },
+  "dlc": "Rebirth",
+  "trackerText": "Red heart pickups count for double",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 313,
+  "id": "holy-mantle",
+  "name": "Holy Mantle",
+  "kind": "collectible",
+  "lines": [
+   "Negates the first hit taken once per room"
+  ],
+  "info": "Negates the first hit taken once per room",
+  "transforms": [
+   "seraphim"
+  ],
+  "dlc": "Rebirth",
+  "trackerText": "1-hit shield for every room",
+  "pools": [
+   "treasure",
+   "angel",
+   "greed-angel"
+  ]
+ },
+ {
+  "num": 314,
+  "id": "thunder-thighs",
+  "name": "Thunder Thighs",
+  "kind": "collectible",
+  "lines": [
+   "↑ +1 Health",
+   "↓ -0.4 Speed",
+   "Heals 1 heart",
+   "Isaac can destroy rocks by walking into them"
+  ],
+  "info": "↑ +1 Health · ↓ -0.4 Speed · Heals 1 heart · Isaac can destroy rocks by walking into them",
+  "stats": {
+   "speed": -0.4,
+   "maxHearts": 1
+  },
+  "dlc": "Rebirth",
+  "trackerText": "Crush rocks",
+  "pools": [
+   "treasure",
+   "greed-boss"
+  ]
+ },
+ {
+  "num": 315,
+  "id": "strange-attractor",
+  "name": "Strange Attractor",
+  "kind": "collectible",
+  "lines": [
+   "Isaac's tears attract enemies, pickups and trinkets",
+   "The attraction effect is much stronger at the end of the tears' path"
+  ],
+  "info": "Isaac's tears attract enemies, pickups and trinkets · The attraction effect is much stronger at the end of the tears' path",
+  "dlc": "Rebirth",
+  "trackerText": "Tears attract enemies and pickups",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 316,
+  "id": "cursed-eye",
+  "name": "Cursed Eye",
+  "kind": "collectible",
+  "lines": [
+   "Charged wave of 5 tears",
+   "Taking damage while partially charged teleports Isaac to a random room"
+  ],
+  "info": "Charged wave of 5 tears · Taking damage while partially charged teleports Isaac to a random room",
+  "dlc": "Rebirth",
+  "trackerText": "Charge shots, random teleport if hit while charging",
+  "pools": [
+   "treasure",
+   "secret",
+   "red-chest",
+   "greed-treasure",
+   "greed-secret"
+  ]
+ },
+ {
+  "num": 317,
+  "id": "mysterious-liquid",
+  "name": "Mysterious Liquid",
+  "kind": "collectible",
+  "lines": [
+   "Isaac's tears leave creep",
+   "The creep deals 30 damage per second"
+  ],
+  "info": "Isaac's tears leave creep · The creep deals 30 damage per second",
+  "dlc": "Rebirth",
+  "trackerText": "Tears generate creep",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 318,
+  "id": "gemini",
+  "name": "Gemini",
+  "kind": "collectible",
+  "lines": [
+   "Close combat familiar",
+   "Deals 6 contact damage per second"
+  ],
+  "info": "Close combat familiar · Deals 6 contact damage per second",
+  "dlc": "Rebirth",
+  "trackerText": "Familiar (3 dmg / tick)",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 319,
+  "id": "cains-other-eye",
+  "name": "Cain's Other Eye",
+  "kind": "collectible",
+  "lines": [
+   "Shoots tears in random directions with the same effects as Isaac",
+   "Deals 75% of Isaac's damage"
+  ],
+  "info": "Shoots tears in random directions with the same effects as Isaac · Deals 75% of Isaac's damage",
+  "dlc": "Rebirth",
+  "trackerText": "Familiar (3.5 dmg / tear)",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 320,
+  "id": "s-only-friend",
+  "name": "???'s Only Friend",
+  "kind": "collectible",
+  "lines": [
+   "Controllable fly",
+   "Deals 15 contact damage per second"
+  ],
+  "info": "Controllable fly · Deals 15 contact damage per second",
+  "transforms": [
+   "fly"
+  ],
+  "dlc": "Rebirth",
+  "trackerText": "Familiar (3.5 dmg / tick)",
+  "pools": [
+   "treasure",
+   "key-master",
+   "greed-treasure",
+   "baby-shop"
+  ]
+ },
+ {
+  "num": 321,
+  "id": "samsons-chains",
+  "name": "Samson's Chains",
+  "kind": "collectible",
+  "lines": [
+   "Draggable ball that can destroy rocks",
+   "Deals 10.7 contact damage per second"
+  ],
+  "info": "Draggable ball that can destroy rocks · Deals 10.7 contact damage per second",
+  "dlc": "Rebirth",
+  "trackerText": "5 dmg / tick, crushes rocks",
+  "pools": [
+   "treasure",
+   "secret",
+   "greed-treasure",
+   "greed-secret"
+  ]
+ },
+ {
+  "num": 322,
+  "id": "mongo-baby",
+  "name": "Mongo Baby",
+  "kind": "collectible",
+  "lines": [
+   "Mimics your baby familiars' tears",
+   "If you have none, shoots normal 3.5 damage tears"
+  ],
+  "info": "Mimics your baby familiars' tears · If you have none, shoots normal 3.5 damage tears",
+  "transforms": [
+   "conjoined"
+  ],
+  "dlc": "Rebirth",
+  "trackerText": "Familiar (copies other familiars or 3.5 dmg / tear)",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "baby-shop"
+  ]
+ },
+ {
+  "num": 323,
+  "id": "isaacs-tears",
+  "name": "Isaac's Tears",
+  "kind": "collectible",
+  "lines": [
+   "Shoots 8 tears in all directions",
+   "The tears copy Isaac's tear effects, plus 5 damage",
+   "Recharges by shooting tears"
+  ],
+  "info": "Shoots 8 tears in all directions · The tears copy Isaac's tear effects, plus 5 damage · Recharges by shooting tears",
+  "active": true,
+  "dlc": "Rebirth",
+  "trackerText": "Fires 8 tears",
+  "pools": [
+   "treasure"
+  ]
+ },
+ {
+  "num": 324,
+  "id": "undefined",
+  "name": "Undefined",
+  "kind": "collectible",
+  "lines": [
+   "Teleports Isaac to the Treasure, Secret, Super Secret or I AM ERROR Room"
+  ],
+  "info": "Teleports Isaac to the Treasure, Secret, Super Secret or I AM ERROR Room",
+  "active": true,
+  "dlc": "Rebirth",
+  "trackerText": "Randomly teleport to Treasure, Secret, Super Secret, I AM ERROR, or Black Market",
+  "pools": [
+   "treasure"
+  ]
+ },
+ {
+  "num": 325,
+  "id": "scissors",
+  "name": "Scissors",
+  "kind": "collectible",
+  "lines": [
+   "Isaac's head turns into a stationary familiar for the room",
+   "The body is controlled separately and gushes blood tears in the direction Isaac is shooting"
+  ],
+  "info": "Isaac's head turns into a stationary familiar for the room · The body is controlled separately and gushes blood tears in the direction Isaac is shooting",
+  "active": true,
+  "dlc": "Rebirth",
+  "trackerText": "Spawns a shooting head familiar, body spews a constant stream of blood",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 326,
+  "id": "breath-of-life",
+  "name": "Breath of Life",
+  "kind": "collectible",
+  "lines": [
+   "Holding down the USE button empties the charge bar",
+   "Isaac is temporarily invincible when the charge bar is empty",
+   "Isaac summons light beams on contact with enemies when invincible",
+   "If damage is blocked with perfect timing, shoot a 4-way holy beam and gain a brief shield",
+   "Holding it for too long deals damage to Isaac"
+  ],
+  "info": "Holding down the USE button empties the charge bar · Isaac is temporarily invincible when the charge bar is empty · Isaac summons light beams on contact with enemies when invincible · If damage is blocked with perfect timing, shoot a 4-way holy beam and gain a brief shield · Holding it for too long deals damage to Isaac",
+  "active": true,
+  "dlc": "Rebirth",
+  "trackerText": "Invincibility when charge bar hits zero, spawns a lightbeam on an enemy if you touch it while invincible",
+  "pools": [
+   "angel"
+  ]
+ },
+ {
+  "num": 327,
+  "id": "the-polaroid",
+  "name": "The Polaroid",
+  "kind": "collectible",
+  "lines": [
+   "Taking damage at half a Red Heart or none makes Isaac temporarily invincible for 5 seconds"
+  ],
+  "info": "Taking damage at half a Red Heart or none makes Isaac temporarily invincible for 5 seconds",
+  "dlc": "Rebirth",
+  "trackerText": "Temporary shield when hit at 1/2 heart, can enter The Chest",
+  "pools": []
+ },
+ {
+  "num": 328,
+  "id": "the-negative",
+  "name": "The Negative",
+  "kind": "collectible",
+  "lines": [
+   "↑ +1 Damage",
+   "Taking damage at half a Red Heart or none damages all enemies in the room"
+  ],
+  "info": "↑ +1 Damage · Taking damage at half a Red Heart or none damages all enemies in the room",
+  "stats": {
+   "damage": 1
+  },
+  "dlc": "Rebirth",
+  "trackerText": "Damage enemies when hit at 1/2 heart, can enter the Dark Room",
+  "pools": []
+ },
+ {
+  "num": 329,
+  "id": "the-ludovico-technique",
+  "name": "The Ludovico Technique",
+  "kind": "collectible",
+  "lines": [
+   "Replaces Isaac's tears with one giant controllable tear"
+  ],
+  "info": "Replaces Isaac's tears with one giant controllable tear",
+  "dlc": "Rebirth",
+  "trackerText": "Remote control tears",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 330,
+  "id": "soy-milk",
+  "name": "Soy Milk",
+  "kind": "collectible",
+  "lines": [
+   "↑ x5.5 Fire rate multiplier",
+   "↓ x0.2 Damage multiplier",
+   "↓ -0.3 Tear size",
+   "Drastically reduces knockback"
+  ],
+  "info": "↑ x5.5 Fire rate multiplier · ↓ x0.2 Damage multiplier · ↓ -0.3 Tear size · Drastically reduces knockback",
+  "stats": {
+   "tearsMult": 5.5,
+   "damageMult": 0.2
+  },
+  "dlc": "Rebirth",
+  "trackerText": "x0.5 tear size",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 331,
+  "id": "godhead",
+  "name": "Godhead",
+  "kind": "collectible",
+  "lines": [
+   "↑ +0.5 Damage",
+   "↓ -0.3 Tears",
+   "↓ -0.3 Shot speed",
+   "Homing tears",
+   "Tears gain an aura that deals 60 damage per second"
+  ],
+  "info": "↑ +0.5 Damage · ↓ -0.3 Tears · ↓ -0.3 Shot speed · Homing tears · Tears gain an aura that deals 60 damage per second",
+  "stats": {
+   "tears": -0.6,
+   "damage": 0.5,
+   "range": 0.5,
+   "rangeHeight": 0.8,
+   "shotSpeed": -0.3
+  },
+  "transforms": [
+   "seraphim"
+  ],
+  "dlc": "Rebirth",
+  "trackerText": "Damaging aura around tears",
+  "pools": [
+   "angel",
+   "greed-angel"
+  ]
+ },
+ {
+  "num": 332,
+  "id": "lazarus-rags",
+  "name": "Lazarus' Rags",
+  "kind": "collectible",
+  "lines": [
+   "When dead, revive as Lazarus (Risen)"
+  ],
+  "info": "When dead, revive as Lazarus (Risen)",
+  "dlc": "Rebirth",
+  "trackerText": "+1 life (will respawn as Lazarus II)",
+  "pools": [
+   "treasure",
+   "angel",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 333,
+  "id": "the-mind",
+  "name": "The Mind",
+  "kind": "collectible",
+  "lines": [
+   "Full mapping effect"
+  ],
+  "info": "Full mapping effect",
+  "dlc": "Rebirth",
+  "trackerText": "Treasure Map + Compass + Blue Map",
+  "pools": [
+   "treasure",
+   "angel",
+   "greed-treasure",
+   "greed-angel"
+  ]
+ },
+ {
+  "num": 334,
+  "id": "the-body",
+  "name": "The Body",
+  "kind": "collectible",
+  "lines": [
+   "↑ +3 Health"
+  ],
+  "info": "↑ +3 Health",
+  "stats": {
+   "maxHearts": 3
+  },
+  "healthOnly": true,
+  "dlc": "Rebirth",
+  "trackerText": "+3 heart containers",
+  "pools": [
+   "treasure",
+   "angel",
+   "greed-treasure",
+   "greed-angel",
+   "ultra-secret"
+  ]
+ },
+ {
+  "num": 335,
+  "id": "the-soul",
+  "name": "The Soul",
+  "kind": "collectible",
+  "lines": [
+   "+2 Soul Hearts",
+   "Grants an aura that repels enemies and projectiles"
+  ],
+  "info": "+2 Soul Hearts · Grants an aura that repels enemies and projectiles",
+  "stats": {
+   "soul": 2
+  },
+  "dlc": "Rebirth",
+  "trackerText": "Enemy projectiles are repulsed",
+  "pools": [
+   "treasure",
+   "angel",
+   "greed-treasure",
+   "greed-angel"
+  ]
+ },
+ {
+  "num": 336,
+  "id": "dead-onion",
+  "name": "Dead Onion",
+  "kind": "collectible",
+  "lines": [
+   "↑ +0.22 Tear size",
+   "↓ -1.5 Range",
+   "↓ -0.4 Shot speed",
+   "Piercing + spectral tears"
+  ],
+  "info": "↑ +0.22 Tear size · ↓ -1.5 Range · ↓ -0.4 Shot speed · Piercing + spectral tears",
+  "stats": {
+   "range": -1.5,
+   "rangeHeight": -0.5,
+   "shotSpeed": -0.4
+  },
+  "dlc": "Rebirth",
+  "trackerText": "Piercing and spectral tears",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "rotten-beggar"
+  ]
+ },
+ {
+  "num": 337,
+  "id": "broken-watch",
+  "name": "Broken Watch",
+  "kind": "collectible",
+  "lines": [
+   "Slows down every 4th room",
+   "13% chance to speed up the room instead"
+  ],
+  "info": "Slows down every 4th room · 13% chance to speed up the room instead",
+  "dlc": "Rebirth",
+  "trackerText": "Chance to slow down or speed up enemies",
+  "pools": [
+   "shop",
+   "crane-game"
+  ]
+ },
+ {
+  "num": 338,
+  "id": "the-boomerang",
+  "name": "The Boomerang",
+  "kind": "collectible",
+  "lines": [
+   "Throwable boomerang",
+   "Petrifies enemies and deals 2x Isaac's damage",
+   "Can grab and bring back items"
+  ],
+  "info": "Throwable boomerang · Petrifies enemies and deals 2x Isaac's damage · Can grab and bring back items",
+  "active": true,
+  "dlc": "Rebirth",
+  "trackerText": "2x dmg and is piercing, can petrify enemies, can grab pickups",
+  "pools": [
+   "shop",
+   "crane-game"
+  ]
+ },
+ {
+  "num": 339,
+  "id": "safety-pin",
+  "name": "Safety Pin",
+  "kind": "collectible",
+  "lines": [
+   "↑ +2.5 Range",
+   "↑ +0.16 Shot speed",
+   "+1 Black Heart"
+  ],
+  "info": "↑ +2.5 Range · ↑ +0.16 Shot speed · +1 Black Heart",
+  "stats": {
+   "range": 1.5,
+   "rangeHeight": 0.5,
+   "shotSpeed": 0.16,
+   "black": 1
+  },
+  "dlc": "Rebirth",
+  "trackerText": "Evil up",
+  "pools": [
+   "boss",
+   "greed-boss"
+  ]
+ },
+ {
+  "num": 340,
+  "id": "caffeine-pill",
+  "name": "Caffeine Pill",
+  "kind": "collectible",
+  "lines": [
+   "↑ +0.3 Speed",
+   "↑ Size down",
+   "Spawns a random pill"
+  ],
+  "info": "↑ +0.3 Speed · ↑ Size down · Spawns a random pill",
+  "stats": {
+   "speed": 0.3
+  },
+  "dlc": "Rebirth",
+  "trackerText": "Size down, grants a pill",
+  "pools": [
+   "boss",
+   "demon-beggar",
+   "greed-boss"
+  ]
+ },
+ {
+  "num": 341,
+  "id": "torn-photo",
+  "name": "Torn Photo",
+  "kind": "collectible",
+  "lines": [
+   "↑ +0.7 Tears",
+   "↑ +0.16 Shot speed"
+  ],
+  "info": "↑ +0.7 Tears · ↑ +0.16 Shot speed",
+  "stats": {
+   "tears": 0.72,
+   "shotSpeed": 0.16
+  },
+  "dlc": "Rebirth",
+  "pools": [
+   "boss",
+   "golden-chest",
+   "greed-boss",
+   "old-chest"
+  ]
+ },
+ {
+  "num": 342,
+  "id": "blue-cap",
+  "name": "Blue Cap",
+  "kind": "collectible",
+  "lines": [
+   "↑ +1 Health",
+   "↑ +0.7 Tears",
+   "↓ -0.16 Shot speed",
+   "Heals 1 heart"
+  ],
+  "info": "↑ +1 Health · ↑ +0.7 Tears · ↓ -0.16 Shot speed · Heals 1 heart",
+  "stats": {
+   "tears": 0.72,
+   "shotSpeed": -0.16,
+   "maxHearts": 1
+  },
+  "transforms": [
+   "fun-guy"
+  ],
+  "dlc": "Rebirth",
+  "pools": [
+   "boss",
+   "greed-boss"
+  ]
+ },
+ {
+  "num": 343,
+  "id": "latch-key",
+  "name": "Latch Key",
+  "kind": "collectible",
+  "lines": [
+   "↑ +1 Luck",
+   "+1 Soul Heart",
+   "Spawns 2 keys"
+  ],
+  "info": "↑ +1 Luck · +1 Soul Heart · Spawns 2 keys",
+  "stats": {
+   "luck": 1,
+   "soul": 1
+  },
+  "dlc": "Rebirth",
+  "trackerText": "+2 keys",
+  "pools": [
+   "boss",
+   "golden-chest",
+   "key-master",
+   "greed-boss"
+  ]
+ },
+ {
+  "num": 344,
+  "id": "match-book",
+  "name": "Match Book",
+  "kind": "collectible",
+  "lines": [
+   "+1 Black Heart",
+   "Spawns 3 bombs",
+   "Spawns Match Stick"
+  ],
+  "info": "+1 Black Heart · Spawns 3 bombs · Spawns Match Stick",
+  "stats": {
+   "black": 1
+  },
+  "dlc": "Rebirth",
+  "trackerText": "+3 bombs and can spawn Match Stick",
+  "pools": [
+   "boss",
+   "golden-chest",
+   "greed-boss"
+  ]
+ },
+ {
+  "num": 345,
+  "id": "synthoil",
+  "name": "Synthoil",
+  "kind": "collectible",
+  "lines": [
+   "↑ +1 Damage",
+   "↑ +2.5 Range"
+  ],
+  "info": "↑ +1 Damage · ↑ +2.5 Range",
+  "stats": {
+   "damage": 1,
+   "range": 1.5,
+   "rangeHeight": 0.5
+  },
+  "transforms": [
+   "spun"
+  ],
+  "dlc": "Rebirth",
+  "pools": [
+   "boss",
+   "demon-beggar",
+   "greed-boss"
+  ]
+ },
+ {
+  "num": 346,
+  "id": "a-snack",
+  "name": "A Snack",
+  "kind": "collectible",
+  "lines": [
+   "↑ +1 Health",
+   "Heals 1 heart"
+  ],
+  "info": "↑ +1 Health · Heals 1 heart",
+  "stats": {
+   "maxHearts": 1
+  },
+  "healthOnly": true,
+  "dlc": "Rebirth",
+  "pools": [
+   "boss",
+   "greed-boss"
+  ]
+ },
+ {
+  "num": 347,
+  "id": "diplopia",
+  "name": "Diplopia",
+  "kind": "collectible",
+  "lines": [
+   "Duplicates all item pedestals and pickups in the room"
+  ],
+  "info": "Duplicates all item pedestals and pickups in the room",
+  "active": true,
+  "dlc": "Afterbirth",
+  "trackerText": "One-shot duplicates pedestals and pickups",
+  "pools": [
+   "shop"
+  ]
+ },
+ {
+  "num": 348,
+  "id": "placebo",
+  "name": "Placebo",
+  "kind": "collectible",
+  "lines": [
+   "Triggers the effect of the pill Isaac holds without using it"
+  ],
+  "info": "Triggers the effect of the pill Isaac holds without using it",
+  "active": true,
+  "dlc": "Afterbirth",
+  "trackerText": "Mimics the effect of the currently held pill",
+  "pools": [
+   "shop",
+   "secret",
+   "greed-shop",
+   "greed-secret"
+  ]
+ },
+ {
+  "num": 349,
+  "id": "wooden-nickel",
+  "name": "Wooden Nickel",
+  "kind": "collectible",
+  "lines": [
+   "59% chance to spawn a random coin"
+  ],
+  "info": "59% chance to spawn a random coin",
+  "active": true,
+  "dlc": "Afterbirth",
+  "trackerText": "50% chance to drop a coin",
+  "pools": [
+   "shop",
+   "greed-treasure",
+   "wooden-chest"
+  ]
+ },
+ {
+  "num": 350,
+  "id": "toxic-shock",
+  "name": "Toxic Shock",
+  "kind": "collectible",
+  "lines": [
+   "Entering a room poisons all enemies",
+   "Enemies killed leave a puddle of creep",
+   "The creep deals 30 damage per second"
+  ],
+  "info": "Entering a room poisons all enemies · Enemies killed leave a puddle of creep · The creep deals 30 damage per second",
+  "dlc": "Afterbirth",
+  "trackerText": "Deals 2x dmg to enemies at the start of each room",
+  "pools": [
+   "treasure"
+  ]
+ },
+ {
+  "num": 351,
+  "id": "mega-bean",
+  "name": "Mega Bean",
+  "kind": "collectible",
+  "lines": [
+   "Petrifies all enemies in the room",
+   "Deals 5 damage and poisons any enemies nearby",
+   "Sends a rock wave in the direction Isaac is moving",
+   "The rock wave can open secret rooms and break rocks"
+  ],
+  "info": "Petrifies all enemies in the room · Deals 5 damage and poisons any enemies nearby · Sends a rock wave in the direction Isaac is moving · The rock wave can open secret rooms and break rocks",
+  "active": true,
+  "dlc": "Afterbirth",
+  "trackerText": "Big damaging fart with spike wave",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 352,
+  "id": "glass-cannon",
+  "name": "Glass Cannon",
+  "kind": "collectible",
+  "lines": [
+   "Shoots a large piercing spectral tear that does 10x Isaac's damage +10 damage",
+   "While held, taking damage:",
+   "↓ Removes an extra 2 hearts of health",
+   "↓ Breaks the cannon for a few rooms",
+   "↑ +1.5 Range and leaves a blood trail for the room",
+   "The extra damage can't kill Isaac",
+   "Self-damage does not trigger the effect"
+  ],
+  "info": "Shoots a large piercing spectral tear that does 10x Isaac's damage +10 damage · While held, taking damage: · ↓ Removes an extra 2 hearts of health · ↓ Breaks the cannon for a few rooms · ↑ +1.5 Range and leaves a blood trail for the room · The extra damage can't kill Isaac · Self-damage does not trigger the effect",
+  "active": true,
+  "dlc": "Afterbirth",
+  "trackerText": "Shoots a big shot. On hit: inflict an extra 2 full heart dmg (non lethal), leaves blood trail and gain 1.5 range",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "crane-game"
+  ]
+ },
+ {
+  "num": 353,
+  "id": "bomber-boy",
+  "name": "Bomber Boy",
+  "kind": "collectible",
+  "lines": [
+   "+5 Bombs",
+   "Bombs explode in a cross-shaped pattern",
+   "↓ x0.75 Bomb damage"
+  ],
+  "info": "+5 Bombs · Bombs explode in a cross-shaped pattern · ↓ x0.75 Bomb damage",
+  "dlc": "Afterbirth",
+  "trackerText": "+5 bombs, bombs explode in a plus shape",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "bomb-bum"
+  ]
+ },
+ {
+  "num": 354,
+  "id": "crack-jacks",
+  "name": "Crack Jacks",
+  "kind": "collectible",
+  "lines": [
+   "↑ +1 Health",
+   "Heals 1 heart",
+   "Spawns a trinket"
+  ],
+  "info": "↑ +1 Health · Heals 1 heart · Spawns a trinket",
+  "stats": {
+   "maxHearts": 1
+  },
+  "dlc": "Afterbirth",
+  "trackerText": "Spawns a random trinket on pickup",
+  "pools": [
+   "boss",
+   "golden-chest",
+   "greed-boss"
+  ]
+ },
+ {
+  "num": 355,
+  "id": "moms-pearls",
+  "name": "Mom's Pearls",
+  "kind": "collectible",
+  "lines": [
+   "↑ +2.5 Range",
+   "↑ +1 Luck",
+   "+1 Soul Heart"
+  ],
+  "info": "↑ +2.5 Range · ↑ +1 Luck · +1 Soul Heart",
+  "stats": {
+   "range": 0.38,
+   "rangeHeight": 0.5,
+   "luck": 1,
+   "soul": 1
+  },
+  "transforms": [
+   "mom"
+  ],
+  "dlc": "Afterbirth",
+  "pools": [
+   "boss",
+   "golden-chest",
+   "moms-chest",
+   "greed-boss",
+   "old-chest"
+  ]
+ },
+ {
+  "num": 356,
+  "id": "car-battery",
+  "name": "Car Battery",
+  "kind": "collectible",
+  "lines": [
+   "Using an active item triggers its effect twice"
+  ],
+  "info": "Using an active item triggers its effect twice",
+  "dlc": "Afterbirth",
+  "trackerText": "Active items trigger twice when used",
+  "pools": [
+   "shop",
+   "battery-bum",
+   "greed-shop"
+  ]
+ },
+ {
+  "num": 357,
+  "id": "box-of-friends",
+  "name": "Box of Friends",
+  "kind": "collectible",
+  "lines": [
+   "Duplicates all your familiars for the room",
+   "Grants a Demon Baby for the room if Isaac has no familiars"
+  ],
+  "info": "Duplicates all your familiars for the room · Grants a Demon Baby for the room if Isaac has no familiars",
+  "active": true,
+  "dlc": "Afterbirth",
+  "trackerText": "Temporarily duplicates each familiar, gives Demon Baby if no familiars",
+  "pools": [
+   "shop",
+   "greed-treasure",
+   "crane-game"
+  ]
+ },
+ {
+  "num": 358,
+  "id": "the-wiz",
+  "name": "The Wiz",
+  "kind": "collectible",
+  "lines": [
+   "Spectral tears",
+   "Isaac shoots 2 tears at once diagonally"
+  ],
+  "info": "Spectral tears · Isaac shoots 2 tears at once diagonally",
+  "dlc": "Afterbirth",
+  "trackerText": "Diagonal double shot tears, spectral tears",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 359,
+  "id": "8-inch-nails",
+  "name": "8 Inch Nails",
+  "kind": "collectible",
+  "lines": [
+   "↑ +1.5 Damage",
+   "Increases knockback"
+  ],
+  "info": "↑ +1.5 Damage · Increases knockback",
+  "stats": {
+   "damage": 1.5
+  },
+  "dlc": "Afterbirth",
+  "trackerText": "Nail tears",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ },
+ {
+  "num": 360,
+  "id": "incubus",
+  "name": "Incubus",
+  "kind": "collectible",
+  "lines": [
+   "Shoots tears with the same effects as Isaac",
+   "Deals 75% of Isaac's damage"
+  ],
+  "info": "Shoots tears with the same effects as Isaac · Deals 75% of Isaac's damage",
+  "transforms": [
+   "conjoined"
+  ],
+  "dlc": "Afterbirth",
+  "trackerText": "Familiar that copies your tears effect and deals 75% of your damage",
+  "pools": [
+   "devil",
+   "greed-devil",
+   "baby-shop"
+  ]
+ },
+ {
+  "num": 361,
+  "id": "fates-reward",
+  "name": "Fate's Reward",
+  "kind": "collectible",
+  "lines": [
+   "Shoots tears with the same damage and effects as Isaac",
+   "Shoots at half the rate of other familiars"
+  ],
+  "info": "Shoots tears with the same damage and effects as Isaac · Shoots at half the rate of other familiars",
+  "dlc": "Afterbirth",
+  "trackerText": "Familiar (copies your tears with a slow shooting frequency)",
+  "pools": [
+   "treasure",
+   "baby-shop"
+  ]
+ },
+ {
+  "num": 362,
+  "id": "lil-chest",
+  "name": "Lil Chest",
+  "kind": "collectible",
+  "lines": [
+   "35% chance to spawn a pickup every room"
+  ],
+  "info": "35% chance to spawn a pickup every room",
+  "dlc": "Afterbirth",
+  "trackerText": "Spawns pickups and trinkets every few rooms cleared",
+  "pools": [
+   "treasure",
+   "beggar",
+   "greed-treasure",
+   "crane-game",
+   "wooden-chest"
+  ]
+ },
+ {
+  "num": 363,
+  "id": "sworn-protector",
+  "name": "Sworn Protector",
+  "kind": "collectible",
+  "lines": [
+   "Orbital",
+   "Deals 105 contact damage per second",
+   "Blocks and attracts enemy shots",
+   "Blocking 10 shots in one room spawns an Eternal Heart"
+  ],
+  "info": "Orbital · Deals 105 contact damage per second · Blocks and attracts enemy shots · Blocking 10 shots in one room spawns an Eternal Heart",
+  "transforms": [
+   "conjoined"
+  ],
+  "dlc": "Afterbirth",
+  "trackerText": "Orbital (7 dmg / tick)",
+  "pools": [
+   "angel",
+   "greed-angel",
+   "baby-shop"
+  ]
+ },
+ {
+  "num": 364,
+  "id": "friend-zone",
+  "name": "Friend Zone",
+  "kind": "collectible",
+  "lines": [
+   "Midrange fly orbital",
+   "Deals 45 contact damage per second"
+  ],
+  "info": "Midrange fly orbital · Deals 45 contact damage per second",
+  "transforms": [
+   "fly"
+  ],
+  "dlc": "Afterbirth",
+  "trackerText": "Orbital (3 dmg / tick)",
+  "pools": [
+   "treasure",
+   "key-master",
+   "greed-treasure",
+   "baby-shop"
+  ]
+ },
+ {
+  "num": 365,
+  "id": "lost-fly",
+  "name": "Lost Fly",
+  "kind": "collectible",
+  "lines": [
+   "Moves along walls/obstacles in the room",
+   "Deals 30 contact damage per second",
+   "Nearby enemies target the fly"
+  ],
+  "info": "Moves along walls/obstacles in the room · Deals 30 contact damage per second · Nearby enemies target the fly",
+  "transforms": [
+   "fly"
+  ],
+  "dlc": "Afterbirth",
+  "trackerText": "Familiar that hugs walls (7 dmg / tick)",
+  "pools": [
+   "treasure",
+   "key-master",
+   "greed-treasure",
+   "baby-shop"
+  ]
+ },
+ {
+  "num": 366,
+  "id": "scatter-bombs",
+  "name": "Scatter Bombs",
+  "kind": "collectible",
+  "lines": [
+   "+5 Bombs",
+   "Isaac's bombs scatter into 4-5 tiny bombs"
+  ],
+  "info": "+5 Bombs · Isaac's bombs scatter into 4-5 tiny bombs",
+  "dlc": "Afterbirth",
+  "trackerText": "+5 bombs, bombs split into 4-5 small bombs after exploding",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "bomb-bum"
+  ]
+ },
+ {
+  "num": 367,
+  "id": "sticky-bombs",
+  "name": "Sticky Bombs",
+  "kind": "collectible",
+  "lines": [
+   "+5 Bombs",
+   "Isaac's bombs stick to enemies and leave white slowing creep",
+   "Killing an enemy with a bomb spawns blue spiders"
+  ],
+  "info": "+5 Bombs · Isaac's bombs stick to enemies and leave white slowing creep · Killing an enemy with a bomb spawns blue spiders",
+  "transforms": [
+   "spider"
+  ],
+  "dlc": "Afterbirth",
+  "trackerText": "+5 bombs, bombs stick to enemies, spawns 4 spiders if the bomb kills an enemy",
+  "pools": [
+   "treasure",
+   "greed-treasure",
+   "bomb-bum"
+  ]
+ },
+ {
+  "num": 368,
+  "id": "epiphora",
+  "name": "Epiphora",
+  "kind": "collectible",
+  "lines": [
+   "↑ Shooting in one direction gradually increases fire rate up to 200% and decreases accuracy"
+  ],
+  "info": "↑ Shooting in one direction gradually increases fire rate up to 200% and decreases accuracy",
+  "dlc": "Afterbirth",
+  "trackerText": "Faster tear rate when shooting in one direction, up to 2x tear rate after 10 seconds",
+  "pools": [
+   "treasure",
+   "greed-treasure"
+  ]
+ }
+]

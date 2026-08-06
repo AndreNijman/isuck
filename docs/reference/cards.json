@@ -1,0 +1,1044 @@
+[
+ {
+  "num": 1,
+  "id": "0-the-fool",
+  "name": "0 - The Fool",
+  "kind": "card",
+  "lines": [
+   "Teleports Isaac to the first room of the floor"
+  ],
+  "info": "Teleports Isaac to the first room of the floor"
+ },
+ {
+  "num": 2,
+  "id": "i-the-magician",
+  "name": "I - The Magician",
+  "kind": "card",
+  "lines": [
+   "Receive for the room:",
+   "↑ +3 Range",
+   "Homing tears"
+  ],
+  "info": "Receive for the room: · ↑ +3 Range · Homing tears"
+ },
+ {
+  "num": 3,
+  "id": "ii-the-high-priestess",
+  "name": "II - The High Priestess",
+  "kind": "card",
+  "lines": [
+   "Mom's Foot stomps on an enemy",
+   "Mom's Foot stomps Isaac if there are no enemies"
+  ],
+  "info": "Mom's Foot stomps on an enemy · Mom's Foot stomps Isaac if there are no enemies"
+ },
+ {
+  "num": 4,
+  "id": "iii-the-empress",
+  "name": "III - The Empress",
+  "kind": "card",
+  "lines": [
+   "Receive for the room:",
+   "↑ +0.3 Speed",
+   "↑ +1.5 Damage"
+  ],
+  "info": "Receive for the room: · ↑ +0.3 Speed · ↑ +1.5 Damage"
+ },
+ {
+  "num": 5,
+  "id": "iv-the-emperor",
+  "name": "IV - The Emperor",
+  "kind": "card",
+  "lines": [
+   "Teleports Isaac to the Boss Room"
+  ],
+  "info": "Teleports Isaac to the Boss Room"
+ },
+ {
+  "num": 6,
+  "id": "v-the-hierophant",
+  "name": "V - The Hierophant",
+  "kind": "card",
+  "lines": [
+   "Spawns 2 Soul Hearts"
+  ],
+  "info": "Spawns 2 Soul Hearts"
+ },
+ {
+  "num": 7,
+  "id": "vi-the-lovers",
+  "name": "VI - The Lovers",
+  "kind": "card",
+  "lines": [
+   "Spawns 2 Red Hearts"
+  ],
+  "info": "Spawns 2 Red Hearts"
+ },
+ {
+  "num": 8,
+  "id": "vii-the-chariot",
+  "name": "VII - The Chariot",
+  "kind": "card",
+  "lines": [
+   "Receive for 6 seconds:",
+   "↑ +0.28 Speed",
+   "Invincibility",
+   "Isaac can't shoot but deals 40 contact damage per second"
+  ],
+  "info": "Receive for 6 seconds: · ↑ +0.28 Speed · Invincibility · Isaac can't shoot but deals 40 contact damage per second"
+ },
+ {
+  "num": 9,
+  "id": "viii-justice",
+  "name": "VIII - Justice",
+  "kind": "card",
+  "lines": [
+   "Spawns a random heart, coin, bomb and key"
+  ],
+  "info": "Spawns a random heart, coin, bomb and key"
+ },
+ {
+  "num": 10,
+  "id": "ix-the-hermit",
+  "name": "IX - The Hermit",
+  "kind": "card",
+  "lines": [
+   "Teleports Isaac to the Shop"
+  ],
+  "info": "Teleports Isaac to the Shop"
+ },
+ {
+  "num": 11,
+  "id": "x-wheel-of-fortune",
+  "name": "X - Wheel of Fortune",
+  "kind": "card",
+  "lines": [
+   "Spawns a Slot Machine",
+   "25% chance for it to be a Fortune Telling Machine"
+  ],
+  "info": "Spawns a Slot Machine · 25% chance for it to be a Fortune Telling Machine"
+ },
+ {
+  "num": 12,
+  "id": "xi-strength",
+  "name": "XI - Strength",
+  "kind": "card",
+  "lines": [
+   "Receive for the room:",
+   "↑ +1 Health",
+   "↑ +0.3 Speed",
+   "↑ +0.3 Damage",
+   "↑ x1.5 Damage multiplier",
+   "↑ +2.5 Range"
+  ],
+  "info": "Receive for the room: · ↑ +1 Health · ↑ +0.3 Speed · ↑ +0.3 Damage · ↑ x1.5 Damage multiplier · ↑ +2.5 Range"
+ },
+ {
+  "num": 13,
+  "id": "xii-the-hanged-man",
+  "name": "XII - The Hanged Man",
+  "kind": "card",
+  "lines": [
+   "Flight for the room"
+  ],
+  "info": "Flight for the room"
+ },
+ {
+  "num": 14,
+  "id": "xiii-death",
+  "name": "XIII - Death",
+  "kind": "card",
+  "lines": [
+   "Deals 40 damage to all enemies in the room"
+  ],
+  "info": "Deals 40 damage to all enemies in the room"
+ },
+ {
+  "num": 15,
+  "id": "xiv-temperance",
+  "name": "XIV - Temperance",
+  "kind": "card",
+  "lines": [
+   "Spawns a Blood Donation Machine"
+  ],
+  "info": "Spawns a Blood Donation Machine"
+ },
+ {
+  "num": 16,
+  "id": "xv-the-devil",
+  "name": "XV - The Devil",
+  "kind": "card",
+  "lines": [
+   "Receive for the room:",
+   "↑ +2 Damage"
+  ],
+  "info": "Receive for the room: · ↑ +2 Damage"
+ },
+ {
+  "num": 17,
+  "id": "xvi-the-tower",
+  "name": "XVI - The Tower",
+  "kind": "card",
+  "lines": [
+   "Spawns 6 Troll Bombs"
+  ],
+  "info": "Spawns 6 Troll Bombs"
+ },
+ {
+  "num": 18,
+  "id": "xvii-the-stars",
+  "name": "XVII - The Stars",
+  "kind": "card",
+  "lines": [
+   "Teleports Isaac to the Treasure Room",
+   "If there is a Planetarium, it teleports there instead"
+  ],
+  "info": "Teleports Isaac to the Treasure Room · If there is a Planetarium, it teleports there instead"
+ },
+ {
+  "num": 19,
+  "id": "xviii-the-moon",
+  "name": "XVIII - The Moon",
+  "kind": "card",
+  "lines": [
+   "Teleports Isaac to the Secret Room"
+  ],
+  "info": "Teleports Isaac to the Secret Room"
+ },
+ {
+  "num": 20,
+  "id": "xix-the-sun",
+  "name": "XIX - The Sun",
+  "kind": "card",
+  "lines": [
+   "Full health",
+   "Deals 100 damage to all enemies",
+   "Full mapping effect for the floor (except Super / Ultra Secret Room)",
+   "Removes Curse of Darkness"
+  ],
+  "info": "Full health · Deals 100 damage to all enemies · Full mapping effect for the floor (except Super / Ultra Secret Room) · Removes Curse of Darkness"
+ },
+ {
+  "num": 21,
+  "id": "xx-judgement",
+  "name": "XX - Judgement",
+  "kind": "card",
+  "lines": [
+   "Spawns a Beggar",
+   "33% chance for it to be a Devil Beggar",
+   "5% chance for it to be a Key Master, Bomb Bum, Battery Bum, or Rotten Beggar"
+  ],
+  "info": "Spawns a Beggar · 33% chance for it to be a Devil Beggar · 5% chance for it to be a Key Master, Bomb Bum, Battery Bum, or Rotten Beggar"
+ },
+ {
+  "num": 22,
+  "id": "xxi-the-world",
+  "name": "XXI - The World",
+  "kind": "card",
+  "lines": [
+   "Full mapping effect for the floor (except Super / Ultra Secret Room)"
+  ],
+  "info": "Full mapping effect for the floor (except Super / Ultra Secret Room)"
+ },
+ {
+  "num": 23,
+  "id": "2-of-clubs",
+  "name": "2 of Clubs",
+  "kind": "card",
+  "lines": [
+   "Doubles Isaac's number of bombs"
+  ],
+  "info": "Doubles Isaac's number of bombs"
+ },
+ {
+  "num": 24,
+  "id": "2-of-diamonds",
+  "name": "2 of Diamonds",
+  "kind": "card",
+  "lines": [
+   "Doubles Isaac's number of coins"
+  ],
+  "info": "Doubles Isaac's number of coins"
+ },
+ {
+  "num": 25,
+  "id": "2-of-spades",
+  "name": "2 of Spades",
+  "kind": "card",
+  "lines": [
+   "Doubles Isaac's number of keys"
+  ],
+  "info": "Doubles Isaac's number of keys"
+ },
+ {
+  "num": 26,
+  "id": "2-of-hearts",
+  "name": "2 of Hearts",
+  "kind": "card",
+  "lines": [
+   "Doubles Isaac's number of Red Hearts (not containers)"
+  ],
+  "info": "Doubles Isaac's number of Red Hearts (not containers)"
+ },
+ {
+  "num": 27,
+  "id": "ace-of-clubs",
+  "name": "Ace of Clubs",
+  "kind": "card",
+  "lines": [
+   "Turns all pickups, chests and non-boss enemies into random bombs"
+  ],
+  "info": "Turns all pickups, chests and non-boss enemies into random bombs"
+ },
+ {
+  "num": 28,
+  "id": "ace-of-diamonds",
+  "name": "Ace of Diamonds",
+  "kind": "card",
+  "lines": [
+   "Turns all pickups, chests and non-boss enemies into random coins"
+  ],
+  "info": "Turns all pickups, chests and non-boss enemies into random coins"
+ },
+ {
+  "num": 29,
+  "id": "ace-of-spades-29",
+  "name": "Ace of Spades",
+  "kind": "card",
+  "lines": [
+   "Turns all pickups, chests and non-boss enemies into random keys"
+  ],
+  "info": "Turns all pickups, chests and non-boss enemies into random keys"
+ },
+ {
+  "num": 30,
+  "id": "ace-of-hearts",
+  "name": "Ace of Hearts",
+  "kind": "card",
+  "lines": [
+   "Turns all pickups, chests and non-boss enemies into random hearts"
+  ],
+  "info": "Turns all pickups, chests and non-boss enemies into random hearts"
+ },
+ {
+  "num": 31,
+  "id": "joker",
+  "name": "Joker",
+  "kind": "card",
+  "lines": [
+   "Teleports Isaac to the Devil or Angel Room"
+  ],
+  "info": "Teleports Isaac to the Devil or Angel Room"
+ },
+ {
+  "num": 32,
+  "id": "hagalaz",
+  "name": "Hagalaz",
+  "kind": "card",
+  "lines": [
+   "Destroy all rocks in the room"
+  ],
+  "info": "Destroy all rocks in the room"
+ },
+ {
+  "num": 33,
+  "id": "jera",
+  "name": "Jera",
+  "kind": "card",
+  "lines": [
+   "Duplicates all pickups in room"
+  ],
+  "info": "Duplicates all pickups in room"
+ },
+ {
+  "num": 34,
+  "id": "ehwaz",
+  "name": "Ehwaz",
+  "kind": "card",
+  "lines": [
+   "Spawns a trapdoor to the next floor",
+   "Spawns a crawlspace if used on a decorative floor tile (grass, small rocks, papers, gems, etc.)"
+  ],
+  "info": "Spawns a trapdoor to the next floor · Spawns a crawlspace if used on a decorative floor tile (grass, small rocks, papers, gems, etc.)"
+ },
+ {
+  "num": 35,
+  "id": "dagaz",
+  "name": "Dagaz",
+  "kind": "card",
+  "lines": [
+   "+1 Soul Heart",
+   "Removes all curses for the floor"
+  ],
+  "info": "+1 Soul Heart · Removes all curses for the floor"
+ },
+ {
+  "num": 36,
+  "id": "ansuz",
+  "name": "Ansuz",
+  "kind": "card",
+  "lines": [
+   "Full mapping effect for the floor"
+  ],
+  "info": "Full mapping effect for the floor"
+ },
+ {
+  "num": 37,
+  "id": "perthro",
+  "name": "Perthro",
+  "kind": "card",
+  "lines": [
+   "Rerolls all pedestal items in the room"
+  ],
+  "info": "Rerolls all pedestal items in the room"
+ },
+ {
+  "num": 38,
+  "id": "berkano",
+  "name": "Berkano",
+  "kind": "card",
+  "lines": [
+   "Summons 3 blue spiders and 3 blue flies"
+  ],
+  "info": "Summons 3 blue spiders and 3 blue flies"
+ },
+ {
+  "num": 39,
+  "id": "algiz",
+  "name": "Algiz",
+  "kind": "card",
+  "lines": [
+   "Makes Isaac invincible for 20 seconds"
+  ],
+  "info": "Makes Isaac invincible for 20 seconds"
+ },
+ {
+  "num": 40,
+  "id": "blank-rune",
+  "name": "Blank Rune",
+  "kind": "card",
+  "lines": [
+   "Triggers a random rune effect",
+   "25% chance to duplicate itself when used"
+  ],
+  "info": "Triggers a random rune effect · 25% chance to duplicate itself when used"
+ },
+ {
+  "num": 41,
+  "id": "black-rune",
+  "name": "Black Rune",
+  "kind": "card",
+  "lines": [
+   "Deals 40 damage to all enemies",
+   "Converts all pedestal items in the room into random stat ups",
+   "Converts all pickups in the room into blue flies"
+  ],
+  "info": "Deals 40 damage to all enemies · Converts all pedestal items in the room into random stat ups · Converts all pickups in the room into blue flies"
+ },
+ {
+  "num": 42,
+  "id": "chaos-card",
+  "name": "Chaos Card",
+  "kind": "card",
+  "lines": [
+   "Using the card throws it in the direction Isaac is moving",
+   "Instantly kills ANY enemy it touches (except Delirium or the Beast)"
+  ],
+  "info": "Using the card throws it in the direction Isaac is moving · Instantly kills ANY enemy it touches (except Delirium or the Beast)"
+ },
+ {
+  "num": 43,
+  "id": "credit-card",
+  "name": "Credit Card",
+  "kind": "card",
+  "lines": [
+   "Makes all items and pickups in a Shop or Devil Room free"
+  ],
+  "info": "Makes all items and pickups in a Shop or Devil Room free"
+ },
+ {
+  "num": 44,
+  "id": "rules-card",
+  "name": "Rules Card",
+  "kind": "card",
+  "lines": [
+   "Displays \\\"helpful\\\" tips on use"
+  ],
+  "info": "Displays \\\"helpful\\\" tips on use"
+ },
+ {
+  "num": 45,
+  "id": "a-card-against-humanity",
+  "name": "A Card Against Humanity",
+  "kind": "card",
+  "lines": [
+   "Fills the whole room with poop"
+  ],
+  "info": "Fills the whole room with poop"
+ },
+ {
+  "num": 46,
+  "id": "suicide-king",
+  "name": "Suicide King",
+  "kind": "card",
+  "lines": [
+   "Instantly kills Isaac and spawns 10 pickups or items on the floor",
+   "Spawned items will use the current room's item pool"
+  ],
+  "info": "Instantly kills Isaac and spawns 10 pickups or items on the floor · Spawned items will use the current room's item pool"
+ },
+ {
+  "num": 47,
+  "id": "get-out-of-jail-free-card",
+  "name": "Get Out Of Jail Free Card",
+  "kind": "card",
+  "lines": [
+   "Open all doors in the room"
+  ],
+  "info": "Open all doors in the room"
+ },
+ {
+  "num": 48,
+  "id": "card",
+  "name": "? Card",
+  "kind": "card",
+  "lines": [
+   "Uses Isaac's active item for free"
+  ],
+  "info": "Uses Isaac's active item for free"
+ },
+ {
+  "num": 49,
+  "id": "dice-shard",
+  "name": "Dice Shard",
+  "kind": "card",
+  "lines": [
+   "Rerolls all item pedestals and pickups in the room"
+  ],
+  "info": "Rerolls all item pedestals and pickups in the room"
+ },
+ {
+  "num": 50,
+  "id": "emergency-contact",
+  "name": "Emergency Contact",
+  "kind": "card",
+  "lines": [
+   "Two of Mom's Hands come down and grab an enemy each"
+  ],
+  "info": "Two of Mom's Hands come down and grab an enemy each"
+ },
+ {
+  "num": 51,
+  "id": "holy-card",
+  "name": "Holy Card",
+  "kind": "card",
+  "lines": [
+   "A one-use Holy Mantle shield (prevents damage once)"
+  ],
+  "info": "A one-use Holy Mantle shield (prevents damage once)"
+ },
+ {
+  "num": 52,
+  "id": "huge-growth",
+  "name": "Huge Growth",
+  "kind": "card",
+  "lines": [
+   "Receive for the room:",
+   "↑ +7 Damage",
+   "↑ +3 Range",
+   "Size up",
+   "Allows Isaac to destroy rocks by walking into them"
+  ],
+  "info": "Receive for the room: · ↑ +7 Damage · ↑ +3 Range · Size up · Allows Isaac to destroy rocks by walking into them"
+ },
+ {
+  "num": 53,
+  "id": "ancient-recall",
+  "name": "Ancient Recall",
+  "kind": "card",
+  "lines": [
+   "Spawns 3 random cards"
+  ],
+  "info": "Spawns 3 random cards"
+ },
+ {
+  "num": 54,
+  "id": "era-walk",
+  "name": "Era Walk",
+  "kind": "card",
+  "lines": [
+   "Receive for the room:",
+   "↑ +0.5 Speed",
+   "↓ -1 Shot speed",
+   "Slow down enemies"
+  ],
+  "info": "Receive for the room: · ↑ +0.5 Speed · ↓ -1 Shot speed · Slow down enemies"
+ },
+ {
+  "num": 55,
+  "id": "rune-shard",
+  "name": "Rune Shard",
+  "kind": "card",
+  "lines": [
+   "Activates a random rune effect",
+   "The rune effect is weaker"
+  ],
+  "info": "Activates a random rune effect · The rune effect is weaker"
+ },
+ {
+  "num": 56,
+  "id": "0-the-fool-56",
+  "name": "0 - The Fool?",
+  "kind": "card",
+  "lines": [
+   "Drops all of Isaac's hearts but one and all of his pickups on the floor",
+   "Coins and bombs are dropped as The Quarter or Boom! if possible"
+  ],
+  "info": "Drops all of Isaac's hearts but one and all of his pickups on the floor · Coins and bombs are dropped as The Quarter or Boom! if possible"
+ },
+ {
+  "num": 57,
+  "id": "i-the-magician-57",
+  "name": "I - The Magician?",
+  "kind": "card",
+  "lines": [
+   "Grants an aura that repels enemies and projectiles for 60 seconds"
+  ],
+  "info": "Grants an aura that repels enemies and projectiles for 60 seconds"
+ },
+ {
+  "num": 58,
+  "id": "ii-the-high-priestess-58",
+  "name": "II - The High Priestess?",
+  "kind": "card",
+  "lines": [
+   "Mom's Foot tries to stomp Isaac for 60 seconds"
+  ],
+  "info": "Mom's Foot tries to stomp Isaac for 60 seconds"
+ },
+ {
+  "num": 59,
+  "id": "iii-the-empress-59",
+  "name": "III - The Empress?",
+  "kind": "card",
+  "lines": [
+   "Receive for 60 seconds:",
+   "↑ +2 Health",
+   "↑ +1.5 Fire rate",
+   "↓ -0.1 Speed"
+  ],
+  "info": "Receive for 60 seconds: · ↑ +2 Health · ↑ +1.5 Fire rate · ↓ -0.1 Speed"
+ },
+ {
+  "num": 60,
+  "id": "iv-the-emperor-60",
+  "name": "IV - The Emperor?",
+  "kind": "card",
+  "lines": [
+   "Teleports Isaac to an extra Boss room that can be defeated for an item",
+   "The boss is chosen from two floors deeper than the current one"
+  ],
+  "info": "Teleports Isaac to an extra Boss room that can be defeated for an item · The boss is chosen from two floors deeper than the current one"
+ },
+ {
+  "num": 61,
+  "id": "v-the-hierophant-61",
+  "name": "V - The Hierophant?",
+  "kind": "card",
+  "lines": [
+   "Spawns 2 Bone Hearts"
+  ],
+  "info": "Spawns 2 Bone Hearts"
+ },
+ {
+  "num": 62,
+  "id": "vi-the-lovers-62",
+  "name": "VI - The Lovers?",
+  "kind": "card",
+  "lines": [
+   "Spawns an item from the current room's item pool",
+   "Converts 1 heart container or 2 Soul Hearts into a Broken Heart"
+  ],
+  "info": "Spawns an item from the current room's item pool · Converts 1 heart container or 2 Soul Hearts into a Broken Heart"
+ },
+ {
+  "num": 63,
+  "id": "vii-the-chariot-63",
+  "name": "VII - The Chariot?",
+  "kind": "card",
+  "lines": [
+   "Receive for 10 seconds:",
+   "↑ x4 Fire rate multiplier",
+   "Invincible but can't move"
+  ],
+  "info": "Receive for 10 seconds: · ↑ x4 Fire rate multiplier · Invincible but can't move"
+ },
+ {
+  "num": 64,
+  "id": "viii-justice-64",
+  "name": "VIII - Justice?",
+  "kind": "card",
+  "lines": [
+   "Spawns 2-4 golden chests"
+  ],
+  "info": "Spawns 2-4 golden chests"
+ },
+ {
+  "num": 65,
+  "id": "ix-the-hermit-65",
+  "name": "IX - The Hermit?",
+  "kind": "card",
+  "lines": [
+   "Turns all pickups and items in the room into a number of coins equal to their Shop value",
+   "If there is nothing to turn, spawns a Penny instead"
+  ],
+  "info": "Turns all pickups and items in the room into a number of coins equal to their Shop value · If there is nothing to turn, spawns a Penny instead"
+ },
+ {
+  "num": 66,
+  "id": "x-wheel-of-fortune-66",
+  "name": "X - Wheel of Fortune?",
+  "kind": "card",
+  "lines": [
+   "Triggers a random Dice Room effect"
+  ],
+  "info": "Triggers a random Dice Room effect"
+ },
+ {
+  "num": 67,
+  "id": "xi-strength-67",
+  "name": "XI - Strength?",
+  "kind": "card",
+  "lines": [
+   "Enemies in the room are slowed and take double damage for 30 seconds"
+  ],
+  "info": "Enemies in the room are slowed and take double damage for 30 seconds"
+ },
+ {
+  "num": 68,
+  "id": "xii-the-hanged-man-68",
+  "name": "XII - The Hanged Man?",
+  "kind": "card",
+  "lines": [
+   "Receive for 30 seconds:",
+   "↓ -0.1 Speed",
+   "Triple shot",
+   "Killed enemies drop coins"
+  ],
+  "info": "Receive for 30 seconds: · ↓ -0.1 Speed · Triple shot · Killed enemies drop coins"
+ },
+ {
+  "num": 69,
+  "id": "xiii-death-69",
+  "name": "XIII - Death?",
+  "kind": "card",
+  "lines": [
+   "Activates Book of the Dead",
+   "Spawns friendly Bone entities for each enemy killed in room"
+  ],
+  "info": "Activates Book of the Dead · Spawns friendly Bone entities for each enemy killed in room"
+ },
+ {
+  "num": 70,
+  "id": "xiv-temperance-70",
+  "name": "XIV - Temperance?",
+  "kind": "card",
+  "lines": [
+   "Forces Isaac to eat 5 random pills"
+  ],
+  "info": "Forces Isaac to eat 5 random pills"
+ },
+ {
+  "num": 71,
+  "id": "xv-the-devil-71",
+  "name": "XV - The Devil?",
+  "kind": "card",
+  "lines": [
+   "Receive for 30 seconds:",
+   "Activates The Bible (flight)",
+   "Seraphim familiar",
+   "Kills Mom's Foot and Mom's Heart instantly",
+   "Kills Isaac when used on Satan"
+  ],
+  "info": "Receive for 30 seconds: · Activates The Bible (flight) · Seraphim familiar · Kills Mom's Foot and Mom's Heart instantly · Kills Isaac when used on Satan"
+ },
+ {
+  "num": 72,
+  "id": "xvi-the-tower-72",
+  "name": "XVI - The Tower?",
+  "kind": "card",
+  "lines": [
+   "Spawns 7 clusters of random rocks and obstacles",
+   "Clusters often contain Tinted Rocks"
+  ],
+  "info": "Spawns 7 clusters of random rocks and obstacles · Clusters often contain Tinted Rocks"
+ },
+ {
+  "num": 73,
+  "id": "xvii-the-stars-73",
+  "name": "XVII - The Stars?",
+  "kind": "card",
+  "lines": [
+   "Removes Isaac's oldest collected passive item (ignoring starting items)",
+   "Spawns 2 random items from the current room's item pool"
+  ],
+  "info": "Removes Isaac's oldest collected passive item (ignoring starting items) · Spawns 2 random items from the current room's item pool"
+ },
+ {
+  "num": 74,
+  "id": "xviii-the-moon-74",
+  "name": "XVIII - The Moon?",
+  "kind": "card",
+  "lines": [
+   "Teleports Isaac to the Ultra Secret Room",
+   "Pathway back will be made of red rooms"
+  ],
+  "info": "Teleports Isaac to the Ultra Secret Room · Pathway back will be made of red rooms"
+ },
+ {
+  "num": 75,
+  "id": "xix-the-sun-75",
+  "name": "XIX - The Sun?",
+  "kind": "card",
+  "lines": [
+   "Receive for the floor:",
+   "↑ +1.5 Damage",
+   "Flight and spectral tears",
+   "Converts heart containers into Bone Hearts (reverts)",
+   "Curse of Darkness"
+  ],
+  "info": "Receive for the floor: · ↑ +1.5 Damage · Flight and spectral tears · Converts heart containers into Bone Hearts (reverts) · Curse of Darkness"
+ },
+ {
+  "num": 76,
+  "id": "xx-judgement-76",
+  "name": "XX - Judgement?",
+  "kind": "card",
+  "lines": [
+   "Spawns a Restock Machine"
+  ],
+  "info": "Spawns a Restock Machine"
+ },
+ {
+  "num": 77,
+  "id": "xxi-the-world-77",
+  "name": "XXI - The World?",
+  "kind": "card",
+  "lines": [
+   "Spawns a trapdoor to a crawlspace"
+  ],
+  "info": "Spawns a trapdoor to a crawlspace"
+ },
+ {
+  "num": 78,
+  "id": "cracked-key",
+  "name": "Cracked Key",
+  "kind": "card",
+  "lines": [
+   "Single-use Red Key"
+  ],
+  "info": "Single-use Red Key"
+ },
+ {
+  "num": 79,
+  "id": "queen-of-hearts",
+  "name": "Queen of Hearts",
+  "kind": "card",
+  "lines": [
+   "Spawns 1-20 Red Hearts"
+  ],
+  "info": "Spawns 1-20 Red Hearts"
+ },
+ {
+  "num": 80,
+  "id": "wild-card",
+  "name": "Wild Card",
+  "kind": "card",
+  "lines": [
+   "Copies the effect of your most recently used pill, card, rune, soul stone or activated item"
+  ],
+  "info": "Copies the effect of your most recently used pill, card, rune, soul stone or activated item"
+ },
+ {
+  "num": 81,
+  "id": "soul-of-isaac",
+  "name": "Soul of Isaac",
+  "kind": "card",
+  "lines": [
+   "Makes all item pedestals in the room cycle between two different items"
+  ],
+  "info": "Makes all item pedestals in the room cycle between two different items"
+ },
+ {
+  "num": 82,
+  "id": "soul-of-magdalene",
+  "name": "Soul of Magdalene",
+  "kind": "card",
+  "lines": [
+   "Effect lasts for the room:",
+   "Enemies killed drop half Red Hearts that disappear after 2 seconds"
+  ],
+  "info": "Effect lasts for the room: · Enemies killed drop half Red Hearts that disappear after 2 seconds"
+ },
+ {
+  "num": 83,
+  "id": "soul-of-cain",
+  "name": "Soul of Cain",
+  "kind": "card",
+  "lines": [
+   "Opens all doors in the room",
+   "Creates red rooms on every wall possible"
+  ],
+  "info": "Opens all doors in the room · Creates red rooms on every wall possible"
+ },
+ {
+  "num": 84,
+  "id": "soul-of-judas",
+  "name": "Soul of Judas",
+  "kind": "card",
+  "lines": [
+   "Activates Dark Arts with a 3 second duration",
+   "Temporary ↑ damage up for every enemy/projectile hit"
+  ],
+  "info": "Activates Dark Arts with a 3 second duration · Temporary ↑ damage up for every enemy/projectile hit"
+ },
+ {
+  "num": 85,
+  "id": "soul-of",
+  "name": "Soul of ???",
+  "kind": "card",
+  "lines": [
+   "Causes 8 poison farts with brown creep, then quickly spawns 7 Butt Bombs",
+   "Standing on the creep grants:",
+   "↑ +1.5 Fire rate",
+   "↑ +1 Damage"
+  ],
+  "info": "Causes 8 poison farts with brown creep, then quickly spawns 7 Butt Bombs · Standing on the creep grants: · ↑ +1.5 Fire rate · ↑ +1 Damage"
+ },
+ {
+  "num": 86,
+  "id": "soul-of-eve",
+  "name": "Soul of Eve",
+  "kind": "card",
+  "lines": [
+   "14 Dead Bird familiars fly in and attack enemies for the room"
+  ],
+  "info": "14 Dead Bird familiars fly in and attack enemies for the room"
+ },
+ {
+  "num": 87,
+  "id": "soul-of-samson",
+  "name": "Soul of Samson",
+  "kind": "card",
+  "lines": [
+   "Activates Berserk! for 10 seconds",
+   "Each kill increases the duration by 1 second"
+  ],
+  "info": "Activates Berserk! for 10 seconds · Each kill increases the duration by 1 second"
+ },
+ {
+  "num": 88,
+  "id": "soul-of-azazel",
+  "name": "Soul of Azazel",
+  "kind": "card",
+  "lines": [
+   "Fires a Mega Blast beam for 7.5 seconds"
+  ],
+  "info": "Fires a Mega Blast beam for 7.5 seconds"
+ },
+ {
+  "num": 89,
+  "id": "soul-of-lazarus",
+  "name": "Soul of Lazarus",
+  "kind": "card",
+  "lines": [
+   "Isaac dies and immediately revives at half a heart",
+   "This item is automatically used upon taking fatal damage (acts as an extra life)"
+  ],
+  "info": "Isaac dies and immediately revives at half a heart · This item is automatically used upon taking fatal damage (acts as an extra life)"
+ },
+ {
+  "num": 90,
+  "id": "soul-of-eden",
+  "name": "Soul of Eden",
+  "kind": "card",
+  "lines": [
+   "Rerolls item pedestals and pickups in the room",
+   "The rerolled items come from random item pools"
+  ],
+  "info": "Rerolls item pedestals and pickups in the room · The rerolled items come from random item pools"
+ },
+ {
+  "num": 91,
+  "id": "soul-of-the-lost",
+  "name": "Soul of the Lost",
+  "kind": "card",
+  "lines": [
+   "Turns the player into The Lost for the room",
+   "Allows taking one Devil Room item for free",
+   "Allows entering the Mausoleum or Gehenna door for free"
+  ],
+  "info": "Turns the player into The Lost for the room · Allows taking one Devil Room item for free · Allows entering the Mausoleum or Gehenna door for free"
+ },
+ {
+  "num": 92,
+  "id": "soul-of-lilith",
+  "name": "Soul of Lilith",
+  "kind": "card",
+  "lines": [
+   "Permanently grants a random familiar"
+  ],
+  "info": "Permanently grants a random familiar"
+ },
+ {
+  "num": 93,
+  "id": "soul-of-the-keeper",
+  "name": "Soul of the Keeper",
+  "kind": "card",
+  "lines": [
+   "Spawns 1-25 random coins"
+  ],
+  "info": "Spawns 1-25 random coins"
+ },
+ {
+  "num": 94,
+  "id": "soul-of-apollyon",
+  "name": "Soul of Apollyon",
+  "kind": "card",
+  "lines": [
+   "Spawns 15 random locusts"
+  ],
+  "info": "Spawns 15 random locusts"
+ },
+ {
+  "num": 95,
+  "id": "soul-of-the-forgotten",
+  "name": "Soul of the Forgotten",
+  "kind": "card",
+  "lines": [
+   "Spawns The Forgotten as a secondary character for the room"
+  ],
+  "info": "Spawns The Forgotten as a secondary character for the room"
+ },
+ {
+  "num": 96,
+  "id": "soul-of-bethany",
+  "name": "Soul of Bethany",
+  "kind": "card",
+  "lines": [
+   "Spawns 6 random Book of Virtues wisps"
+  ],
+  "info": "Spawns 6 random Book of Virtues wisps"
+ },
+ {
+  "num": 97,
+  "id": "soul-of-jacob-and-esau",
+  "name": "Soul of Jacob and Esau",
+  "kind": "card",
+  "lines": [
+   "Spawns Esau as a secondary character for the room",
+   "He spawns with as many passive items as the player"
+  ],
+  "info": "Spawns Esau as a secondary character for the room · He spawns with as many passive items as the player"
+ }
+]

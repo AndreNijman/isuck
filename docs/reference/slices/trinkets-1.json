@@ -1,0 +1,1229 @@
+[
+ {
+  "num": 1,
+  "id": "swallowed-penny",
+  "name": "Swallowed Penny",
+  "kind": "trinket",
+  "lines": [
+   "Taking damage spawns 1 coin"
+  ],
+  "info": "Taking damage spawns 1 coin",
+  "dlc": "Rebirth",
+  "trackerText": "Spawn 1-2 pennies on hit"
+ },
+ {
+  "num": 2,
+  "id": "petrified-poop",
+  "name": "Petrified Poop",
+  "kind": "trinket",
+  "lines": [
+   "50% chance to get drops from poop"
+  ],
+  "info": "50% chance to get drops from poop",
+  "dlc": "Rebirth",
+  "trackerText": "Higher chance for rewards from poops"
+ },
+ {
+  "num": 3,
+  "id": "aaa-battery",
+  "name": "AAA Battery",
+  "kind": "trinket",
+  "lines": [
+   "-1 Charge needed for active items"
+  ],
+  "info": "-1 Charge needed for active items",
+  "dlc": "Rebirth",
+  "trackerText": "Quicker charge"
+ },
+ {
+  "num": 4,
+  "id": "broken-remote",
+  "name": "Broken Remote",
+  "kind": "trinket",
+  "lines": [
+   "Using an active item teleports Isaac to a random room"
+  ],
+  "info": "Using an active item teleports Isaac to a random room",
+  "dlc": "Rebirth",
+  "trackerText": "Teleport on active item use"
+ },
+ {
+  "num": 5,
+  "id": "purple-heart",
+  "name": "Purple Heart",
+  "kind": "trinket",
+  "lines": [
+   "2x chance for champion enemies"
+  ],
+  "info": "2x chance for champion enemies",
+  "dlc": "Rebirth",
+  "trackerText": "Higher chance for champions"
+ },
+ {
+  "num": 6,
+  "id": "broken-magnet",
+  "name": "Broken Magnet",
+  "kind": "trinket",
+  "lines": [
+   "Attracts coins to Isaac"
+  ],
+  "info": "Attracts coins to Isaac",
+  "dlc": "Rebirth",
+  "trackerText": "Pulls coins toward you"
+ },
+ {
+  "num": 7,
+  "id": "rosary-bead",
+  "name": "Rosary Bead",
+  "kind": "trinket",
+  "lines": [
+   "50% higher Angel Room chance",
+   "Higher chance to find The Bible in Shops and Libraries"
+  ],
+  "info": "50% higher Angel Room chance · Higher chance to find The Bible in Shops and Libraries",
+  "dlc": "Rebirth",
+  "trackerText": "Increases Angel Room chance to 75%/25% (from 50%/50%)"
+ },
+ {
+  "num": 8,
+  "id": "cartridge",
+  "name": "Cartridge",
+  "kind": "trinket",
+  "lines": [
+   "5% chance upon taking damage to receive for 6.5 seconds:",
+   "Invincibility",
+   "Isaac can't shoot but deals 40 contact damage per second",
+   "Killing 2 enemies heals half a heart",
+   "Fears all enemies in the room"
+  ],
+  "info": "5% chance upon taking damage to receive for 6.5 seconds: · Invincibility · Isaac can't shoot but deals 40 contact damage per second · Killing 2 enemies heals half a heart · Fears all enemies in the room",
+  "dlc": "Rebirth",
+  "trackerText": "Chance to get The Gamekid effect on hit"
+ },
+ {
+  "num": 9,
+  "id": "pulse-worm",
+  "name": "Pulse Worm",
+  "kind": "trinket",
+  "lines": [
+   "Isaac's tears pulsate",
+   "Affects tear hitbox"
+  ],
+  "info": "Isaac's tears pulsate · Affects tear hitbox",
+  "dlc": "Rebirth",
+  "trackerText": "Pulsing tears (only cosmetic)"
+ },
+ {
+  "num": 10,
+  "id": "wiggle-worm",
+  "name": "Wiggle Worm",
+  "kind": "trinket",
+  "lines": [
+   "↑ +0.4 Tears",
+   "Spectral tears",
+   "Isaac's tears move in waves"
+  ],
+  "info": "↑ +0.4 Tears · Spectral tears · Isaac's tears move in waves",
+  "stats": {
+   "tears": 0.4
+  },
+  "dlc": "Rebirth",
+  "trackerText": "Wave + spectral tears"
+ },
+ {
+  "num": 11,
+  "id": "ring-worm",
+  "name": "Ring Worm",
+  "kind": "trinket",
+  "lines": [
+   "↑ +0.4 Tears",
+   "Spectral tears",
+   "Isaac's tears move in spirals with high speed"
+  ],
+  "info": "↑ +0.4 Tears · Spectral tears · Isaac's tears move in spirals with high speed",
+  "dlc": "Rebirth",
+  "trackerText": "Ring + spectral tears"
+ },
+ {
+  "num": 12,
+  "id": "flat-worm",
+  "name": "Flat Worm",
+  "kind": "trinket",
+  "lines": [
+   "50% wider tears",
+   "Increases knockback"
+  ],
+  "info": "50% wider tears · Increases knockback",
+  "dlc": "Rebirth",
+  "trackerText": "Flat tears (only cosmetic)"
+ },
+ {
+  "num": 13,
+  "id": "store-credit",
+  "name": "Store Credit",
+  "kind": "trinket",
+  "lines": [
+   "Allows Isaac to take 1 Shop item for free"
+  ],
+  "info": "Allows Isaac to take 1 Shop item for free",
+  "dlc": "Rebirth",
+  "trackerText": "First shop item you will take while holding the trinket will be free"
+ },
+ {
+  "num": 14,
+  "id": "callus",
+  "name": "Callus",
+  "kind": "trinket",
+  "lines": [
+   "Immune to creep and floor spikes"
+  ],
+  "info": "Immune to creep and floor spikes",
+  "dlc": "Rebirth",
+  "trackerText": "Immunity from spike and creep damage"
+ },
+ {
+  "num": 15,
+  "id": "lucky-rock",
+  "name": "Lucky Rock",
+  "kind": "trinket",
+  "lines": [
+   "Destroying rocks has a 33% chance to spawn a coin"
+  ],
+  "info": "Destroying rocks has a 33% chance to spawn a coin",
+  "dlc": "Rebirth",
+  "trackerText": "33% for rocks to drop coins when broken"
+ },
+ {
+  "num": 16,
+  "id": "moms-toenail",
+  "name": "Mom's Toenail",
+  "kind": "trinket",
+  "lines": [
+   "Mom's Foot stomps a random spot in the room every 20 seconds"
+  ],
+  "info": "Mom's Foot stomps a random spot in the room every 20 seconds",
+  "dlc": "Rebirth",
+  "trackerText": "Mom stomps every 60 seconds (300 dmg)"
+ },
+ {
+  "num": 17,
+  "id": "black-lipstick",
+  "name": "Black Lipstick",
+  "kind": "trinket",
+  "lines": [
+   "+10% chance for random Soul Hearts to spawn as Black Hearts"
+  ],
+  "info": "+10% chance for random Soul Hearts to spawn as Black Hearts",
+  "dlc": "Rebirth",
+  "trackerText": "Higher chance for black hearts"
+ },
+ {
+  "num": 18,
+  "id": "bible-tract",
+  "name": "Bible Tract",
+  "kind": "trinket",
+  "lines": [
+   "+3% chance for Eternal Hearts"
+  ],
+  "info": "+3% chance for Eternal Hearts",
+  "dlc": "Rebirth",
+  "trackerText": "Higher chance for eternal hearts"
+ },
+ {
+  "num": 19,
+  "id": "paper-clip",
+  "name": "Paper Clip",
+  "kind": "trinket",
+  "lines": [
+   "Gold chests can be opened for free"
+  ],
+  "info": "Gold chests can be opened for free",
+  "dlc": "Rebirth",
+  "trackerText": "Can open Golden Chests without using a key"
+ },
+ {
+  "num": 20,
+  "id": "monkey-paw",
+  "name": "Monkey Paw",
+  "kind": "trinket",
+  "lines": [
+   "Spawns 1 Black Heart when Isaac's health is damaged down to half a heart",
+   "Disappears after spawning 3 Black Hearts"
+  ],
+  "info": "Spawns 1 Black Heart when Isaac's health is damaged down to half a heart · Disappears after spawning 3 Black Hearts",
+  "dlc": "Rebirth",
+  "trackerText": "Spawns a black heart when half a heart is remaining (3 times max)"
+ },
+ {
+  "num": 21,
+  "id": "mysterious-paper",
+  "name": "Mysterious Paper",
+  "kind": "trinket",
+  "lines": [
+   "Randomly grants the effect of:",
+   "The Polaroid",
+   "The Negative",
+   "A Missing Page",
+   "Missing Poster"
+  ],
+  "info": "Randomly grants the effect of: · The Polaroid · The Negative · A Missing Page · Missing Poster",
+  "dlc": "Rebirth",
+  "trackerText": "Copies effect of either A Missing Page, The Polaroid, The Negative, or Missing Poster"
+ },
+ {
+  "num": 22,
+  "id": "daemons-tail",
+  "name": "Daemon's Tail",
+  "kind": "trinket",
+  "lines": [
+   "Decreases spawn rate of hearts to 20%",
+   "All Heart pickups turn into Black Hearts",
+   "Increases the drop chance of keys"
+  ],
+  "info": "Decreases spawn rate of hearts to 20% · All Heart pickups turn into Black Hearts · Increases the drop chance of keys",
+  "dlc": "Rebirth",
+  "trackerText": "Heart drops are rerolled into a black heart, 80% to replace a heart drop with a key"
+ },
+ {
+  "num": 23,
+  "id": "missing-poster",
+  "name": "Missing Poster",
+  "kind": "trinket",
+  "lines": [
+   "Respawn as The Lost on death"
+  ],
+  "info": "Respawn as The Lost on death",
+  "dlc": "Rebirth",
+  "trackerText": "+1 life (will respawn as The Lost)"
+ },
+ {
+  "num": 24,
+  "id": "butt-penny",
+  "name": "Butt Penny",
+  "kind": "trinket",
+  "lines": [
+   "20% higher chance for coins to spawn from poop",
+   "Picking up coins makes Isaac fart, which poisons and knocks back enemies and projectiles"
+  ],
+  "info": "20% higher chance for coins to spawn from poop · Picking up coins makes Isaac fart, which poisons and knocks back enemies and projectiles",
+  "dlc": "Rebirth",
+  "trackerText": "Farts upon picking up a coin"
+ },
+ {
+  "num": 25,
+  "id": "mysterious-candy",
+  "name": "Mysterious Candy",
+  "kind": "trinket",
+  "lines": [
+   "Isaac farts or spawns poop every 30 seconds"
+  ],
+  "info": "Isaac farts or spawns poop every 30 seconds",
+  "dlc": "Rebirth",
+  "trackerText": "Chance to randomly poop"
+ },
+ {
+  "num": 26,
+  "id": "hook-worm",
+  "name": "Hook Worm",
+  "kind": "trinket",
+  "lines": [
+   "↑ +0.4 Tears",
+   "↑ +1.5 Range",
+   "Spectral tears",
+   "Isaac's tears move in angular patterns"
+  ],
+  "info": "↑ +0.4 Tears · ↑ +1.5 Range · Spectral tears · Isaac's tears move in angular patterns",
+  "stats": {
+   "range": 1.5
+  },
+  "dlc": "Rebirth",
+  "trackerText": "Hook + spectral tears"
+ },
+ {
+  "num": 27,
+  "id": "whip-worm",
+  "name": "Whip Worm",
+  "kind": "trinket",
+  "lines": [
+   "↑ +0.5 Shot speed"
+  ],
+  "info": "↑ +0.5 Shot speed",
+  "stats": {
+   "shotSpeed": 0.5
+  },
+  "dlc": "Rebirth"
+ },
+ {
+  "num": 28,
+  "id": "broken-ankh",
+  "name": "Broken Ankh",
+  "kind": "trinket",
+  "lines": [
+   "22% chance to respawn as ??? (Blue Baby) on death"
+  ],
+  "info": "22% chance to respawn as ??? (Blue Baby) on death",
+  "dlc": "Rebirth",
+  "trackerText": "20% chance to respawn as Blue Baby on death"
+ },
+ {
+  "num": 29,
+  "id": "fish-head",
+  "name": "Fish Head",
+  "kind": "trinket",
+  "lines": [
+   "Taking damage spawns 1-2 blue flies"
+  ],
+  "info": "Taking damage spawns 1-2 blue flies",
+  "dlc": "Rebirth",
+  "trackerText": "Spawns 1-2 blue flies on hit"
+ },
+ {
+  "num": 30,
+  "id": "pinky-eye",
+  "name": "Pinky Eye",
+  "kind": "trinket",
+  "lines": [
+   "10% chance to shoot poison tears",
+   "100% chance at 18 luck"
+  ],
+  "info": "10% chance to shoot poison tears · 100% chance at 18 luck",
+  "dlc": "Rebirth",
+  "trackerText": "Chance to shoot poison tears"
+ },
+ {
+  "num": 31,
+  "id": "push-pin",
+  "name": "Push Pin",
+  "kind": "trinket",
+  "lines": [
+   "10% chance to shoot piercing + spectral tears",
+   "100% chance at 18 luck"
+  ],
+  "info": "10% chance to shoot piercing + spectral tears · 100% chance at 18 luck",
+  "dlc": "Rebirth",
+  "trackerText": "Chance to shoot spectral + piercing tears"
+ },
+ {
+  "num": 32,
+  "id": "liberty-cap",
+  "name": "Liberty Cap",
+  "kind": "trinket",
+  "lines": [
+   "25% chance for a random mushroom effect per room"
+  ],
+  "info": "25% chance for a random mushroom effect per room",
+  "dlc": "Rebirth",
+  "trackerText": "Gives a random mushroom effect each room"
+ },
+ {
+  "num": 33,
+  "id": "umbilical-cord",
+  "name": "Umbilical Cord",
+  "kind": "trinket",
+  "lines": [
+   "Having half a Red Heart or less grants Little Steven",
+   "Taking damage has a high chance to spawn a Gemini familiar for the room"
+  ],
+  "info": "Having half a Red Heart or less grants Little Steven · Taking damage has a high chance to spawn a Gemini familiar for the room",
+  "dlc": "Rebirth",
+  "trackerText": "Gives Little Steven if damaged to 1/2 hearts, high chance to proc a Gemini for the room when hit"
+ },
+ {
+  "num": 34,
+  "id": "childs-heart",
+  "name": "Child's Heart",
+  "kind": "trinket",
+  "lines": [
+   "10% chance for the room clear reward to be a random heart",
+   "33% chance for a bonus heart from chests, tinted rocks, and destroyed machines"
+  ],
+  "info": "10% chance for the room clear reward to be a random heart · 33% chance for a bonus heart from chests, tinted rocks, and destroyed machines",
+  "dlc": "Rebirth",
+  "trackerText": "Higher chance to find red hearts"
+ },
+ {
+  "num": 35,
+  "id": "curved-horn",
+  "name": "Curved Horn",
+  "kind": "trinket",
+  "lines": [
+   "↑ +2 Damage"
+  ],
+  "info": "↑ +2 Damage",
+  "stats": {
+   "damage": 2
+  },
+  "dlc": "Rebirth"
+ },
+ {
+  "num": 36,
+  "id": "rusted-key",
+  "name": "Rusted Key",
+  "kind": "trinket",
+  "lines": [
+   "10% chance for the room clear reward to be a key",
+   "33% chance for a bonus key from chests, tinted rocks, and destroyed machines"
+  ],
+  "info": "10% chance for the room clear reward to be a key · 33% chance for a bonus key from chests, tinted rocks, and destroyed machines",
+  "dlc": "Rebirth",
+  "trackerText": "Higher chance to find keys and chests"
+ },
+ {
+  "num": 37,
+  "id": "goat-hoof",
+  "name": "Goat Hoof",
+  "kind": "trinket",
+  "lines": [
+   "↑ +0.15 Speed"
+  ],
+  "info": "↑ +0.15 Speed",
+  "stats": {
+   "speed": 0.15
+  },
+  "dlc": "Rebirth"
+ },
+ {
+  "num": 38,
+  "id": "moms-pearl",
+  "name": "Mom's Pearl",
+  "kind": "trinket",
+  "lines": [
+   "+10% chance for heart drops to be Soul Hearts, Black Hearts or Bone Hearts"
+  ],
+  "info": "+10% chance for heart drops to be Soul Hearts, Black Hearts or Bone Hearts",
+  "dlc": "Rebirth",
+  "trackerText": "Higher chance to find soul hearts"
+ },
+ {
+  "num": 39,
+  "id": "cancer-39",
+  "name": "Cancer",
+  "kind": "trinket",
+  "lines": [
+   "↑ +1 Fire rate"
+  ],
+  "info": "↑ +1 Fire rate",
+  "stats": {
+   "tears": 1
+  },
+  "dlc": "Rebirth"
+ },
+ {
+  "num": 40,
+  "id": "red-patch",
+  "name": "Red Patch",
+  "kind": "trinket",
+  "lines": [
+   "Taking damage has a 20% chance to grant ↑ +1.8 damage for the room",
+   "100% chance at 8 luck"
+  ],
+  "info": "Taking damage has a 20% chance to grant ↑ +1.8 damage for the room · 100% chance at 8 luck",
+  "dlc": "Rebirth",
+  "trackerText": "Chance to temporarily gain 1.8 dmg on hit"
+ },
+ {
+  "num": 41,
+  "id": "match-stick",
+  "name": "Match Stick",
+  "kind": "trinket",
+  "lines": [
+   "10% chance for the room clear reward to be a bomb",
+   "33% chance for a bonus bomb from chests, tinted rocks, and destroyed machines",
+   "Removes Tick"
+  ],
+  "info": "10% chance for the room clear reward to be a bomb · 33% chance for a bonus bomb from chests, tinted rocks, and destroyed machines · Removes Tick",
+  "dlc": "Rebirth",
+  "trackerText": "Higher chance to find bombs"
+ },
+ {
+  "num": 42,
+  "id": "lucky-toe",
+  "name": "Lucky Toe",
+  "kind": "trinket",
+  "lines": [
+   "↑ +1 Luck",
+   "+8% room clear reward chance",
+   "33% chance for an extra pickup from chests, tinted rocks, and destroyed machines"
+  ],
+  "info": "↑ +1 Luck · +8% room clear reward chance · 33% chance for an extra pickup from chests, tinted rocks, and destroyed machines",
+  "stats": {
+   "luck": 1
+  },
+  "dlc": "Rebirth"
+ },
+ {
+  "num": 43,
+  "id": "cursed-skull",
+  "name": "Cursed Skull",
+  "kind": "trinket",
+  "lines": [
+   "When damaged down to half a heart or less, Isaac is teleported to a random room"
+  ],
+  "info": "When damaged down to half a heart or less, Isaac is teleported to a random room",
+  "dlc": "Rebirth",
+  "trackerText": "Teleported to a random room if damaged to 1/2 heart"
+ },
+ {
+  "num": 44,
+  "id": "safety-cap",
+  "name": "Safety Cap",
+  "kind": "trinket",
+  "lines": [
+   "10% chance for the room clear reward to be a pill",
+   "33% chance for a bonus pill from chests, tinted rocks, and destroyed machines"
+  ],
+  "info": "10% chance for the room clear reward to be a pill · 33% chance for a bonus pill from chests, tinted rocks, and destroyed machines",
+  "dlc": "Rebirth",
+  "trackerText": "Higher chance to find pills"
+ },
+ {
+  "num": 45,
+  "id": "ace-of-spades",
+  "name": "Ace of Spades",
+  "kind": "trinket",
+  "lines": [
+   "10% chance for the room clear reward to be a card",
+   "33% chance for a bonus card from chests, tinted rocks, and destroyed machines"
+  ],
+  "info": "10% chance for the room clear reward to be a card · 33% chance for a bonus card from chests, tinted rocks, and destroyed machines",
+  "dlc": "Rebirth",
+  "trackerText": "Higher chance to find cards"
+ },
+ {
+  "num": 46,
+  "id": "isaacs-fork",
+  "name": "Isaac's Fork",
+  "kind": "trinket",
+  "lines": [
+   "Clearing a room has a 10% chance to heal half a heart",
+   "100% chance at 18 luck"
+  ],
+  "info": "Clearing a room has a 10% chance to heal half a heart · 100% chance at 18 luck",
+  "dlc": "Rebirth",
+  "trackerText": "Chance to heal for a 1/2 heart after clearing a room"
+ },
+ {
+  "num": 47,
+  "id": "item-47",
+  "name": "",
+  "kind": "trinket",
+  "lines": [
+   "<Item does not exist>"
+  ],
+  "info": "<Item does not exist>"
+ },
+ {
+  "num": 48,
+  "id": "a-missing-page",
+  "name": "A Missing Page",
+  "kind": "trinket",
+  "lines": [
+   "Taking damage has a 5% chance to deal 80 damage to all enemies in the room",
+   "Black Hearts and Necronomicon-like effects deal double damage"
+  ],
+  "info": "Taking damage has a 5% chance to deal 80 damage to all enemies in the room · Black Hearts and Necronomicon-like effects deal double damage",
+  "dlc": "Rebirth",
+  "trackerText": "Chance to do Necronomicon effect (80 dmg) on hit"
+ },
+ {
+  "num": 49,
+  "id": "bloody-penny",
+  "name": "Bloody Penny",
+  "kind": "trinket",
+  "lines": [
+   "Picking up a coin has a 25% chance to spawn a half Red Heart",
+   "Higher chance from nickels and dimes"
+  ],
+  "info": "Picking up a coin has a 25% chance to spawn a half Red Heart · Higher chance from nickels and dimes",
+  "dlc": "Rebirth",
+  "trackerText": "25% chance to spawn a 1/2 red heart upon picking up a coin"
+ },
+ {
+  "num": 50,
+  "id": "burnt-penny",
+  "name": "Burnt Penny",
+  "kind": "trinket",
+  "lines": [
+   "Picking up a coin has a 25% chance to spawn a bomb",
+   "Higher chance from nickels and dimes"
+  ],
+  "info": "Picking up a coin has a 25% chance to spawn a bomb · Higher chance from nickels and dimes",
+  "dlc": "Rebirth",
+  "trackerText": "25% chance to spawn a bomb upon picking up a coin"
+ },
+ {
+  "num": 51,
+  "id": "flat-penny",
+  "name": "Flat Penny",
+  "kind": "trinket",
+  "lines": [
+   "Picking up a coin has a 25% chance to spawn a key",
+   "Higher chance from nickels and dimes"
+  ],
+  "info": "Picking up a coin has a 25% chance to spawn a key · Higher chance from nickels and dimes",
+  "dlc": "Rebirth",
+  "trackerText": "25% chance to spawns a key upon picking up a coin"
+ },
+ {
+  "num": 52,
+  "id": "counterfeit-penny",
+  "name": "Counterfeit Penny",
+  "kind": "trinket",
+  "lines": [
+   "Picking up a coin has a 50% chance to add another coin to the counter"
+  ],
+  "info": "Picking up a coin has a 50% chance to add another coin to the counter",
+  "dlc": "Rebirth",
+  "trackerText": "50% chance to gain an extra cent upon picking up a coin"
+ },
+ {
+  "num": 53,
+  "id": "tick",
+  "name": "Tick",
+  "kind": "trinket",
+  "lines": [
+   "Heals 1 heart when entering a Boss Room",
+   "-15% boss health",
+   "Once picked up, it can't be removed",
+   "Only removeable with Match Stick or gulping"
+  ],
+  "info": "Heals 1 heart when entering a Boss Room · -15% boss health · Once picked up, it can't be removed · Only removeable with Match Stick or gulping",
+  "dlc": "Rebirth",
+  "trackerText": "Automatically deals 15% damage to each boss, heals 1 red heart, cannot drop"
+ },
+ {
+  "num": 54,
+  "id": "isaacs-head",
+  "name": "Isaac's Head",
+  "kind": "trinket",
+  "lines": [
+   "Familiar with piercing tears",
+   "Deals 3.5 damage per tear"
+  ],
+  "info": "Familiar with piercing tears · Deals 3.5 damage per tear",
+  "dlc": "Rebirth",
+  "trackerText": "Familiar (3.5 dmg / tear, piercing)"
+ },
+ {
+  "num": 55,
+  "id": "maggys-faith",
+  "name": "Maggy's Faith",
+  "kind": "trinket",
+  "lines": [
+   "Entering a new floor grants +1 Eternal Heart"
+  ],
+  "info": "Entering a new floor grants +1 Eternal Heart",
+  "dlc": "Rebirth",
+  "trackerText": "Gives an eternal heart at the beginning of every floor"
+ },
+ {
+  "num": 56,
+  "id": "judas-tongue",
+  "name": "Judas' Tongue",
+  "kind": "trinket",
+  "lines": [
+   "Reduces all devil deal prices to 1 heart container",
+   "Doesn't reduce 3 Soul Heart prices"
+  ],
+  "info": "Reduces all devil deal prices to 1 heart container · Doesn't reduce 3 Soul Heart prices",
+  "dlc": "Rebirth",
+  "trackerText": "Devil deal items that cost 2 hearts are reduced to 1 heart"
+ },
+ {
+  "num": 57,
+  "id": "s-soul",
+  "name": "???'s Soul",
+  "kind": "trinket",
+  "lines": [
+   "Familiar that bounces around the room",
+   "Shoots in the same direction as Isaac",
+   "Deals 3.5 damage per tear"
+  ],
+  "info": "Familiar that bounces around the room · Shoots in the same direction as Isaac · Deals 3.5 damage per tear",
+  "dlc": "Rebirth",
+  "trackerText": "Familiar that moves like DVD logo, shoots in the same direction as the player"
+ },
+ {
+  "num": 58,
+  "id": "samsons-lock",
+  "name": "Samson's Lock",
+  "kind": "trinket",
+  "lines": [
+   "Killing an enemy has a 6.66% chance to grant ↑ +0.5 damage for the room",
+   "100% chance at 10 luck"
+  ],
+  "info": "Killing an enemy has a 6.66% chance to grant ↑ +0.5 damage for the room · 100% chance at 10 luck",
+  "dlc": "Rebirth",
+  "trackerText": "Chance to temporarily gain 0.5 dmg when killing an enemy"
+ },
+ {
+  "num": 59,
+  "id": "cains-eye",
+  "name": "Cain's Eye",
+  "kind": "trinket",
+  "lines": [
+   "Entering a new floor has a 25% chance to reveal map icons",
+   "100% chance at 3 luck"
+  ],
+  "info": "Entering a new floor has a 25% chance to reveal map icons · 100% chance at 3 luck",
+  "dlc": "Rebirth",
+  "trackerText": "25% chance to gain The Compass effect at the beginning of every floor"
+ },
+ {
+  "num": 60,
+  "id": "eves-bird-foot",
+  "name": "Eve's Bird Foot",
+  "kind": "trinket",
+  "lines": [
+   "Killing an enemy has a 5% chance to spawn a Dead Bird",
+   "100% chance at 8 luck"
+  ],
+  "info": "Killing an enemy has a 5% chance to spawn a Dead Bird · 100% chance at 8 luck",
+  "dlc": "Rebirth",
+  "trackerText": "Chance to spawn a Dead Bird familiar when killing an enemy (2 dmg / tick)"
+ },
+ {
+  "num": 61,
+  "id": "the-left-hand",
+  "name": "The Left Hand",
+  "kind": "trinket",
+  "lines": [
+   "Turns all chests into Red Chests"
+  ],
+  "info": "Turns all chests into Red Chests",
+  "dlc": "Rebirth",
+  "trackerText": "All chests become Red Chests"
+ },
+ {
+  "num": 62,
+  "id": "shiny-rock",
+  "name": "Shiny Rock",
+  "kind": "trinket",
+  "lines": [
+   "Crawlspace rocks and tinted rocks blink every 10 seconds"
+  ],
+  "info": "Crawlspace rocks and tinted rocks blink every 10 seconds",
+  "dlc": "Afterbirth",
+  "trackerText": "Tinted rocks and crawlspace rocks will flash white every 10 seconds"
+ },
+ {
+  "num": 63,
+  "id": "safety-scissors",
+  "name": "Safety Scissors",
+  "kind": "trinket",
+  "lines": [
+   "Turns Troll Bombs into bomb pickups"
+  ],
+  "info": "Turns Troll Bombs into bomb pickups",
+  "dlc": "Afterbirth",
+  "trackerText": "Turns all troll bombs into bomb pickups"
+ },
+ {
+  "num": 64,
+  "id": "rainbow-worm",
+  "name": "Rainbow Worm",
+  "kind": "trinket",
+  "lines": [
+   "Grants a random worm effect every 3 seconds"
+  ],
+  "info": "Grants a random worm effect every 3 seconds",
+  "dlc": "Afterbirth",
+  "trackerText": "Rainbow worm tears (a random worm effect every 5 seconds)"
+ },
+ {
+  "num": 65,
+  "id": "tape-worm",
+  "name": "Tape Worm",
+  "kind": "trinket",
+  "lines": [
+   "↑ +3 Range"
+  ],
+  "info": "↑ +3 Range",
+  "stats": {
+   "range": 3
+  },
+  "dlc": "Afterbirth",
+  "trackerText": "Halves tear height"
+ },
+ {
+  "num": 66,
+  "id": "lazy-worm",
+  "name": "Lazy Worm",
+  "kind": "trinket",
+  "lines": [
+   "↓ -0.5 Shot speed"
+  ],
+  "info": "↓ -0.5 Shot speed",
+  "stats": {
+   "rangeHeight": 2,
+   "shotSpeed": -0.5
+  },
+  "dlc": "Afterbirth"
+ },
+ {
+  "num": 67,
+  "id": "cracked-dice",
+  "name": "Cracked Dice",
+  "kind": "trinket",
+  "lines": [
+   "Taking damage has a 50% chance to trigger one of these effects:",
+   "D6",
+   "D8",
+   "D10",
+   "D12",
+   "D20"
+  ],
+  "info": "Taking damage has a 50% chance to trigger one of these effects: · D6 · D8 · D10 · D12 · D20",
+  "dlc": "Afterbirth",
+  "trackerText": "Randomly D6, D20, D8, or D12 on hit"
+ },
+ {
+  "num": 68,
+  "id": "super-magnet",
+  "name": "Super Magnet",
+  "kind": "trinket",
+  "lines": [
+   "Isaac attracts pickups and enemies"
+  ],
+  "info": "Isaac attracts pickups and enemies",
+  "dlc": "Afterbirth",
+  "trackerText": "Pickups and enemies move towards you"
+ },
+ {
+  "num": 69,
+  "id": "faded-polaroid",
+  "name": "Faded Polaroid",
+  "kind": "trinket",
+  "lines": [
+   "Randomly camouflages Isaac",
+   "Confuses enemies",
+   "Can be used to open the \\\"Strange Door\\\" in \\\"Depths II\\\""
+  ],
+  "info": "Randomly camouflages Isaac · Confuses enemies · Can be used to open the \\\"Strange Door\\\" in \\\"Depths II\\\"",
+  "dlc": "Afterbirth",
+  "trackerText": "Chance to gain camouflage for a few seconds (confuses all enemies)"
+ },
+ {
+  "num": 70,
+  "id": "louse",
+  "name": "Louse",
+  "kind": "trinket",
+  "lines": [
+   "Occasionally spawns a blue spider in hostile rooms"
+  ],
+  "info": "Occasionally spawns a blue spider in hostile rooms",
+  "dlc": "Afterbirth",
+  "trackerText": "Chance to spawn a blue spider when in a room with enemies"
+ },
+ {
+  "num": 71,
+  "id": "bobs-bladder",
+  "name": "Bob's Bladder",
+  "kind": "trinket",
+  "lines": [
+   "Isaac's bombs leave damaging creep"
+  ],
+  "info": "Isaac's bombs leave damaging creep",
+  "dlc": "Afterbirth",
+  "trackerText": "Bombs make green creep"
+ },
+ {
+  "num": 72,
+  "id": "watch-battery",
+  "name": "Watch Battery",
+  "kind": "trinket",
+  "lines": [
+   "6.66% chance for the room clear reward to be a battery",
+   "+10% chance for random pickups to be a battery",
+   "5% chance to add 1 charge to held active item when clearing a room"
+  ],
+  "info": "6.66% chance for the room clear reward to be a battery · +10% chance for random pickups to be a battery · 5% chance to add 1 charge to held active item when clearing a room",
+  "dlc": "Afterbirth",
+  "trackerText": "Increased chance to find batteries, chance to add an extra charge after clearing a room"
+ },
+ {
+  "num": 73,
+  "id": "blasting-cap",
+  "name": "Blasting Cap",
+  "kind": "trinket",
+  "lines": [
+   "10% chance for exploding bombs to drop a bomb pickup"
+  ],
+  "info": "10% chance for exploding bombs to drop a bomb pickup",
+  "dlc": "Afterbirth",
+  "trackerText": "Exploding bombs have a chance to drop another bomb pickup"
+ },
+ {
+  "num": 74,
+  "id": "stud-finder",
+  "name": "Stud Finder",
+  "kind": "trinket",
+  "lines": [
+   "0.5% chance to reveal a crawlspace when breaking a rock"
+  ],
+  "info": "0.5% chance to reveal a crawlspace when breaking a rock",
+  "dlc": "Afterbirth",
+  "trackerText": "Increased chance to find crawlspaces when breaking rocks"
+ },
+ {
+  "num": 75,
+  "id": "error",
+  "name": "Error",
+  "kind": "trinket",
+  "lines": [
+   "Grants a random trinket effect every room"
+  ],
+  "info": "Grants a random trinket effect every room",
+  "dlc": "Afterbirth",
+  "trackerText": "Gives a random trinket effect per room"
+ },
+ {
+  "num": 76,
+  "id": "poker-chip",
+  "name": "Poker Chip",
+  "kind": "trinket",
+  "lines": [
+   "↑ 50% chance for chests to spawn extra pickups",
+   "↓ 50% chance for chests to contain a single fly"
+  ],
+  "info": "↑ 50% chance for chests to spawn extra pickups · ↓ 50% chance for chests to contain a single fly",
+  "dlc": "Afterbirth",
+  "trackerText": "Chests now have a 50/50 chance to give extra pickups or have nothing"
+ },
+ {
+  "num": 77,
+  "id": "blister",
+  "name": "Blister",
+  "kind": "trinket",
+  "lines": [
+   "Increases knockback"
+  ],
+  "info": "Increases knockback",
+  "dlc": "Afterbirth",
+  "trackerText": "Tears have extra knockback"
+ },
+ {
+  "num": 78,
+  "id": "second-hand",
+  "name": "Second Hand",
+  "kind": "trinket",
+  "lines": [
+   "Status effects applied to enemies last 2 times as long"
+  ],
+  "info": "Status effects applied to enemies last 2 times as long",
+  "dlc": "Afterbirth",
+  "trackerText": "Increases the time that status effects stay on enemies"
+ },
+ {
+  "num": 79,
+  "id": "endless-nameless",
+  "name": "Endless Nameless",
+  "kind": "trinket",
+  "lines": [
+   "Using a rune, card or pill has a 25% chance to spawn a copy of that rune, card or pill"
+  ],
+  "info": "Using a rune, card or pill has a 25% chance to spawn a copy of that rune, card or pill",
+  "dlc": "Afterbirth",
+  "trackerText": "Chance to drop an extra copy of a card/pill upon use"
+ },
+ {
+  "num": 80,
+  "id": "black-feather",
+  "name": "Black Feather",
+  "kind": "trinket",
+  "lines": [
+   "↑ +0.5 Damage for each \\\"Evil up\\\" item held"
+  ],
+  "info": "↑ +0.5 Damage for each \\\"Evil up\\\" item held",
+  "dlc": "Afterbirth",
+  "trackerText": "+0.5 dmg per \"evil\" item"
+ },
+ {
+  "num": 81,
+  "id": "blind-rage",
+  "name": "Blind Rage",
+  "kind": "trinket",
+  "lines": [
+   "Invincibility frames after taking damage last 2 times as long"
+  ],
+  "info": "Invincibility frames after taking damage last 2 times as long",
+  "dlc": "Afterbirth",
+  "trackerText": "Extra invulnerability frames on hit"
+ },
+ {
+  "num": 82,
+  "id": "golden-horse-shoe",
+  "name": "Golden Horse Shoe",
+  "kind": "trinket",
+  "lines": [
+   "Future Treasure Rooms have +15% chance to let Isaac choose between two items"
+  ],
+  "info": "Future Treasure Rooms have +15% chance to let Isaac choose between two items",
+  "dlc": "Afterbirth",
+  "trackerText": "+15% chance to get a double Treasure Room"
+ },
+ {
+  "num": 83,
+  "id": "store-key",
+  "name": "Store Key",
+  "kind": "trinket",
+  "lines": [
+   "Lets Isaac open Shops for free"
+  ],
+  "info": "Lets Isaac open Shops for free",
+  "dlc": "Afterbirth",
+  "trackerText": "Shops do not require keys"
+ },
+ {
+  "num": 84,
+  "id": "rib-of-greed",
+  "name": "Rib of Greed",
+  "kind": "trinket",
+  "lines": [
+   "5% more coins and fewer hearts from room clear rewards",
+   "Greed and Super Greed no longer appear in Shops or Secret Rooms"
+  ],
+  "info": "5% more coins and fewer hearts from room clear rewards · Greed and Super Greed no longer appear in Shops or Secret Rooms",
+  "dlc": "Afterbirth",
+  "trackerText": "Greed and Super Greed can no longer appear"
+ },
+ {
+  "num": 85,
+  "id": "karma",
+  "name": "Karma",
+  "kind": "trinket",
+  "lines": [
+   "Using a Donation Machine has a 33% chance to:",
+   "Heal 1 heart (40%)",
+   "Give 1 coin (40%)",
+   "Grant +1 luck (15%)",
+   "Spawn a Beggar (5%)"
+  ],
+  "info": "Using a Donation Machine has a 33% chance to: · Heal 1 heart (40%) · Give 1 coin (40%) · Grant +1 luck (15%) · Spawn a Beggar (5%)",
+  "dlc": "Afterbirth",
+  "trackerText": "Chance to heal a red heart or spawn a Beggar when using a Donation Machine"
+ },
+ {
+  "num": 86,
+  "id": "lil-larva",
+  "name": "Lil Larva",
+  "kind": "trinket",
+  "lines": [
+   "Destroying poop spawns 1 blue fly"
+  ],
+  "info": "Destroying poop spawns 1 blue fly",
+  "dlc": "Afterbirth",
+  "trackerText": "Gives a blue fly upon destroying a poop"
+ },
+ {
+  "num": 87,
+  "id": "moms-locket",
+  "name": "Mom's Locket",
+  "kind": "trinket",
+  "lines": [
+   "Using a key heals half a heart",
+   "Turns half hearts into full hearts"
+  ],
+  "info": "Using a key heals half a heart · Turns half hearts into full hearts",
+  "dlc": "Afterbirth",
+  "trackerText": "Changes all 1/2 red hearts into full hearts, heals 1/2 heart when a key is used"
+ },
+ {
+  "num": 88,
+  "id": "no",
+  "name": "NO!",
+  "kind": "trinket",
+  "lines": [
+   "Prevents active items from spawning"
+  ],
+  "info": "Prevents active items from spawning",
+  "dlc": "Afterbirth",
+  "trackerText": "Prevents active items from appearing"
+ },
+ {
+  "num": 89,
+  "id": "child-leash",
+  "name": "Child Leash",
+  "kind": "trinket",
+  "lines": [
+   "Familiars stay closer to Isaac"
+  ],
+  "info": "Familiars stay closer to Isaac",
+  "dlc": "Afterbirth",
+  "trackerText": "Familiars stay closer to you"
+ },
+ {
+  "num": 90,
+  "id": "brown-cap",
+  "name": "Brown Cap",
+  "kind": "trinket",
+  "lines": [
+   "Poop explodes for 100 damage when destroyed"
+  ],
+  "info": "Poop explodes for 100 damage when destroyed",
+  "dlc": "Afterbirth",
+  "trackerText": "Poop explodes when destroyed"
+ },
+ {
+  "num": 91,
+  "id": "meconium",
+  "name": "Meconium",
+  "kind": "trinket",
+  "lines": [
+   "33% chance for Black Poops to spawn",
+   "Destroying Black Poop has a 5% chance to spawn a Black Heart"
+  ],
+  "info": "33% chance for Black Poops to spawn · Destroying Black Poop has a 5% chance to spawn a Black Heart",
+  "dlc": "Afterbirth+",
+  "trackerText": "Increased chance for Black Poops"
+ },
+ {
+  "num": 92,
+  "id": "cracked-crown",
+  "name": "Cracked Crown",
+  "kind": "trinket",
+  "lines": [
+   "↑ x1.2 Stat multiplier for the stats that are above 1 speed, 2.73 tears, 3.5 damage, 6.5 range, 1 shot speed"
+  ],
+  "info": "↑ x1.2 Stat multiplier for the stats that are above 1 speed, 2.73 tears, 3.5 damage, 6.5 range, 1 shot speed",
+  "dlc": "Afterbirth+",
+  "trackerText": "Stat bonuses are increased by 20%"
+ },
+ {
+  "num": 93,
+  "id": "used-diaper",
+  "name": "Used Diaper",
+  "kind": "trinket",
+  "lines": [
+   "15% chance per room for all fly enemies to become friendly"
+  ],
+  "info": "15% chance per room for all fly enemies to become friendly",
+  "dlc": "Afterbirth+",
+  "trackerText": "Gives Skatole effect in certain rooms"
+ },
+ {
+  "num": 94,
+  "id": "fish-tail",
+  "name": "Fish Tail",
+  "kind": "trinket",
+  "lines": [
+   "Doubles all blue fly / locust spawns"
+  ],
+  "info": "Doubles all blue fly / locust spawns",
+  "dlc": "Afterbirth+",
+  "trackerText": "2x blue fly/spider generation"
+ },
+ {
+  "num": 95,
+  "id": "black-tooth",
+  "name": "Black Tooth",
+  "kind": "trinket",
+  "lines": [
+   "3% chance to shoot poison tooth tears",
+   "The tooth deals 2x Isaac's damage"
+  ],
+  "info": "3% chance to shoot poison tooth tears · The tooth deals 2x Isaac's damage",
+  "dlc": "Afterbirth+",
+  "trackerText": "Chance to shoot black tooth tears (2x dmg + poison)"
+ }
+]

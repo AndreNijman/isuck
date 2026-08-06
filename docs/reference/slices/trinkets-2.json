@@ -1,0 +1,1207 @@
+[
+ {
+  "num": 96,
+  "id": "ouroboros-worm",
+  "name": "Ouroboros Worm",
+  "kind": "trinket",
+  "lines": [
+   "↑ +0.4 Tears",
+   "↑ +1.5 Range",
+   "Spectral tears",
+   "10% Chance for homing tears",
+   "100% chance at 9 luck",
+   "Isaac's tears move quickly in a spiral pattern"
+  ],
+  "info": "↑ +0.4 Tears · ↑ +1.5 Range · Spectral tears · 10% Chance for homing tears · 100% chance at 9 luck · Isaac's tears move quickly in a spiral pattern",
+  "stats": {
+   "range": 1.5
+  },
+  "dlc": "Afterbirth+",
+  "trackerText": "Spiral tears"
+ },
+ {
+  "num": 97,
+  "id": "tonsil",
+  "name": "Tonsil",
+  "kind": "trinket",
+  "lines": [
+   "Taking damage 12-20 times spawns a projectile blocking familiar",
+   "Disappears after spawning 2 familiars"
+  ],
+  "info": "Taking damage 12-20 times spawns a projectile blocking familiar · Disappears after spawning 2 familiars",
+  "dlc": "Afterbirth+",
+  "trackerText": "Chance to spawn tonsil familiar on hit"
+ },
+ {
+  "num": 98,
+  "id": "nose-goblin",
+  "name": "Nose Goblin",
+  "kind": "trinket",
+  "lines": [
+   "10% chance to shoot a sticky tear",
+   "50% chance for it to be homing",
+   "Boogers deal Isaac's damage once per second",
+   "Boogers stick for 10 seconds"
+  ],
+  "info": "10% chance to shoot a sticky tear · 50% chance for it to be homing · Boogers deal Isaac's damage once per second · Boogers stick for 10 seconds",
+  "dlc": "Afterbirth+",
+  "trackerText": "Chance to shoot booger tears (dmg over time for 60 seconds)"
+ },
+ {
+  "num": 99,
+  "id": "super-ball",
+  "name": "Super Ball",
+  "kind": "trinket",
+  "lines": [
+   "10% chance to shoot bouncing tears"
+  ],
+  "info": "10% chance to shoot bouncing tears",
+  "dlc": "Afterbirth+",
+  "trackerText": "Chance to shoot bouncy tears (tears bounce off rocks/walls)"
+ },
+ {
+  "num": 100,
+  "id": "vibrant-bulb",
+  "name": "Vibrant Bulb",
+  "kind": "trinket",
+  "lines": [
+   "Holding a fully charged active item grants:",
+   "↑ +0.25 Speed",
+   "↑ +0.2 Tears",
+   "↑ +0.5 Damage",
+   "↑ +0.75 Range",
+   "↑ +0.1 Shot speed",
+   "↑ +1 Luck"
+  ],
+  "info": "Holding a fully charged active item grants: · ↑ +0.25 Speed · ↑ +0.2 Tears · ↑ +0.5 Damage · ↑ +0.75 Range · ↑ +0.1 Shot speed · ↑ +1 Luck",
+  "dlc": "Afterbirth+",
+  "trackerText": "+0.25 speed, +0.75 range, +0.1 shot speed, +0.2 tears, +0.5 damage, +1 luck when active item is fully charged"
+ },
+ {
+  "num": 101,
+  "id": "dim-bulb",
+  "name": "Dim Bulb",
+  "kind": "trinket",
+  "lines": [
+   "Holding a completely uncharged active item grants:",
+   "↑ +0.5 Speed",
+   "↑ +0.5 Tears",
+   "↑ +1.5 Damage",
+   "↑ +1.5 Range",
+   "↑ +0.3 Shot speed",
+   "↑ +2 Luck"
+  ],
+  "info": "Holding a completely uncharged active item grants: · ↑ +0.5 Speed · ↑ +0.5 Tears · ↑ +1.5 Damage · ↑ +1.5 Range · ↑ +0.3 Shot speed · ↑ +2 Luck",
+  "dlc": "Afterbirth+",
+  "trackerText": "+0.5 speed, +1.5 range, +0.3 shot speed, +0.5 tears, +1.5 damage, +2 luck when active item is completely uncharged"
+ },
+ {
+  "num": 102,
+  "id": "fragmented-card",
+  "name": "Fragmented Card",
+  "kind": "trinket",
+  "lines": [
+   "+1 extra Secret Room per floor while held"
+  ],
+  "info": "+1 extra Secret Room per floor while held",
+  "dlc": "Afterbirth+",
+  "trackerText": "Generates 2 Secret Rooms per floor"
+ },
+ {
+  "num": 103,
+  "id": "equality",
+  "name": "Equality!",
+  "kind": "trinket",
+  "lines": [
+   "Turns single pickups into double pickups when Isaac's coin, bomb and key counts are equal"
+  ],
+  "info": "Turns single pickups into double pickups when Isaac's coin, bomb and key counts are equal",
+  "dlc": "Afterbirth+",
+  "trackerText": "Half pickups turn into doubled pickups when same # of coins + bombs + keys"
+ },
+ {
+  "num": 104,
+  "id": "wish-bone",
+  "name": "Wish Bone",
+  "kind": "trinket",
+  "lines": [
+   "2% chance to get destroyed and spawn a pedestal item when hit"
+  ],
+  "info": "2% chance to get destroyed and spawn a pedestal item when hit",
+  "dlc": "Afterbirth+",
+  "trackerText": "Chance to spawn pedestal item on hit"
+ },
+ {
+  "num": 105,
+  "id": "bag-lunch",
+  "name": "Bag Lunch",
+  "kind": "trinket",
+  "lines": [
+   "2% chance to get destroyed and spawn Lunch when hit"
+  ],
+  "info": "2% chance to get destroyed and spawn Lunch when hit",
+  "dlc": "Afterbirth+",
+  "trackerText": "Chance to spawn Lunch on hit"
+ },
+ {
+  "num": 106,
+  "id": "lost-cork",
+  "name": "Lost Cork",
+  "kind": "trinket",
+  "lines": [
+   "Increases the radius of friendly creep"
+  ],
+  "info": "Increases the radius of friendly creep",
+  "dlc": "Afterbirth+",
+  "trackerText": "Increases radius of friendly creep"
+ },
+ {
+  "num": 107,
+  "id": "crow-heart",
+  "name": "Crow Heart",
+  "kind": "trinket",
+  "lines": [
+   "Taking damage depletes Red Hearts before Soul/Black Hearts",
+   "Taking Red Heart damage will reduce Devil/Angel Room chance"
+  ],
+  "info": "Taking damage depletes Red Hearts before Soul/Black Hearts · Taking Red Heart damage will reduce Devil/Angel Room chance",
+  "dlc": "Afterbirth+",
+  "trackerText": "Red heart containers are depleted first"
+ },
+ {
+  "num": 108,
+  "id": "walnut",
+  "name": "Walnut",
+  "kind": "trinket",
+  "lines": [
+   "Getting hit by 1-9 explosions destroys the trinket and drops a random heart, coin, key and trinket",
+   "Taking damage isn't required"
+  ],
+  "info": "Getting hit by 1-9 explosions destroys the trinket and drops a random heart, coin, key and trinket · Taking damage isn't required",
+  "dlc": "Afterbirth+",
+  "trackerText": "Chance to break and drop random coin/heart/key/trinket on hit from explosion"
+ },
+ {
+  "num": 109,
+  "id": "duct-tape",
+  "name": "Duct Tape",
+  "kind": "trinket",
+  "lines": [
+   "Familiars are stuck in place relative to Isaac's position"
+  ],
+  "info": "Familiars are stuck in place relative to Isaac's position",
+  "dlc": "Afterbirth+",
+  "trackerText": "Orbitals and familiars stop moving"
+ },
+ {
+  "num": 110,
+  "id": "silver-dollar",
+  "name": "Silver Dollar",
+  "kind": "trinket",
+  "lines": [
+   "Shops appear in the Womb and Corpse"
+  ],
+  "info": "Shops appear in the Womb and Corpse",
+  "dlc": "Afterbirth+",
+  "trackerText": "Shops will appear on the Womb"
+ },
+ {
+  "num": 111,
+  "id": "bloody-crown",
+  "name": "Bloody Crown",
+  "kind": "trinket",
+  "lines": [
+   "Treasure Rooms appear in the Womb and Corpse"
+  ],
+  "info": "Treasure Rooms appear in the Womb and Corpse",
+  "dlc": "Afterbirth+",
+  "trackerText": "Treasure Rooms will appear on the Womb"
+ },
+ {
+  "num": 112,
+  "id": "pay-to-win",
+  "name": "Pay To Win",
+  "kind": "trinket",
+  "lines": [
+   "Restock boxes always spawn in Treasure Rooms"
+  ],
+  "info": "Restock boxes always spawn in Treasure Rooms",
+  "dlc": "Afterbirth+",
+  "trackerText": "Restock Machines will always spawn in Treasure Rooms"
+ },
+ {
+  "num": 113,
+  "id": "locust-of-war",
+  "name": "Locust of War",
+  "kind": "trinket",
+  "lines": [
+   "Entering a hostile room spawns an exploding attack fly",
+   "The fly deals 2x Isaac's damage + explosion damage"
+  ],
+  "info": "Entering a hostile room spawns an exploding attack fly · The fly deals 2x Isaac's damage + explosion damage",
+  "dlc": "Afterbirth+",
+  "trackerText": "Spawns a Red (exploding) Locust upon entering a room"
+ },
+ {
+  "num": 114,
+  "id": "locust-of-pestilence",
+  "name": "Locust of Pestilence",
+  "kind": "trinket",
+  "lines": [
+   "Entering a hostile room spawns a poison attack fly",
+   "The fly deals 2x Isaac's damage"
+  ],
+  "info": "Entering a hostile room spawns a poison attack fly · The fly deals 2x Isaac's damage",
+  "dlc": "Afterbirth+",
+  "trackerText": "Spawns a Green (poison) Locust upon entering a room"
+ },
+ {
+  "num": 115,
+  "id": "locust-of-famine",
+  "name": "Locust of Famine",
+  "kind": "trinket",
+  "lines": [
+   "Entering a hostile room spawns a slowing attack fly",
+   "The fly deals 2x Isaac's damage"
+  ],
+  "info": "Entering a hostile room spawns a slowing attack fly · The fly deals 2x Isaac's damage",
+  "dlc": "Afterbirth+",
+  "trackerText": "Spawns a Yellow (slowing) Locust upon entering a room"
+ },
+ {
+  "num": 116,
+  "id": "locust-of-death",
+  "name": "Locust of Death",
+  "kind": "trinket",
+  "lines": [
+   "Entering a hostile room spawns an attack fly",
+   "The fly deals 4x Isaac's damage"
+  ],
+  "info": "Entering a hostile room spawns an attack fly · The fly deals 4x Isaac's damage",
+  "dlc": "Afterbirth+",
+  "trackerText": "Spawns a Black (4x dmg) Locust upon entering a room"
+ },
+ {
+  "num": 117,
+  "id": "locust-of-conquest",
+  "name": "Locust of Conquest",
+  "kind": "trinket",
+  "lines": [
+   "Entering a hostile room spawns 1-4 attack flies",
+   "Each fly deals 2x Isaac's damage"
+  ],
+  "info": "Entering a hostile room spawns 1-4 attack flies · Each fly deals 2x Isaac's damage",
+  "dlc": "Afterbirth+",
+  "trackerText": "Spawns 2-5 White Locusts upon entering a room"
+ },
+ {
+  "num": 118,
+  "id": "bat-wing",
+  "name": "Bat Wing",
+  "kind": "trinket",
+  "lines": [
+   "Killing an enemy has a 5% chance to grant flight for the room"
+  ],
+  "info": "Killing an enemy has a 5% chance to grant flight for the room",
+  "dlc": "Afterbirth+",
+  "trackerText": "Chance to gain flight when killing an enemy"
+ },
+ {
+  "num": 119,
+  "id": "stem-cell",
+  "name": "Stem Cell",
+  "kind": "trinket",
+  "lines": [
+   "Entering a new floor heals half of Isaac's empty Red/Bone Hearts",
+   "Heals half a heart minimum"
+  ],
+  "info": "Entering a new floor heals half of Isaac's empty Red/Bone Hearts · Heals half a heart minimum",
+  "dlc": "Afterbirth+",
+  "trackerText": "Heals for 1/2 heart when travelling to the next floor"
+ },
+ {
+  "num": 120,
+  "id": "hairpin",
+  "name": "Hairpin",
+  "kind": "trinket",
+  "lines": [
+   "Entering an uncleared boss room fully recharges active items"
+  ],
+  "info": "Entering an uncleared boss room fully recharges active items",
+  "dlc": "Booster Pack #1",
+  "trackerText": "Fully recharges active item at the start of each boss"
+ },
+ {
+  "num": 121,
+  "id": "wooden-cross",
+  "name": "Wooden Cross",
+  "kind": "trinket",
+  "lines": [
+   "Grants a Holy shield that prevents damage once per floor"
+  ],
+  "info": "Grants a Holy shield that prevents damage once per floor",
+  "dlc": "Booster Pack #1",
+  "trackerText": "Gives 1-hit shield at the start of each floor"
+ },
+ {
+  "num": 122,
+  "id": "butter",
+  "name": "Butter!",
+  "kind": "trinket",
+  "lines": [
+   "Using an active item drops it on a pedestal on the ground",
+   "Taking damage has a 2% chance to drop one of Isaac's passive items"
+  ],
+  "info": "Using an active item drops it on a pedestal on the ground · Taking damage has a 2% chance to drop one of Isaac's passive items",
+  "dlc": "Booster Pack #1",
+  "trackerText": "Using active items drops them on the ground, chance to drop passive items on hit"
+ },
+ {
+  "num": 123,
+  "id": "filigree-feather",
+  "name": "Filigree Feather",
+  "kind": "trinket",
+  "lines": [
+   "Angel bosses drop angel items instead of Key Pieces"
+  ],
+  "info": "Angel bosses drop angel items instead of Key Pieces",
+  "dlc": "Booster Pack #2",
+  "trackerText": "Angels will drop Angel Room items instead of key pieces"
+ },
+ {
+  "num": 124,
+  "id": "door-stop",
+  "name": "Door Stop",
+  "kind": "trinket",
+  "lines": [
+   "The last door used stays open"
+  ],
+  "info": "The last door used stays open",
+  "dlc": "Booster Pack #3",
+  "trackerText": "Doors that you go through stay open"
+ },
+ {
+  "num": 125,
+  "id": "extension-cord",
+  "name": "Extension Cord",
+  "kind": "trinket",
+  "lines": [
+   "Connects all familiars with beams of electricity",
+   "The beams deal 6 damage"
+  ],
+  "info": "Connects all familiars with beams of electricity · The beams deal 6 damage",
+  "dlc": "Booster Pack #4",
+  "trackerText": "Yellow laser chain flows through familiars"
+ },
+ {
+  "num": 126,
+  "id": "rotten-penny",
+  "name": "Rotten Penny",
+  "kind": "trinket",
+  "lines": [
+   "Picking up a coin spawns a blue fly"
+  ],
+  "info": "Picking up a coin spawns a blue fly",
+  "dlc": "Booster Pack #5",
+  "trackerText": "+1 blue fly upon picking up a coin"
+ },
+ {
+  "num": 127,
+  "id": "baby-bender",
+  "name": "Baby-Bender",
+  "kind": "trinket",
+  "lines": [
+   "Grants all familiars homing shots"
+  ],
+  "info": "Grants all familiars homing shots",
+  "dlc": "Booster Pack #5",
+  "trackerText": "Familiars have homing shots"
+ },
+ {
+  "num": 128,
+  "id": "finger-bone",
+  "name": "Finger Bone",
+  "kind": "trinket",
+  "lines": [
+   "Taking damage has a 4% chance to grant a Bone Heart"
+  ],
+  "info": "Taking damage has a 4% chance to grant a Bone Heart",
+  "dlc": "Booster Pack #5",
+  "trackerText": "5% chance to gain a bone heart on hit"
+ },
+ {
+  "num": 129,
+  "id": "jawbreaker",
+  "name": "Jawbreaker",
+  "kind": "trinket",
+  "lines": [
+   "10% chance to shoot teeth that deal 3.2x Isaac's damage",
+   "100% chance at 9 luck"
+  ],
+  "info": "10% chance to shoot teeth that deal 3.2x Isaac's damage · 100% chance at 9 luck",
+  "dlc": "Antibirth",
+  "trackerText": "Tears can become a tooth"
+ },
+ {
+  "num": 130,
+  "id": "chewed-pen",
+  "name": "Chewed Pen",
+  "kind": "trinket",
+  "lines": [
+   "10% chance to shoot slowing tears",
+   "100% chance at 18 luck"
+  ],
+  "info": "10% chance to shoot slowing tears · 100% chance at 18 luck",
+  "dlc": "Antibirth",
+  "trackerText": "Tears have a chance to slow enemies"
+ },
+ {
+  "num": 131,
+  "id": "blessed-penny",
+  "name": "Blessed Penny",
+  "kind": "trinket",
+  "lines": [
+   "Picking up a coin has a 17% chance to spawn a half Soul Heart",
+   "Higher chance from nickels and dimes"
+  ],
+  "info": "Picking up a coin has a 17% chance to spawn a half Soul Heart · Higher chance from nickels and dimes",
+  "dlc": "Antibirth",
+  "trackerText": "Chance to spawn half a soul heart when picking up a coin"
+ },
+ {
+  "num": 132,
+  "id": "broken-syringe",
+  "name": "Broken Syringe",
+  "kind": "trinket",
+  "lines": [
+   "25% chance to get a random syringe effect each room"
+  ],
+  "info": "25% chance to get a random syringe effect each room",
+  "dlc": "Antibirth",
+  "trackerText": "Gives you a random syringe effect every room"
+ },
+ {
+  "num": 133,
+  "id": "short-fuse",
+  "name": "Short Fuse",
+  "kind": "trinket",
+  "lines": [
+   "Isaac's bombs explode faster"
+  ],
+  "info": "Isaac's bombs explode faster",
+  "dlc": "Antibirth",
+  "trackerText": "All bombs have a shorter fuse time"
+ },
+ {
+  "num": 134,
+  "id": "gigante-bean",
+  "name": "Gigante Bean",
+  "kind": "trinket",
+  "lines": [
+   "Increases fart size"
+  ],
+  "info": "Increases fart size",
+  "dlc": "Antibirth",
+  "trackerText": "Farts from isaac and familiars are larger"
+ },
+ {
+  "num": 135,
+  "id": "a-lighter",
+  "name": "A Lighter",
+  "kind": "trinket",
+  "lines": [
+   "Entering a room has a 20% chance to burn random enemies"
+  ],
+  "info": "Entering a room has a 20% chance to burn random enemies",
+  "dlc": "Antibirth",
+  "trackerText": "Chance for enemies to burn when entering a room"
+ },
+ {
+  "num": 136,
+  "id": "broken-padlock",
+  "name": "Broken Padlock",
+  "kind": "trinket",
+  "lines": [
+   "Doors, key blocks and golden chests can be opened with explosions",
+   "Explosions can also open the \\\"Strange Door\\\" in \\\"Depths II\\\""
+  ],
+  "info": "Doors, key blocks and golden chests can be opened with explosions · Explosions can also open the \\\"Strange Door\\\" in \\\"Depths II\\\"",
+  "dlc": "Antibirth",
+  "trackerText": "Explosions can open locked doors"
+ },
+ {
+  "num": 137,
+  "id": "myosotis",
+  "name": "Myosotis",
+  "kind": "trinket",
+  "lines": [
+   "Entering a new floor spawns up to 4 uncollected pickups from the previous floor in the starting room"
+  ],
+  "info": "Entering a new floor spawns up to 4 uncollected pickups from the previous floor in the starting room",
+  "dlc": "Antibirth",
+  "trackerText": "Get max 4 pickups from the previous floor at the beginning of the new floor"
+ },
+ {
+  "num": 138,
+  "id": "m",
+  "name": "'M",
+  "kind": "trinket",
+  "lines": [
+   "Using an active item rerolls it"
+  ],
+  "info": "Using an active item rerolls it",
+  "dlc": "Antibirth",
+  "trackerText": "Reroll your active item upon use"
+ },
+ {
+  "num": 139,
+  "id": "teardrop-charm",
+  "name": "Teardrop Charm",
+  "kind": "trinket",
+  "lines": [
+   "+4 Luck towards luck-based tear effects"
+  ],
+  "info": "+4 Luck towards luck-based tear effects",
+  "dlc": "Antibirth",
+  "trackerText": "Tear-based effects have an extra chance of occurring"
+ },
+ {
+  "num": 140,
+  "id": "apple-of-sodom",
+  "name": "Apple of Sodom",
+  "kind": "trinket",
+  "lines": [
+   "Picking up Red Hearts have a 50% chance to convert them into blue spiders",
+   "Works even while at full health",
+   "Effect may consume hearts needed for healing"
+  ],
+  "info": "Picking up Red Hearts have a 50% chance to convert them into blue spiders · Works even while at full health · Effect may consume hearts needed for healing",
+  "dlc": "Repentance",
+  "trackerText": "Red hearts have a chance to burst into blue spiders when touched"
+ },
+ {
+  "num": 141,
+  "id": "forgotten-lullaby",
+  "name": "Forgotten Lullaby",
+  "kind": "trinket",
+  "lines": [
+   "2x Fire rate for familiars"
+  ],
+  "info": "2x Fire rate for familiars",
+  "dlc": "Antibirth",
+  "trackerText": "Increase tear rate of familiars"
+ },
+ {
+  "num": 142,
+  "id": "beths-faith",
+  "name": "Beth's Faith",
+  "kind": "trinket",
+  "lines": [
+   "Entering a new floor spawns 4 Book of Virtues wisps"
+  ],
+  "info": "Entering a new floor spawns 4 Book of Virtues wisps",
+  "dlc": "Antibirth",
+  "trackerText": "Spawn four wisps at the start of each floor"
+ },
+ {
+  "num": 143,
+  "id": "old-capacitor",
+  "name": "Old Capacitor",
+  "kind": "trinket",
+  "lines": [
+   "Prevents active item from charging by clearing a room",
+   "Clearing a room has a 20% chance to spawn a battery",
+   "33% chance at 5 luck"
+  ],
+  "info": "Prevents active item from charging by clearing a room · Clearing a room has a 20% chance to spawn a battery · 33% chance at 5 luck",
+  "dlc": "Antibirth",
+  "trackerText": "Your active item don't charge but you have a chance to spawn an extra battery drop on room clear"
+ },
+ {
+  "num": 144,
+  "id": "brain-worm",
+  "name": "Brain Worm",
+  "kind": "trinket",
+  "lines": [
+   "Tears turn 90 degrees to target enemies that they may have missed"
+  ],
+  "info": "Tears turn 90 degrees to target enemies that they may have missed",
+  "dlc": "Antibirth",
+  "trackerText": "Missed tears will redirect themselves toward enemies"
+ },
+ {
+  "num": 145,
+  "id": "perfection",
+  "name": "Perfection",
+  "kind": "trinket",
+  "lines": [
+   "↑ +10 Luck",
+   "Taking damage destroys the trinket"
+  ],
+  "info": "↑ +10 Luck · Taking damage destroys the trinket",
+  "dlc": "Antibirth",
+  "trackerText": "+10 luck but break when hit"
+ },
+ {
+  "num": 146,
+  "id": "devils-crown",
+  "name": "Devil's Crown",
+  "kind": "trinket",
+  "lines": [
+   "Treasure Room items are replaced with devil deals"
+  ],
+  "info": "Treasure Room items are replaced with devil deals",
+  "dlc": "Antibirth",
+  "trackerText": "Treasure rooms are replaced with Devil Deals"
+ },
+ {
+  "num": 147,
+  "id": "charged-penny",
+  "name": "Charged Penny",
+  "kind": "trinket",
+  "lines": [
+   "Picking up a coin has a 17% chance to add 1 charge to the active item",
+   "Higher chance from nickels and dimes"
+  ],
+  "info": "Picking up a coin has a 17% chance to add 1 charge to the active item · Higher chance from nickels and dimes",
+  "dlc": "Antibirth",
+  "trackerText": "Chance to replenish 1 bar of charge when picking up pennies"
+ },
+ {
+  "num": 148,
+  "id": "friendship-necklace",
+  "name": "Friendship Necklace",
+  "kind": "trinket",
+  "lines": [
+   "All familiars orbit around Isaac"
+  ],
+  "info": "All familiars orbit around Isaac",
+  "dlc": "Repentance",
+  "trackerText": "Turns follower familiars into orbitals"
+ },
+ {
+  "num": 149,
+  "id": "panic-button",
+  "name": "Panic Button",
+  "kind": "trinket",
+  "lines": [
+   "Right before taking damage, uses the active item if it is charged"
+  ],
+  "info": "Right before taking damage, uses the active item if it is charged",
+  "dlc": "Repentance",
+  "trackerText": "Automatically uses active item when the player is about to be hit by a projectile or an enemy"
+ },
+ {
+  "num": 150,
+  "id": "blue-key",
+  "name": "Blue Key",
+  "kind": "trinket",
+  "lines": [
+   "Locked doors can be opened for free, but Isaac has to clear a room from the Hush floor before accessing the room behind them"
+  ],
+  "info": "Locked doors can be opened for free, but Isaac has to clear a room from the Hush floor before accessing the room behind them",
+  "dlc": "Repentance",
+  "trackerText": "Locked doors can be opened for free but you have to go through a Blue Womb room with enemies"
+ },
+ {
+  "num": 151,
+  "id": "flat-file",
+  "name": "Flat File",
+  "kind": "trinket",
+  "lines": [
+   "Retracts most spikes, rendering them harmless",
+   "Also affects Curse Room doors, mimics and any spike obstacle"
+  ],
+  "info": "Retracts most spikes, rendering them harmless · Also affects Curse Room doors, mimics and any spike obstacle",
+  "dlc": "Repentance",
+  "trackerText": "Removes all spikes (spiked rocks, spiked chests, curse room included)"
+ },
+ {
+  "num": 152,
+  "id": "telescope-lens",
+  "name": "Telescope Lens",
+  "kind": "trinket",
+  "lines": [
+   "+9% Planetarium chance",
+   "Additional +15% chance if a Planetarium hasn't been entered yet",
+   "Planetariums can spawn in the Womb and Corpse"
+  ],
+  "info": "+9% Planetarium chance · Additional +15% chance if a Planetarium hasn't been entered yet · Planetariums can spawn in the Womb and Corpse",
+  "dlc": "Repentance",
+  "trackerText": "+9% chance of finding Planetarium + allows them to appear in chapter 4"
+ },
+ {
+  "num": 153,
+  "id": "moms-lock",
+  "name": "Mom's Lock",
+  "kind": "trinket",
+  "lines": [
+   "25% chance for a random Mom item effect each room"
+  ],
+  "info": "25% chance for a random Mom item effect each room",
+  "dlc": "Repentance",
+  "trackerText": "Chance of triggering a Mom item effect every room"
+ },
+ {
+  "num": 154,
+  "id": "dice-bag",
+  "name": "Dice Bag",
+  "kind": "trinket",
+  "lines": [
+   "50% chance per new room to grant a single use die consumable item",
+   "The die disappears when leaving",
+   "The die does not take up a pill/card slot"
+  ],
+  "info": "50% chance per new room to grant a single use die consumable item · The die disappears when leaving · The die does not take up a pill/card slot",
+  "dlc": "Repentance",
+  "trackerText": "Chance to obtain a single use dice item in your card slot that only lasts for the current room"
+ },
+ {
+  "num": 155,
+  "id": "holy-crown",
+  "name": "Holy Crown",
+  "kind": "trinket",
+  "lines": [
+   "Spawns a Treasure Room and Shop in Cathedral"
+  ],
+  "info": "Spawns a Treasure Room and Shop in Cathedral",
+  "dlc": "Repentance",
+  "trackerText": "Treasure rooms and shops will appear in the Cathedral"
+ },
+ {
+  "num": 156,
+  "id": "mothers-kiss",
+  "name": "Mother's Kiss",
+  "kind": "trinket",
+  "lines": [
+   "+1 Heart container while held"
+  ],
+  "info": "+1 Heart container while held",
+  "dlc": "Repentance",
+  "trackerText": "Gives one empty heart container"
+ },
+ {
+  "num": 157,
+  "id": "torn-card",
+  "name": "Torn Card",
+  "kind": "trinket",
+  "lines": [
+   "Every 15 shots, Isaac shoots an Ipecac + My Reflection tear with a very high range value"
+  ],
+  "info": "Every 15 shots, Isaac shoots an Ipecac + My Reflection tear with a very high range value",
+  "dlc": "Repentance",
+  "trackerText": "Chance to shoot Ipecac + My Reflection shots"
+ },
+ {
+  "num": 158,
+  "id": "torn-pocket",
+  "name": "Torn Pocket",
+  "kind": "trinket",
+  "lines": [
+   "Taking damage makes Isaac drop 2 of his coins, keys or bombs",
+   "The pickups can be replaced with other variants, such as golden keys, nickels, dimes, etc."
+  ],
+  "info": "Taking damage makes Isaac drop 2 of his coins, keys or bombs · The pickups can be replaced with other variants, such as golden keys, nickels, dimes, etc.",
+  "dlc": "Repentance",
+  "trackerText": "Spawns 2 pickups you have on the ground when damaged"
+ },
+ {
+  "num": 159,
+  "id": "gilded-key",
+  "name": "Gilded Key",
+  "kind": "trinket",
+  "lines": [
+   "+1 Key on pickup",
+   "Replaces all chests (except Old/Mega) with golden chests",
+   "Golden chests can contain extra cards, pills or trinkets"
+  ],
+  "info": "+1 Key on pickup · Replaces all chests (except Old/Mega) with golden chests · Golden chests can contain extra cards, pills or trinkets",
+  "dlc": "Repentance",
+  "trackerText": "All chests become locked chests containing mixed pickups (including cards/pills/runes/batteries)"
+ },
+ {
+  "num": 160,
+  "id": "lucky-sack",
+  "name": "Lucky Sack",
+  "kind": "trinket",
+  "lines": [
+   "Entering a new floor spawns a sack"
+  ],
+  "info": "Entering a new floor spawns a sack",
+  "dlc": "Repentance",
+  "trackerText": "A sack spawns in every starting room"
+ },
+ {
+  "num": 161,
+  "id": "wicked-crown",
+  "name": "Wicked Crown",
+  "kind": "trinket",
+  "lines": [
+   "Spawns a Treasure Room and Shop in Sheol"
+  ],
+  "info": "Spawns a Treasure Room and Shop in Sheol",
+  "dlc": "Repentance",
+  "trackerText": "Treasure rooms and shops will appear in Sheol"
+ },
+ {
+  "num": 162,
+  "id": "azazels-stump",
+  "name": "Azazel's Stump",
+  "kind": "trinket",
+  "lines": [
+   "Clearing a room has a 33% chance to turn the player into Azazel",
+   "Effect lasts until clearing and leaving another room"
+  ],
+  "info": "Clearing a room has a 33% chance to turn the player into Azazel · Effect lasts until clearing and leaving another room",
+  "dlc": "Repentance",
+  "trackerText": "Chance to become Azazel on room clear until the next room clear"
+ },
+ {
+  "num": 163,
+  "id": "dingle-berry",
+  "name": "Dingle Berry",
+  "kind": "trinket",
+  "lines": [
+   "All Dip (small poop) enemies are friendly",
+   "Clearing a room spawns 1 random Dip"
+  ],
+  "info": "All Dip (small poop) enemies are friendly · Clearing a room spawns 1 random Dip",
+  "dlc": "Repentance",
+  "trackerText": "Spawns a charmed Dip on room clear"
+ },
+ {
+  "num": 164,
+  "id": "ring-cap",
+  "name": "Ring Cap",
+  "kind": "trinket",
+  "lines": [
+   "Spawns 1 extra bomb for each bomb placed"
+  ],
+  "info": "Spawns 1 extra bomb for each bomb placed",
+  "dlc": "Repentance",
+  "trackerText": "2 bombs spawn each time you drop 1 bomb"
+ },
+ {
+  "num": 165,
+  "id": "nuh-uh",
+  "name": "Nuh Uh!",
+  "kind": "trinket",
+  "lines": [
+   "On Womb and beyond, replaces all coin and key spawns with a bomb, heart, pill, card, trinket, battery, or enemy fly"
+  ],
+  "info": "On Womb and beyond, replaces all coin and key spawns with a bomb, heart, pill, card, trinket, battery, or enemy fly",
+  "dlc": "Repentance",
+  "trackerText": "Prevents coins and keys from spawning after the Depths"
+ },
+ {
+  "num": 166,
+  "id": "modeling-clay",
+  "name": "Modeling Clay",
+  "kind": "trinket",
+  "lines": [
+   "50% chance to grant the effect of a random passive item each room"
+  ],
+  "info": "50% chance to grant the effect of a random passive item each room",
+  "dlc": "Repentance",
+  "trackerText": "Chance of giving you a random passive item each room until room clear"
+ },
+ {
+  "num": 167,
+  "id": "polished-bone",
+  "name": "Polished Bone",
+  "kind": "trinket",
+  "lines": [
+   "Clearing a room has a 25% chance to spawn a friendly Bony"
+  ],
+  "info": "Clearing a room has a 25% chance to spawn a friendly Bony",
+  "dlc": "Repentance",
+  "trackerText": "Chance of spawning a charmed bony on room clear"
+ },
+ {
+  "num": 168,
+  "id": "hollow-heart",
+  "name": "Hollow Heart",
+  "kind": "trinket",
+  "lines": [
+   "Entering a new floor grants +1 Bone Heart"
+  ],
+  "info": "Entering a new floor grants +1 Bone Heart",
+  "dlc": "Repentance",
+  "trackerText": "Gain an empty bone heart at the start of each floor"
+ },
+ {
+  "num": 169,
+  "id": "kids-drawing",
+  "name": "Kid's Drawing",
+  "kind": "trinket",
+  "lines": [
+   "Counts as 1 item towards the Guppy transformation while held"
+  ],
+  "info": "Counts as 1 item towards the Guppy transformation while held",
+  "transforms": [
+   "guppy"
+  ],
+  "dlc": "Repentance",
+  "trackerText": "Counts as a Guppy item, does nothing else"
+ },
+ {
+  "num": 170,
+  "id": "crystal-key",
+  "name": "Crystal Key",
+  "kind": "trinket",
+  "lines": [
+   "Clearing a room has a 33% chance to create a Red Key room",
+   "Lower chance to occur when in a red room"
+  ],
+  "info": "Clearing a room has a 33% chance to create a Red Key room · Lower chance to occur when in a red room",
+  "dlc": "Repentance",
+  "trackerText": "33% chance of Red Key effect on room clear"
+ },
+ {
+  "num": 171,
+  "id": "keepers-bargain",
+  "name": "Keeper's Bargain",
+  "kind": "trinket",
+  "lines": [
+   "50% chance for devil deals to cost coins instead of hearts"
+  ],
+  "info": "50% chance for devil deals to cost coins instead of hearts",
+  "dlc": "Repentance",
+  "trackerText": "50% chance each devil deal will cost coins"
+ },
+ {
+  "num": 172,
+  "id": "cursed-penny",
+  "name": "Cursed Penny",
+  "kind": "trinket",
+  "lines": [
+   "Picking up a coin teleports Isaac to a random room",
+   "Can teleport to secret rooms"
+  ],
+  "info": "Picking up a coin teleports Isaac to a random room · Can teleport to secret rooms",
+  "dlc": "Repentance",
+  "trackerText": "Teleports you every time you pick up a coin"
+ },
+ {
+  "num": 173,
+  "id": "your-soul",
+  "name": "Your Soul",
+  "kind": "trinket",
+  "lines": [
+   "Allows Isaac to take 1 Devil Room item for free",
+   "The free Devil deal still affects Angel Room chance"
+  ],
+  "info": "Allows Isaac to take 1 Devil Room item for free · The free Devil deal still affects Angel Room chance",
+  "dlc": "Repentance",
+  "trackerText": "First devil deal item you will take while holding the trinket will be free"
+ },
+ {
+  "num": 174,
+  "id": "number-magnet",
+  "name": "Number Magnet",
+  "kind": "trinket",
+  "lines": [
+   "+10% Devil Room chance",
+   "Prevents Krampus from appearing in Devil Rooms",
+   "Devil Rooms are special variants with more deals, Black Hearts and enemies"
+  ],
+  "info": "+10% Devil Room chance · Prevents Krampus from appearing in Devil Rooms · Devil Rooms are special variants with more deals, Black Hearts and enemies",
+  "dlc": "Repentance",
+  "trackerText": "Devil rooms always have at least a black heart and 2 enemies inside"
+ },
+ {
+  "num": 175,
+  "id": "strange-key",
+  "name": "Strange Key",
+  "kind": "trinket",
+  "lines": [
+   "Opens the door to the Hush floor regardless of the timer",
+   "Using Pandora's Box consumes the key and spawns 6 items from random pools"
+  ],
+  "info": "Opens the door to the Hush floor regardless of the timer · Using Pandora's Box consumes the key and spawns 6 items from random pools",
+  "dlc": "Repentance",
+  "trackerText": "Removes the time limit for Blue Womb. If Pandora's box is used, this trinket is consumed and spawns 6 random items"
+ },
+ {
+  "num": 176,
+  "id": "lil-clot",
+  "name": "Lil Clot",
+  "kind": "trinket",
+  "lines": [
+   "Spawns a blood clot that mimics Isaac's movement",
+   "Copies Isaac's stats, tear effects and 35% of his damage",
+   "Respawns each room"
+  ],
+  "info": "Spawns a blood clot that mimics Isaac's movement · Copies Isaac's stats, tear effects and 35% of his damage · Respawns each room",
+  "dlc": "Repentance",
+  "trackerText": "Spawns one of Alt Eve's babies which respawns in the next room if killed"
+ },
+ {
+  "num": 177,
+  "id": "temporary-tattoo",
+  "name": "Temporary Tattoo",
+  "kind": "trinket",
+  "lines": [
+   "Clearing a Challenge Room spawns a chest",
+   "Clearing a Boss Challenge Room spawns an item"
+  ],
+  "info": "Clearing a Challenge Room spawns a chest · Clearing a Boss Challenge Room spawns an item",
+  "dlc": "Repentance",
+  "trackerText": "Challenge rooms drop 2 extra chests on clear, boss challenge rooms require 2 full hearts or less to enter"
+ },
+ {
+  "num": 178,
+  "id": "swallowed-m80",
+  "name": "Swallowed M80",
+  "kind": "trinket",
+  "lines": [
+   "Taking damage has a 50% chance for Isaac to explode",
+   "Doesn't destroy Blood Donation Machines or Confessionals, while spawning pickups as if it did"
+  ],
+  "info": "Taking damage has a 50% chance for Isaac to explode · Doesn't destroy Blood Donation Machines or Confessionals, while spawning pickups as if it did",
+  "dlc": "Repentance",
+  "trackerText": "50% chance to trigger Kamikaze effect on hit"
+ },
+ {
+  "num": 179,
+  "id": "rc-remote",
+  "name": "RC Remote",
+  "kind": "trinket",
+  "lines": [
+   "Familiars mimic Isaac's movement",
+   "Hold the drop button () to keep the familiars in place"
+  ],
+  "info": "Familiars mimic Isaac's movement · Hold the drop button () to keep the familiars in place",
+  "dlc": "Repentance",
+  "trackerText": "Familiars are now controlled like Jacob&Esau"
+ },
+ {
+  "num": 180,
+  "id": "found-soul",
+  "name": "Found Soul",
+  "kind": "trinket",
+  "lines": [
+   "Follows Isaac's movement and shoots spectral tears",
+   "Copies Isaac's stats, tear effects and 50% of his damage",
+   "Uses most active items when Isaac does",
+   "Dies in one hit",
+   "Respawns each floor"
+  ],
+  "info": "Follows Isaac's movement and shoots spectral tears · Copies Isaac's stats, tear effects and 50% of his damage · Uses most active items when Isaac does · Dies in one hit · Respawns each floor",
+  "dlc": "Repentance",
+  "trackerText": "Spawns a controllable baby Lost at the start of each floor that acts like a co-op baby"
+ },
+ {
+  "num": 181,
+  "id": "expansion-pack",
+  "name": "Expansion Pack",
+  "kind": "trinket",
+  "lines": [
+   "Using an active item triggers the effect of an additional 1-2 charge active item"
+  ],
+  "info": "Using an active item triggers the effect of an additional 1-2 charge active item",
+  "dlc": "Repentance",
+  "trackerText": "Using an active item will also trigger the effect of a random 1-2 charge item"
+ },
+ {
+  "num": 182,
+  "id": "beths-essence",
+  "name": "Beth's Essence",
+  "kind": "trinket",
+  "lines": [
+   "Entering an Angel Room spawns 5 wisps",
+   "Donating to Beggars has a 25% chance to spawn a wisp"
+  ],
+  "info": "Entering an Angel Room spawns 5 wisps · Donating to Beggars has a 25% chance to spawn a wisp",
+  "dlc": "Repentance",
+  "trackerText": "Enter an angel room = 5 wisps, donate to a beggar = 1 wisp"
+ },
+ {
+  "num": 183,
+  "id": "the-twins",
+  "name": "The Twins",
+  "kind": "trinket",
+  "lines": [
+   "50% chance to duplicate a familiar each room",
+   "Grants Brother Bobby or Sister Maggy if Isaac has no familiars"
+  ],
+  "info": "50% chance to duplicate a familiar each room · Grants Brother Bobby or Sister Maggy if Isaac has no familiars",
+  "dlc": "Repentance",
+  "trackerText": "Chance of doubling one of your familiars each room, get Brother Bobby or Sister Maggy if no familiars"
+ },
+ {
+  "num": 184,
+  "id": "adoption-papers",
+  "name": "Adoption Papers",
+  "kind": "trinket",
+  "lines": [
+   "Shops sell familiars for 10 coins"
+  ],
+  "info": "Shops sell familiars for 10 coins",
+  "dlc": "Repentance",
+  "trackerText": "Familiars now replace items in shops and are on sale"
+ },
+ {
+  "num": 185,
+  "id": "cricket-leg",
+  "name": "Cricket Leg",
+  "kind": "trinket",
+  "lines": [
+   "Killing an enemy has a 17% chance to spawn a random locust"
+  ],
+  "info": "Killing an enemy has a 17% chance to spawn a random locust",
+  "dlc": "Repentance",
+  "trackerText": "10% chance of spawning a random locust per enemy killed"
+ },
+ {
+  "num": 186,
+  "id": "apollyons-best-friend",
+  "name": "Apollyon's Best Friend",
+  "kind": "trinket",
+  "lines": [
+   "Grants 1 Abyss locust"
+  ],
+  "info": "Grants 1 Abyss locust",
+  "dlc": "Repentance",
+  "trackerText": "Spawns one of Alt Apollyon's red locusts"
+ },
+ {
+  "num": 187,
+  "id": "broken-glasses",
+  "name": "Broken Glasses",
+  "kind": "trinket",
+  "lines": [
+   "50% chance of adding an extra blind item in Treasure Rooms",
+   "50% chance to reveal the blind item in alt path Treasure Rooms"
+  ],
+  "info": "50% chance of adding an extra blind item in Treasure Rooms · 50% chance to reveal the blind item in alt path Treasure Rooms",
+  "dlc": "Repentance",
+  "trackerText": "33% chance of extra blind item option on main path, reveals blind item on alt path"
+ },
+ {
+  "num": 188,
+  "id": "ice-cube",
+  "name": "Ice Cube",
+  "kind": "trinket",
+  "lines": [
+   "Entering a room has a 20% chance to petrify random enemies",
+   "Killing a petrified enemy freezes it"
+  ],
+  "info": "Entering a room has a 20% chance to petrify random enemies · Killing a petrified enemy freezes it",
+  "dlc": "Repentance",
+  "trackerText": "Chance of enemies being frozen when you enter the room"
+ },
+ {
+  "num": 189,
+  "id": "sigil-of-baphomet",
+  "name": "Sigil of Baphomet",
+  "kind": "trinket",
+  "lines": [
+   "Killing an enemy makes Isaac invincible for 1 second",
+   "Invincibility stacks with successive enemy kills, up to 5 seconds"
+  ],
+  "info": "Killing an enemy makes Isaac invincible for 1 second · Invincibility stacks with successive enemy kills, up to 5 seconds",
+  "dlc": "Repentance",
+  "trackerText": "Grants a 2 seconds shield every time you kill an enemy"
+ }
+]
