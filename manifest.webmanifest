@@ -1,0 +1,14 @@
+{
+  "name": "ISUCK",
+  "short_name": "ISUCK",
+  "description": "A from-scratch browser roguelike in the shape of The Binding of Isaac: Repentance.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#0a0807",
+  "theme_color": "#120f0e",
+  "icons": [
+    { "src": "og-image.png", "sizes": "1200x630", "type": "image/png", "purpose": "any" }
+  ]
+}

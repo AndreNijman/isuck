@@ -11,10 +11,29 @@ to write, straight out of `node tools/state.mjs --json`. Re-running a phase with
 a fresh `missing` list is safe and re-does only the unfinished part. That is the
 whole resume story: **recompute state from disk, pass the gaps back in.**
 
-| Phase | Script | Run ID | Agents |
+| Phase | Script | Run IDs | Agents |
 |---|---|---|---|
-| P1 core + engine | `workflows/scripts/isuck-p1-engine-wf_f8c7aca3-81f.js` | `wf_f8c7aca3-81f` | 13 |
-| P3 collectibles | `workflows/scripts/isuck-p3-collectibles-wf_846d5f1f-9a8.js` | `wf_846d5f1f-9a8` | 14 |
+| P1 core + engine | `workflows/scripts/isuck-p1-engine-wf_f8c7aca3-81f.js` | `wf_f8c7aca3-81f`, re-dispatched `wf_53e264ec-d1b` | 13 |
+| P3 collectibles | `workflows/scripts/isuck-p3-collectibles-wf_846d5f1f-9a8.js` | `wf_846d5f1f-9a8`, re-dispatched `wf_cdcdf80f-43e` | 14 |
+| P4 world | `workflows/scripts/isuck-p4-world-wf_6cf597d5-acf.js` | `wf_6cf597d5-acf` | 1 + 13 |
+
+## What the first interruption taught us
+
+The session hosting the first P1/P3/P4 dispatch exited while all three were in
+flight. Two observations worth keeping:
+
+1. **`resumeFromRunId` is session-scoped.** Once the session is gone, the agent
+   result cache is gone with it, and the run IDs above are only useful as a
+   paper trail. The durable resume path is the one this project was built around:
+   `node tools/state.mjs` → recompute the gap list from disk → re-invoke the
+   **script path** (which does persist) with a fresh `args.missing`.
+2. **Files on disk are the real checkpoint, not commits.** `js/engine/ctx.js` and
+   `js/data/familiars.js` were still uncommitted when the session died and
+   survived anyway, and the next session picked them up automatically because
+   `state.mjs` derives status from the filesystem. Commits are for history; disk
+   is for durability. This is why no phase is allowed to hold results in memory
+   and write them "at the end" — every agent writes its own file as it finishes,
+   so an interruption costs only the agents that were still mid-write.
 
 Script paths are relative to:
 `/var/home/andre/.claude/projects/-var-home-andre-Projects-isuck/a3d73950-d367-4d66-9bb4-0cede11c467d/`

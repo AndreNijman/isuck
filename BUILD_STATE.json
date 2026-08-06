@@ -2,7 +2,7 @@
   "project": "isuck",
   "generated": "derived-from-disk",
   "git": {
-    "head": "f21c13b",
+    "head": "fb8f0fd",
     "branch": "master",
     "dirty": true,
     "remote": null
@@ -32,7 +32,7 @@
     {
       "id": "P3",
       "title": "Content: collectibles",
-      "done": 0,
+      "done": 1,
       "total": 14,
       "complete": false
     },
@@ -277,11 +277,6 @@
       "state": "missing"
     },
     {
-      "phase": "P3",
-      "file": "js/data/familiars.js",
-      "state": "missing"
-    },
-    {
       "phase": "P4",
       "file": "js/data/enemies-1.js",
       "state": "missing"
@@ -456,8 +451,7 @@
       "js/data/trinkets-2.js",
       "js/data/cards.js",
       "js/data/pills.js",
-      "js/data/characters.js",
-      "js/data/familiars.js"
+      "js/data/characters.js"
     ],
     "P4": [
       "js/data/enemies-1.js",
