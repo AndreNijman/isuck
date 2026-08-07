@@ -94,6 +94,15 @@ verified 10,446 rooms. `isaac.andrenijman.com` is now a proxied Cloudflare CNAME
 to `andrenijman.github.io`; the custom HTTPS deployment was verified in Chromium
 through a real keyboard-driven room transition with clean browser logs.
 
+### Responsive canvas repair (2026-08-07)
+
+Firefox exposed a second false assumption: the game used CSS canvas dimensions
+to scale the scene but left the backing buffer at 1280×720, cropping large-window
+rendering. Commit `3d82bd3` synchronises backing pixels with CSS size and DPR,
+adds a 1900×1060 browser regression check, repairs HUD/door sprite identifiers,
+and replaces placeholder exits with framed doorways. Validator, smoke 32/32 and
+balance 200/200 pass; the live custom-domain build was verified at desktop size.
+
 ## What the first interruption taught us
 
 The session hosting the first P1/P3/P4 dispatch exited while all three were in

@@ -1,6 +1,6 @@
 # Resuming this build
 
-## Latest checkpoint — gameplay hotfix and custom domain live, 2026-08-07
+## Latest checkpoint — responsive viewport hotfix live, 2026-08-07
 
 All phases remain complete, and the broken first release has been repaired in
 commits `5b0f5df` and `b653444`. Floor generation now creates reciprocal doors,
@@ -27,6 +27,13 @@ The code, GitHub Pages setting, metadata, sitemap, README and games catalog use
 to `andrenijman.github.io`; Full SSL is active. A live Chromium session loaded
 the custom HTTPS URL, started a run and crossed a generated door with keyboard
 movement with zero console errors or exceptions.
+
+Commit `3d82bd3` fixes a Firefox/large-window regression where CSS enlarged the
+canvas without enlarging its backing buffer, cropping the HUD and every door.
+The canvas now synchronises its backing size to CSS size and device pixel ratio;
+the release suite checks a 1900×1060 viewport. HUD icon and door sprite IDs were
+also corrected so placeholders no longer ship. The custom-domain deployment was
+visually verified at 1884×1060 and at 2× device pixel ratio.
 
 For future changes, run the three release
 gates, regenerate screenshots with `node tools/card-shot.js`, commit, and push

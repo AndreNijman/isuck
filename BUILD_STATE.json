@@ -2,7 +2,7 @@
   "project": "isuck",
   "generated": "derived-from-disk",
   "git": {
-    "head": "198b524",
+    "head": "3d82bd3",
     "branch": "master",
     "dirty": true,
     "remote": "origin\thttps://github.com/AndreNijman/isuck.git (fetch)"
