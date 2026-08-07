@@ -2,7 +2,7 @@
   "project": "isuck",
   "generated": "derived-from-disk",
   "git": {
-    "head": "f5a5914",
+    "head": "ac7d824",
     "branch": "master",
     "dirty": true,
     "remote": null
@@ -53,30 +53,14 @@
     {
       "id": "P6",
       "title": "Ship",
-      "done": 3,
+      "done": 6,
       "total": 6,
-      "complete": false
+      "complete": true
     }
   ],
-  "currentPhase": "P6",
-  "currentPhaseTitle": "Ship",
-  "missing": [
-    {
-      "phase": "P6",
-      "file": "README.md",
-      "state": "missing"
-    },
-    {
-      "phase": "P6",
-      "file": "og-image.png",
-      "state": "missing"
-    },
-    {
-      "phase": "P6",
-      "file": "shots/card.png",
-      "state": "missing"
-    }
-  ],
+  "currentPhase": "complete",
+  "currentPhaseTitle": "all phases complete",
+  "missing": [],
   "missingByPhase": {
     "P0": [],
     "P1": [],
@@ -84,11 +68,18 @@
     "P3": [],
     "P4": [],
     "P5": [],
-    "P6": [
-      "README.md",
-      "og-image.png",
-      "shots/card.png"
-    ]
+    "P6": []
   },
-  "gates": "not-run (pass --gates)"
+  "gates": [
+    {
+      "name": "validate-content",
+      "pass": true,
+      "tail": "────────────────────────────────────────────────────────────────────────\n\nvalidate-content: PASS"
+    },
+    {
+      "name": "smoke",
+      "pass": true,
+      "tail": "  ok   every boss spawns and runs 4 seconds of its own attacks\n  ok   no console errors across the whole session\n  ok   no uncaught exceptions across the whole session"
+    }
+  ]
 }
