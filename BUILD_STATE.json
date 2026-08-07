@@ -2,10 +2,10 @@
   "project": "isuck",
   "generated": "derived-from-disk",
   "git": {
-    "head": "ac7d824",
+    "head": "5ba757b",
     "branch": "master",
     "dirty": true,
-    "remote": null
+    "remote": "origin\thttps://github.com/AndreNijman/isuck.git (fetch)"
   },
   "phases": [
     {
@@ -70,16 +70,5 @@
     "P5": [],
     "P6": []
   },
-  "gates": [
-    {
-      "name": "validate-content",
-      "pass": true,
-      "tail": "────────────────────────────────────────────────────────────────────────\n\nvalidate-content: PASS"
-    },
-    {
-      "name": "smoke",
-      "pass": true,
-      "tail": "  ok   every boss spawns and runs 4 seconds of its own attacks\n  ok   no console errors across the whole session\n  ok   no uncaught exceptions across the whole session"
-    }
-  ]
+  "gates": "not-run (pass --gates)"
 }

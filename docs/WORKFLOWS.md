@@ -73,6 +73,15 @@ balance sample passes without exceptions. `tools/state.mjs` now selects P6;
 P5 was already complete. The remaining local ship assets are `README.md`,
 `og-image.png`, and `shots/card.png`.
 
+### P6 completion checkpoint (2026-08-07)
+
+P6 completed at 6/6. `README.md` documents play, controls, local serving, gates,
+structure and credits. `tools/card-shot.js` generated the real-game 1000×525
+catalog image and 1200×630 social image. The full validator and 27/27 smoke suite
+pass; the release balance gate passes 200/200 runs with no exceptions. The public
+repository and Pages deployment are live at `AndreNijman/isuck`, and games-site
+commit `b5b983b` adds the verified live catalog card. All phases are complete.
+
 ## What the first interruption taught us
 
 The session hosting the first P1/P3/P4 dispatch exited while all three were in

@@ -1,11 +1,11 @@
 # Resuming this build
 
-## Latest checkpoint — P4 complete, 2026-08-07
+## Latest checkpoint — build and deployment complete, 2026-08-07
 
-P4 (world content) is complete at **17/17**. The canonical world registry now
-contains 208 enemies, 80 bosses, 500 rooms, 57 floors, 45 challenges and 637
-achievements. `docs/reference/roster.json` is the exact enemy/boss source used by
-the runtime definitions.
+All phases are complete, including P6 at **6/6**. The public game is live at
+<https://andrenijman.github.io/isuck/> and the source repository is
+<https://github.com/AndreNijman/isuck>. The ISUCK card is also live on
+<https://games.andrenijman.com/>.
 
 Verification performed at this boundary:
 
@@ -14,14 +14,17 @@ Verification performed at this boundary:
   schema, vocabulary, cross-reference, sprite, or deterministic-RNG errors.
 - `node tools/smoke.mjs` passes 27/27: a run starts, descends three floors, all
   732 items grant safely, and all 80 bosses complete their attack simulation.
-- `node tools/balance.mjs --runs 20` passes: 20/20 deterministic runs complete
-  without exceptions and reach a mean depth of 6.8/8.
-- `node tools/state.mjs` reports P4 **17/17**, P5 **6/6**, and selects P6 next.
+- `node tools/balance.mjs --runs 200` passes: 200/200 deterministic runs complete
+  without exceptions and reach a mean depth of 6.67/8.
+- `node tools/state.mjs` reports every phase complete with no missing files.
+- GitHub Pages returns HTTP 200 for the game and 1200×630 social image.
+- The games catalog deployment succeeded and its live ISUCK card and 1000×525
+  image both return HTTP 200.
 
-The next action is **P6 — Ship**. Its remaining files are `README.md`,
-`og-image.png`, and `shots/card.png`. Shipping can change public/external state,
-so inspect P6 and obtain the appropriate authorization before enabling Pages or
-publishing. Do not use Kimi agents; Andre explicitly requested this.
+There is no unfinished build step. For future changes, run the three release
+gates, regenerate screenshots with `node tools/card-shot.js`, commit, and push
+`master`; GitHub Pages deploys from the repository root. Do not use Kimi agents
+unless Andre explicitly reverses that instruction.
 
 This build is designed to survive the laptop being shut down mid-phase. Nothing
 important lives in a session's head: it lives in files, and `tools/state.mjs`
