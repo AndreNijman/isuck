@@ -51,6 +51,19 @@ real-browser title checks pass. The remaining 34 validator errors are entirely
 P3/P4-owned. The exact P3 missing list and three deterministic-RNG repairs are
 recorded at the top of `RESUME.md`.
 
+### P3 completion checkpoint (2026-08-07)
+
+P3 completed at 14/14 with 732 items, 189 trinkets, 97 cards, 50 pills,
+34 characters and 104 familiar definitions. Exact reference-slice coverage and
+a seeded grant/use runtime sweep pass. The validator's only 17 errors are the
+17 missing P4 files. The audit found that older item files had been counted as
+done despite omitting 134 entries, so future content phases must validate
+registry counts and reference coverage rather than file presence alone.
+
+Andre requested that Kimi agents not be used after two Kimi attempts returned
+only reconnaissance. Continue P4 in the main thread or with explicitly bounded
+standard workers.
+
 ## What the first interruption taught us
 
 The session hosting the first P1/P3/P4 dispatch exited while all three were in

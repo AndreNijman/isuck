@@ -2,7 +2,7 @@
   "project": "isuck",
   "generated": "derived-from-disk",
   "git": {
-    "head": "3a92566",
+    "head": "6c6e53d",
     "branch": "master",
     "dirty": true,
     "remote": null
@@ -32,9 +32,9 @@
     {
       "id": "P3",
       "title": "Content: collectibles",
-      "done": 7,
+      "done": 14,
       "total": 14,
-      "complete": false
+      "complete": true
     },
     {
       "id": "P4",
@@ -58,44 +58,9 @@
       "complete": false
     }
   ],
-  "currentPhase": "P3",
-  "currentPhaseTitle": "Content: collectibles",
+  "currentPhase": "P4",
+  "currentPhaseTitle": "Content: world",
   "missing": [
-    {
-      "phase": "P3",
-      "file": "js/data/items-2.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P3",
-      "file": "js/data/items-4.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P3",
-      "file": "js/data/items-8.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P3",
-      "file": "js/data/trinkets-1.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P3",
-      "file": "js/data/trinkets-2.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P3",
-      "file": "js/data/cards.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P3",
-      "file": "js/data/characters.js",
-      "state": "missing"
-    },
     {
       "phase": "P4",
       "file": "js/data/enemies-1.js",
@@ -201,15 +166,7 @@
     "P0": [],
     "P1": [],
     "P2": [],
-    "P3": [
-      "js/data/items-2.js",
-      "js/data/items-4.js",
-      "js/data/items-8.js",
-      "js/data/trinkets-1.js",
-      "js/data/trinkets-2.js",
-      "js/data/cards.js",
-      "js/data/characters.js"
-    ],
+    "P3": [],
     "P4": [
       "js/data/enemies-1.js",
       "js/data/enemies-2.js",

@@ -1,54 +1,52 @@
 # Resuming this build
 
-## Latest checkpoint — P2 complete, 2026-08-07
+## Latest checkpoint — P3 complete, 2026-08-07
 
-P2 (render + UI + boot) is complete at **15/15**. The browser now has a
-procedural sprite system, room compositor, camera and lighting, HUD/minimap,
-shared canvas UI, all 18 contracted screens, a fixed-step game loop, a
-headless simulator, and accessible page-level canvas controls.
+P3 (collectible content) is complete at **14/14**. The registry now contains
+the complete offline Repentance reference set:
+
+- 732/732 collectibles, including 654 declarative effects and 545 hook-driven
+  behaviours;
+- 189/189 trinkets;
+- 97/97 cards, all with guarded `use(player, ctx)` implementations;
+- 50/50 pills;
+- 34/34 playable characters;
+- 104 familiar behaviour definitions.
 
 Verification performed at this boundary:
 
-- Every file in `js/render/`, `js/ui/`, and `js/main.js` passes `node --check`.
-- Headless loading registers 18 screens and 579 sprites with current partial
-  content; all documented P2 API symbols are present.
-- Mechanical sprite coverage includes current items, pills and familiars and
-  automatically covers later character/enemy/boss/card/trinket registries.
-- A hook probe proves content hooks receive `(player, ...args, ctx)` exactly;
-  P2 integration exposed and fixed the older inconsistent P1 dispatch.
-- `node tools/validate-content.mjs` is down to 34 expected errors: 24 missing
-  P3/P4 files, seven familiar references whose definitions are in missing
-  collectible batches, and three pre-existing `Math.random()` violations in
-  partial P3 data. There are no P2 API or sprite errors.
-- A real Chromium/file-URL pass reaches the title screen, advances frames, and
-  records no exception or warning. Network errors are only the 24 future
-  P3/P4 scripts already listed above.
-- `node tools/state.mjs` reports P2 **15/15** and selects P3 next.
+- Every `js/data/*.js` file passes `node --check` and `git diff --check` passes.
+- Each item/trinket slice has exact ID, number and non-empty-name coverage
+  against its source JSON, with no missing or extra entries.
+- `node tools/validate-content.mjs` reports exactly 17 errors, all of them the
+  17 not-yet-created P4 world files. There are no P3 schema, vocabulary,
+  cross-reference, duplicate-ID, sprite, or deterministic-RNG errors.
+- A seeded runtime sweep grants and updates every one of the 732 items, then
+  invokes all 97 cards and all 50 pills against a dummy room: zero exceptions
+  and no non-finite player stats.
+- `node tools/state.mjs` reports P3 **14/14** and selects P4 next.
 
-Accessibility/design decisions:
+Important history: the first disk audit counted several old item files as done
+because they existed and parsed, but they omitted 134 entries. P3 was therefore
+audited against the reference slices rather than trusting file presence; the
+final 732/732 registry count is authoritative.
 
-- The direction is a grimy, hand-inked basement with bone text and one blood
-  accent—not generic glass UI. The title's memorable device is a stark keyhole
-  under a narrow cellar light.
-- The canvas is keyboard-focusable with a visible high-contrast focus border,
-  control instructions, skip link, and polite screen-state announcements.
-- Canvas menus use 44-unit targets and obvious selected states. Raw key events
-  are forwarded to seed entry/rebinding screens. Reduced-motion preference
-  disables the title flicker/blink and CSS transitions collapse under the
-  existing media query.
-
-The next action is **P3 — Content: collectibles**, and only P3. Recompute state
-before work. The expected missing files are:
+The next action is **P4 — Content: world**, and only P4. Its 17 files are:
 
 ```text
-js/data/items-2.js, js/data/items-4.js, js/data/items-8.js,
-js/data/trinkets-1.js, js/data/trinkets-2.js,
-js/data/cards.js, js/data/characters.js
+js/data/enemies-1.js, js/data/enemies-2.js, js/data/enemies-3.js,
+js/data/enemies-4.js, js/data/bosses-1.js, js/data/bosses-2.js,
+js/data/bosses-3.js, js/data/bosses-4.js, js/data/floors.js,
+js/data/rooms-basement.js, js/data/rooms-caves.js,
+js/data/rooms-depths.js, js/data/rooms-womb.js, js/data/rooms-alt.js,
+js/data/rooms-special.js, js/data/challenges.js,
+js/data/achievements.js
 ```
 
-P3 must also remove the three validator-reported `Math.random()` calls from
-`items-5.js`, `items-7.js`, and `pills.js` by using the owning `ctx.rng` stream.
-Do not begin P4 until the collectible validator is clean.
+The durable original workflow is
+`~/.claude/projects/-var-home-andre-Projects-isuck/a3d73950-d367-4d66-9bb4-0cede11c467d/workflows/scripts/isuck-p4-world-wf_6cf597d5-acf.js`.
+Recompute the P4 gap list from disk before using it. Do not use Kimi agents;
+Andre explicitly requested that after two Kimi runs stopped at reconnaissance.
 
 This build is designed to survive the laptop being shut down mid-phase. Nothing
 important lives in a session's head: it lives in files, and `tools/state.mjs`
