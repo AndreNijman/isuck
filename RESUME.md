@@ -1,6 +1,6 @@
 # Resuming this build
 
-## Latest checkpoint — gameplay hotfix deployed, DNS pending, 2026-08-07
+## Latest checkpoint — gameplay hotfix and custom domain live, 2026-08-07
 
 All phases remain complete, and the broken first release has been repaired in
 commits `5b0f5df` and `b653444`. Floor generation now creates reciprocal doors,
@@ -22,16 +22,18 @@ Verification performed at this boundary:
 - The games catalog deployment succeeded and its live ISUCK card and 1000×525
   image both return HTTP 200.
 
-The code, GitHub Pages setting, metadata, sitemap, README and games catalog now
-use `https://isaac.andrenijman.com/`. One external step remains because this
-machine has no Cloudflare credentials: create a DNS-only CNAME named `isaac`
-pointing to `andrenijman.github.io`. After it resolves, enable HTTPS enforcement
-in GitHub Pages and verify the custom URL.
+The code, GitHub Pages setting, metadata, sitemap, README and games catalog use
+`https://isaac.andrenijman.com/`. Cloudflare serves a proxied CNAME from `isaac`
+to `andrenijman.github.io`; Full SSL is active. A live Chromium session loaded
+the custom HTTPS URL, started a run and crossed a generated door with keyboard
+movement with zero console errors or exceptions.
 
 For future changes, run the three release
 gates, regenerate screenshots with `node tools/card-shot.js`, commit, and push
 `master`; GitHub Pages deploys from the repository root. Do not use Kimi agents
-unless Andre explicitly reverses that instruction.
+unless Andre explicitly reverses that instruction. GitHub's origin certificate
+may finish provisioning later; the public HTTPS route already works through
+Cloudflare.
 
 This build is designed to survive the laptop being shut down mid-phase. Nothing
 important lives in a session's head: it lives in files, and `tools/state.mjs`

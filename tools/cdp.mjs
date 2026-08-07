@@ -60,6 +60,7 @@ export async function launch (opts = {}) {
     `--window-size=${opts.width || 1280},${opts.height || 720}`,
     'about:blank'
   ]
+  if (opts.hostResolverRules) args.splice(args.length - 1, 0, `--host-resolver-rules=${opts.hostResolverRules}`)
 
   const proc = spawn(chrome, args, { stdio: ['ignore', 'pipe', 'pipe'] })
 

@@ -90,8 +90,9 @@ was unreachable from the player's collision boundary. Commits `5b0f5df` and
 `b653444` add reciprocal floor graph doors, reachable transitions, full-room
 camera fitting and accurate `run.roomIndex`. Smoke now passes 31/31 with a real
 keyboard-driven door crossing; a separate sweep generated 1,140 floors and
-verified 10,446 rooms. The `isaac.andrenijman.com` code-side setup is complete;
-Cloudflare still needs a DNS-only `isaac` CNAME to `andrenijman.github.io`.
+verified 10,446 rooms. `isaac.andrenijman.com` is now a proxied Cloudflare CNAME
+to `andrenijman.github.io`; the custom HTTPS deployment was verified in Chromium
+through a real keyboard-driven room transition with clean browser logs.
 
 ## What the first interruption taught us
 
