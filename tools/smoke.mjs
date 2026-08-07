@@ -99,6 +99,17 @@ try {
   ok(r.roomCount >= 6, 'floor generated a sensible number of rooms', String(r.roomCount))
   ok(r.dmg > 0, 'player stats were computed', `damage ${r.dmg}`)
 
+  await page.call('Emulation.setDeviceMetricsOverride', { width: 1900, height: 1060, deviceScaleFactor: 1, mobile: false })
+  await page.wait(180)
+  const canvasFit = JSON.parse(await page.evaluate(`return JSON.stringify((function () {
+    const canvas = document.getElementById('game'), r = canvas.getBoundingClientRect()
+    return { cssW:r.width, cssH:r.height, backingW:canvas.width, backingH:canvas.height,
+      dpr:devicePixelRatio, scale:IS.camera.scale }
+  })())`))
+  ok(Math.abs(canvasFit.backingW - canvasFit.cssW * canvasFit.dpr) <= 1 &&
+    Math.abs(canvasFit.backingH - canvasFit.cssH * canvasFit.dpr) <= 1,
+  'the canvas backing buffer matches its large CSS viewport', JSON.stringify(canvasFit))
+
   const graphInfo = JSON.parse(await page.evaluate(`return JSON.stringify((function () {
     const floor = IS.state.run.floor, seen = new Set([floor.startIndex]), todo = [floor.startIndex]
     let reciprocal = true, dangling = false

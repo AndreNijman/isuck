@@ -6,8 +6,8 @@
   function text (g, s, x, y, size, align, colour) { g.font = 'bold ' + size + 'px monospace'; g.textAlign = align || 'left'; g.textBaseline = 'middle'; g.fillStyle = 'rgba(20,12,9,.7)'; g.fillText(String(s), x + 2, y + 2); g.fillStyle = colour || '#eadcc7'; g.fillText(String(s), x, y) }
   function icon (g, name, x, y, s, t) { if (IS.drawSprite) IS.drawSprite(g, name, x, y, s, t || {}); else { g.fillStyle = '#b99362'; g.fillRect(x - s / 4, y - s / 4, s / 2, s / 2) } }
   function heart (g, kind, half, x, y, keeper) {
-    if (keeper) { icon(g, 'coin-penny', x, y, 27, { variant: half ? 'half' : '' }); return }
-    var name = kind === 'red' ? 'heart-' + (half ? 'half' : 'full') : kind === 'soul' ? 'heart-soul' : kind === 'black' ? 'heart-black' : kind === 'bone' ? 'heart-bone' : kind === 'rotten' ? 'heart-rotten' : 'heart-' + kind
+    if (keeper) { icon(g, 'penny', x, y, 27, { variant: half ? 'half' : '' }); return }
+    var name = kind === 'red' ? (half ? 'half-heart' : 'red-heart') : kind === 'soul' ? 'soul-heart' : kind === 'black' ? 'black-heart' : kind === 'bone' ? 'bone-heart' : kind === 'rotten' ? 'rotten-heart' : kind === 'eternal' ? 'eternal-heart' : kind === 'gold' ? 'gold-heart' : kind + '-heart'
     icon(g, name, x, y, 30, {})
   }
   function hearts (g, p, u) {
@@ -21,7 +21,7 @@
     for (i = 0; i < cells.length; i++) heart(g, cells[i][0], cells[i][1], 26 * u + (i % 6) * 31 * u, 25 * u + ((i / 6) | 0) * 29 * u, p.flags && p.flags.has('keeperHearts'))
   }
   function consumables (g, p, u) {
-    var y = 86 * u, vals = [['coin-penny', p.coins], ['bomb', p.bombs], ['key', p.keys]]
+    var y = 86 * u, vals = [['penny', p.coins], ['bomb', p.bombs], ['key', p.keys]]
     for (var i = 0; i < vals.length; i++) { icon(g, vals[i][0], 28 * u, y + i * 29 * u, 25 * u, {}); text(g, String(vals[i][1] || 0).padStart(2, '0') + (i === 1 && p.goldenBomb ? '*' : i === 2 && p.goldenKey ? '*' : ''), 48 * u, y + i * 29 * u, 18 * u) }
   }
   function actives (g, p, u) {

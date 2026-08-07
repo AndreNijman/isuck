@@ -111,7 +111,7 @@
       var d = room.doors[i]; if (!d || d.hidden) continue
       g.save(); g.translate(d.x, d.y)
       if (d.dir === 'left') g.rotate(-Math.PI / 2); else if (d.dir === 'right') g.rotate(Math.PI / 2); else if (d.dir === 'down') g.rotate(Math.PI)
-      sprite(g, 'door-' + d.kind, 0, 0, d.w || 92, { charge: d.open ? 1 : 0, variant: d.locked ? 'locked' : '', time: room.time || 0 })
+      sprite(g, 'door:' + d.kind, 0, 0, 104, { charge: d.open ? 1 : 0, variant: d.locked ? 'locked' : '', time: room.time || 0 })
       g.restore()
     }
   }

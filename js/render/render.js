@@ -42,9 +42,9 @@
   IS.render = function (g, dt) {
     var run = IS.state && IS.state.run, room = run && run.room
     if (!g || !room) return
-    var canvas = g.canvas, cssW = canvas && (canvas.clientWidth || canvas.width) || VW, cssH = canvas && (canvas.clientHeight || canvas.height) || VH
-    var dpr = typeof devicePixelRatio === 'number' ? devicePixelRatio : 1
-    var scale = Math.min(cssW / VW, cssH / VH) * dpr, ox = ((canvas ? canvas.width : VW) - VW * scale) / 2, oy = ((canvas ? canvas.height : VH) - VH * scale) / 2
+    var canvas = g.canvas
+    var scale = Math.min((canvas ? canvas.width : VW) / VW, (canvas ? canvas.height : VH) / VH)
+    var ox = ((canvas ? canvas.width : VW) - VW * scale) / 2, oy = ((canvas ? canvas.height : VH) - VH * scale) / 2
     IS.camera.scale = scale; IS.camera.offsetX = ox; IS.camera.offsetY = oy
     IS.updateCamera(room, run.player, dt)
     g.setTransform(1, 0, 0, 1, 0, 0); g.fillStyle = '#120e0c'; g.fillRect(0, 0, canvas ? canvas.width : VW, canvas ? canvas.height : VH)

@@ -58,7 +58,7 @@
     else if (/chest|sack/.test(k)) { g.fillStyle = base; g.fillRect(-s * .4, -s * .18, s * .8, s * .52); g.fillStyle = IS.shade ? IS.shade(base, .25) : '#d8b06a'; g.fillRect(-s * .42, -s * .3, s * .84, s * .2); g.fillStyle = '#3d2b20'; g.fillRect(-s * .05, -s * .08, s * .1, s * .22) }
     else { g.fillStyle = base; oval(g, 0, 0, s * .36, s * .36); line(g, '#eee5cf', s * .06, [-s * .18, 0, s * .18, 0]) }
   } }
-  var pickups = ['penny','nickel','dime','lucky-penny','coin','key','golden-key','bomb','golden-bomb','red-heart','half-heart','soul-heart','black-heart','eternal-heart','gold-heart','bone-heart','rotten-heart','blended-heart','battery','mega-battery','card','pill','rune','trinket','sack','chest','golden-chest','spiked-chest','mimic-chest','red-chest','haunted-chest','old-chest','mega-chest','bomb-chest']
+  var pickups = ['penny','nickel','dime','lucky-penny','coin','key','golden-key','bomb','golden-bomb','red-heart','half-heart','soul-heart','black-heart','eternal-heart','gold-heart','bone-heart','rotten-heart','broken-heart','blended-heart','battery','mega-battery','card','pill','rune','trinket','sack','chest','golden-chest','spiked-chest','mimic-chest','red-chest','haunted-chest','old-chest','mega-chest','bomb-chest']
   pickups.forEach(function (n) { if (!IS.sprite(n)) IS.defineSprite(n, pickup(n)) })
   IS.defineSprite('item-pedestal', function (g, s, t) { g.fillStyle = bodyColour(t, '#77716a'); g.fillRect(-s * .32, s * .08, s * .64, s * .3); g.fillStyle = '#a49b8c'; g.fillRect(-s * .42, -s * .02, s * .84, s * .14); g.fillStyle = IS.alpha ? IS.alpha('#e2cc75', .25) : '#786d43'; oval(g, 0, -s * .2, s * .35, s * .12) })
 
@@ -66,7 +66,16 @@
   Object.keys(IS.GRID_CHARS || {}).forEach(function (k) { var n = IS.GRID_CHARS[k]; if (typeof n !== 'string') n = k.toLowerCase().replace(/_/g, '-'); if (!IS.sprite(n)) IS.defineSprite(n, grid(n)); if (/fire/.test(n)) IS.spriteAnimated(n) })
   ;['rock','tinted-rock','skull-rock','metal-block','pillar','poop','red-poop','gold-poop','rainbow-poop','spikes','retracting-spikes','pit','pit-bridge','web','fireplace','blue-fireplace','tnt','key-block','locked-chest-spawn','mushroom','vase','water','crawlspace'].forEach(function (n) { if (!IS.sprite(n)) IS.defineSprite(n, grid(n)); if (/fireplace/.test(n)) IS.spriteAnimated(n) })
 
-  function door (kind) { return function (g, s, t) { var n = kind.toLowerCase(), c = /treasure|gold/.test(n) ? '#b68b33' : /devil|boss/.test(n) ? '#74292c' : /angel/.test(n) ? '#ddd6b9' : '#69615a'; var open = Math.max(0, Math.min(1, t.charge || 0)); g.fillStyle = '#211c1c'; g.fillRect(-s * .48, -s * .55, s * .96, s * 1.1); g.fillStyle = bodyColour(t, c); g.fillRect(-s * .43, -s * .5, s * .86 * (1 - open), s); if (/locked|shop|treasure/.test(n)) { g.fillStyle = '#d4b043'; oval(g, 0, 0, s * .13, s * .16); g.fillRect(-s * .04, 0, s * .08, s * .22) } if (/boss|devil/.test(n)) { g.fillStyle = '#e1c4a5'; for (var i = -2; i <= 2; i++) { g.beginPath(); g.moveTo(i * s * .15, -s * .08); g.lineTo(i * s * .15 + s * .06, s * .13); g.lineTo(i * s * .15 - s * .06, s * .13); g.fill() } } } }
+  function door (kind) { return function (g, s, t) {
+    var n = kind.toLowerCase(), c = /treasure|gold/.test(n) ? '#b68b33' : /devil|boss/.test(n) ? '#74292c' : /angel/.test(n) ? '#ddd6b9' : '#69615a'
+    var open = Math.max(0, Math.min(1, t.charge || 0))
+    g.fillStyle = '#302724'; g.fillRect(-s * .56, -s * .62, s * 1.12, s * 1.22)
+    g.fillStyle = '#594b43'; g.fillRect(-s * .5, -s * .56, s, s * .13); g.fillRect(-s * .5, s * .43, s, s * .13)
+    g.fillStyle = '#151011'; g.beginPath(); g.roundRect(-s * .41, -s * .45, s * .82, s * .9, s * .12); g.fill()
+    if (open < .98) { g.fillStyle = bodyColour(t, c); g.beginPath(); g.roundRect(-s * .36, -s * .4, s * .72 * (1 - open), s * .8, s * .06); g.fill(); g.strokeStyle = IS.shade ? IS.shade(c, -.35) : '#403934'; g.lineWidth = s * .045; g.stroke() }
+    if (/locked|shop|treasure/.test(n) && open < .98) { g.fillStyle = '#d4b043'; oval(g, 0, 0, s * .1, s * .13); g.fillRect(-s * .035, 0, s * .07, s * .19) }
+    if (/boss|devil/.test(n)) { g.fillStyle = '#e1c4a5'; for (var i = -2; i <= 2; i++) { g.beginPath(); g.moveTo(i * s * .14, -s * .53); g.lineTo(i * s * .14 + s * .05, -s * .42); g.lineTo(i * s * .14 - s * .05, -s * .42); g.fill() } }
+  } }
   ;(IS.DOOR_KIND_LIST || []).forEach(function (n) { if (!IS.sprite('door:' + n)) IS.defineSprite('door:' + n, door(n)); if (!IS.sprite(n + '-door')) IS.defineSprite(n + '-door', door(n)) })
 
   function projectile (name) { return function (g, s, t) { var n = name; if (/beam|laser/.test(n)) { g.fillStyle = /tech/.test(n) ? '#e94f45' : '#b5222d'; g.fillRect(-s * .55, -s * .1, s * 1.1, s * .2); return } if (/knife/.test(n)) { g.fillStyle = '#d4d0c5'; g.beginPath(); g.moveTo(-s * .45, s * .12); g.lineTo(s * .5, 0); g.lineTo(-s * .45, -s * .12); g.fill(); return } g.fillStyle = /blood|enemy|explosion/.test(n) ? '#a92d35' : /holy|spark/.test(n) ? '#e5d56b' : '#78b9d0'; oval(g, 0, 0, s * (.32 + .05 * (+t.variant || 0)), s * .38); g.fillStyle = IS.alpha ? IS.alpha('#f4eee0', .55) : '#d9e7e8'; oval(g, -s * .1, -s * .13, s * .08, s * .1) } }

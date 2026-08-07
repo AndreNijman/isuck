@@ -113,9 +113,24 @@
 
   function draw (dt) {
     if (!IS.g) return
+    IS.syncCanvasSize()
     var screen = IS.screens[IS.state.screen]
     if (screen && typeof screen.draw === 'function') screen.draw(IS.g, dt, IS.state.args)
     else if (IS.state.run && typeof IS.render === 'function') IS.render(IS.g, dt)
+  }
+
+  IS.syncCanvasSize = function () {
+    var canvas = IS.canvas
+    if (!canvas || typeof window === 'undefined') return false
+    var rect = canvas.getBoundingClientRect()
+    var dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1))
+    var w = Math.max(1, Math.round(rect.width * dpr))
+    var h = Math.max(1, Math.round(rect.height * dpr))
+    if (canvas.width === w && canvas.height === h) return false
+    canvas.width = w
+    canvas.height = h
+    IS.pixelRatio = dpr
+    return true
   }
 
   IS.boot = function () {
