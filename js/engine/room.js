@@ -1992,6 +1992,7 @@
     room.entryDir = fromDir || null
     room.dark = !!(num(run.curses, 0) & (IS.CURSE ? IS.CURSE.DARKNESS : 0))
     run.room = room
+    run.roomIndex = roomIndex
     floor.current = roomIndex
     floor.currentIndex = roomIndex
     if (room.firstVisit) floor.visitedCount = num(floor.visitedCount, 0) + 1
