@@ -12,5 +12,5 @@
   IS.spawnDevilDeal=(room,run,ctx)=>{for(let i=0;i<2;i++)IS.spawnPedestal(room,IS.rollItem(run,'devil'),room.pxW/2+(i*2-1)*80,room.pxH/2,{price:2,deal:'devil'});return room.pickups}
   IS.spawnAngelDeal=(room,run)=>IS.spawnPedestal(room,IS.rollItem(run,'angel'),room.pxW/2,room.pxH/2,{deal:'angel'})
   IS.rerollPedestals=(room,run,ctx)=>{for(const p of room.pickups)if(p.kind==='item'&&!p.dead)p.id=IS.rollItem(run,p.pool||'treasure');ctx?.sfx('reroll');return room.pickups}
-  IS.updateInteractions=(room,dt,ctx)=>{for(const p of room.pickups)if(!p.dead&&IS.entityHit(p,ctx.player))IS.tryTakePickup(ctx.player,p,ctx);room.pickups=room.pickups.filter(p=>!p.dead);for(const d of room.doors)if(IS.dist(ctx.player.x,ctx.player.y,d.x,d.y)<55)IS.tryDoor(ctx.player,d,ctx)}
+  IS.updateInteractions=(room,dt,ctx)=>{for(const p of room.pickups)if(!p.dead&&IS.entityHit(p,ctx.player))IS.tryTakePickup(ctx.player,p,ctx);room.pickups=room.pickups.filter(p=>!p.dead);for(const d of room.doors)if(IS.dist(ctx.player.x,ctx.player.y,d.x,d.y)<72)IS.tryDoor(ctx.player,d,ctx)}
 })(typeof window !== 'undefined' ? (window.IS = window.IS || {}) : (globalThis.IS = globalThis.IS || {}))

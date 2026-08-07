@@ -99,6 +99,33 @@ try {
   ok(r.roomCount >= 6, 'floor generated a sensible number of rooms', String(r.roomCount))
   ok(r.dmg > 0, 'player stats were computed', `damage ${r.dmg}`)
 
+  const graphInfo = JSON.parse(await page.evaluate(`return JSON.stringify((function () {
+    const floor = IS.state.run.floor, seen = new Set([floor.startIndex]), todo = [floor.startIndex]
+    let reciprocal = true, dangling = false
+    while (todo.length) {
+      const i = todo.shift(), room = floor.rooms[i]
+      for (const d of room.doors) {
+        const other = floor.rooms[d.target]
+        if (!other) { dangling = true; continue }
+        if (!other.doors.some(x => x.target === i && x.dir === IS.DIR_OPPOSITE[d.dir])) reciprocal = false
+        if (!seen.has(d.target)) { seen.add(d.target); todo.push(d.target) }
+      }
+    }
+    return { reached: seen.size, total: floor.rooms.length, reciprocal, dangling, startDoors: floor.rooms[floor.startIndex].doors.length }
+  })())`))
+  ok(graphInfo.startDoors > 0, 'the starting room has an exit', JSON.stringify(graphInfo))
+  ok(graphInfo.reached === graphInfo.total && graphInfo.reciprocal && !graphInfo.dangling,
+    'the generated floor is connected by reciprocal doors', JSON.stringify(graphInfo))
+  const cameraFits = await page.evaluate(`
+    const run = IS.state.run
+    return run.floor.rooms.every(room => {
+      IS.updateCamera(room, run.player, 1/60)
+      return (room.pxW + IS.WALL * 2) * IS.camera.zoom <= IS.VIEW_W + 0.01 &&
+        (room.pxH + IS.WALL * 2) * IS.camera.zoom <= IS.VIEW_H + 0.01
+    })
+  `)
+  ok(cameraFits, 'every generated room fits inside the game viewport')
+
   // ------------------------------------------------------- 3. input and combat
   const before = await page.evaluate('JSON.stringify({x: IS.state.run.player.x, y: IS.state.run.player.y})')
   await page.hold(['d'], 420)
@@ -110,6 +137,28 @@ try {
   await page.hold(['right'], 400)
   const firedEver = await page.evaluate('IS.state.run.stats && IS.state.run.stats.tearsFired ? IS.state.run.stats.tearsFired : (IS.state.run.room.tears.length)')
   ok(Number(firedEver) > 0, 'holding a shoot key fires tears', `saw ${firedEver}`)
+
+  // Traverse a real door with normal movement input. Previous versions called
+  // enterRoom() directly here and therefore missed a shipped floor with no
+  // doors at all, plus an interaction radius the player could not reach.
+  const doorWalk = JSON.parse(await page.evaluate(`return JSON.stringify((function () {
+    const run = IS.state.run, room = run.room, p = run.player
+    const d = room.doors.find(x => x.open && x.target != null)
+    if (!d) return { error: 'no open door', from: room.index }
+    const gap = 34
+    if (d.dir === 'right') { p.x = room.pxW - p.r - gap; p.y = d.y }
+    if (d.dir === 'left') { p.x = p.r + gap; p.y = d.y }
+    if (d.dir === 'down') { p.x = d.x; p.y = room.pxH - p.r - gap }
+    if (d.dir === 'up') { p.x = d.x; p.y = p.r + gap }
+    return { from: room.index, target: d.target, dir: d.dir }
+  })())`))
+  if (!doorWalk.error) {
+    const moveKey = { right: 'd', left: 'a', up: 'w', down: 's' }[doorWalk.dir]
+    await page.hold([moveKey], 700)
+    await page.wait(100)
+  }
+  const afterDoor = await page.evaluate('IS.state.run.room.index')
+  ok(!doorWalk.error && afterDoor === doorWalk.target, 'movement through a door enters the connected room', JSON.stringify({ doorWalk, afterDoor }))
 
   // ------------------------------------------------- 4. descend several floors
   let reached = 0

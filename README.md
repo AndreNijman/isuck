@@ -4,7 +4,7 @@ ISUCK is a free, from-scratch browser roguelike inspired by *The Binding of
 Isaac: Repentance*. It runs entirely in one web page: no engine, installation,
 accounts, ads, sprite sheets, or downloaded audio assets.
 
-[Play ISUCK](https://andrenijman.github.io/isuck/)
+[Play ISUCK](https://isaac.andrenijman.com/)
 
 ![A seeded ISUCK combat room](shots/card.png)
 

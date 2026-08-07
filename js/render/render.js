@@ -6,15 +6,11 @@
 
   IS.updateCamera = function (room, p, dt) {
     if (!room) return IS.camera
-    var c = IS.camera, halfW = VW / (2 * c.zoom), halfH = VH / (2 * c.zoom)
+    var c = IS.camera, wall = IS.WALL || 80
+    var fit = Math.min(1, VW / (room.pxW + wall * 2), VH / (room.pxH + wall * 2))
+    c.zoom = fit
     var tx = room.pxW / 2, ty = room.pxH / 2
-    if ((room.pxW > IS.ROOM_PX_W || room.pxH > IS.ROOM_PX_H) && p) {
-      var dzx = 120, dzy = 75
-      tx = c.x + (p.x < c.x - dzx ? p.x - (c.x - dzx) : p.x > c.x + dzx ? p.x - (c.x + dzx) : 0)
-      ty = c.y + (p.y < c.y - dzy ? p.y - (c.y - dzy) : p.y > c.y + dzy ? p.y - (c.y + dzy) : 0)
-    }
-    tx = Math.max(halfW - (IS.WALL || 80), Math.min(room.pxW + (IS.WALL || 80) - halfW, tx))
-    ty = Math.max(halfH - (IS.WALL || 80), Math.min(room.pxH + (IS.WALL || 80) - halfH, ty))
+    if (c.roomIndex !== room.index) { c.roomIndex = room.index; c.x = tx; c.y = ty; return c }
     var k = 1 - Math.exp(-Math.max(0, dt || 0) * 9)
     c.x += (tx - c.x) * k; c.y += (ty - c.y) * k
     return c
