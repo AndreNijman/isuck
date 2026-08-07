@@ -3,9 +3,22 @@
 :root {
   --void: #0a0807;
   --paper: #120f0e;
+  --surface: #1c1715;
   --ink: #efe7d8;
-  --blood: #a8271f;
+  --muted: #a99c89;
+  --blood: #b6382d;
+  --blood-dim: #7b211c;
   --bone: #d8ceb8;
+  --focus: #e0b95d;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --dur-fast: 150ms;
+  --dur-base: 220ms;
+  --ease-out: cubic-bezier(0, 0, .2, 1);
 }
 
 * { box-sizing: border-box; }
@@ -44,6 +57,27 @@ html, body {
   touch-action: none;
 }
 
+#game:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: -3px;
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 100;
+  top: -80px;
+  left: var(--space-3);
+  min-height: 44px;
+  padding: 12px var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--focus);
+  color: var(--void);
+  font-weight: 700;
+  transition: top var(--dur-fast) var(--ease-out);
+}
+
+.skip-link:focus { top: var(--space-3); }
+
 #boot {
   position: absolute;
   inset: 0;
@@ -52,7 +86,7 @@ html, body {
   gap: 14px;
   justify-items: center;
   background: var(--void);
-  transition: opacity 0.5s ease;
+  transition: opacity var(--dur-base) var(--ease-out);
   pointer-events: none;
 }
 #boot.gone { opacity: 0; }

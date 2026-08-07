@@ -41,6 +41,16 @@ archetypes and 45/45 boss attacks. `tools/state.mjs` selects P2 as the next
 phase. See the latest checkpoint at the top of `RESUME.md` for the exact P2 gap
 list and integration caveats.
 
+### P2 completion checkpoint (2026-08-07)
+
+P2 was implemented from the durable repository workflow and completed at
+15/15. The phase registers 579 sprites against currently available data, all 18
+screen names, every documented render/HUD/camera symbol, and the main loop plus
+headless simulator. Syntax, headless registration, hook-signature, state, and
+real-browser title checks pass. The remaining 34 validator errors are entirely
+P3/P4-owned. The exact P3 missing list and three deterministic-RNG repairs are
+recorded at the top of `RESUME.md`.
+
 ## What the first interruption taught us
 
 The session hosting the first P1/P3/P4 dispatch exited while all three were in

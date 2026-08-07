@@ -48,6 +48,7 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <a class="skip-link" href="#game">Skip to game</a>
   <!-- Real prose behind the canvas so crawlers see words, not an empty element. -->
   <header class="sr-only">
     <h1>ISUCK — free browser roguelike</h1>
@@ -74,8 +75,12 @@
   </header>
 
   <div id="shell">
-    <canvas id="game" width="1280" height="720" aria-label="ISUCK game screen"></canvas>
-    <div id="boot">
+    <canvas id="game" width="1280" height="720" tabindex="0" role="application"
+      aria-label="ISUCK game. Use W A S D to move, arrow keys to shoot, E for active item, Q for pocket item, Space for a bomb, Tab for the map, and Escape to pause."
+      aria-describedby="game-instructions game-status"></canvas>
+    <p id="game-instructions" class="sr-only">The game is rendered on a canvas. Menus use arrow keys and Enter. During a run, use W A S D to move, arrow keys to shoot, E for the active item, Q for a card or pill, Space to place a bomb, Tab for the map, and Escape to pause.</p>
+    <div id="game-status" class="sr-only" role="status" aria-live="polite"></div>
+    <div id="boot" role="status" aria-live="polite">
       <div class="boot-title">ISUCK</div>
       <div class="boot-note">loading the basement…</div>
     </div>

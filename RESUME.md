@@ -1,46 +1,54 @@
 # Resuming this build
 
-## Latest checkpoint — P1 complete, 2026-08-07
+## Latest checkpoint — P2 complete, 2026-08-07
 
-P1 (core + engine spine) is complete at **18/18**. The 15 files missing after
-the interrupted Claude workflows were implemented directly against revision 1
-of `ARCHITECTURE.md` and the exact ownership list in `docs/ENGINE-API.md`.
+P2 (render + UI + boot) is complete at **15/15**. The browser now has a
+procedural sprite system, room compositor, camera and lighting, HUD/minimap,
+shared canvas UI, all 18 contracted screens, a fixed-step game loop, a
+headless simulator, and accessible page-level canvas controls.
 
 Verification performed at this boundary:
 
-- Every file in `js/core/` and `js/engine/` passes `node --check`.
-- A headless integration probe loads the scripts in `index.html` order, creates
-  a seeded run, player, room and context, spawns an enemy, fires a tear, advances
-  projectiles and updates both player and room. The enemy takes damage.
-- All 36 frozen enemy archetypes and all 45 boss attacks register.
-- `node tools/state.mjs` reports P1 **18/18** and points to P2 next.
-- `node tools/validate-content.mjs` improved from 368 to 135 errors. It reports
-  no missing P1 API. The remaining errors belong to missing P2/P3/P4 files and
-  cross-references that those phases will register (sprites, familiars, etc.).
+- Every file in `js/render/`, `js/ui/`, and `js/main.js` passes `node --check`.
+- Headless loading registers 18 screens and 579 sprites with current partial
+  content; all documented P2 API symbols are present.
+- Mechanical sprite coverage includes current items, pills and familiars and
+  automatically covers later character/enemy/boss/card/trinket registries.
+- A hook probe proves content hooks receive `(player, ...args, ctx)` exactly;
+  P2 integration exposed and fixed the older inconsistent P1 dispatch.
+- `node tools/validate-content.mjs` is down to 34 expected errors: 24 missing
+  P3/P4 files, seven familiar references whose definitions are in missing
+  collectible batches, and three pre-existing `Math.random()` violations in
+  partial P3 data. There are no P2 API or sprite errors.
+- A real Chromium/file-URL pass reaches the title screen, advances frames, and
+  records no exception or warning. Network errors are only the 24 future
+  P3/P4 scripts already listed above.
+- `node tools/state.mjs` reports P2 **15/15** and selects P3 next.
 
-Important implementation notes for the next Claude session:
+Accessibility/design decisions:
 
-- Registry lookups use the `*ById` maps (`itemsById`, `enemiesById`, and so on);
-  the similarly named plural properties are ordered arrays.
-- The engine is a functional baseline, not a claim of complete Repentance
-  fidelity. Content hooks and later play-through gates should drive refinements.
-- Existing interrupted-workflow output in P3 was deliberately left untouched.
+- The direction is a grimy, hand-inked basement with bone text and one blood
+  accent—not generic glass UI. The title's memorable device is a stark keyhole
+  under a narrow cellar light.
+- The canvas is keyboard-focusable with a visible high-contrast focus border,
+  control instructions, skip link, and polite screen-state announcements.
+- Canvas menus use 44-unit targets and obvious selected states. Raw key events
+  are forwarded to seed entry/rebinding screens. Reduced-motion preference
+  disables the title flicker/blink and CSS transitions collapse under the
+  existing media query.
 
-The next action is **P2 — Render + UI + boot**, and only P2. Its durable script
-is already in the repository at `tools/workflows/p2-render.js`. Recompute state
-before dispatching; the expected missing list is:
+The next action is **P3 — Content: collectibles**, and only P3. Recompute state
+before work. The expected missing files are:
 
 ```text
-js/render/sprites-core.js, js/render/sprites-enemies.js,
-js/render/sprites-bosses.js, js/render/sprites-items.js,
-js/render/backdrop.js, js/render/render.js, js/render/hud.js,
-js/ui/widgets.js, js/ui/screens-title.js, js/ui/screens-select.js,
-js/ui/screens-meta.js, js/ui/screens-run.js, js/main.js
+js/data/items-2.js, js/data/items-4.js, js/data/items-8.js,
+js/data/trinkets-1.js, js/data/trinkets-2.js,
+js/data/cards.js, js/data/characters.js
 ```
 
-Do not resume the obsolete P1 workflow. P3 can still be resumed independently
-after this ordered next step, using its fresh missing list from
-`BUILD_STATE.json`.
+P3 must also remove the three validator-reported `Math.random()` calls from
+`items-5.js`, `items-7.js`, and `pills.js` by using the owning `ctx.rng` stream.
+Do not begin P4 until the collectible validator is clean.
 
 This build is designed to survive the laptop being shut down mid-phase. Nothing
 important lives in a session's head: it lives in files, and `tools/state.mjs`

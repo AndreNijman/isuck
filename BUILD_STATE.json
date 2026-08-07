@@ -2,7 +2,7 @@
   "project": "isuck",
   "generated": "derived-from-disk",
   "git": {
-    "head": "ed317b3",
+    "head": "3a92566",
     "branch": "master",
     "dirty": true,
     "remote": null
@@ -25,9 +25,9 @@
     {
       "id": "P2",
       "title": "Render + UI + boot",
-      "done": 2,
+      "done": 15,
       "total": 15,
-      "complete": false
+      "complete": true
     },
     {
       "id": "P3",
@@ -58,74 +58,9 @@
       "complete": false
     }
   ],
-  "currentPhase": "P2",
-  "currentPhaseTitle": "Render + UI + boot",
+  "currentPhase": "P3",
+  "currentPhaseTitle": "Content: collectibles",
   "missing": [
-    {
-      "phase": "P2",
-      "file": "js/render/sprites-core.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P2",
-      "file": "js/render/sprites-enemies.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P2",
-      "file": "js/render/sprites-bosses.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P2",
-      "file": "js/render/sprites-items.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P2",
-      "file": "js/render/backdrop.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P2",
-      "file": "js/render/render.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P2",
-      "file": "js/render/hud.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P2",
-      "file": "js/ui/widgets.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P2",
-      "file": "js/ui/screens-title.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P2",
-      "file": "js/ui/screens-select.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P2",
-      "file": "js/ui/screens-meta.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P2",
-      "file": "js/ui/screens-run.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P2",
-      "file": "js/main.js",
-      "state": "missing"
-    },
     {
       "phase": "P3",
       "file": "js/data/items-2.js",
@@ -265,21 +200,7 @@
   "missingByPhase": {
     "P0": [],
     "P1": [],
-    "P2": [
-      "js/render/sprites-core.js",
-      "js/render/sprites-enemies.js",
-      "js/render/sprites-bosses.js",
-      "js/render/sprites-items.js",
-      "js/render/backdrop.js",
-      "js/render/render.js",
-      "js/render/hud.js",
-      "js/ui/widgets.js",
-      "js/ui/screens-title.js",
-      "js/ui/screens-select.js",
-      "js/ui/screens-meta.js",
-      "js/ui/screens-run.js",
-      "js/main.js"
-    ],
+    "P2": [],
     "P3": [
       "js/data/items-2.js",
       "js/data/items-4.js",
