@@ -2,7 +2,7 @@
   "project": "isuck",
   "generated": "derived-from-disk",
   "git": {
-    "head": "6c6e53d",
+    "head": "f5a5914",
     "branch": "master",
     "dirty": true,
     "remote": null
@@ -39,9 +39,9 @@
     {
       "id": "P4",
       "title": "Content: world",
-      "done": 0,
+      "done": 17,
       "total": 17,
-      "complete": false
+      "complete": true
     },
     {
       "id": "P5",
@@ -58,94 +58,9 @@
       "complete": false
     }
   ],
-  "currentPhase": "P4",
-  "currentPhaseTitle": "Content: world",
+  "currentPhase": "P6",
+  "currentPhaseTitle": "Ship",
   "missing": [
-    {
-      "phase": "P4",
-      "file": "js/data/enemies-1.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P4",
-      "file": "js/data/enemies-2.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P4",
-      "file": "js/data/enemies-3.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P4",
-      "file": "js/data/enemies-4.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P4",
-      "file": "js/data/bosses-1.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P4",
-      "file": "js/data/bosses-2.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P4",
-      "file": "js/data/bosses-3.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P4",
-      "file": "js/data/bosses-4.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P4",
-      "file": "js/data/floors.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P4",
-      "file": "js/data/rooms-basement.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P4",
-      "file": "js/data/rooms-caves.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P4",
-      "file": "js/data/rooms-depths.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P4",
-      "file": "js/data/rooms-womb.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P4",
-      "file": "js/data/rooms-alt.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P4",
-      "file": "js/data/rooms-special.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P4",
-      "file": "js/data/challenges.js",
-      "state": "missing"
-    },
-    {
-      "phase": "P4",
-      "file": "js/data/achievements.js",
-      "state": "missing"
-    },
     {
       "phase": "P6",
       "file": "README.md",
@@ -167,25 +82,7 @@
     "P1": [],
     "P2": [],
     "P3": [],
-    "P4": [
-      "js/data/enemies-1.js",
-      "js/data/enemies-2.js",
-      "js/data/enemies-3.js",
-      "js/data/enemies-4.js",
-      "js/data/bosses-1.js",
-      "js/data/bosses-2.js",
-      "js/data/bosses-3.js",
-      "js/data/bosses-4.js",
-      "js/data/floors.js",
-      "js/data/rooms-basement.js",
-      "js/data/rooms-caves.js",
-      "js/data/rooms-depths.js",
-      "js/data/rooms-womb.js",
-      "js/data/rooms-alt.js",
-      "js/data/rooms-special.js",
-      "js/data/challenges.js",
-      "js/data/achievements.js"
-    ],
+    "P4": [],
     "P5": [],
     "P6": [
       "README.md",

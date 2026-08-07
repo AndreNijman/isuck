@@ -64,6 +64,15 @@ Andre requested that Kimi agents not be used after two Kimi attempts returned
 only reconnaissance. Continue P4 in the main thread or with explicitly bounded
 standard workers.
 
+### P4 completion checkpoint (2026-08-07)
+
+P4 completed at 17/17 using the frozen `docs/reference/roster.json`: 208 enemies,
+80 bosses, 500 rooms, 57 floors, 45 challenges and 637 achievements. Content
+validation passes with all 63 scripts loaded, smoke passes 27/27, and a 20-run
+balance sample passes without exceptions. `tools/state.mjs` now selects P6;
+P5 was already complete. The remaining local ship assets are `README.md`,
+`og-image.png`, and `shots/card.png`.
+
 ## What the first interruption taught us
 
 The session hosting the first P1/P3/P4 dispatch exited while all three were in

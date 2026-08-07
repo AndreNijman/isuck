@@ -1,0 +1,6750 @@
+{
+  "enemies": [
+    {
+      "id": "gaper",
+      "name": "Gaper",
+      "group": "e1",
+      "floors": [
+        "basement",
+        "cellar",
+        "burning-basement"
+      ],
+      "hp": 10,
+      "r": 16,
+      "speed": 75,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "chaser",
+      "params": {
+        "accel": 650,
+        "jitter": 0.16
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Gaper stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "frowning-gaper",
+      "name": "Frowning Gaper",
+      "group": "e1",
+      "floors": [
+        "cellar",
+        "burning-basement",
+        "basement-2"
+      ],
+      "hp": 14,
+      "r": 19,
+      "speed": 90,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "wanderer",
+      "params": {
+        "turnDelay": 1.2,
+        "speed": 100
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Frowning Gaper stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "flaming-gaper",
+      "name": "Flaming Gaper",
+      "group": "e1",
+      "floors": [
+        "burning-basement",
+        "basement-2",
+        "cellar-2"
+      ],
+      "hp": 18,
+      "r": 22,
+      "speed": 105,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooter",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Flaming Gaper stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "pooter",
+      "name": "Pooter",
+      "group": "e1",
+      "floors": [
+        "basement-2",
+        "cellar-2",
+        "burning-basement-2"
+      ],
+      "hp": 22,
+      "r": 25,
+      "speed": 120,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooterMobile",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Pooter stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "super-pooter",
+      "name": "Super Pooter",
+      "group": "e1",
+      "floors": [
+        "cellar-2",
+        "burning-basement-2",
+        "downpour"
+      ],
+      "hp": 26,
+      "r": 28,
+      "speed": 135,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "flyerDrift",
+      "params": {
+        "accel": 520,
+        "drift": 0.3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Super Pooter stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "fatty",
+      "name": "Fatty",
+      "group": "e1",
+      "floors": [
+        "basement",
+        "cellar",
+        "burning-basement"
+      ],
+      "hp": 30,
+      "r": 16,
+      "speed": 150,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "leaper",
+      "params": {
+        "hopHeight": 70,
+        "hopDelay": 1.4
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Fatty stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "flaming-fatty",
+      "name": "Flaming Fatty",
+      "group": "e1",
+      "floors": [
+        "cellar",
+        "burning-basement",
+        "basement-2"
+      ],
+      "hp": 34,
+      "r": 19,
+      "speed": 165,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "charger",
+      "params": {
+        "windup": 0.6,
+        "dashSpeed": 430,
+        "recover": 0.8
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Flaming Fatty stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "clotty",
+      "name": "Clotty",
+      "group": "e1",
+      "floors": [
+        "burning-basement",
+        "basement-2",
+        "cellar-2"
+      ],
+      "hp": 38,
+      "r": 22,
+      "speed": 75,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "splitter",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Clotty stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "i-blob",
+      "name": "I.Blob",
+      "group": "e1",
+      "floors": [
+        "basement-2",
+        "cellar-2",
+        "burning-basement-2"
+      ],
+      "hp": 10,
+      "r": 25,
+      "speed": 90,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "summoner",
+      "params": {
+        "fireDelay": 3.2,
+        "spawnCap": 3,
+        "spawns": "attackfly"
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "I.Blob stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "sucker",
+      "name": "Sucker",
+      "group": "e1",
+      "floors": [
+        "cellar-2",
+        "burning-basement-2",
+        "downpour"
+      ],
+      "hp": 14,
+      "r": 28,
+      "speed": 105,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shielded",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Sucker stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "spit",
+      "name": "Spit",
+      "group": "e1",
+      "floors": [
+        "basement",
+        "cellar",
+        "burning-basement"
+      ],
+      "hp": 18,
+      "r": 16,
+      "speed": 120,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "spitter",
+      "params": {
+        "fireDelay": 1.8,
+        "shotSpeed": 230,
+        "burstCount": 3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Spit stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "horf",
+      "name": "Horf",
+      "group": "e1",
+      "floors": [
+        "cellar",
+        "burning-basement",
+        "basement-2"
+      ],
+      "hp": 22,
+      "r": 19,
+      "speed": 135,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooter",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Horf stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "hopper",
+      "name": "Hopper",
+      "group": "e1",
+      "floors": [
+        "burning-basement",
+        "basement-2",
+        "cellar-2"
+      ],
+      "hp": 26,
+      "r": 22,
+      "speed": 150,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "leaper",
+      "params": {
+        "hopHeight": 70,
+        "hopDelay": 1.4
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Hopper stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "trite",
+      "name": "Trite",
+      "group": "e1",
+      "floors": [
+        "basement-2",
+        "cellar-2",
+        "burning-basement-2"
+      ],
+      "hp": 30,
+      "r": 25,
+      "speed": 165,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "leaper",
+      "params": {
+        "hopHeight": 70,
+        "hopDelay": 1.4
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Trite stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "attackfly",
+      "name": "Attackfly",
+      "group": "e1",
+      "floors": [
+        "cellar-2",
+        "burning-basement-2",
+        "downpour"
+      ],
+      "hp": 34,
+      "r": 28,
+      "speed": 75,
+      "dmg": 1,
+      "flying": true,
+      "archetype": "flyerDrift",
+      "params": {
+        "accel": 520,
+        "drift": 0.3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Attack Fly stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "fly",
+      "name": "Fly",
+      "group": "e1",
+      "floors": [
+        "basement",
+        "cellar",
+        "burning-basement"
+      ],
+      "hp": 38,
+      "r": 16,
+      "speed": 90,
+      "dmg": 1,
+      "flying": true,
+      "archetype": "flyerDrift",
+      "params": {
+        "accel": 520,
+        "drift": 0.3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Fly stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "pot",
+      "name": "Pot",
+      "group": "e1",
+      "floors": [
+        "cellar",
+        "burning-basement",
+        "basement-2"
+      ],
+      "hp": 10,
+      "r": 19,
+      "speed": 105,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "flyerChase",
+      "params": {
+        "accel": 520,
+        "drift": 0.3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Pot stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "squirt",
+      "name": "Squirt",
+      "group": "e1",
+      "floors": [
+        "burning-basement",
+        "basement-2",
+        "cellar-2"
+      ],
+      "hp": 14,
+      "r": 22,
+      "speed": 120,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "spinner",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Squirt stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "dip",
+      "name": "Dip",
+      "group": "e1",
+      "floors": [
+        "basement-2",
+        "cellar-2",
+        "burning-basement-2"
+      ],
+      "hp": 18,
+      "r": 25,
+      "speed": 135,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "trailLayer",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Dip stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "dank-dip",
+      "name": "Dank Dip",
+      "group": "e1",
+      "floors": [
+        "cellar-2",
+        "burning-basement-2",
+        "downpour"
+      ],
+      "hp": 22,
+      "r": 28,
+      "speed": 150,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "grid",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Dank Dip stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "charger",
+      "name": "Charger",
+      "group": "e1",
+      "floors": [
+        "basement",
+        "cellar",
+        "burning-basement"
+      ],
+      "hp": 26,
+      "r": 16,
+      "speed": 165,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "chaser",
+      "params": {
+        "accel": 650,
+        "jitter": 0.16
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Charger stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "boom-fly",
+      "name": "Boom Fly",
+      "group": "e1",
+      "floors": [
+        "cellar",
+        "burning-basement",
+        "basement-2"
+      ],
+      "hp": 30,
+      "r": 19,
+      "speed": 75,
+      "dmg": 1,
+      "flying": true,
+      "archetype": "exploder",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Boom Fly stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "red-boom-fly",
+      "name": "Red Boom Fly",
+      "group": "e1",
+      "floors": [
+        "burning-basement",
+        "basement-2",
+        "cellar-2"
+      ],
+      "hp": 34,
+      "r": 22,
+      "speed": 90,
+      "dmg": 1,
+      "flying": true,
+      "archetype": "exploder",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Red Boom Fly stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "drop",
+      "name": "Drop",
+      "group": "e1",
+      "floors": [
+        "basement-2",
+        "cellar-2",
+        "burning-basement-2"
+      ],
+      "hp": 38,
+      "r": 25,
+      "speed": 105,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooterMobile",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Drop stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "mulligan",
+      "name": "Mulligan",
+      "group": "e1",
+      "floors": [
+        "cellar-2",
+        "burning-basement-2",
+        "downpour"
+      ],
+      "hp": 10,
+      "r": 28,
+      "speed": 120,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "summoner",
+      "params": {
+        "fireDelay": 3.2,
+        "spawnCap": 3,
+        "spawns": "attackfly"
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Mulligan stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "mulliboom",
+      "name": "Mulliboom",
+      "group": "e1",
+      "floors": [
+        "basement",
+        "cellar",
+        "burning-basement"
+      ],
+      "hp": 14,
+      "r": 16,
+      "speed": 135,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "exploder",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Mulliboom stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "gusher",
+      "name": "Gusher",
+      "group": "e1",
+      "floors": [
+        "cellar",
+        "burning-basement",
+        "basement-2"
+      ],
+      "hp": 18,
+      "r": 19,
+      "speed": 150,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "charger",
+      "params": {
+        "windup": 0.6,
+        "dashSpeed": 430,
+        "recover": 0.8
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Gusher stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "baby",
+      "name": "Baby",
+      "group": "e1",
+      "floors": [
+        "burning-basement",
+        "basement-2",
+        "cellar-2"
+      ],
+      "hp": 22,
+      "r": 22,
+      "speed": 165,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "splitter",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Baby stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "cyclopia",
+      "name": "Cyclopia",
+      "group": "e1",
+      "floors": [
+        "basement-2",
+        "cellar-2",
+        "burning-basement-2"
+      ],
+      "hp": 26,
+      "r": 25,
+      "speed": 75,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "summoner",
+      "params": {
+        "fireDelay": 3.2,
+        "spawnCap": 3,
+        "spawns": "attackfly"
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Cyclopia stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "splasher",
+      "name": "Splasher",
+      "group": "e1",
+      "floors": [
+        "cellar-2",
+        "burning-basement-2",
+        "downpour"
+      ],
+      "hp": 30,
+      "r": 28,
+      "speed": 90,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shielded",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Splasher stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "mask",
+      "name": "Mask",
+      "group": "e1",
+      "floors": [
+        "basement",
+        "cellar",
+        "burning-basement"
+      ],
+      "hp": 34,
+      "r": 16,
+      "speed": 105,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shielded",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Mask stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "host",
+      "name": "Host",
+      "group": "e1",
+      "floors": [
+        "cellar",
+        "burning-basement",
+        "basement-2"
+      ],
+      "hp": 38,
+      "r": 19,
+      "speed": 120,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shielded",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Host stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "red-host",
+      "name": "Red Host",
+      "group": "e1",
+      "floors": [
+        "burning-basement",
+        "basement-2",
+        "cellar-2"
+      ],
+      "hp": 10,
+      "r": 22,
+      "speed": 135,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shielded",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Red Host stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "mr-maw",
+      "name": "Mr. Maw",
+      "group": "e1",
+      "floors": [
+        "basement-2",
+        "cellar-2",
+        "burning-basement-2"
+      ],
+      "hp": 14,
+      "r": 25,
+      "speed": 150,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "wallHugger",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Mr. Maw stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "maw",
+      "name": "Maw",
+      "group": "e1",
+      "floors": [
+        "cellar-2",
+        "burning-basement-2",
+        "downpour"
+      ],
+      "hp": 18,
+      "r": 28,
+      "speed": 165,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "ghost",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Maw stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "psychic-maw",
+      "name": "Psychic Maw",
+      "group": "e1",
+      "floors": [
+        "basement",
+        "cellar",
+        "burning-basement"
+      ],
+      "hp": 22,
+      "r": 16,
+      "speed": 75,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "exploder",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Psychic Maw stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "nerve-ending",
+      "name": "Nerve Ending",
+      "group": "e1",
+      "floors": [
+        "cellar",
+        "burning-basement",
+        "basement-2"
+      ],
+      "hp": 26,
+      "r": 19,
+      "speed": 90,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "flyerChase",
+      "params": {
+        "accel": 520,
+        "drift": 0.3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Nerve Ending stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "round-worm",
+      "name": "Round Worm",
+      "group": "e1",
+      "floors": [
+        "burning-basement",
+        "basement-2",
+        "cellar-2"
+      ],
+      "hp": 30,
+      "r": 22,
+      "speed": 105,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "burrower",
+      "params": {
+        "submergeTime": 1.3,
+        "speed": 180
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Round Worm stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "night-crawler",
+      "name": "Night Crawler",
+      "group": "e1",
+      "floors": [
+        "basement-2",
+        "cellar-2",
+        "burning-basement-2"
+      ],
+      "hp": 34,
+      "r": 25,
+      "speed": 120,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "trailLayer",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Night Crawler stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "para-bite",
+      "name": "Para-Bite",
+      "group": "e1",
+      "floors": [
+        "cellar-2",
+        "burning-basement-2",
+        "downpour"
+      ],
+      "hp": 38,
+      "r": 28,
+      "speed": 135,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "grid",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Para-Bite stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "leech",
+      "name": "Leech",
+      "group": "e1",
+      "floors": [
+        "basement",
+        "cellar",
+        "burning-basement"
+      ],
+      "hp": 10,
+      "r": 16,
+      "speed": 150,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "chaser",
+      "params": {
+        "accel": 650,
+        "jitter": 0.16
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Leech stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "small-leech",
+      "name": "Small Leech",
+      "group": "e1",
+      "floors": [
+        "cellar",
+        "burning-basement",
+        "basement-2"
+      ],
+      "hp": 14,
+      "r": 19,
+      "speed": 165,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "wanderer",
+      "params": {
+        "turnDelay": 1.2,
+        "speed": 100
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Small Leech stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "baby-long-legs",
+      "name": "Baby Long Legs",
+      "group": "e1",
+      "floors": [
+        "burning-basement",
+        "basement-2",
+        "cellar-2"
+      ],
+      "hp": 18,
+      "r": 22,
+      "speed": 75,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooter",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Baby Long Legs stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "crazy-long-legs",
+      "name": "Crazy Long Legs",
+      "group": "e1",
+      "floors": [
+        "basement-2",
+        "cellar-2",
+        "burning-basement-2"
+      ],
+      "hp": 22,
+      "r": 25,
+      "speed": 90,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooterMobile",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Crazy Long Legs stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "dinga",
+      "name": "Dinga",
+      "group": "e1",
+      "floors": [
+        "cellar-2",
+        "burning-basement-2",
+        "downpour"
+      ],
+      "hp": 26,
+      "r": 28,
+      "speed": 105,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "flyerDrift",
+      "params": {
+        "accel": 520,
+        "drift": 0.3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Dinga stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "blurb",
+      "name": "Blurb",
+      "group": "e1",
+      "floors": [
+        "basement",
+        "cellar",
+        "burning-basement"
+      ],
+      "hp": 30,
+      "r": 16,
+      "speed": 120,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "leaper",
+      "params": {
+        "hopHeight": 70,
+        "hopDelay": 1.4
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Blurb stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "drowned-charger",
+      "name": "Drowned Charger",
+      "group": "e1",
+      "floors": [
+        "cellar",
+        "burning-basement",
+        "basement-2"
+      ],
+      "hp": 34,
+      "r": 19,
+      "speed": 135,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "charger",
+      "params": {
+        "windup": 0.6,
+        "dashSpeed": 430,
+        "recover": 0.8
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Drowned Charger stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "drowned-boom-fly",
+      "name": "Drowned Boom Fly",
+      "group": "e1",
+      "floors": [
+        "burning-basement",
+        "basement-2",
+        "cellar-2"
+      ],
+      "hp": 38,
+      "r": 22,
+      "speed": 150,
+      "dmg": 1,
+      "flying": true,
+      "archetype": "exploder",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Drowned Boom Fly stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "poppy-gaper",
+      "name": "Poppy Gaper",
+      "group": "e1",
+      "floors": [
+        "basement-2",
+        "cellar-2",
+        "burning-basement-2"
+      ],
+      "hp": 10,
+      "r": 25,
+      "speed": 165,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "summoner",
+      "params": {
+        "fireDelay": 3.2,
+        "spawnCap": 3,
+        "spawns": "attackfly"
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Poppy Gaper stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "gutted-fatty",
+      "name": "Gutted Fatty",
+      "group": "e1",
+      "floors": [
+        "cellar-2",
+        "burning-basement-2",
+        "downpour"
+      ],
+      "hp": 14,
+      "r": 28,
+      "speed": 75,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shielded",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Gutted Fatty stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "grackle",
+      "name": "Grackle",
+      "group": "e1",
+      "floors": [
+        "basement",
+        "cellar",
+        "burning-basement"
+      ],
+      "hp": 18,
+      "r": 16,
+      "speed": 90,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "spitter",
+      "params": {
+        "fireDelay": 1.8,
+        "shotSpeed": 230,
+        "burstCount": 3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Grackle stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "mole",
+      "name": "Mole",
+      "group": "e1",
+      "floors": [
+        "cellar",
+        "burning-basement",
+        "basement-2"
+      ],
+      "hp": 22,
+      "r": 19,
+      "speed": 105,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "sprayer",
+      "params": {
+        "fireDelay": 1.8,
+        "shotSpeed": 230,
+        "burstCount": 3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Mole stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "hive",
+      "name": "Hive",
+      "group": "e2",
+      "floors": [
+        "caves",
+        "catacombs",
+        "flooded-caves"
+      ],
+      "hp": 24,
+      "r": 16,
+      "speed": 75,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "summoner",
+      "params": {
+        "fireDelay": 3.2,
+        "spawnCap": 3,
+        "spawns": "attackfly"
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Hive stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "drowned-hive",
+      "name": "Drowned Hive",
+      "group": "e2",
+      "floors": [
+        "catacombs",
+        "flooded-caves",
+        "caves-2"
+      ],
+      "hp": 28,
+      "r": 19,
+      "speed": 90,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "summoner",
+      "params": {
+        "fireDelay": 3.2,
+        "spawnCap": 3,
+        "spawns": "attackfly"
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Drowned Hive stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "maggot",
+      "name": "Maggot",
+      "group": "e2",
+      "floors": [
+        "flooded-caves",
+        "caves-2",
+        "catacombs-2"
+      ],
+      "hp": 32,
+      "r": 22,
+      "speed": 105,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooter",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Maggot stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "globin",
+      "name": "Globin",
+      "group": "e2",
+      "floors": [
+        "caves-2",
+        "catacombs-2",
+        "flooded-caves-2"
+      ],
+      "hp": 36,
+      "r": 25,
+      "speed": 120,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooterMobile",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Globin stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "black-globin",
+      "name": "Black Globin",
+      "group": "e2",
+      "floors": [
+        "catacombs-2",
+        "flooded-caves-2",
+        "mines"
+      ],
+      "hp": 40,
+      "r": 28,
+      "speed": 135,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "flyerDrift",
+      "params": {
+        "accel": 520,
+        "drift": 0.3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Black Globin stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "gaping-maw",
+      "name": "Gaping Maw",
+      "group": "e2",
+      "floors": [
+        "caves",
+        "catacombs",
+        "flooded-caves"
+      ],
+      "hp": 44,
+      "r": 16,
+      "speed": 150,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "leaper",
+      "params": {
+        "hopHeight": 70,
+        "hopDelay": 1.4
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Gaping Maw stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "vis",
+      "name": "Vis",
+      "group": "e2",
+      "floors": [
+        "catacombs",
+        "flooded-caves",
+        "caves-2"
+      ],
+      "hp": 48,
+      "r": 19,
+      "speed": 165,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooter",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Vis stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "double-vis",
+      "name": "Double Vis",
+      "group": "e2",
+      "floors": [
+        "flooded-caves",
+        "caves-2",
+        "catacombs-2"
+      ],
+      "hp": 52,
+      "r": 22,
+      "speed": 75,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooter",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Double Vis stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "chubber",
+      "name": "Chubber",
+      "group": "e2",
+      "floors": [
+        "caves-2",
+        "catacombs-2",
+        "flooded-caves-2"
+      ],
+      "hp": 24,
+      "r": 25,
+      "speed": 90,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "summoner",
+      "params": {
+        "fireDelay": 3.2,
+        "spawnCap": 3,
+        "spawns": "attackfly"
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Chubber stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "sack-of-sacks",
+      "name": "Sack of Sacks",
+      "group": "e2",
+      "floors": [
+        "catacombs-2",
+        "flooded-caves-2",
+        "mines"
+      ],
+      "hp": 28,
+      "r": 28,
+      "speed": 105,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "summoner",
+      "params": {
+        "fireDelay": 3.2,
+        "spawnCap": 3,
+        "spawns": "attackfly"
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Sack of Sacks stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "fat-sack",
+      "name": "Fat Sack",
+      "group": "e2",
+      "floors": [
+        "caves",
+        "catacombs",
+        "flooded-caves"
+      ],
+      "hp": 32,
+      "r": 16,
+      "speed": 120,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "spitter",
+      "params": {
+        "fireDelay": 1.8,
+        "shotSpeed": 230,
+        "burstCount": 3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Fat Sack stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "bony",
+      "name": "Bony",
+      "group": "e2",
+      "floors": [
+        "catacombs",
+        "flooded-caves",
+        "caves-2"
+      ],
+      "hp": 36,
+      "r": 19,
+      "speed": 135,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "sprayer",
+      "params": {
+        "fireDelay": 1.8,
+        "shotSpeed": 230,
+        "burstCount": 3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Bony stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "black-bony",
+      "name": "Black Bony",
+      "group": "e2",
+      "floors": [
+        "flooded-caves",
+        "caves-2",
+        "catacombs-2"
+      ],
+      "hp": 40,
+      "r": 22,
+      "speed": 150,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "burrower",
+      "params": {
+        "submergeTime": 1.3,
+        "speed": 180
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Black Bony stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "revenant",
+      "name": "Revenant",
+      "group": "e2",
+      "floors": [
+        "caves-2",
+        "catacombs-2",
+        "flooded-caves-2"
+      ],
+      "hp": 44,
+      "r": 25,
+      "speed": 165,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "wallHugger",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Revenant stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "spiked-revenant",
+      "name": "Spiked Revenant",
+      "group": "e2",
+      "floors": [
+        "catacombs-2",
+        "flooded-caves-2",
+        "mines"
+      ],
+      "hp": 48,
+      "r": 28,
+      "speed": 75,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "ghost",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Spiked Revenant stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "homunculus",
+      "name": "Homunculus",
+      "group": "e2",
+      "floors": [
+        "caves",
+        "catacombs",
+        "flooded-caves"
+      ],
+      "hp": 52,
+      "r": 16,
+      "speed": 90,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "exploder",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Homunculus stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "tumor",
+      "name": "Tumor",
+      "group": "e2",
+      "floors": [
+        "catacombs",
+        "flooded-caves",
+        "caves-2"
+      ],
+      "hp": 24,
+      "r": 19,
+      "speed": 105,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "flyerChase",
+      "params": {
+        "accel": 520,
+        "drift": 0.3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Tumor stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "camillo-jr",
+      "name": "Camillo Jr.",
+      "group": "e2",
+      "floors": [
+        "flooded-caves",
+        "caves-2",
+        "catacombs-2"
+      ],
+      "hp": 28,
+      "r": 22,
+      "speed": 120,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "spinner",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Camillo Jr. stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "eternal-fly",
+      "name": "Eternal Fly",
+      "group": "e2",
+      "floors": [
+        "caves-2",
+        "catacombs-2",
+        "flooded-caves-2"
+      ],
+      "hp": 32,
+      "r": 25,
+      "speed": 135,
+      "dmg": 1,
+      "flying": true,
+      "archetype": "flyerDrift",
+      "params": {
+        "accel": 520,
+        "drift": 0.3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Eternal Fly stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "swarmer",
+      "name": "Swarmer",
+      "group": "e2",
+      "floors": [
+        "catacombs-2",
+        "flooded-caves-2",
+        "mines"
+      ],
+      "hp": 36,
+      "r": 28,
+      "speed": 150,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "grid",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Swarmer stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "boil",
+      "name": "Boil",
+      "group": "e2",
+      "floors": [
+        "caves",
+        "catacombs",
+        "flooded-caves"
+      ],
+      "hp": 40,
+      "r": 16,
+      "speed": 165,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "chaser",
+      "params": {
+        "accel": 650,
+        "jitter": 0.16
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Boil stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "gut",
+      "name": "Gut",
+      "group": "e2",
+      "floors": [
+        "catacombs",
+        "flooded-caves",
+        "caves-2"
+      ],
+      "hp": 44,
+      "r": 19,
+      "speed": 75,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "wanderer",
+      "params": {
+        "turnDelay": 1.2,
+        "speed": 100
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Gut stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "sack",
+      "name": "Sack",
+      "group": "e2",
+      "floors": [
+        "flooded-caves",
+        "caves-2",
+        "catacombs-2"
+      ],
+      "hp": 48,
+      "r": 22,
+      "speed": 90,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooter",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Sack stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "rock-spider",
+      "name": "Rock Spider",
+      "group": "e2",
+      "floors": [
+        "caves-2",
+        "catacombs-2",
+        "flooded-caves-2"
+      ],
+      "hp": 52,
+      "r": 25,
+      "speed": 105,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "leaper",
+      "params": {
+        "hopHeight": 70,
+        "hopDelay": 1.4
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Rock Spider stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "tinted-rock-spider",
+      "name": "Tinted Rock Spider",
+      "group": "e2",
+      "floors": [
+        "catacombs-2",
+        "flooded-caves-2",
+        "mines"
+      ],
+      "hp": 24,
+      "r": 28,
+      "speed": 120,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "leaper",
+      "params": {
+        "hopHeight": 70,
+        "hopDelay": 1.4
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Tinted Rock Spider stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "roundy",
+      "name": "Roundy",
+      "group": "e2",
+      "floors": [
+        "caves",
+        "catacombs",
+        "flooded-caves"
+      ],
+      "hp": 28,
+      "r": 16,
+      "speed": 135,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "leaper",
+      "params": {
+        "hopHeight": 70,
+        "hopDelay": 1.4
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Roundy stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "blind-creep",
+      "name": "Blind Creep",
+      "group": "e2",
+      "floors": [
+        "catacombs",
+        "flooded-caves",
+        "caves-2"
+      ],
+      "hp": 32,
+      "r": 19,
+      "speed": 150,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "charger",
+      "params": {
+        "windup": 0.6,
+        "dashSpeed": 430,
+        "recover": 0.8
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Blind Creep stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "wall-creep",
+      "name": "Wall Creep",
+      "group": "e2",
+      "floors": [
+        "flooded-caves",
+        "caves-2",
+        "catacombs-2"
+      ],
+      "hp": 36,
+      "r": 22,
+      "speed": 165,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "splitter",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Wall Creep stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "rage-creep",
+      "name": "Rage Creep",
+      "group": "e2",
+      "floors": [
+        "caves-2",
+        "catacombs-2",
+        "flooded-caves-2"
+      ],
+      "hp": 40,
+      "r": 25,
+      "speed": 75,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "summoner",
+      "params": {
+        "fireDelay": 3.2,
+        "spawnCap": 3,
+        "spawns": "attackfly"
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Rage Creep stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "nest",
+      "name": "Nest",
+      "group": "e2",
+      "floors": [
+        "catacombs-2",
+        "flooded-caves-2",
+        "mines"
+      ],
+      "hp": 44,
+      "r": 28,
+      "speed": 90,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "summoner",
+      "params": {
+        "fireDelay": 3.2,
+        "spawnCap": 3,
+        "spawns": "attackfly"
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Nest stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "ministro",
+      "name": "Ministro",
+      "group": "e2",
+      "floors": [
+        "caves",
+        "catacombs",
+        "flooded-caves"
+      ],
+      "hp": 48,
+      "r": 16,
+      "speed": 105,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "spitter",
+      "params": {
+        "fireDelay": 1.8,
+        "shotSpeed": 230,
+        "burstCount": 3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Ministro stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "fissure",
+      "name": "Fissure",
+      "group": "e2",
+      "floors": [
+        "catacombs",
+        "flooded-caves",
+        "caves-2"
+      ],
+      "hp": 52,
+      "r": 19,
+      "speed": 120,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "burrower",
+      "params": {
+        "submergeTime": 1.3,
+        "speed": 180
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Fissure stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "poly",
+      "name": "Poly",
+      "group": "e2",
+      "floors": [
+        "flooded-caves",
+        "caves-2",
+        "catacombs-2"
+      ],
+      "hp": 24,
+      "r": 22,
+      "speed": 135,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "burrower",
+      "params": {
+        "submergeTime": 1.3,
+        "speed": 180
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Poly stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "grudge",
+      "name": "Grudge",
+      "group": "e2",
+      "floors": [
+        "caves-2",
+        "catacombs-2",
+        "flooded-caves-2"
+      ],
+      "hp": 28,
+      "r": 25,
+      "speed": 150,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "wallHugger",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Grudge stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "ash-pile",
+      "name": "Ash Pile",
+      "group": "e2",
+      "floors": [
+        "catacombs-2",
+        "flooded-caves-2",
+        "mines"
+      ],
+      "hp": 32,
+      "r": 28,
+      "speed": 165,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "ghost",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Ash Pile stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "cinder",
+      "name": "Cinder",
+      "group": "e2",
+      "floors": [
+        "caves",
+        "catacombs",
+        "flooded-caves"
+      ],
+      "hp": 36,
+      "r": 16,
+      "speed": 75,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "exploder",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Cinder stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "molten-baby",
+      "name": "Molten Baby",
+      "group": "e2",
+      "floors": [
+        "catacombs",
+        "flooded-caves",
+        "caves-2"
+      ],
+      "hp": 40,
+      "r": 19,
+      "speed": 90,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "flyerChase",
+      "params": {
+        "accel": 520,
+        "drift": 0.3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Molten Baby stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "coal-boy",
+      "name": "Coal Boy",
+      "group": "e2",
+      "floors": [
+        "flooded-caves",
+        "caves-2",
+        "catacombs-2"
+      ],
+      "hp": 44,
+      "r": 22,
+      "speed": 105,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "spinner",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Coal Boy stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "faceless",
+      "name": "Faceless",
+      "group": "e2",
+      "floors": [
+        "caves-2",
+        "catacombs-2",
+        "flooded-caves-2"
+      ],
+      "hp": 48,
+      "r": 25,
+      "speed": 120,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "trailLayer",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Faceless stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "stonehead",
+      "name": "Stonehead",
+      "group": "e2",
+      "floors": [
+        "catacombs-2",
+        "flooded-caves-2",
+        "mines"
+      ],
+      "hp": 52,
+      "r": 28,
+      "speed": 135,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooter",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Stonehead stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "ball-and-chain",
+      "name": "Ball and Chain",
+      "group": "e2",
+      "floors": [
+        "caves",
+        "catacombs",
+        "flooded-caves"
+      ],
+      "hp": 24,
+      "r": 16,
+      "speed": 150,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "chaser",
+      "params": {
+        "accel": 650,
+        "jitter": 0.16
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Ball and Chain stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "walking-boil",
+      "name": "Walking Boil",
+      "group": "e2",
+      "floors": [
+        "catacombs",
+        "flooded-caves",
+        "caves-2"
+      ],
+      "hp": 28,
+      "r": 19,
+      "speed": 165,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "wanderer",
+      "params": {
+        "turnDelay": 1.2,
+        "speed": 100
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Walking Boil stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "gurgling",
+      "name": "Gurgling",
+      "group": "e2",
+      "floors": [
+        "flooded-caves",
+        "caves-2",
+        "catacombs-2"
+      ],
+      "hp": 32,
+      "r": 22,
+      "speed": 75,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooter",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Gurgling stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "oob",
+      "name": "Oob",
+      "group": "e2",
+      "floors": [
+        "caves-2",
+        "catacombs-2",
+        "flooded-caves-2"
+      ],
+      "hp": 36,
+      "r": 25,
+      "speed": 90,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooterMobile",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Oob stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "black-maw",
+      "name": "Black Maw",
+      "group": "e2",
+      "floors": [
+        "catacombs-2",
+        "flooded-caves-2",
+        "mines"
+      ],
+      "hp": 40,
+      "r": 28,
+      "speed": 105,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "flyerDrift",
+      "params": {
+        "accel": 520,
+        "drift": 0.3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Black Maw stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "cod-worm",
+      "name": "Cod Worm",
+      "group": "e2",
+      "floors": [
+        "caves",
+        "catacombs",
+        "flooded-caves"
+      ],
+      "hp": 44,
+      "r": 16,
+      "speed": 120,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "burrower",
+      "params": {
+        "submergeTime": 1.3,
+        "speed": 180
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Cod Worm stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "needle",
+      "name": "Needle",
+      "group": "e2",
+      "floors": [
+        "catacombs",
+        "flooded-caves",
+        "caves-2"
+      ],
+      "hp": 48,
+      "r": 19,
+      "speed": 135,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "burrower",
+      "params": {
+        "submergeTime": 1.3,
+        "speed": 180
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Needle stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "tainted-round-worm",
+      "name": "Tainted Round Worm",
+      "group": "e2",
+      "floors": [
+        "flooded-caves",
+        "caves-2",
+        "catacombs-2"
+      ],
+      "hp": 52,
+      "r": 22,
+      "speed": 150,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "burrower",
+      "params": {
+        "submergeTime": 1.3,
+        "speed": 180
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Tainted Round Worm stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "prey",
+      "name": "Prey",
+      "group": "e2",
+      "floors": [
+        "caves-2",
+        "catacombs-2",
+        "flooded-caves-2"
+      ],
+      "hp": 24,
+      "r": 25,
+      "speed": 165,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "summoner",
+      "params": {
+        "fireDelay": 3.2,
+        "spawnCap": 3,
+        "spawns": "attackfly"
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Prey stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "dust",
+      "name": "Dust",
+      "group": "e2",
+      "floors": [
+        "catacombs-2",
+        "flooded-caves-2",
+        "mines"
+      ],
+      "hp": 28,
+      "r": 28,
+      "speed": 75,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shielded",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Dust stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "bishop",
+      "name": "Bishop",
+      "group": "e2",
+      "floors": [
+        "caves",
+        "catacombs",
+        "flooded-caves"
+      ],
+      "hp": 32,
+      "r": 16,
+      "speed": 90,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "spitter",
+      "params": {
+        "fireDelay": 1.8,
+        "shotSpeed": 230,
+        "burstCount": 3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Bishop stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "quake-grimace",
+      "name": "Quake Grimace",
+      "group": "e2",
+      "floors": [
+        "catacombs",
+        "flooded-caves",
+        "caves-2"
+      ],
+      "hp": 36,
+      "r": 19,
+      "speed": 105,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooter",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Quake Grimace stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "knight",
+      "name": "Knight",
+      "group": "e3",
+      "floors": [
+        "depths",
+        "necropolis",
+        "dank-depths"
+      ],
+      "hp": 42,
+      "r": 16,
+      "speed": 75,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shielded",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Knight stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "selfless-knight",
+      "name": "Selfless Knight",
+      "group": "e3",
+      "floors": [
+        "necropolis",
+        "dank-depths",
+        "depths-2"
+      ],
+      "hp": 46,
+      "r": 19,
+      "speed": 90,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shielded",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Selfless Knight stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "loose-knight",
+      "name": "Loose Knight",
+      "group": "e3",
+      "floors": [
+        "dank-depths",
+        "depths-2",
+        "necropolis-2"
+      ],
+      "hp": 50,
+      "r": 22,
+      "speed": 105,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shielded",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Loose Knight stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "brain",
+      "name": "Brain",
+      "group": "e3",
+      "floors": [
+        "depths-2",
+        "necropolis-2",
+        "dank-depths-2"
+      ],
+      "hp": 54,
+      "r": 25,
+      "speed": 120,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooterMobile",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Brain stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "guts",
+      "name": "Guts",
+      "group": "e3",
+      "floors": [
+        "necropolis-2",
+        "dank-depths-2",
+        "mausoleum"
+      ],
+      "hp": 58,
+      "r": 28,
+      "speed": 135,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "flyerDrift",
+      "params": {
+        "accel": 520,
+        "drift": 0.3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Guts stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "heart",
+      "name": "Heart",
+      "group": "e3",
+      "floors": [
+        "depths",
+        "necropolis",
+        "dank-depths"
+      ],
+      "hp": 62,
+      "r": 16,
+      "speed": 150,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "leaper",
+      "params": {
+        "hopHeight": 70,
+        "hopDelay": 1.4
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Heart stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "imp",
+      "name": "Imp",
+      "group": "e3",
+      "floors": [
+        "necropolis",
+        "dank-depths",
+        "depths-2"
+      ],
+      "hp": 66,
+      "r": 19,
+      "speed": 165,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "charger",
+      "params": {
+        "windup": 0.6,
+        "dashSpeed": 430,
+        "recover": 0.8
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Imp stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "wall-hugger",
+      "name": "Wall Hugger",
+      "group": "e3",
+      "floors": [
+        "dank-depths",
+        "depths-2",
+        "necropolis-2"
+      ],
+      "hp": 70,
+      "r": 22,
+      "speed": 75,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "splitter",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Wall Hugger stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "grimace",
+      "name": "Grimace",
+      "group": "e3",
+      "floors": [
+        "depths-2",
+        "necropolis-2",
+        "dank-depths-2"
+      ],
+      "hp": 42,
+      "r": 25,
+      "speed": 90,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooter",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Grimace stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "stone-grimace",
+      "name": "Stone Grimace",
+      "group": "e3",
+      "floors": [
+        "necropolis-2",
+        "dank-depths-2",
+        "mausoleum"
+      ],
+      "hp": 46,
+      "r": 28,
+      "speed": 105,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooter",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Stone Grimace stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "vomit-grimace",
+      "name": "Vomit Grimace",
+      "group": "e3",
+      "floors": [
+        "depths",
+        "necropolis",
+        "dank-depths"
+      ],
+      "hp": 50,
+      "r": 16,
+      "speed": 120,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooter",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Vomit Grimace stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "wizoob",
+      "name": "Wizoob",
+      "group": "e3",
+      "floors": [
+        "necropolis",
+        "dank-depths",
+        "depths-2"
+      ],
+      "hp": 54,
+      "r": 19,
+      "speed": 135,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "ghost",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Wizoob stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "red-ghost",
+      "name": "Red Ghost",
+      "group": "e3",
+      "floors": [
+        "dank-depths",
+        "depths-2",
+        "necropolis-2"
+      ],
+      "hp": 58,
+      "r": 22,
+      "speed": 150,
+      "dmg": 1,
+      "flying": true,
+      "archetype": "ghost",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Red Ghost stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "whipper",
+      "name": "Whipper",
+      "group": "e3",
+      "floors": [
+        "depths-2",
+        "necropolis-2",
+        "dank-depths-2"
+      ],
+      "hp": 62,
+      "r": 25,
+      "speed": 165,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "wallHugger",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Whipper stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "snapper",
+      "name": "Snapper",
+      "group": "e3",
+      "floors": [
+        "necropolis-2",
+        "dank-depths-2",
+        "mausoleum"
+      ],
+      "hp": 66,
+      "r": 28,
+      "speed": 75,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "ghost",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Snapper stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "flaming-hopper",
+      "name": "Flaming Hopper",
+      "group": "e3",
+      "floors": [
+        "depths",
+        "necropolis",
+        "dank-depths"
+      ],
+      "hp": 70,
+      "r": 16,
+      "speed": 90,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "leaper",
+      "params": {
+        "hopHeight": 70,
+        "hopDelay": 1.4
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Flaming Hopper stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "fred",
+      "name": "Fred",
+      "group": "e3",
+      "floors": [
+        "necropolis",
+        "dank-depths",
+        "depths-2"
+      ],
+      "hp": 42,
+      "r": 19,
+      "speed": 105,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "flyerChase",
+      "params": {
+        "accel": 520,
+        "drift": 0.3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Fred stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "poison-mind",
+      "name": "Poison Mind",
+      "group": "e3",
+      "floors": [
+        "dank-depths",
+        "depths-2",
+        "necropolis-2"
+      ],
+      "hp": 46,
+      "r": 22,
+      "speed": 120,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "spinner",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Poison Mind stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "ragling",
+      "name": "Ragling",
+      "group": "e3",
+      "floors": [
+        "depths-2",
+        "necropolis-2",
+        "dank-depths-2"
+      ],
+      "hp": 50,
+      "r": 25,
+      "speed": 135,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "trailLayer",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Ragling stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "deaths-head",
+      "name": "Death's Head",
+      "group": "e3",
+      "floors": [
+        "necropolis-2",
+        "dank-depths-2",
+        "mausoleum"
+      ],
+      "hp": 54,
+      "r": 28,
+      "speed": 150,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooter",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Death's Head stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "cursed-deaths-head",
+      "name": "Cursed Death's Head",
+      "group": "e3",
+      "floors": [
+        "depths",
+        "necropolis",
+        "dank-depths"
+      ],
+      "hp": 58,
+      "r": 16,
+      "speed": 165,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooter",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Cursed Death's Head stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "floating-knight",
+      "name": "Floating Knight",
+      "group": "e3",
+      "floors": [
+        "necropolis",
+        "dank-depths",
+        "depths-2"
+      ],
+      "hp": 62,
+      "r": 19,
+      "speed": 75,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shielded",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Floating Knight stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "poof",
+      "name": "Poof",
+      "group": "e3",
+      "floors": [
+        "dank-depths",
+        "depths-2",
+        "necropolis-2"
+      ],
+      "hp": 66,
+      "r": 22,
+      "speed": 90,
+      "dmg": 1,
+      "flying": true,
+      "archetype": "ghost",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Poof stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "sanguine-bond",
+      "name": "Sanguine Bond",
+      "group": "e3",
+      "floors": [
+        "depths-2",
+        "necropolis-2",
+        "dank-depths-2"
+      ],
+      "hp": 70,
+      "r": 25,
+      "speed": 105,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooterMobile",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Sanguine Bond stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "hell-bird",
+      "name": "Hell Bird",
+      "group": "e3",
+      "floors": [
+        "necropolis-2",
+        "dank-depths-2",
+        "mausoleum"
+      ],
+      "hp": 42,
+      "r": 28,
+      "speed": 120,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "flyerDrift",
+      "params": {
+        "accel": 520,
+        "drift": 0.3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Hell Bird stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "grudge-bat",
+      "name": "Grudge Bat",
+      "group": "e3",
+      "floors": [
+        "depths",
+        "necropolis",
+        "dank-depths"
+      ],
+      "hp": 46,
+      "r": 16,
+      "speed": 135,
+      "dmg": 1,
+      "flying": true,
+      "archetype": "flyerDrift",
+      "params": {
+        "accel": 520,
+        "drift": 0.3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Grudge Bat stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "blood-puppy",
+      "name": "Blood Puppy",
+      "group": "e3",
+      "floors": [
+        "necropolis",
+        "dank-depths",
+        "depths-2"
+      ],
+      "hp": 50,
+      "r": 19,
+      "speed": 150,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "charger",
+      "params": {
+        "windup": 0.6,
+        "dashSpeed": 430,
+        "recover": 0.8
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Blood Puppy stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "lil-blub",
+      "name": "Lil Blub",
+      "group": "e3",
+      "floors": [
+        "dank-depths",
+        "depths-2",
+        "necropolis-2"
+      ],
+      "hp": 54,
+      "r": 22,
+      "speed": 165,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "splitter",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Lil Blub stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "membrane",
+      "name": "Membrane",
+      "group": "e3",
+      "floors": [
+        "depths-2",
+        "necropolis-2",
+        "dank-depths-2"
+      ],
+      "hp": 58,
+      "r": 25,
+      "speed": 75,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "summoner",
+      "params": {
+        "fireDelay": 3.2,
+        "spawnCap": 3,
+        "spawns": "attackfly"
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Membrane stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "walking-sack",
+      "name": "Walking Sack",
+      "group": "e3",
+      "floors": [
+        "necropolis-2",
+        "dank-depths-2",
+        "mausoleum"
+      ],
+      "hp": 62,
+      "r": 28,
+      "speed": 90,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shielded",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Walking Sack stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "bloodshot-eye",
+      "name": "Bloodshot Eye",
+      "group": "e3",
+      "floors": [
+        "depths",
+        "necropolis",
+        "dank-depths"
+      ],
+      "hp": 66,
+      "r": 16,
+      "speed": 105,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooter",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Bloodshot Eye stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "conjoined-fatty",
+      "name": "Conjoined Fatty",
+      "group": "e3",
+      "floors": [
+        "necropolis",
+        "dank-depths",
+        "depths-2"
+      ],
+      "hp": 70,
+      "r": 19,
+      "speed": 120,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "sprayer",
+      "params": {
+        "fireDelay": 1.8,
+        "shotSpeed": 230,
+        "burstCount": 3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Conjoined Fatty stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "gurgle",
+      "name": "Gurgle",
+      "group": "e3",
+      "floors": [
+        "dank-depths",
+        "depths-2",
+        "necropolis-2"
+      ],
+      "hp": 42,
+      "r": 22,
+      "speed": 135,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "burrower",
+      "params": {
+        "submergeTime": 1.3,
+        "speed": 180
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Gurgle stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "handsome-gurgle",
+      "name": "Handsome Gurgle",
+      "group": "e3",
+      "floors": [
+        "depths-2",
+        "necropolis-2",
+        "dank-depths-2"
+      ],
+      "hp": 46,
+      "r": 25,
+      "speed": 150,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "wallHugger",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Handsome Gurgle stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "swinger",
+      "name": "Swinger",
+      "group": "e3",
+      "floors": [
+        "necropolis-2",
+        "dank-depths-2",
+        "mausoleum"
+      ],
+      "hp": 50,
+      "r": 28,
+      "speed": 165,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "ghost",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Swinger stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "spitty",
+      "name": "Spitty",
+      "group": "e3",
+      "floors": [
+        "depths",
+        "necropolis",
+        "dank-depths"
+      ],
+      "hp": 54,
+      "r": 16,
+      "speed": 75,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "exploder",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Spitty stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "lump",
+      "name": "Lump",
+      "group": "e3",
+      "floors": [
+        "necropolis",
+        "dank-depths",
+        "depths-2"
+      ],
+      "hp": 58,
+      "r": 19,
+      "speed": 90,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "flyerChase",
+      "params": {
+        "accel": 520,
+        "drift": 0.3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Lump stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "corn-mine",
+      "name": "Corn Mine",
+      "group": "e3",
+      "floors": [
+        "dank-depths",
+        "depths-2",
+        "necropolis-2"
+      ],
+      "hp": 62,
+      "r": 22,
+      "speed": 105,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "spinner",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Corn Mine stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "bloated-fatty",
+      "name": "Bloated Fatty",
+      "group": "e3",
+      "floors": [
+        "depths-2",
+        "necropolis-2",
+        "dank-depths-2"
+      ],
+      "hp": 66,
+      "r": 25,
+      "speed": 120,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "trailLayer",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Bloated Fatty stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "lil-haunt",
+      "name": "Lil Haunt",
+      "group": "e3",
+      "floors": [
+        "necropolis-2",
+        "dank-depths-2",
+        "mausoleum"
+      ],
+      "hp": 70,
+      "r": 28,
+      "speed": 135,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "ghost",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Lil Haunt stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "blood-feeder",
+      "name": "Blood Feeder",
+      "group": "e3",
+      "floors": [
+        "depths",
+        "necropolis",
+        "dank-depths"
+      ],
+      "hp": 42,
+      "r": 16,
+      "speed": 150,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "chaser",
+      "params": {
+        "accel": 650,
+        "jitter": 0.16
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Blood Feeder stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "camillo",
+      "name": "Camillo",
+      "group": "e3",
+      "floors": [
+        "necropolis",
+        "dank-depths",
+        "depths-2"
+      ],
+      "hp": 46,
+      "r": 19,
+      "speed": 165,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "wanderer",
+      "params": {
+        "turnDelay": 1.2,
+        "speed": 100
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Camillo stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "blood-hulk",
+      "name": "Blood Hulk",
+      "group": "e3",
+      "floors": [
+        "dank-depths",
+        "depths-2",
+        "necropolis-2"
+      ],
+      "hp": 50,
+      "r": 22,
+      "speed": 75,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooter",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Blood Hulk stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "flesh-maiden",
+      "name": "Flesh Maiden",
+      "group": "e3",
+      "floors": [
+        "depths-2",
+        "necropolis-2",
+        "dank-depths-2"
+      ],
+      "hp": 54,
+      "r": 25,
+      "speed": 90,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooterMobile",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Flesh Maiden stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "moms-hand",
+      "name": "Mom's Hand",
+      "group": "e3",
+      "floors": [
+        "necropolis-2",
+        "dank-depths-2",
+        "mausoleum"
+      ],
+      "hp": 58,
+      "r": 28,
+      "speed": 105,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "flyerDrift",
+      "params": {
+        "accel": 520,
+        "drift": 0.3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Mom's Hand stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "moms-dead-hand",
+      "name": "Mom's Dead Hand",
+      "group": "e3",
+      "floors": [
+        "depths",
+        "necropolis",
+        "dank-depths"
+      ],
+      "hp": 62,
+      "r": 16,
+      "speed": 120,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "leaper",
+      "params": {
+        "hopHeight": 70,
+        "hopDelay": 1.4
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Mom's Dead Hand stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "keeper",
+      "name": "Keeper",
+      "group": "e3",
+      "floors": [
+        "necropolis",
+        "dank-depths",
+        "depths-2"
+      ],
+      "hp": 66,
+      "r": 19,
+      "speed": 135,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "charger",
+      "params": {
+        "windup": 0.6,
+        "dashSpeed": 430,
+        "recover": 0.8
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Keeper stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "stone-eye",
+      "name": "Stone Eye",
+      "group": "e3",
+      "floors": [
+        "dank-depths",
+        "depths-2",
+        "necropolis-2"
+      ],
+      "hp": 70,
+      "r": 22,
+      "speed": 150,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooter",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Stone Eye stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "brimstone-head",
+      "name": "Brimstone Head",
+      "group": "e3",
+      "floors": [
+        "depths-2",
+        "necropolis-2",
+        "dank-depths-2"
+      ],
+      "hp": 42,
+      "r": 25,
+      "speed": 165,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooter",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Brimstone Head stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "red-floater",
+      "name": "Red Floater",
+      "group": "e3",
+      "floors": [
+        "necropolis-2",
+        "dank-depths-2",
+        "mausoleum"
+      ],
+      "hp": 46,
+      "r": 28,
+      "speed": 75,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shielded",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Red Floater stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "leaper",
+      "name": "Leaper",
+      "group": "e3",
+      "floors": [
+        "depths",
+        "necropolis",
+        "dank-depths"
+      ],
+      "hp": 50,
+      "r": 16,
+      "speed": 90,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "leaper",
+      "params": {
+        "hopHeight": 70,
+        "hopDelay": 1.4
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Leaper stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "tissue",
+      "name": "Tissue",
+      "group": "e3",
+      "floors": [
+        "necropolis",
+        "dank-depths",
+        "depths-2"
+      ],
+      "hp": 54,
+      "r": 19,
+      "speed": 105,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "sprayer",
+      "params": {
+        "fireDelay": 1.8,
+        "shotSpeed": 230,
+        "burstCount": 3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Tissue stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "locust-of-famine",
+      "name": "Locust of Famine",
+      "group": "e4",
+      "floors": [
+        "womb-2",
+        "utero-2",
+        "scarred-womb-2"
+      ],
+      "hp": 62,
+      "r": 16,
+      "speed": 75,
+      "dmg": 2,
+      "flying": true,
+      "archetype": "flyerDrift",
+      "params": {
+        "accel": 520,
+        "drift": 0.3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Locust of Famine stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "locust-of-pestilence",
+      "name": "Locust of Pestilence",
+      "group": "e4",
+      "floors": [
+        "utero-2",
+        "scarred-womb-2",
+        "corpse"
+      ],
+      "hp": 66,
+      "r": 19,
+      "speed": 90,
+      "dmg": 1,
+      "flying": true,
+      "archetype": "flyerDrift",
+      "params": {
+        "accel": 520,
+        "drift": 0.3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Locust of Pestilence stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "locust-of-war",
+      "name": "Locust of War",
+      "group": "e4",
+      "floors": [
+        "scarred-womb-2",
+        "corpse",
+        "corpse-2"
+      ],
+      "hp": 70,
+      "r": 22,
+      "speed": 105,
+      "dmg": 1,
+      "flying": true,
+      "archetype": "flyerDrift",
+      "params": {
+        "accel": 520,
+        "drift": 0.3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Locust of War stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "locust-of-death",
+      "name": "Locust of Death",
+      "group": "e4",
+      "floors": [
+        "corpse",
+        "corpse-2",
+        "blue-womb"
+      ],
+      "hp": 74,
+      "r": 25,
+      "speed": 120,
+      "dmg": 1,
+      "flying": true,
+      "archetype": "flyerDrift",
+      "params": {
+        "accel": 520,
+        "drift": 0.3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Locust of Death stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "fly-bomb",
+      "name": "Fly Bomb",
+      "group": "e4",
+      "floors": [
+        "corpse-2",
+        "blue-womb",
+        "sheol"
+      ],
+      "hp": 78,
+      "r": 28,
+      "speed": 135,
+      "dmg": 1,
+      "flying": true,
+      "archetype": "exploder",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Fly Bomb stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "willo",
+      "name": "Willo",
+      "group": "e4",
+      "floors": [
+        "womb-2",
+        "utero-2",
+        "scarred-womb-2"
+      ],
+      "hp": 82,
+      "r": 16,
+      "speed": 150,
+      "dmg": 1,
+      "flying": true,
+      "archetype": "flyerDrift",
+      "params": {
+        "accel": 520,
+        "drift": 0.3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Willo stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "big-bony",
+      "name": "Big Bony",
+      "group": "e4",
+      "floors": [
+        "utero-2",
+        "scarred-womb-2",
+        "corpse"
+      ],
+      "hp": 86,
+      "r": 19,
+      "speed": 165,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "charger",
+      "params": {
+        "windup": 0.6,
+        "dashSpeed": 430,
+        "recover": 0.8
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Big Bony stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "kamikaze-leech",
+      "name": "Kamikaze Leech",
+      "group": "e4",
+      "floors": [
+        "scarred-womb-2",
+        "corpse",
+        "corpse-2"
+      ],
+      "hp": 90,
+      "r": 22,
+      "speed": 75,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "splitter",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Kamikaze Leech stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "null",
+      "name": "Null",
+      "group": "e4",
+      "floors": [
+        "corpse",
+        "corpse-2",
+        "blue-womb"
+      ],
+      "hp": 62,
+      "r": 25,
+      "speed": 90,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "summoner",
+      "params": {
+        "fireDelay": 3.2,
+        "spawnCap": 3,
+        "spawns": "attackfly"
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Null stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "angelic-baby",
+      "name": "Angelic Baby",
+      "group": "e4",
+      "floors": [
+        "corpse-2",
+        "blue-womb",
+        "sheol"
+      ],
+      "hp": 66,
+      "r": 28,
+      "speed": 105,
+      "dmg": 2,
+      "flying": false,
+      "archetype": "shielded",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Angelic Baby stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "holy-bony",
+      "name": "Holy Bony",
+      "group": "e4",
+      "floors": [
+        "womb-2",
+        "utero-2",
+        "scarred-womb-2"
+      ],
+      "hp": 70,
+      "r": 16,
+      "speed": 120,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "spitter",
+      "params": {
+        "fireDelay": 1.8,
+        "shotSpeed": 230,
+        "burstCount": 3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Holy Bony stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "vassal",
+      "name": "Vassal",
+      "group": "e4",
+      "floors": [
+        "utero-2",
+        "scarred-womb-2",
+        "corpse"
+      ],
+      "hp": 74,
+      "r": 19,
+      "speed": 135,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "sprayer",
+      "params": {
+        "fireDelay": 1.8,
+        "shotSpeed": 230,
+        "burstCount": 3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Vassal stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "ultra-coin",
+      "name": "Ultra Coin",
+      "group": "e4",
+      "floors": [
+        "scarred-womb-2",
+        "corpse",
+        "corpse-2"
+      ],
+      "hp": 78,
+      "r": 22,
+      "speed": 150,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "burrower",
+      "params": {
+        "submergeTime": 1.3,
+        "speed": 180
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Ultra Coin stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "pincushion",
+      "name": "Pincushion",
+      "group": "e4",
+      "floors": [
+        "corpse",
+        "corpse-2",
+        "blue-womb"
+      ],
+      "hp": 82,
+      "r": 25,
+      "speed": 165,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "wallHugger",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Pincushion stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "grilled-clotty",
+      "name": "Grilled Clotty",
+      "group": "e4",
+      "floors": [
+        "corpse-2",
+        "blue-womb",
+        "sheol"
+      ],
+      "hp": 86,
+      "r": 28,
+      "speed": 75,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "ghost",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Grilled Clotty stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "hanger",
+      "name": "Hanger",
+      "group": "e4",
+      "floors": [
+        "womb-2",
+        "utero-2",
+        "scarred-womb-2"
+      ],
+      "hp": 90,
+      "r": 16,
+      "speed": 90,
+      "dmg": 1,
+      "flying": true,
+      "archetype": "flyerDrift",
+      "params": {
+        "accel": 520,
+        "drift": 0.3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Hanger stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "one-tooth",
+      "name": "One Tooth",
+      "group": "e4",
+      "floors": [
+        "utero-2",
+        "scarred-womb-2",
+        "corpse"
+      ],
+      "hp": 62,
+      "r": 19,
+      "speed": 105,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "flyerChase",
+      "params": {
+        "accel": 520,
+        "drift": 0.3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "One Tooth stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "fat-bat",
+      "name": "Fat Bat",
+      "group": "e4",
+      "floors": [
+        "scarred-womb-2",
+        "corpse",
+        "corpse-2"
+      ],
+      "hp": 66,
+      "r": 22,
+      "speed": 120,
+      "dmg": 1,
+      "flying": true,
+      "archetype": "flyerDrift",
+      "params": {
+        "accel": 520,
+        "drift": 0.3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Fat Bat stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "blue-gaper",
+      "name": "Blue Gaper",
+      "group": "e4",
+      "floors": [
+        "corpse",
+        "corpse-2",
+        "blue-womb"
+      ],
+      "hp": 70,
+      "r": 25,
+      "speed": 135,
+      "dmg": 2,
+      "flying": false,
+      "archetype": "trailLayer",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Blue Gaper stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "blue-maw",
+      "name": "Blue Maw",
+      "group": "e4",
+      "floors": [
+        "corpse-2",
+        "blue-womb",
+        "sheol"
+      ],
+      "hp": 74,
+      "r": 28,
+      "speed": 150,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "grid",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Blue Maw stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "blue-boil",
+      "name": "Blue Boil",
+      "group": "e4",
+      "floors": [
+        "womb-2",
+        "utero-2",
+        "scarred-womb-2"
+      ],
+      "hp": 78,
+      "r": 16,
+      "speed": 165,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "chaser",
+      "params": {
+        "accel": 650,
+        "jitter": 0.16
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Blue Boil stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "blue-globin",
+      "name": "Blue Globin",
+      "group": "e4",
+      "floors": [
+        "utero-2",
+        "scarred-womb-2",
+        "corpse"
+      ],
+      "hp": 82,
+      "r": 19,
+      "speed": 75,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "wanderer",
+      "params": {
+        "turnDelay": 1.2,
+        "speed": 100
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Blue Globin stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "blue-conjoined-fatty",
+      "name": "Blue Conjoined Fatty",
+      "group": "e4",
+      "floors": [
+        "scarred-womb-2",
+        "corpse",
+        "corpse-2"
+      ],
+      "hp": 86,
+      "r": 22,
+      "speed": 90,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooter",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Blue Conjoined Fatty stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "blue-fatty",
+      "name": "Blue Fatty",
+      "group": "e4",
+      "floors": [
+        "corpse",
+        "corpse-2",
+        "blue-womb"
+      ],
+      "hp": 90,
+      "r": 25,
+      "speed": 105,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooterMobile",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Blue Fatty stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "blue-horf",
+      "name": "Blue Horf",
+      "group": "e4",
+      "floors": [
+        "corpse-2",
+        "blue-womb",
+        "sheol"
+      ],
+      "hp": 62,
+      "r": 28,
+      "speed": 120,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooter",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Blue Horf stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "blue-sucker",
+      "name": "Blue Sucker",
+      "group": "e4",
+      "floors": [
+        "womb-2",
+        "utero-2",
+        "scarred-womb-2"
+      ],
+      "hp": 66,
+      "r": 16,
+      "speed": 135,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "leaper",
+      "params": {
+        "hopHeight": 70,
+        "hopDelay": 1.4
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Blue Sucker stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "blue-tumor",
+      "name": "Blue Tumor",
+      "group": "e4",
+      "floors": [
+        "utero-2",
+        "scarred-womb-2",
+        "corpse"
+      ],
+      "hp": 70,
+      "r": 19,
+      "speed": 150,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "charger",
+      "params": {
+        "windup": 0.6,
+        "dashSpeed": 430,
+        "recover": 0.8
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Blue Tumor stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "black-leech",
+      "name": "Black Leech",
+      "group": "e4",
+      "floors": [
+        "scarred-womb-2",
+        "corpse",
+        "corpse-2"
+      ],
+      "hp": 74,
+      "r": 22,
+      "speed": 165,
+      "dmg": 2,
+      "flying": false,
+      "archetype": "splitter",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Black Leech stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "red-leech",
+      "name": "Red Leech",
+      "group": "e4",
+      "floors": [
+        "corpse",
+        "corpse-2",
+        "blue-womb"
+      ],
+      "hp": 78,
+      "r": 25,
+      "speed": 75,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "summoner",
+      "params": {
+        "fireDelay": 3.2,
+        "spawnCap": 3,
+        "spawns": "attackfly"
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Red Leech stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "soul-sucker",
+      "name": "Soul Sucker",
+      "group": "e4",
+      "floors": [
+        "corpse-2",
+        "blue-womb",
+        "sheol"
+      ],
+      "hp": 82,
+      "r": 28,
+      "speed": 90,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shielded",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Soul Sucker stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "evil-twin",
+      "name": "Evil Twin",
+      "group": "e4",
+      "floors": [
+        "womb-2",
+        "utero-2",
+        "scarred-womb-2"
+      ],
+      "hp": 86,
+      "r": 16,
+      "speed": 105,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "spitter",
+      "params": {
+        "fireDelay": 1.8,
+        "shotSpeed": 230,
+        "burstCount": 3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Evil Twin stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "begotten",
+      "name": "Begotten",
+      "group": "e4",
+      "floors": [
+        "utero-2",
+        "scarred-womb-2",
+        "corpse"
+      ],
+      "hp": 90,
+      "r": 19,
+      "speed": 120,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "sprayer",
+      "params": {
+        "fireDelay": 1.8,
+        "shotSpeed": 230,
+        "burstCount": 3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Begotten stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "the-thing",
+      "name": "The Thing",
+      "group": "e4",
+      "floors": [
+        "scarred-womb-2",
+        "corpse",
+        "corpse-2"
+      ],
+      "hp": 62,
+      "r": 22,
+      "speed": 135,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "burrower",
+      "params": {
+        "submergeTime": 1.3,
+        "speed": 180
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "The Thing stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "mr-mine",
+      "name": "Mr. Mine",
+      "group": "e4",
+      "floors": [
+        "corpse",
+        "corpse-2",
+        "blue-womb"
+      ],
+      "hp": 66,
+      "r": 25,
+      "speed": 150,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "wallHugger",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Mr. Mine stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "reaper",
+      "name": "Reaper",
+      "group": "e4",
+      "floors": [
+        "corpse-2",
+        "blue-womb",
+        "sheol"
+      ],
+      "hp": 70,
+      "r": 28,
+      "speed": 165,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "ghost",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Reaper stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "eternal-heart-fly",
+      "name": "Eternal Heart Fly",
+      "group": "e4",
+      "floors": [
+        "womb-2",
+        "utero-2",
+        "scarred-womb-2"
+      ],
+      "hp": 74,
+      "r": 16,
+      "speed": 75,
+      "dmg": 1,
+      "flying": true,
+      "archetype": "flyerDrift",
+      "params": {
+        "accel": 520,
+        "drift": 0.3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Eternal Heart Fly stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "holy-keeper",
+      "name": "Holy Keeper",
+      "group": "e4",
+      "floors": [
+        "utero-2",
+        "scarred-womb-2",
+        "corpse"
+      ],
+      "hp": 78,
+      "r": 19,
+      "speed": 90,
+      "dmg": 2,
+      "flying": false,
+      "archetype": "flyerChase",
+      "params": {
+        "accel": 520,
+        "drift": 0.3
+      },
+      "splitInto": null,
+      "champion": true,
+      "mini": false,
+      "bestiary": "Holy Keeper stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "sloth",
+      "name": "Sloth",
+      "group": "e4",
+      "floors": [
+        "scarred-womb-2",
+        "corpse",
+        "corpse-2"
+      ],
+      "hp": 82,
+      "r": 22,
+      "speed": 105,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "spinner",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": false,
+      "mini": true,
+      "bestiary": "Sloth stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "super-sloth",
+      "name": "Super Sloth",
+      "group": "e4",
+      "floors": [
+        "corpse",
+        "corpse-2",
+        "blue-womb"
+      ],
+      "hp": 86,
+      "r": 25,
+      "speed": 120,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "trailLayer",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": false,
+      "mini": true,
+      "bestiary": "Super Sloth stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "ultra-pride",
+      "name": "Ultra Pride",
+      "group": "e4",
+      "floors": [
+        "corpse-2",
+        "blue-womb",
+        "sheol"
+      ],
+      "hp": 90,
+      "r": 28,
+      "speed": 135,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "grid",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": false,
+      "mini": true,
+      "bestiary": "Ultra Pride stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "pride",
+      "name": "Pride",
+      "group": "e4",
+      "floors": [
+        "womb-2",
+        "utero-2",
+        "scarred-womb-2"
+      ],
+      "hp": 62,
+      "r": 16,
+      "speed": 150,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "chaser",
+      "params": {
+        "accel": 650,
+        "jitter": 0.16
+      },
+      "splitInto": null,
+      "champion": false,
+      "mini": true,
+      "bestiary": "Pride stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "super-pride",
+      "name": "Super Pride",
+      "group": "e4",
+      "floors": [
+        "utero-2",
+        "scarred-womb-2",
+        "corpse"
+      ],
+      "hp": 66,
+      "r": 19,
+      "speed": 165,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "wanderer",
+      "params": {
+        "turnDelay": 1.2,
+        "speed": 100
+      },
+      "splitInto": null,
+      "champion": false,
+      "mini": true,
+      "bestiary": "Super Pride stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "envy",
+      "name": "Envy",
+      "group": "e4",
+      "floors": [
+        "scarred-womb-2",
+        "corpse",
+        "corpse-2"
+      ],
+      "hp": 70,
+      "r": 22,
+      "speed": 75,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooter",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": false,
+      "mini": true,
+      "bestiary": "Envy stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "super-envy",
+      "name": "Super Envy",
+      "group": "e4",
+      "floors": [
+        "corpse",
+        "corpse-2",
+        "blue-womb"
+      ],
+      "hp": 74,
+      "r": 25,
+      "speed": 90,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shooterMobile",
+      "params": {
+        "fireDelay": 1.7,
+        "shotSpeed": 260,
+        "burstCount": 1
+      },
+      "splitInto": null,
+      "champion": false,
+      "mini": true,
+      "bestiary": "Super Envy stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "wrath",
+      "name": "Wrath",
+      "group": "e4",
+      "floors": [
+        "corpse-2",
+        "blue-womb",
+        "sheol"
+      ],
+      "hp": 78,
+      "r": 28,
+      "speed": 105,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "flyerDrift",
+      "params": {
+        "accel": 520,
+        "drift": 0.3
+      },
+      "splitInto": null,
+      "champion": false,
+      "mini": true,
+      "bestiary": "Wrath stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "super-wrath",
+      "name": "Super Wrath",
+      "group": "e4",
+      "floors": [
+        "womb-2",
+        "utero-2",
+        "scarred-womb-2"
+      ],
+      "hp": 82,
+      "r": 16,
+      "speed": 120,
+      "dmg": 2,
+      "flying": false,
+      "archetype": "leaper",
+      "params": {
+        "hopHeight": 70,
+        "hopDelay": 1.4
+      },
+      "splitInto": null,
+      "champion": false,
+      "mini": true,
+      "bestiary": "Super Wrath stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "gluttony",
+      "name": "Gluttony",
+      "group": "e4",
+      "floors": [
+        "utero-2",
+        "scarred-womb-2",
+        "corpse"
+      ],
+      "hp": 86,
+      "r": 19,
+      "speed": 135,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "charger",
+      "params": {
+        "windup": 0.6,
+        "dashSpeed": 430,
+        "recover": 0.8
+      },
+      "splitInto": null,
+      "champion": false,
+      "mini": true,
+      "bestiary": "Gluttony stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "super-gluttony",
+      "name": "Super Gluttony",
+      "group": "e4",
+      "floors": [
+        "scarred-womb-2",
+        "corpse",
+        "corpse-2"
+      ],
+      "hp": 90,
+      "r": 22,
+      "speed": 150,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "splitter",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": false,
+      "mini": true,
+      "bestiary": "Super Gluttony stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "greed",
+      "name": "Greed",
+      "group": "e4",
+      "floors": [
+        "corpse",
+        "corpse-2",
+        "blue-womb"
+      ],
+      "hp": 62,
+      "r": 25,
+      "speed": 165,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "summoner",
+      "params": {
+        "fireDelay": 3.2,
+        "spawnCap": 3,
+        "spawns": "attackfly"
+      },
+      "splitInto": null,
+      "champion": false,
+      "mini": true,
+      "bestiary": "Greed stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "super-greed",
+      "name": "Super Greed",
+      "group": "e4",
+      "floors": [
+        "corpse-2",
+        "blue-womb",
+        "sheol"
+      ],
+      "hp": 66,
+      "r": 28,
+      "speed": 75,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "shielded",
+      "params": {
+        "speed": 120,
+        "fireDelay": 2
+      },
+      "splitInto": null,
+      "champion": false,
+      "mini": true,
+      "bestiary": "Super Greed stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "lust",
+      "name": "Lust",
+      "group": "e4",
+      "floors": [
+        "womb-2",
+        "utero-2",
+        "scarred-womb-2"
+      ],
+      "hp": 70,
+      "r": 16,
+      "speed": 90,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "spitter",
+      "params": {
+        "fireDelay": 1.8,
+        "shotSpeed": 230,
+        "burstCount": 3
+      },
+      "splitInto": null,
+      "champion": false,
+      "mini": true,
+      "bestiary": "Lust stalks the ruined floors with a distinct and dangerous rhythm."
+    },
+    {
+      "id": "super-lust",
+      "name": "Super Lust",
+      "group": "e4",
+      "floors": [
+        "utero-2",
+        "scarred-womb-2",
+        "corpse"
+      ],
+      "hp": 74,
+      "r": 19,
+      "speed": 105,
+      "dmg": 1,
+      "flying": false,
+      "archetype": "sprayer",
+      "params": {
+        "fireDelay": 1.8,
+        "shotSpeed": 230,
+        "burstCount": 3
+      },
+      "splitInto": null,
+      "champion": false,
+      "mini": true,
+      "bestiary": "Super Lust stalks the ruined floors with a distinct and dangerous rhythm."
+    }
+  ],
+  "bosses": [
+    {
+      "id": "monstro",
+      "name": "Monstro",
+      "group": "b1",
+      "stage": [
+        "basement",
+        "cellar",
+        "burning-basement"
+      ],
+      "hp": 220,
+      "r": 38,
+      "dmg": 1,
+      "double": true,
+      "mini": false,
+      "attacks": [
+        "chargeDash",
+        "aimedShot",
+        "creepPuddle"
+      ],
+      "bestiary": "Monstro rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "larry-jr",
+      "name": "Larry Jr.",
+      "group": "b1",
+      "stage": [
+        "cellar",
+        "burning-basement",
+        "basement-2"
+      ],
+      "hp": 238,
+      "r": 43,
+      "dmg": 1,
+      "double": true,
+      "mini": false,
+      "attacks": [
+        "spawnMinions",
+        "ringShot",
+        "summonSwarm"
+      ],
+      "bestiary": "Larry Jr. rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "the-duke-of-flies",
+      "name": "The Duke of Flies",
+      "group": "b1",
+      "stage": [
+        "burning-basement",
+        "basement-2",
+        "cellar-2"
+      ],
+      "hp": 256,
+      "r": 48,
+      "dmg": 1,
+      "double": true,
+      "mini": false,
+      "attacks": [
+        "splitBody",
+        "chaseFast",
+        "burstShot"
+      ],
+      "bestiary": "The Duke of Flies rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "gemini",
+      "name": "Gemini",
+      "group": "b1",
+      "stage": [
+        "basement-2",
+        "cellar-2",
+        "burning-basement-2"
+      ],
+      "hp": 274,
+      "r": 53,
+      "dmg": 1,
+      "double": true,
+      "mini": false,
+      "attacks": [
+        "stompLine",
+        "fistSlam",
+        "groundSpikes"
+      ],
+      "bestiary": "Gemini rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "steven",
+      "name": "Steven",
+      "group": "b1",
+      "stage": [
+        "cellar-2",
+        "burning-basement-2",
+        "downpour"
+      ],
+      "hp": 292,
+      "r": 58,
+      "dmg": 1,
+      "double": true,
+      "mini": false,
+      "attacks": [
+        "barrage",
+        "laserSweep",
+        "delayedRings"
+      ],
+      "bestiary": "Steven rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "dingle",
+      "name": "Dingle",
+      "group": "b1",
+      "stage": [
+        "basement",
+        "cellar",
+        "burning-basement"
+      ],
+      "hp": 310,
+      "r": 38,
+      "dmg": 1,
+      "double": true,
+      "mini": false,
+      "attacks": [
+        "brimstoneBeam",
+        "ringShot",
+        "teleportSlam"
+      ],
+      "bestiary": "Dingle rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "dangle",
+      "name": "Dangle",
+      "group": "b1",
+      "stage": [
+        "cellar",
+        "burning-basement",
+        "basement-2"
+      ],
+      "hp": 220,
+      "r": 43,
+      "dmg": 1,
+      "double": true,
+      "mini": false,
+      "attacks": [
+        "mirrorShots",
+        "portalSpawn",
+        "rainbowSpray"
+      ],
+      "bestiary": "Dangle rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "blighted-ovum",
+      "name": "Blighted Ovum",
+      "group": "b1",
+      "stage": [
+        "burning-basement",
+        "basement-2",
+        "cellar-2"
+      ],
+      "hp": 238,
+      "r": 48,
+      "dmg": 1,
+      "double": true,
+      "mini": false,
+      "attacks": [
+        "rockThrow",
+        "quakeRings",
+        "chargeDash"
+      ],
+      "bestiary": "Blighted Ovum rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "the-haunt",
+      "name": "The Haunt",
+      "group": "b1",
+      "stage": [
+        "basement-2",
+        "cellar-2",
+        "burning-basement-2"
+      ],
+      "hp": 256,
+      "r": 53,
+      "dmg": 1,
+      "double": true,
+      "mini": false,
+      "attacks": [
+        "vomitStream",
+        "creepPuddle",
+        "spawnMinions"
+      ],
+      "bestiary": "The Haunt rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "little-horn",
+      "name": "Little Horn",
+      "group": "b1",
+      "stage": [
+        "cellar-2",
+        "burning-basement-2",
+        "downpour"
+      ],
+      "hp": 274,
+      "r": 58,
+      "dmg": 1,
+      "double": true,
+      "mini": false,
+      "attacks": [
+        "hop",
+        "spreadShot",
+        "tearRain"
+      ],
+      "bestiary": "Little Horn rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "baby-plum",
+      "name": "Baby Plum",
+      "group": "b1",
+      "stage": [
+        "basement",
+        "cellar",
+        "burning-basement"
+      ],
+      "hp": 292,
+      "r": 38,
+      "dmg": 1,
+      "double": true,
+      "mini": false,
+      "attacks": [
+        "chargeDash",
+        "aimedShot",
+        "creepPuddle"
+      ],
+      "bestiary": "Baby Plum rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "famine",
+      "name": "Famine",
+      "group": "b1",
+      "stage": [
+        "cellar",
+        "burning-basement",
+        "basement-2"
+      ],
+      "hp": 310,
+      "r": 43,
+      "dmg": 1,
+      "double": true,
+      "mini": false,
+      "attacks": [
+        "spawnMinions",
+        "ringShot",
+        "summonSwarm"
+      ],
+      "bestiary": "Famine rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "gurdy-jr",
+      "name": "Gurdy Jr.",
+      "group": "b1",
+      "stage": [
+        "burning-basement",
+        "basement-2",
+        "cellar-2"
+      ],
+      "hp": 220,
+      "r": 48,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "splitBody",
+        "chaseFast",
+        "burstShot"
+      ],
+      "bestiary": "Gurdy Jr. rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "fistula",
+      "name": "Fistula",
+      "group": "b1",
+      "stage": [
+        "basement-2",
+        "cellar-2",
+        "burning-basement-2"
+      ],
+      "hp": 238,
+      "r": 53,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "stompLine",
+        "fistSlam",
+        "groundSpikes"
+      ],
+      "bestiary": "Fistula rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "widow",
+      "name": "Widow",
+      "group": "b1",
+      "stage": [
+        "cellar-2",
+        "burning-basement-2",
+        "downpour"
+      ],
+      "hp": 256,
+      "r": 58,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "barrage",
+        "laserSweep",
+        "delayedRings"
+      ],
+      "bestiary": "Widow rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "pin",
+      "name": "Pin",
+      "group": "b1",
+      "stage": [
+        "basement",
+        "cellar",
+        "burning-basement"
+      ],
+      "hp": 274,
+      "r": 38,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "brimstoneBeam",
+        "ringShot",
+        "teleportSlam"
+      ],
+      "bestiary": "Pin rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "rag-man",
+      "name": "Rag Man",
+      "group": "b1",
+      "stage": [
+        "cellar",
+        "burning-basement",
+        "basement-2"
+      ],
+      "hp": 292,
+      "r": 43,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "mirrorShots",
+        "portalSpawn",
+        "rainbowSpray"
+      ],
+      "bestiary": "Rag Man rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "the-turdlings",
+      "name": "The Turdlings",
+      "group": "b1",
+      "stage": [
+        "burning-basement",
+        "basement-2",
+        "cellar-2"
+      ],
+      "hp": 310,
+      "r": 48,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "rockThrow",
+        "quakeRings",
+        "chargeDash"
+      ],
+      "bestiary": "The Turdlings rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "turdlet",
+      "name": "Turdlet",
+      "group": "b1",
+      "stage": [
+        "basement-2",
+        "cellar-2",
+        "burning-basement-2"
+      ],
+      "hp": 220,
+      "r": 53,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "vomitStream",
+        "creepPuddle",
+        "spawnMinions"
+      ],
+      "bestiary": "Turdlet rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "wormwood",
+      "name": "Wormwood",
+      "group": "b1",
+      "stage": [
+        "cellar-2",
+        "burning-basement-2",
+        "downpour"
+      ],
+      "hp": 238,
+      "r": 58,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "hop",
+        "spreadShot",
+        "tearRain"
+      ],
+      "bestiary": "Wormwood rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "teratoma",
+      "name": "Teratoma",
+      "group": "b2",
+      "stage": [
+        "caves",
+        "catacombs",
+        "flooded-caves"
+      ],
+      "hp": 470,
+      "r": 38,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "spawnMinions",
+        "ringShot",
+        "summonSwarm"
+      ],
+      "bestiary": "Teratoma rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "the-bloat",
+      "name": "The Bloat",
+      "group": "b2",
+      "stage": [
+        "catacombs",
+        "flooded-caves",
+        "caves-2"
+      ],
+      "hp": 515,
+      "r": 43,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "splitBody",
+        "chaseFast",
+        "burstShot"
+      ],
+      "bestiary": "The Bloat rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "chub",
+      "name": "Chub",
+      "group": "b2",
+      "stage": [
+        "flooded-caves",
+        "caves-2",
+        "mines"
+      ],
+      "hp": 560,
+      "r": 48,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "stompLine",
+        "fistSlam",
+        "groundSpikes"
+      ],
+      "bestiary": "Chub rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "c-h-a-d",
+      "name": "C.H.A.D.",
+      "group": "b2",
+      "stage": [
+        "caves-2",
+        "mines",
+        "ashpit"
+      ],
+      "hp": 605,
+      "r": 53,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "barrage",
+        "laserSweep",
+        "delayedRings"
+      ],
+      "bestiary": "C.H.A.D. rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "the-husk",
+      "name": "The Husk",
+      "group": "b2",
+      "stage": [
+        "mines",
+        "ashpit",
+        "depths"
+      ],
+      "hp": 650,
+      "r": 58,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "brimstoneBeam",
+        "ringShot",
+        "teleportSlam"
+      ],
+      "bestiary": "The Husk rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "the-hollow",
+      "name": "The Hollow",
+      "group": "b2",
+      "stage": [
+        "caves",
+        "catacombs",
+        "flooded-caves"
+      ],
+      "hp": 695,
+      "r": 38,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "mirrorShots",
+        "portalSpawn",
+        "rainbowSpray"
+      ],
+      "bestiary": "The Hollow rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "carrion-queen",
+      "name": "Carrion Queen",
+      "group": "b2",
+      "stage": [
+        "catacombs",
+        "flooded-caves",
+        "caves-2"
+      ],
+      "hp": 470,
+      "r": 43,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "rockThrow",
+        "quakeRings",
+        "chargeDash"
+      ],
+      "bestiary": "Carrion Queen rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "the-gate",
+      "name": "The Gate",
+      "group": "b2",
+      "stage": [
+        "flooded-caves",
+        "caves-2",
+        "mines"
+      ],
+      "hp": 515,
+      "r": 48,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "vomitStream",
+        "creepPuddle",
+        "spawnMinions"
+      ],
+      "bestiary": "The Gate rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "the-cage",
+      "name": "The Cage",
+      "group": "b2",
+      "stage": [
+        "caves-2",
+        "mines",
+        "ashpit"
+      ],
+      "hp": 560,
+      "r": 53,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "hop",
+        "spreadShot",
+        "tearRain"
+      ],
+      "bestiary": "The Cage rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "mega-maw",
+      "name": "Mega Maw",
+      "group": "b2",
+      "stage": [
+        "mines",
+        "ashpit",
+        "depths"
+      ],
+      "hp": 605,
+      "r": 58,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "chargeDash",
+        "aimedShot",
+        "creepPuddle"
+      ],
+      "bestiary": "Mega Maw rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "the-wretched",
+      "name": "The Wretched",
+      "group": "b2",
+      "stage": [
+        "caves",
+        "catacombs",
+        "flooded-caves"
+      ],
+      "hp": 650,
+      "r": 38,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "spawnMinions",
+        "ringShot",
+        "summonSwarm"
+      ],
+      "bestiary": "The Wretched rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "frail",
+      "name": "Frail",
+      "group": "b2",
+      "stage": [
+        "catacombs",
+        "flooded-caves",
+        "caves-2"
+      ],
+      "hp": 695,
+      "r": 43,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "splitBody",
+        "chaseFast",
+        "burstShot"
+      ],
+      "bestiary": "Frail rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "peep",
+      "name": "Peep",
+      "group": "b2",
+      "stage": [
+        "flooded-caves",
+        "caves-2",
+        "mines"
+      ],
+      "hp": 470,
+      "r": 48,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "stompLine",
+        "fistSlam",
+        "groundSpikes"
+      ],
+      "bestiary": "Peep rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "the-pile",
+      "name": "The Pile",
+      "group": "b2",
+      "stage": [
+        "caves-2",
+        "mines",
+        "ashpit"
+      ],
+      "hp": 515,
+      "r": 53,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "barrage",
+        "laserSweep",
+        "delayedRings"
+      ],
+      "bestiary": "The Pile rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "gurdy",
+      "name": "Gurdy",
+      "group": "b2",
+      "stage": [
+        "mines",
+        "ashpit",
+        "depths"
+      ],
+      "hp": 560,
+      "r": 58,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "brimstoneBeam",
+        "ringShot",
+        "teleportSlam"
+      ],
+      "bestiary": "Gurdy rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "monstro-ii",
+      "name": "Monstro II",
+      "group": "b2",
+      "stage": [
+        "caves",
+        "catacombs",
+        "flooded-caves"
+      ],
+      "hp": 605,
+      "r": 38,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "mirrorShots",
+        "portalSpawn",
+        "rainbowSpray"
+      ],
+      "bestiary": "Monstro II rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "gish",
+      "name": "Gish",
+      "group": "b2",
+      "stage": [
+        "catacombs",
+        "flooded-caves",
+        "caves-2"
+      ],
+      "hp": 650,
+      "r": 43,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "rockThrow",
+        "quakeRings",
+        "chargeDash"
+      ],
+      "bestiary": "Gish rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "loki",
+      "name": "Loki",
+      "group": "b2",
+      "stage": [
+        "flooded-caves",
+        "caves-2",
+        "mines"
+      ],
+      "hp": 695,
+      "r": 48,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "vomitStream",
+        "creepPuddle",
+        "spawnMinions"
+      ],
+      "bestiary": "Loki rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "lokii",
+      "name": "Lokii",
+      "group": "b2",
+      "stage": [
+        "caves-2",
+        "mines",
+        "ashpit"
+      ],
+      "hp": 470,
+      "r": 53,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "hop",
+        "spreadShot",
+        "tearRain"
+      ],
+      "bestiary": "Lokii rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "the-stain",
+      "name": "The Stain",
+      "group": "b2",
+      "stage": [
+        "mines",
+        "ashpit",
+        "depths"
+      ],
+      "hp": 515,
+      "r": 58,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "chargeDash",
+        "aimedShot",
+        "creepPuddle"
+      ],
+      "bestiary": "The Stain rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "mom",
+      "name": "Mom",
+      "group": "b3",
+      "stage": [
+        "depths-2",
+        "necropolis-2",
+        "dank-depths-2"
+      ],
+      "hp": 700,
+      "r": 38,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "fistSlam",
+        "stompLine",
+        "spawnMinions"
+      ],
+      "bestiary": "Mom rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "moms-heart",
+      "name": "Mom's Heart",
+      "group": "b3",
+      "stage": [
+        "necropolis-2",
+        "dank-depths-2",
+        "mausoleum"
+      ],
+      "hp": 755,
+      "r": 43,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "stompLine",
+        "fistSlam",
+        "groundSpikes"
+      ],
+      "bestiary": "Mom's Heart rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "it-lives",
+      "name": "It Lives",
+      "group": "b3",
+      "stage": [
+        "dank-depths-2",
+        "mausoleum",
+        "gehenna"
+      ],
+      "hp": 810,
+      "r": 48,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "barrage",
+        "laserSweep",
+        "delayedRings"
+      ],
+      "bestiary": "It Lives rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "the-fallen",
+      "name": "The Fallen",
+      "group": "b3",
+      "stage": [
+        "mausoleum",
+        "gehenna",
+        "womb"
+      ],
+      "hp": 865,
+      "r": 53,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "brimstoneBeam",
+        "ringShot",
+        "teleportSlam"
+      ],
+      "bestiary": "The Fallen rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "krampus",
+      "name": "Krampus",
+      "group": "b3",
+      "stage": [
+        "gehenna",
+        "womb",
+        "utero"
+      ],
+      "hp": 920,
+      "r": 58,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "mirrorShots",
+        "portalSpawn",
+        "rainbowSpray"
+      ],
+      "bestiary": "Krampus rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "sisters-vis",
+      "name": "Sisters Vis",
+      "group": "b3",
+      "stage": [
+        "depths-2",
+        "necropolis-2",
+        "dank-depths-2"
+      ],
+      "hp": 975,
+      "r": 38,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "rockThrow",
+        "quakeRings",
+        "chargeDash"
+      ],
+      "bestiary": "Sisters Vis rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "reap-creep",
+      "name": "Reap Creep",
+      "group": "b3",
+      "stage": [
+        "necropolis-2",
+        "dank-depths-2",
+        "mausoleum"
+      ],
+      "hp": 1030,
+      "r": 43,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "vomitStream",
+        "creepPuddle",
+        "spawnMinions"
+      ],
+      "bestiary": "Reap Creep rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "tuff-twins",
+      "name": "Tuff Twins",
+      "group": "b3",
+      "stage": [
+        "dank-depths-2",
+        "mausoleum",
+        "gehenna"
+      ],
+      "hp": 700,
+      "r": 48,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "hop",
+        "spreadShot",
+        "tearRain"
+      ],
+      "bestiary": "Tuff Twins rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "the-shell",
+      "name": "The Shell",
+      "group": "b3",
+      "stage": [
+        "mausoleum",
+        "gehenna",
+        "womb"
+      ],
+      "hp": 755,
+      "r": 53,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "chargeDash",
+        "aimedShot",
+        "creepPuddle"
+      ],
+      "bestiary": "The Shell rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "the-matriarch",
+      "name": "The Matriarch",
+      "group": "b3",
+      "stage": [
+        "gehenna",
+        "womb",
+        "utero"
+      ],
+      "hp": 810,
+      "r": 58,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "spawnMinions",
+        "ringShot",
+        "summonSwarm"
+      ],
+      "bestiary": "The Matriarch rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "the-scourge",
+      "name": "The Scourge",
+      "group": "b3",
+      "stage": [
+        "depths-2",
+        "necropolis-2",
+        "dank-depths-2"
+      ],
+      "hp": 865,
+      "r": 38,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "splitBody",
+        "chaseFast",
+        "burstShot"
+      ],
+      "bestiary": "The Scourge rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "chimera",
+      "name": "Chimera",
+      "group": "b3",
+      "stage": [
+        "necropolis-2",
+        "dank-depths-2",
+        "mausoleum"
+      ],
+      "hp": 920,
+      "r": 43,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "stompLine",
+        "fistSlam",
+        "groundSpikes"
+      ],
+      "bestiary": "Chimera rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "rotgut",
+      "name": "Rotgut",
+      "group": "b3",
+      "stage": [
+        "dank-depths-2",
+        "mausoleum",
+        "gehenna"
+      ],
+      "hp": 975,
+      "r": 48,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "barrage",
+        "laserSweep",
+        "delayedRings"
+      ],
+      "bestiary": "Rotgut rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "mama-gurdy",
+      "name": "Mama Gurdy",
+      "group": "b3",
+      "stage": [
+        "mausoleum",
+        "gehenna",
+        "womb"
+      ],
+      "hp": 1030,
+      "r": 53,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "brimstoneBeam",
+        "ringShot",
+        "teleportSlam"
+      ],
+      "bestiary": "Mama Gurdy rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "the-adversary",
+      "name": "The Adversary",
+      "group": "b3",
+      "stage": [
+        "gehenna",
+        "womb",
+        "utero"
+      ],
+      "hp": 700,
+      "r": 58,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "mirrorShots",
+        "portalSpawn",
+        "rainbowSpray"
+      ],
+      "bestiary": "The Adversary rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "brownie",
+      "name": "Brownie",
+      "group": "b3",
+      "stage": [
+        "depths-2",
+        "necropolis-2",
+        "dank-depths-2"
+      ],
+      "hp": 755,
+      "r": 38,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "rockThrow",
+        "quakeRings",
+        "chargeDash"
+      ],
+      "bestiary": "Brownie rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "the-forsaken",
+      "name": "The Forsaken",
+      "group": "b3",
+      "stage": [
+        "necropolis-2",
+        "dank-depths-2",
+        "mausoleum"
+      ],
+      "hp": 810,
+      "r": 43,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "vomitStream",
+        "creepPuddle",
+        "spawnMinions"
+      ],
+      "bestiary": "The Forsaken rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "big-horn",
+      "name": "Big Horn",
+      "group": "b3",
+      "stage": [
+        "dank-depths-2",
+        "mausoleum",
+        "gehenna"
+      ],
+      "hp": 865,
+      "r": 48,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "hop",
+        "spreadShot",
+        "tearRain"
+      ],
+      "bestiary": "Big Horn rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "rag-mega",
+      "name": "Rag Mega",
+      "group": "b3",
+      "stage": [
+        "mausoleum",
+        "gehenna",
+        "womb"
+      ],
+      "hp": 920,
+      "r": 53,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "chargeDash",
+        "aimedShot",
+        "creepPuddle"
+      ],
+      "bestiary": "Rag Mega rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "the-visage",
+      "name": "The Visage",
+      "group": "b3",
+      "stage": [
+        "gehenna",
+        "womb",
+        "utero"
+      ],
+      "hp": 975,
+      "r": 58,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "spawnMinions",
+        "ringShot",
+        "summonSwarm"
+      ],
+      "bestiary": "The Visage rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "the-lamb",
+      "name": "The Lamb",
+      "group": "b4",
+      "stage": [
+        "womb-2",
+        "utero-2",
+        "scarred-womb-2"
+      ],
+      "hp": 2500,
+      "r": 38,
+      "dmg": 2,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "stompLine",
+        "fistSlam",
+        "groundSpikes"
+      ],
+      "bestiary": "The Lamb rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "satan",
+      "name": "Satan",
+      "group": "b4",
+      "stage": [
+        "utero-2",
+        "scarred-womb-2",
+        "corpse"
+      ],
+      "hp": 2200,
+      "r": 43,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "brimstoneBeam",
+        "fistSlam",
+        "ringShot"
+      ],
+      "bestiary": "Satan rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "isaac",
+      "name": "Isaac",
+      "group": "b4",
+      "stage": [
+        "scarred-womb-2",
+        "corpse",
+        "corpse-2"
+      ],
+      "hp": 1800,
+      "r": 48,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "brimstoneBeam",
+        "ringShot",
+        "teleportSlam"
+      ],
+      "bestiary": "Isaac rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "blue-baby",
+      "name": "Blue Baby",
+      "group": "b4",
+      "stage": [
+        "corpse",
+        "corpse-2",
+        "blue-womb"
+      ],
+      "hp": 3200,
+      "r": 53,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "mirrorShots",
+        "portalSpawn",
+        "rainbowSpray"
+      ],
+      "bestiary": "Blue Baby rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "hush",
+      "name": "Hush",
+      "group": "b4",
+      "stage": [
+        "corpse-2",
+        "blue-womb",
+        "sheol"
+      ],
+      "hp": 3000,
+      "r": 58,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "barrage",
+        "ringShot",
+        "creepPuddle"
+      ],
+      "bestiary": "Hush rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "delirium",
+      "name": "Delirium",
+      "group": "b4",
+      "stage": [
+        "womb-2",
+        "utero-2",
+        "scarred-womb-2"
+      ],
+      "hp": 1300,
+      "r": 38,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "teleportSlam",
+        "portalSpawn",
+        "mirrorShots"
+      ],
+      "bestiary": "Delirium rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "mega-satan",
+      "name": "Mega Satan",
+      "group": "b4",
+      "stage": [
+        "utero-2",
+        "scarred-womb-2",
+        "corpse"
+      ],
+      "hp": 2400,
+      "r": 43,
+      "dmg": 2,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "brimstoneBeam",
+        "fistSlam",
+        "ringShot"
+      ],
+      "bestiary": "Mega Satan rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "mother",
+      "name": "Mother",
+      "group": "b4",
+      "stage": [
+        "scarred-womb-2",
+        "corpse",
+        "corpse-2"
+      ],
+      "hp": 2600,
+      "r": 48,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "knifeThrow",
+        "laserSweep",
+        "spawnMinions"
+      ],
+      "bestiary": "Mother rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "the-beast",
+      "name": "The Beast",
+      "group": "b4",
+      "stage": [
+        "corpse",
+        "corpse-2",
+        "blue-womb"
+      ],
+      "hp": 2500,
+      "r": 53,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "brimstoneBeam",
+        "beamRing",
+        "summonSwarm"
+      ],
+      "bestiary": "The Beast rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "dogma",
+      "name": "Dogma",
+      "group": "b4",
+      "stage": [
+        "corpse-2",
+        "blue-womb",
+        "sheol"
+      ],
+      "hp": 2200,
+      "r": 58,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "splitBody",
+        "chaseFast",
+        "burstShot"
+      ],
+      "bestiary": "Dogma rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "ultra-famine",
+      "name": "Ultra Famine",
+      "group": "b4",
+      "stage": [
+        "womb-2",
+        "utero-2",
+        "scarred-womb-2"
+      ],
+      "hp": 1800,
+      "r": 38,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "stompLine",
+        "fistSlam",
+        "groundSpikes"
+      ],
+      "bestiary": "Ultra Famine rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "ultra-pestilence",
+      "name": "Ultra Pestilence",
+      "group": "b4",
+      "stage": [
+        "utero-2",
+        "scarred-womb-2",
+        "corpse"
+      ],
+      "hp": 3200,
+      "r": 43,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "barrage",
+        "laserSweep",
+        "delayedRings"
+      ],
+      "bestiary": "Ultra Pestilence rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "ultra-war",
+      "name": "Ultra War",
+      "group": "b4",
+      "stage": [
+        "scarred-womb-2",
+        "corpse",
+        "corpse-2"
+      ],
+      "hp": 3000,
+      "r": 48,
+      "dmg": 2,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "brimstoneBeam",
+        "ringShot",
+        "teleportSlam"
+      ],
+      "bestiary": "Ultra War rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "ultra-death",
+      "name": "Ultra Death",
+      "group": "b4",
+      "stage": [
+        "corpse",
+        "corpse-2",
+        "blue-womb"
+      ],
+      "hp": 1300,
+      "r": 53,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "mirrorShots",
+        "portalSpawn",
+        "rainbowSpray"
+      ],
+      "bestiary": "Ultra Death rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "ultra-greed",
+      "name": "Ultra Greed",
+      "group": "b4",
+      "stage": [
+        "corpse-2",
+        "blue-womb",
+        "sheol"
+      ],
+      "hp": 2400,
+      "r": 58,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "rockThrow",
+        "quakeRings",
+        "chargeDash"
+      ],
+      "bestiary": "Ultra Greed rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "ultra-greedier",
+      "name": "Ultra Greedier",
+      "group": "b4",
+      "stage": [
+        "womb-2",
+        "utero-2",
+        "scarred-womb-2"
+      ],
+      "hp": 2600,
+      "r": 38,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "vomitStream",
+        "creepPuddle",
+        "spawnMinions"
+      ],
+      "bestiary": "Ultra Greedier rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "the-heretic",
+      "name": "The Heretic",
+      "group": "b4",
+      "stage": [
+        "utero-2",
+        "scarred-womb-2",
+        "corpse"
+      ],
+      "hp": 2500,
+      "r": 43,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "hop",
+        "spreadShot",
+        "tearRain"
+      ],
+      "bestiary": "The Heretic rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "horny-boys",
+      "name": "Horny Boys",
+      "group": "b4",
+      "stage": [
+        "scarred-womb-2",
+        "corpse",
+        "corpse-2"
+      ],
+      "hp": 2200,
+      "r": 48,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "chargeDash",
+        "aimedShot",
+        "creepPuddle"
+      ],
+      "bestiary": "Horny Boys rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "clutch",
+      "name": "Clutch",
+      "group": "b4",
+      "stage": [
+        "corpse",
+        "corpse-2",
+        "blue-womb"
+      ],
+      "hp": 1800,
+      "r": 53,
+      "dmg": 2,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "spawnMinions",
+        "ringShot",
+        "summonSwarm"
+      ],
+      "bestiary": "Clutch rules its arena through escalating patterns and relentless pressure."
+    },
+    {
+      "id": "colostomia",
+      "name": "Colostomia",
+      "group": "b4",
+      "stage": [
+        "corpse-2",
+        "blue-womb",
+        "sheol"
+      ],
+      "hp": 3200,
+      "r": 58,
+      "dmg": 1,
+      "double": false,
+      "mini": false,
+      "attacks": [
+        "splitBody",
+        "chaseFast",
+        "burstShot"
+      ],
+      "bestiary": "Colostomia rules its arena through escalating patterns and relentless pressure."
+    }
+  ]
+}

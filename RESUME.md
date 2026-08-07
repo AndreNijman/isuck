@@ -1,52 +1,27 @@
 # Resuming this build
 
-## Latest checkpoint — P3 complete, 2026-08-07
+## Latest checkpoint — P4 complete, 2026-08-07
 
-P3 (collectible content) is complete at **14/14**. The registry now contains
-the complete offline Repentance reference set:
-
-- 732/732 collectibles, including 654 declarative effects and 545 hook-driven
-  behaviours;
-- 189/189 trinkets;
-- 97/97 cards, all with guarded `use(player, ctx)` implementations;
-- 50/50 pills;
-- 34/34 playable characters;
-- 104 familiar behaviour definitions.
+P4 (world content) is complete at **17/17**. The canonical world registry now
+contains 208 enemies, 80 bosses, 500 rooms, 57 floors, 45 challenges and 637
+achievements. `docs/reference/roster.json` is the exact enemy/boss source used by
+the runtime definitions.
 
 Verification performed at this boundary:
 
-- Every `js/data/*.js` file passes `node --check` and `git diff --check` passes.
-- Each item/trinket slice has exact ID, number and non-empty-name coverage
-  against its source JSON, with no missing or extra entries.
-- `node tools/validate-content.mjs` reports exactly 17 errors, all of them the
-  17 not-yet-created P4 world files. There are no P3 schema, vocabulary,
-  cross-reference, duplicate-ID, sprite, or deterministic-RNG errors.
-- A seeded runtime sweep grants and updates every one of the 732 items, then
-  invokes all 97 cards and all 50 pills against a dummy room: zero exceptions
-  and no non-finite player stats.
-- `node tools/state.mjs` reports P3 **14/14** and selects P4 next.
+- Every `js/data/*.js` file passes `node --check`; `git diff --check` passes.
+- `node tools/validate-content.mjs` passes with all 63 scripts loaded and no
+  schema, vocabulary, cross-reference, sprite, or deterministic-RNG errors.
+- `node tools/smoke.mjs` passes 27/27: a run starts, descends three floors, all
+  732 items grant safely, and all 80 bosses complete their attack simulation.
+- `node tools/balance.mjs --runs 20` passes: 20/20 deterministic runs complete
+  without exceptions and reach a mean depth of 6.8/8.
+- `node tools/state.mjs` reports P4 **17/17**, P5 **6/6**, and selects P6 next.
 
-Important history: the first disk audit counted several old item files as done
-because they existed and parsed, but they omitted 134 entries. P3 was therefore
-audited against the reference slices rather than trusting file presence; the
-final 732/732 registry count is authoritative.
-
-The next action is **P4 — Content: world**, and only P4. Its 17 files are:
-
-```text
-js/data/enemies-1.js, js/data/enemies-2.js, js/data/enemies-3.js,
-js/data/enemies-4.js, js/data/bosses-1.js, js/data/bosses-2.js,
-js/data/bosses-3.js, js/data/bosses-4.js, js/data/floors.js,
-js/data/rooms-basement.js, js/data/rooms-caves.js,
-js/data/rooms-depths.js, js/data/rooms-womb.js, js/data/rooms-alt.js,
-js/data/rooms-special.js, js/data/challenges.js,
-js/data/achievements.js
-```
-
-The durable original workflow is
-`~/.claude/projects/-var-home-andre-Projects-isuck/a3d73950-d367-4d66-9bb4-0cede11c467d/workflows/scripts/isuck-p4-world-wf_6cf597d5-acf.js`.
-Recompute the P4 gap list from disk before using it. Do not use Kimi agents;
-Andre explicitly requested that after two Kimi runs stopped at reconnaissance.
+The next action is **P6 — Ship**. Its remaining files are `README.md`,
+`og-image.png`, and `shots/card.png`. Shipping can change public/external state,
+so inspect P6 and obtain the appropriate authorization before enabling Pages or
+publishing. Do not use Kimi agents; Andre explicitly requested this.
 
 This build is designed to survive the laptop being shut down mid-phase. Nothing
 important lives in a session's head: it lives in files, and `tools/state.mjs`
