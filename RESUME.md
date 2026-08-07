@@ -1,18 +1,19 @@
 # Resuming this build
 
-## Latest checkpoint — build and deployment complete, 2026-08-07
+## Latest checkpoint — gameplay hotfix deployed, DNS pending, 2026-08-07
 
-All phases are complete, including P6 at **6/6**. The public game is live at
-<https://andrenijman.github.io/isuck/> and the source repository is
-<https://github.com/AndreNijman/isuck>. The ISUCK card is also live on
-<https://games.andrenijman.com/>.
+All phases remain complete, and the broken first release has been repaired in
+commits `5b0f5df` and `b653444`. Floor generation now creates reciprocal doors,
+door interaction is reachable from the collision boundary, large rooms fit in
+the viewport, and room transitions update persisted run state.
 
 Verification performed at this boundary:
 
 - Every `js/data/*.js` file passes `node --check`; `git diff --check` passes.
 - `node tools/validate-content.mjs` passes with all 63 scripts loaded and no
   schema, vocabulary, cross-reference, sprite, or deterministic-RNG errors.
-- `node tools/smoke.mjs` passes 27/27: a run starts, descends three floors, all
+- `node tools/smoke.mjs` passes 31/31: a run starts, crosses a real door by
+  movement input, verifies the whole floor graph and room fitting, descends three floors, all
   732 items grant safely, and all 80 bosses complete their attack simulation.
 - `node tools/balance.mjs --runs 200` passes: 200/200 deterministic runs complete
   without exceptions and reach a mean depth of 6.67/8.
@@ -21,7 +22,13 @@ Verification performed at this boundary:
 - The games catalog deployment succeeded and its live ISUCK card and 1000×525
   image both return HTTP 200.
 
-There is no unfinished build step. For future changes, run the three release
+The code, GitHub Pages setting, metadata, sitemap, README and games catalog now
+use `https://isaac.andrenijman.com/`. One external step remains because this
+machine has no Cloudflare credentials: create a DNS-only CNAME named `isaac`
+pointing to `andrenijman.github.io`. After it resolves, enable HTTPS enforcement
+in GitHub Pages and verify the custom URL.
+
+For future changes, run the three release
 gates, regenerate screenshots with `node tools/card-shot.js`, commit, and push
 `master`; GitHub Pages deploys from the repository root. Do not use Kimi agents
 unless Andre explicitly reverses that instruction.

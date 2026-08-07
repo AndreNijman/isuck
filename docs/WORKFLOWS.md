@@ -82,6 +82,17 @@ pass; the release balance gate passes 200/200 runs with no exceptions. The publi
 repository and Pages deployment are live at `AndreNijman/isuck`, and games-site
 commit `b5b983b` adds the verified live catalog card. All phases are complete.
 
+### Post-release gameplay repair (2026-08-07)
+
+The original smoke test skipped navigation by calling `enterRoom()` directly,
+so it failed to detect that generated floors had no doors and the door trigger
+was unreachable from the player's collision boundary. Commits `5b0f5df` and
+`b653444` add reciprocal floor graph doors, reachable transitions, full-room
+camera fitting and accurate `run.roomIndex`. Smoke now passes 31/31 with a real
+keyboard-driven door crossing; a separate sweep generated 1,140 floors and
+verified 10,446 rooms. The `isaac.andrenijman.com` code-side setup is complete;
+Cloudflare still needs a DNS-only `isaac` CNAME to `andrenijman.github.io`.
+
 ## What the first interruption taught us
 
 The session hosting the first P1/P3/P4 dispatch exited while all three were in
