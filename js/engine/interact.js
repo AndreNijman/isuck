@@ -1,0 +1,16 @@
+;(function (IS) {
+  'use strict'
+  IS.tryTakePickup=(p,x,ctx)=>{if(x.dead)return false;let ok=true;switch(x.kind){case'coin':IS.addCoins(p,x.amount||1);break;case'bomb':IS.addBombs(p,x.amount||1);break;case'key':IS.addKeys(p,x.amount||1);break;case'heart':IS.healRed(p,x.amount||2);break;case'soul':IS.addSoulHearts(p,x.amount||2);break;case'black':IS.addBlackHearts(p,x.amount||2);break;case'battery':IS.addCharge(p,x.amount||1);break;case'item':ok=IS.giveItem(p,x.id,{ctx});break;case'trinket':ok=IS.giveTrinket(p,x.id||ctx.rollTrinket());break;case'card':case'rune':ok=IS.givePocket(p,x.kind,x.id||ctx.rollCard());break;case'pill':ok=IS.givePocket(p,'pill',x.id||ctx.rollPill());break;default:ok=false}if(ok){x.dead=true;IS.fireHook(p,'onPickup',[p,x.kind,x.amount||1],ctx)}return ok}
+  IS.openChest=(room,chest,ctx)=>{if(chest.open)return false;chest.open=true;for(let i=0;i<(chest.count||2);i++)ctx.spawnPickup(ctx.pick(['coin','heart','bomb','key']),chest.x+ctx.range(-20,20),chest.y+ctx.range(-20,20));return true}
+  IS.tryDoor=(p,d,ctx)=>{if(!d.open){if(d.locked&&!p.goldenKey){if(!p.keys)return false;p.keys--}d.locked=false;d.open=true;IS.fireHook(p,'onDoorOpen',[p,d],ctx)}if(d.target!=null)IS.enterRoom(ctx.run,d.target,d.dir,ctx);return true}
+  IS.buy=(room,e,ctx)=>{if(e.sold||ctx.player.coins<(e.price||5))return false;ctx.player.coins-=e.price||5;e.sold=true;if(e.itemId)IS.giveItem(ctx.player,e.itemId,{ctx});else IS.tryTakePickup(ctx.player,e,ctx);IS.fireHook(ctx.player,'onPurchase',[ctx.player,e],ctx);return true}
+  IS.donate=(room,m,n,ctx)=>{n=Math.min(n||1,ctx.player.coins);ctx.player.coins-=n;m.coins=(m.coins||0)+n;IS.progress.record('donation',{amount:n},ctx.run);return n}
+  IS.sacrifice=(room,ctx)=>IS.damagePlayer(ctx.player,2,{kind:'sacrifice'},ctx)
+  IS.spawnTrapdoor=(room,x,y,o)=>{room.trapdoor=Object.assign({x:x??room.pxW/2,y:y??room.pxH/2,open:true},o);return room.trapdoor}
+  IS.spawnCrawlspace=(room,x,y)=>{room.crawlspace={x:x??room.pxW/2,y:y??room.pxH/2};return room.crawlspace}
+  IS.useTrapdoor=(run,ctx)=>{const n=IS.nextFloorIds(run);return n.normal?IS.startFloor(run,n.normal,ctx):null}
+  IS.spawnDevilDeal=(room,run,ctx)=>{for(let i=0;i<2;i++)IS.spawnPedestal(room,IS.rollItem(run,'devil'),room.pxW/2+(i*2-1)*80,room.pxH/2,{price:2,deal:'devil'});return room.pickups}
+  IS.spawnAngelDeal=(room,run)=>IS.spawnPedestal(room,IS.rollItem(run,'angel'),room.pxW/2,room.pxH/2,{deal:'angel'})
+  IS.rerollPedestals=(room,run,ctx)=>{for(const p of room.pickups)if(p.kind==='item'&&!p.dead)p.id=IS.rollItem(run,p.pool||'treasure');ctx?.sfx('reroll');return room.pickups}
+  IS.updateInteractions=(room,dt,ctx)=>{for(const p of room.pickups)if(!p.dead&&IS.entityHit(p,ctx.player))IS.tryTakePickup(ctx.player,p,ctx);room.pickups=room.pickups.filter(p=>!p.dead);for(const d of room.doors)if(IS.dist(ctx.player.x,ctx.player.y,d.x,d.y)<55)IS.tryDoor(ctx.player,d,ctx)}
+})(typeof window !== 'undefined' ? (window.IS = window.IS || {}) : (globalThis.IS = globalThis.IS || {}))

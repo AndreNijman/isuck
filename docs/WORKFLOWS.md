@@ -17,6 +17,30 @@ whole resume story: **recompute state from disk, pass the gaps back in.**
 | P3 collectibles | `workflows/scripts/isuck-p3-collectibles-wf_846d5f1f-9a8.js` | `wf_846d5f1f-9a8`, re-dispatched `wf_cdcdf80f-43e` | 14 |
 | P4 world | `workflows/scripts/isuck-p4-world-wf_6cf597d5-acf.js` | `wf_6cf597d5-acf` | 1 + 13 |
 
+### Audit after the second interruption (2026-08-07)
+
+No workflow was launched during this audit. All surviving JavaScript files pass
+syntax checking, and `BUILD_STATE.json` was recomputed from disk. P1 has 15
+files left, P3 has 7 files left, and P4 has all 17 files left. The authoritative
+P1 argument and continuation procedure are recorded at the top of `RESUME.md`.
+
+The second P1 run (`wf_53e264ec-d1b`) and second P3 run
+(`wf_cdcdf80f-43e`) both terminated due Claude session/weekly limits. Their
+workflow completion envelopes say `completed`, but every child agent is listed
+under `failures`; do not interpret the envelope status as phase completion.
+Partial files that reached disk are valid checkpoints and are excluded by the
+fresh missing lists.
+
+### P1 completion checkpoint (2026-08-07)
+
+P1 was completed directly after the failed workflow runs; the obsolete P1
+workflow must not be relaunched. All 18 planned files now exist, pass syntax
+checking, and are wired in `index.html`. A seeded headless entity/projectile
+probe passes, and the validator finds all P1-owned API symbols plus 36/36 enemy
+archetypes and 45/45 boss attacks. `tools/state.mjs` selects P2 as the next
+phase. See the latest checkpoint at the top of `RESUME.md` for the exact P2 gap
+list and integration caveats.
+
 ## What the first interruption taught us
 
 The session hosting the first P1/P3/P4 dispatch exited while all three were in

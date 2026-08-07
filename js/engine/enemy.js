@@ -1,0 +1,13 @@
+;(function (IS) {
+  'use strict'
+  IS.spawnEnemy=(room,id,x,y,opts)=>{const d=IS.enemiesById[id];if(!d)return null;const e=IS.makeEntity(d,x,y,opts||{});e.room=room;if(d.champion&&room.rng)IS.rollChampion(e,room.rng);room.enemies.push(e);IS.save?.seeEnemy(id,false);return e}
+  IS.spawnBoss=(room,id,x,y,opts)=>{const d=IS.bossesById[id];if(!d)return null;const e=IS.makeEntity(Object.assign({},d,{boss:true}),x,y,Object.assign({boss:true},opts));e.room=room;room.enemies.push(e);room.boss=e;if(d.onSpawn)d.onSpawn(e,opts?.ctx);return e}
+  IS.rollChampion=(e,rng)=>{if(!rng.chance(.05))return null;e.champion=rng.pick(IS.CHAMPIONS);e.hp*=1.5;e.maxHp=e.hp;e.dmg++;return e.champion}
+  IS.enemyDrops=(e,ctx)=>{if(!ctx||!e.room||e.boss)return;if(ctx.chance(.06))ctx.spawnPickup(ctx.pick(['coin','heart','bomb','key']),e.x,e.y)}
+  function chase(e,dt,c,m){const n=IS.norm(c.player.x-e.x,c.player.y-e.y),s=e.speed*(m||1);e.vx=IS.approach(e.vx,n.x*s,s*4*dt);e.vy=IS.approach(e.vy,n.y*s,s*4*dt)}
+  function wander(e,dt,c){e.ai.t=(e.ai.t||0)-dt;if(e.ai.t<=0){e.ai.t=c.range(.5,2);e.ai.a=c.range(0,Math.PI*2)}const v=IS.fromAngle(e.ai.a,e.speed);e.vx=v.x;e.vy=v.y}
+  function shooter(e,dt,c){e.ai.fire=(e.ai.fire||c.range(.3,1.2))-dt;if(e.ai.fire<=0){IS.enemyShoot(e,{},c);e.ai.fire=e.def.params?.fireDelay||1.5}}
+  const map={idle:()=>{},chaser:(e,d,c)=>chase(e,d,c),chaserSlow:(e,d,c)=>chase(e,d,c,.6),wanderer:wander,patroller:wander,charger:(e,d,c)=>chase(e,d,c,1.8),leaper:(e,d,c)=>chase(e,d,c,1.2),jumper:(e,d,c)=>chase(e,d,c,1.1),flyerChase:(e,d,c)=>chase(e,d,c),flyerDrift:wander,flyerOrbit:wander,flyerDart:(e,d,c)=>chase(e,d,c,1.3),shooter,shooterMobile:(e,d,c)=>{wander(e,d,c);shooter(e,d,c)},spitter:shooter,sprayer:shooter,laserer:shooter,burrower:wander,teleporter:wander,splitter:(e,d,c)=>chase(e,d,c),exploder:(e,d,c)=>chase(e,d,c,1.3),summoner:shooter,shielded:(e,d,c)=>chase(e,d,c,.5),trailLayer:(e,d,c)=>{chase(e,d,c);c.spawnCreep(e.x,e.y,20,{life:2,dmg:1})},boomerang:wander,mimic:()=>{},sucker:(e,d,c)=>chase(e,d,c),guard:(e,d,c)=>chase(e,d,c,.5),spinner:shooter,swarm:(e,d,c)=>chase(e,d,c,1.1),wallHugger:wander,grid:shooter,ghost:(e,d,c)=>chase(e,d,c),bomber:(e,d,c)=>{wander(e,d,c);shooter(e,d,c)},grubber:wander,climber:shooter}
+  IS.ARCHETYPE_LIST.forEach(n=>IS.defineArchetype(n,map[n]||wander))
+  IS.updateEnemies=(room,dt,ctx)=>{for(const e of room.enemies){if(e.dead)continue;IS.updateStatuses(e,dt,ctx);if(e.status.freeze)continue;if(e.boss)IS.updateBoss(e,dt,ctx);else (IS.archetypes[e.def.archetype]||map.idle)(e,dt,ctx);IS.moveEntity(e,dt,room,ctx);IS.enemyContactDamage(e,ctx.player,ctx)}room.enemies=room.enemies.filter(e=>!e.dead)}
+})(typeof window !== 'undefined' ? (window.IS = window.IS || {}) : (globalThis.IS = globalThis.IS || {}))

@@ -1,0 +1,10 @@
+;(function (IS) {
+  'use strict'
+  IS.bossPhaseFor=b=>{const frac=b.hp/b.maxHp;return (b.def.phases||[]).find(p=>frac>=(p.hpAbove||0))||(b.def.phases||[]).slice(-1)[0]||{attacks:['aimedShot'],cooldown:[1,2]}}
+  IS.startAttack=(b,name,ctx)=>{b.attack=name;b.attackState={t:0};b.attackT=0;return !!IS.attacks[name]}
+  IS.updateBoss=(b,dt,ctx)=>{const phase=IS.bossPhaseFor(b);if(b.attack){const fn=IS.attacks[b.attack];b.attackState.t+=dt;if(!fn||fn(b,dt,b.attackState,ctx)){b.attack=null;b.attackState=null;b.attackT=ctx.range(...(phase.cooldown||[1,2]))}}else{b.attackT-=dt;if(b.attackT<=0)IS.startAttack(b,ctx.rng.pickWeighted(phase.attacks||['aimedShot'],phase.weights||[]),ctx)}}
+  const timed=(duration,act)=>(b,dt,s,c)=>{if(!s.did){s.did=true;act(b,c,s)}return s.t>=duration}
+  const shot=(count,spread)=>timed(.35,(b,c)=>IS.enemyShoot(b,{count,spread,speed:300},c))
+  const attacks={aimedShot:shot(1,0),spreadShot:shot(5,.16),ringShot:shot(12,Math.PI*2/12),burstShot:shot(3,.08),spinShot:shot(10,.3),barrage:shot(8,.1),homingShots:shot(3,.2),tearRain:shot(8,.25),delayedRings:shot(12,.52),rainbowSpray:shot(9,.18),mirrorShots:shot(6,.2),retreatVolley:shot(5,.15),orbitalShots:shot(8,.78),hop:timed(.7,(b,c)=>{const n=IS.norm(c.player.x-b.x,c.player.y-b.y);b.vx=n.x*b.speed*2;b.vy=n.y*b.speed*2}),chargeDash:timed(.8,(b,c)=>{const n=IS.norm(c.player.x-b.x,c.player.y-b.y);b.vx=n.x*500;b.vy=n.y*500}),chaseFast:timed(1,(b,c)=>{b.speed*=1.5}),spawnMinions:timed(.4,(b,c)=>c.spawnEnemy(c.pick(Object.keys(IS.enemies)),b.x,b.y)),summonSwarm:timed(.4,(b,c)=>{for(let i=0;i<3;i++)c.spawnEnemy(c.pick(Object.keys(IS.enemies)),b.x,b.y)}),creepPuddle:timed(.4,(b,c)=>c.spawnCreep(b.x,b.y,80,{life:6,dmg:1})),bombDrop:timed(.4,(b,c)=>c.spawnBomb(b.x,b.y,{friendly:false,fuse:.8})),teleportSlam:timed(.7,(b,c)=>{const p=c.freeFloorPos();b.x=p.x;b.y=p.y}),phaseInvuln:timed(1,(b)=>{b.invuln=true})}
+  IS.ATTACK_LIST.forEach(n=>IS.defineAttack(n,attacks[n]||shot(4,.2)))
+})(typeof window !== 'undefined' ? (window.IS = window.IS || {}) : (globalThis.IS = globalThis.IS || {}))

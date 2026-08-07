@@ -1,0 +1,13 @@
+;(function (IS) {
+  'use strict'
+  IS.makeEntity = (def, x, y, opts) => Object.assign({ id:def.id,def,x,y,vx:0,vy:0,r:def.r||22,hp:def.hp||10,maxHp:def.hp||10,dmg:def.dmg||1,speed:def.speed||100,flying:!!def.flying,dead:false,hurtT:0,status:{},ai:{},champion:null,room:null,spawnedBy:null,invuln:false,boss:!!def.boss,phase:0,attack:null,attackT:0,sprite:def.sprite||def.id,tint:def.tint||'#fff',scale:1,frame:0,dir:1,friendly:false},opts)
+  IS.entityHit = (a,b) => !!a && !!b && !a.dead && !b.dead && IS.circleHit(a.x,a.y,a.r||0,b.x,b.y,b.r||0)
+  IS.applyStatus = (e,s,secs) => { if (e && IS.STATUS_LIST.includes(s)) e.status[s]=Math.max(e.status[s]||0,secs||0); return e }
+  IS.updateStatuses = (e,dt,ctx) => { if (!e || !e.status) return; for (const s of Object.keys(e.status)) { e.status[s]-=dt; if (e.status[s]<=0) delete e.status[s] } if (e.status.poison && ctx && ctx.run && (ctx.run.time||0)%1 < dt) IS.damageEnemy(e,1,{silent:true},ctx); if (e.status.burn && ctx && (ctx.run.time||0)%0.5<dt) IS.damageEnemy(e,1,{silent:true},ctx) }
+  IS.knockback = (e,x,y,f) => { const n=IS.norm(e.x-x,e.y-y);e.vx=(e.vx||0)+n.x*f;e.vy=(e.vy||0)+n.y*f }
+  IS.moveEntity = (e,dt,room) => { if (!e || e.dead) return; const slow=e.status && e.status.slow?.55:1;e.x+=(e.vx||0)*dt*slow;e.y+=(e.vy||0)*dt*slow;if (!e.flying) IS.clampToRoom(room,e);e.vx*=Math.pow(.02,dt);e.vy*=Math.pow(.02,dt) }
+  IS.damageEnemy = (e,dmg,opts,ctx) => { if (!e || e.dead || e.invuln) return false; let n=Math.max(0,dmg||0); if (ctx && ctx.player && IS.fireHook) { const rs=IS.fireHook(ctx.player,'onEnemyDamage',[e,n],ctx); rs.forEach(v=>{if(typeof v==='number')n=v}) } e.hp-=n;e.hurtT=.12;if(e.hp<=0)return IS.killEnemy(e,ctx);return false }
+  IS.killEnemy = (e,ctx) => { if (!e||e.dead)return false;e.dead=true;e.hp=0;if(e.def&&e.def.splitInto&&ctx)e.def.splitInto.forEach(id=>ctx.spawnEnemy(id,e.x,e.y));if(ctx&&ctx.player&&IS.fireHook)IS.fireHook(ctx.player,'onEnemyKill',[e],ctx);if(IS.enemyDrops)IS.enemyDrops(e,ctx);if(IS.save)IS.save.seeEnemy(e.id,true);return true }
+  IS.enemyShoot = (e,o,ctx) => { o=o||{};const count=o.count||1,spread=o.spread||0,a=o.angle==null?IS.angleTo(e.x,e.y,ctx.player.x,ctx.player.y):o.angle;for(let i=0;i<count;i++){const q=a+(i-(count-1)/2)*spread;ctx.spawnEnemyShot({x:e.x,y:e.y,vx:Math.cos(q)*(o.speed||300),vy:Math.sin(q)*(o.speed||300),dmg:o.dmg||e.dmg||1,r:o.r||8,flags:o.flags||[],life:o.life||4,gravity:o.gravity||0})} }
+  IS.enemyContactDamage = (e,p,ctx) => { if(IS.entityHit(e,p))IS.damagePlayer(p,e.dmg||1,e,ctx) }
+})(typeof window !== 'undefined' ? (window.IS = window.IS || {}) : (globalThis.IS = globalThis.IS || {}))
