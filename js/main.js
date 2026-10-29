@@ -111,6 +111,8 @@
     if (IS.input && typeof IS.input.update === 'function') IS.input.update()
   }
 
+  IS.step = step
+
   function draw (dt) {
     if (!IS.g) return
     IS.syncCanvasSize()
@@ -152,6 +154,8 @@
       last = now
       accumulator += elapsed
       var count = 0
+      // tools/playtest.mjs drives the simulation itself through IS.step
+      if (IS.state.manual) accumulator = 0
       while (accumulator >= IS.DT && count++ < 5) { step(IS.DT); accumulator -= IS.DT }
       draw(elapsed)
       requestAnimationFrame(frame)
