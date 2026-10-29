@@ -193,9 +193,17 @@
     var w = WEAPON[p.charId]
     if (w && w(p, d, dt, ctx, !!(d.x || d.y)) === true) return
     var before = p.beam
-    origWeapon(p, d, dt, ctx)
-    // Tainted Azazel's beam is as short as Azazel's (tears.js only shortens his).
-    if (p.charId === 'tainted-azazel' && p.beam && p.beam !== before) p.beam.len = Math.min(p.beam.len, p.stats.range * 0.9)
+    // Azazel's short beam fires the moment it is fully charged instead of waiting for the release,
+    // so holding fire keeps him shooting (simplification of Repentance's release-to-fire).
+    if ((p.charId === 'azazel' || p.charId === 'tainted-azazel') && (d.x || d.y) && p.charge >= 1 && !(p.beam && p.beam.life > 0 && ((ctx.room || ctx.run.room).lasers || []).indexOf(p.beam) >= 0)) {
+      var dir = p.chargeDir || d
+      origWeapon(p, { x: 0, y: 0 }, dt, ctx)
+      p.chargeDir = dir
+    }
+    var az = p.charId === 'azazel' || p.charId === 'tainted-azazel'
+    origWeapon(p, d, az ? dt * 1.8 : dt, ctx) // Azazel's short beam charges quickly
+    // short beam, about 4.5 tiles: long enough to reach across the gap a cautious player keeps
+    if ((p.charId === 'azazel' || p.charId === 'tainted-azazel') && p.beam && p.beam !== before && !IS.hasItem(p, 'brimstone')) { p.beam.len = p.stats.range * 1.3; p.beam.width = 52 }
   }
 
   var origUsePocket = IS.usePocket
@@ -259,14 +267,15 @@
     var p = ctx.player
     if (!p) return
     var mine = (p.familiars || []).filter(function (x) { return x.def && x.def.behaviour === 'charIncubus' }), idx = mine.indexOf(f)
-    var ox = (idx % 2 ? 1 : -1) * (44 + 16 * ((idx / 2) | 0)), oy = -16
+    var ox = (idx % 2 ? 1 : -1) * (44 + 16 * ((idx / 2) | 0)), oy = 0
     var k = Math.min(1, dt * 7)
     f.x += (p.x + ox - f.x) * k; f.y += (p.y + oy - f.y) * k
     f.shotT -= dt
     var d = IS.input && IS.input.shoot && IS.input.shoot()
     if (d && (d.x || d.y) && f.shotT <= 0 && !p.dead) {
       f.shotT = p.stats.fireDelay
-      var base = IS.tearBaseOpts(p), a = Math.atan2(d.y, d.x), s = IS.TEAR_SPEED * p.stats.shotSpeed
+      var base = IS.tearBaseOpts(p), a = Math.atan2(p.y - 8 + d.y * 230 - f.y, p.x + d.x * 230 - f.x), // converges on the line the player aims along
+         s = IS.TEAR_SPEED * p.stats.shotSpeed
       var t = ctx.spawnTear(Object.assign({}, base, { x: f.x, y: f.y, vx: Math.cos(a) * s, vy: Math.sin(a) * s, dmg: base.dmg * 0.75, r: base.r * 0.9 }))
       if (t) IS.applyTearFlags(t, p)
     }

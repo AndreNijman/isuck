@@ -87,7 +87,7 @@ for (const d of IS.characters) {
   g = start('eve'); ok(g.p.active[0] && g.p.active[0].id === 'razor-blade', 'Eve holds Razor Blade'); ok(hasItem(g.p, 'dead-bird') && hasItem(g.p, 'whore-of-babylon'), 'Eve has Dead Bird and Whore of Babylon')
   g = start('samson'); const d0 = g.p.stats.damage; hit(g, 1); ok(g.p.stats.damage > d0, 'Samson gains damage from being hurt (Bloody Lust)', `${d0} -> ${g.p.stats.damage}`)
   g = start('azazel'); ok(g.p.flags.has('flying') && g.p.flags.has('brimstone'), 'Azazel flies with brimstone'); ok(g.p.hearts.black === 6 && g.p.hearts.maxRed === 0, 'Azazel has 3 black hearts')
-  clearRoom(g); dummy(g); step(2); for (let i = 0; i < 90; i++) IS.updateWeapon(g.p, { x: 1, y: 0 }, FRAME, g.ctx); IS.updateWeapon(g.p, { x: 0, y: 0 }, FRAME, g.ctx); ok(g.ctx.room.lasers.length > 0, 'Azazel releases a brimstone beam'); ok(g.p.beam && g.p.beam.len < 400, 'Azazel beam is short', g.p.beam && g.p.beam.len)
+  clearRoom(g); dummy(g); step(2); for (let i = 0; i < 90; i++) IS.updateWeapon(g.p, { x: 1, y: 0 }, FRAME, g.ctx); IS.updateWeapon(g.p, { x: 0, y: 0 }, FRAME, g.ctx); ok(g.ctx.room.lasers.length > 0, 'Azazel releases a brimstone beam'); ok(g.p.beam && g.p.beam.len < 500, 'Azazel beam is short', g.p.beam && g.p.beam.len)
   g = start('lazarus'); ok(hasItem(g.p, 'lazarus-rags'), 'Lazarus starts with Lazarus\' Rags')
   g.p.hearts.red = 1; g.p.invulnUntil = 0; hit(g, 5); step(2)
   ok(!g.p.dead && total(g.p.hearts) > 0, 'Lazarus revives on death'); ok(!hasItem(g.p, 'lazarus-rags'), 'Rags are consumed'); ok(hasItem(g.p, 'anemic'), 'Lazarus Risen gains Anemic')
