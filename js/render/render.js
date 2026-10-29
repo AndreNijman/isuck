@@ -153,7 +153,7 @@
     }
   }
 
-  function pickupName (p) { if (p.kind === 'item') return 'item-pedestal'; if (p.kind === 'card') return 'card-back'; return p.variant ? p.kind + '-' + p.variant : p.kind }
+  function pickupName (p) { if (IS.pickupSprite) return IS.pickupSprite(p); if (p.kind === 'item') return 'item-pedestal'; if (p.kind === 'card') return 'card-back'; return p.variant ? p.kind + '-' + p.variant : p.kind }
   function projectiles (g, room) {
     var groups = [['tears', 'tear'], ['shots', 'enemy-shot'], ['bombs', 'bomb'], ['knives', 'knife']]
     var a, i, list, p
@@ -181,6 +181,19 @@
       g.beginPath(); g.moveTo(l.x, l.y); g.lineTo(ex, ey); g.stroke()
       g.strokeStyle = '#ffe2c8'; g.lineWidth = w * .3
       g.beginPath(); g.moveTo(l.x, l.y); g.lineTo(ex, ey); g.stroke()
+    }
+  }
+
+  // holes in the floor: the trapdoor to the next floor, a crawlspace hatch and the ladder out of one
+  function portals (g, room) {
+    var t = (IS.state && IS.state.time) || 0, list = [room.trapdoor, room.crawlspace, room.ladder], i, o
+    for (i = 0; i < list.length; i++) {
+      o = list[i]; if (!o) continue
+      var ladder = o === room.ladder, hatch = o === room.crawlspace
+      g.fillStyle = ladder ? '#2a1d14' : 'rgba(6,3,2,.95)'; g.beginPath(); g.ellipse(o.x, o.y, 38, 26, 0, 0, Math.PI * 2); g.fill()
+      g.strokeStyle = hatch ? '#6a5a48' : '#5c4230'; g.lineWidth = 5; g.stroke()
+      if (ladder) { g.strokeStyle = '#a88a5c'; g.lineWidth = 4; g.beginPath(); g.moveTo(o.x - 12, o.y - 20); g.lineTo(o.x - 12, o.y + 20); g.moveTo(o.x + 12, o.y - 20); g.lineTo(o.x + 12, o.y + 20); for (var r = -12; r <= 12; r += 12) { g.moveTo(o.x - 12, o.y + r); g.lineTo(o.x + 12, o.y + r) } g.stroke() }
+      else { g.strokeStyle = 'rgba(200,170,120,' + (.25 + Math.sin(t * 3) * .1).toFixed(2) + ')'; g.lineWidth = 2; g.beginPath(); g.ellipse(o.x, o.y, 26, 17, 0, 0, Math.PI * 2); g.stroke() }
     }
   }
 
@@ -213,8 +226,10 @@
     IS.drawBackdrop(g, room, run.floor)
     if (IS.fx && IS.fx.draw) IS.fx.draw(g, 'under')
     markers(g, room)
+    portals(g, room)
     for (var i = 0; i < room.grid.length; i++) if (room.grid[i] && room.grid[i].kind === 'pit' && !room.grid[i].broken) spr(g, 'pit', room.grid[i], IS.TILE || 80)
-    for (i = 0; i < room.pickups.length; i++) { var p = room.pickups[i]; if (!p.taken && !p.removed) { shadow(g, p); spr(g, pickupName(p), p, p.kind === 'item' ? 72 : 44); if (p.kind === 'item' && p.id) spr(g, 'item:' + p.id, { x: p.x, y: p.y - 32 + Math.sin(((IS.state && IS.state.time) || 0) * 3) * 4, z: p.z || 0, variant: p.variant }, 42) } }
+    for (i = 0; i < room.pickups.length; i++) { var p = room.pickups[i]; if (!p.taken && !p.removed) { shadow(g, p); spr(g, pickupName(p), p, p.kind === 'item' ? 72 : p.kind === 'chest' ? 56 : 44); if (IS.drawPickupExtras) IS.drawPickupExtras(g, p, run); if (p.kind === 'item' && p.id && (run.curses || 0) & (IS.CURSE && IS.CURSE.BLIND || 32)) { g.font = 'bold 34px monospace'; g.textAlign = 'center'; g.fillStyle = '#e8dcc0'; g.fillText('?', p.x, p.y - 22); g.textAlign = 'left' } else if (p.kind === 'item' && p.id) spr(g, 'item:' + p.id, { x: p.x, y: p.y - 32 + Math.sin(((IS.state && IS.state.time) || 0) * 3) * 4, z: p.z || 0, variant: p.variant }, 42) } }
+    if (IS.drawMachines) IS.drawMachines(g, room)
     var actors = (room.enemies || []).slice(); if (run.player) actors.push(run.player); Array.prototype.push.apply(actors, run.player && run.player.familiars || [])
     actors.sort(function (a, b) { return a.y - b.y })
     for (i = 0; i < actors.length; i++) if (!actors[i].hidden) shadow(g, actors[i])

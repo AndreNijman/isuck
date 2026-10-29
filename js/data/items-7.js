@@ -519,9 +519,9 @@
     },
 
     'red-key': {
-      // APPROXIMATE: red rooms are not generated; the key teleports Isaac to a random room instead.
+      // Opens a red room beside the current room (IS.openRedRoom); fails when no free cell is left.
       onUse: function (p, ctx) {
-        if (!hasRoom(ctx) || !ctx.teleport('random')) return { fail: true }
+        if (!ctx || !ctx.run || !IS.openRedRoom(ctx.run, ctx)) return { fail: true }
       }
     },
 

@@ -49,13 +49,13 @@
     }
   }
   IS.hud.minimap = function (g, run) {
-    var floor = run.floor; if (!floor || ((run.curses || floor.curses || 0) & (IS.CURSE && IS.CURSE.LOST || 4))) return
+    var floor = run.floor; if (!floor || ((run.curses || 0) & (IS.CURSE && IS.CURSE.LOST || 4))) return
     var cells = floor.mapOffsets || (floor.layout && floor.layout.grid) || [], expanded = !!(IS.input && IS.input.down && IS.input.down('map'))
     var s = expanded ? 28 : 11, bx = expanded ? 640 - 6.5 * s : 1112, by = expanded ? 360 - 6.5 * s : 18
     if (expanded) { g.fillStyle = 'rgba(17,11,9,.82)'; g.fillRect(380, 100, 520, 520) }
-    for (var i = 0; i < cells.length; i++) { var r = floor.rooms[i], c = cells[i], known = r && (r.visited || r.mapKnown); if (!known) continue; var x = bx + c.x * s, y = by + c.y * s
+    for (var i = 0; i < cells.length; i++) { var r = floor.rooms[i], c = cells[i], known = r && (r.visited || (r.mapKnown && !r.virtual)); if (!known) continue; var x = bx + c.x * s, y = by + c.y * s
       g.fillStyle = i === run.roomIndex ? '#e0b963' : r.cleared ? '#aa9578' : r.visited ? '#75634f' : '#3a3028'; g.fillRect(x, y, s * (c.w || 1) - 2, s * (c.h || 1) - 2)
-      if (r.type && r.type !== 'default' && r.type !== 'start') { text(g, ({ treasure: 'T', shop: '$', boss: 'B', secret: '?', devil: 'D', angel: 'A', planetarium: '*' })[r.type] || '·', x + (s - 2) / 2, y + (s - 2) / 2, Math.max(7, s * .45), 'center', '#291c16') }
+      if (r.type && r.type !== 'default' && r.type !== 'start') { text(g, (r.red ? 'R' : { treasure: 'T', shop: '$', boss: 'B', secret: '?', devil: 'D', angel: 'A', planetarium: '*' }[r.type]) || '·', x + (s - 2) / 2, y + (s - 2) / 2, Math.max(7, s * .45), 'center', '#291c16') }
     }
   }
   IS.hud.pickupBanner = function (textValue, subtext) { banners.push({ text: textValue || '', sub: subtext || '' }); return banners.length }
@@ -67,7 +67,8 @@
   }
   IS.hud.draw = function (g, run) {
     if (!g || !run || !run.player) return; var u = Math.min((IS.VIEW_W || 1280) / 1280, (IS.VIEW_H || 720) / 720)
-    hearts(g, run.player, u); consumables(g, run.player, u); actives(g, run.player, u); IS.hud.minimap(g, run)
+    if ((run.curses || 0) & (IS.CURSE && IS.CURSE.UNKNOWN || 8)) text(g, '???', 26 * u, 25 * u, 24 * u, 'left', '#d8b0a0'); else hearts(g, run.player, u)
+    consumables(g, run.player, u); actives(g, run.player, u); IS.hud.minimap(g, run)
     var pockets = run.player.pocket || []; for (var i = 0; i < pockets.length; i++) { var p = pockets[i], name = p.kind === 'pill' ? 'pill:' + p.id : 'card:' + p.id; icon(g, name, (1240 - i * 48) * u, 670 * u, 38 * u, { variant: run.pillColours && run.pillColours[p.id] }) }
     var tr = run.player.trinkets || []; for (i = 0; i < tr.length; i++) if (tr[i]) icon(g, 'item:' + tr[i], (28 + i * 42) * u, 674 * u, 34 * u, {})
     var mins = Math.floor((run.time || 0) / 60), secs = Math.floor(run.time || 0) % 60; text(g, (run.floor && run.floor.def && run.floor.def.name) || (run.floor && run.floor.id) || '', 18, 186, 14); text(g, mins + ':' + String(secs).padStart(2, '0'), 18, 207, 13, 'left', '#bba88c')
