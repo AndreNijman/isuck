@@ -299,7 +299,8 @@
   BESPOKE['the-stain']=S(still,{teleportSlam:popUp(8,.7),spawnMinions:call('dip',3),spreadShot:spit(5,.25,{speed:280})})
   // Rag Man: blinks about, rings of tears, Raglings from his rags
   BESPOKE['rag-man']=S(weave(.4,.4),{teleportSlam:blink((b,c)=>ring(b,c,8,{speed:240,r:11,off:c.range(0,1)})),spawnMinions:call('ragling',2),ringShot:timedRing(10)})
-  BESPOKE['rag-mega']=S(weave(.4,.4),{teleportSlam:blink((b,c)=>ring(b,c,8,{speed:250,r:11,off:c.range(0,1)})),spawnMinions:call('ragling',2),brimstoneBeam:attacks.brimstoneBeam})
+  // Rag Mega drifts and stays in the fight (no Rag Man blinks): purple rings, a ragling, then the beam
+  BESPOKE['rag-mega']=S(weave(.4,.4),{ringShot:timedRing(10),spawnMinions:call('ragling',1),brimstoneBeam:attacks.brimstoneBeam})
   // Turdlings burst into Turdlets
   BESPOKE['the-turdlings']=S(wanderMove(.5),{hop:hopper(2,180,.8,(b,c)=>c.spawnCreep(b.x,b.y,44,{life:5,dmg:1})),spreadShot:spit(3,.3),spawnMinions:(b,dt,s,c)=>{if(minions(b,c)>=4)return true;return call('dip',2)(b,dt,s,c)}},{die:(b,c)=>kids(b,c,'turdlet',3,.2,.7)})
   BESPOKE['turdlet']=S(wanderMove(.6),{hop:hopper(2,160,.7),spreadShot:spit(3,.3),creepPuddle:attacks.creepPuddle})
@@ -583,7 +584,8 @@
   const digger=atk=>({move:still,atk,setup:b=>{hide(b);b.attackT=.5}})
   BESPOKE['pin']=digger({teleportSlam:burrow({ring:10}),spreadShot:burrow({fan:5}),delayedRings:burrow({ring:8,echo:[.4,.8],hold:1.8})})
   BESPOKE['frail']=digger({teleportSlam:burrow({ring:8}),spreadShot:burrow({fan:5}),brimstoneBeam:burrow({beams:1,fan:3,sp:.4})})
-  BESPOKE['wormwood']=digger({teleportSlam:burrow({ring:6}),spreadShot:burrow({fan:3,sp:.3}),ringShot:burrow({ring:8})})
+  // Wormwood surfaces for a long arc across the room before it dives again
+  BESPOKE['wormwood']=digger({teleportSlam:burrow({ring:6,hold:2.1}),spreadShot:burrow({fan:3,sp:.3,hold:2.1}),ringShot:burrow({ring:8,hold:2.1})})
 
   // ---- Steven and Blighted Ovum: not Gemini ----
   const by=m=>(b,dt,s,c)=>(m[b.role]||m[Object.keys(m)[0]])(b,dt,s,c)

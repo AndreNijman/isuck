@@ -56,7 +56,7 @@
       'lokii': [['teleportSlam', 'ringShot', 'spawnMinions'], ['teleportSlam', 'ringShot', 'teleportSlam', 'spawnMinions']],
       'the-stain': [['teleportSlam', 'spawnMinions'], ['teleportSlam', 'spawnMinions', 'spreadShot']],
       'rag-man': [['teleportSlam', 'spawnMinions'], ['teleportSlam', 'ringShot', 'spawnMinions']],
-      'rag-mega': [['teleportSlam', 'spawnMinions'], ['teleportSlam', 'brimstoneBeam', 'spawnMinions']],
+      'rag-mega': [['ringShot', 'spawnMinions'], ['ringShot', 'brimstoneBeam', 'spawnMinions']],
       'big-horn': [['bombDrop', 'teleportSlam'], ['bombDrop', 'teleportSlam', 'chargeDash']],
       'the-gate': [['spinShot', 'spawnMinions'], ['spinShot', 'ringShot', 'spawnMinions']],
       'the-cage': [['chargeDash', 'spreadShot'], ['chargeDash', 'spreadShot', 'ringShot']],
