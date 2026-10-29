@@ -1,6 +1,43 @@
 # Resuming this build
 
-## Latest checkpoint — responsive viewport hotfix live, 2026-08-07
+## Latest checkpoint — Repentance fidelity pass on `feat/game-feel`, 2026-10-29
+
+Branch `feat/game-feel` (not yet merged to master or deployed; the live site
+still runs the older build). It brings the game much closer to The Binding of
+Isaac: Repentance:
+
+- all 34 characters, with their mechanics in `js/engine/characters.js`
+- every enemy has a behaviour (`IS.enemyBehaviours`) and an Isaac-style sprite
+- all 80 bosses are scripted, plus the endgame (Mother, Satan, Lamb, Isaac,
+  ???, Hush, Mega Satan, Beast, Dogma, Delirium, Ultra Greed)
+- per-floor Repentance enemy pools and 370 generated rooms
+- the dead items are implemented
+- systems: statuses, curses, devil/angel rooms, beggars and machines, chests
+  and two active slots
+
+Gates, all passing at this checkpoint:
+
+```bash
+node tools/validate-content.mjs   # schema, cross-references, off-pool enemies
+node tools/smoke.mjs              # headless boot, no console errors
+node tools/item-check.mjs         # 276 item behaviour checks
+node tools/systems-check.mjs      # 117 systems checks
+node tools/char-check.mjs         # 419 character checks
+node tools/enemy-ai.mjs           # every enemy behaves, spawn grace
+node tools/playtest.mjs [--floor id] [--boss id] [--char id] [--seeds 1,2]
+node tools/balance.mjs --runs 50  # seeded auto-runs reach depth 8
+```
+
+`playtest.mjs` is a bot that plays rooms in a real browser and fails on
+rooms it can't clear or fights that hit too hard. Its rule is to fix the
+bot, not weaken enemies. It releases charge weapons, closes in with melee
+characters, steps out of telegraphed impacts and aims at burrow holes.
+
+Known approximations are listed in the branch's commit messages and the vault
+decision note: devil/angel odds, beggar payouts, HP values from memory, items
+marked `APPROXIMATE`, and about 30 enemies still on shared archetype movement.
+
+## Earlier checkpoint — responsive viewport hotfix live, 2026-08-07
 
 All phases remain complete, and the broken first release has been repaired in
 commits `5b0f5df` and `b653444`. Floor generation now creates reciprocal doors,
@@ -85,6 +122,11 @@ before writing anything. `docs/FILE-PLAN.json` is the master file list.
 ```bash
 node tools/validate-content.mjs   # schema, cross-references, script wiring
 node tools/smoke.mjs              # headless boot, no console errors, plays floors
+node tools/item-check.mjs         # item behaviours
+node tools/systems-check.mjs      # statuses, curses, deals, machines, pricing
+node tools/char-check.mjs         # character mechanics
+node tools/enemy-ai.mjs           # enemy behaviours
+node tools/playtest.mjs           # bot plays rooms and bosses in a browser
 node tools/balance.mjs            # seeded auto-runs, reports depth reached
 ```
 
