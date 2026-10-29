@@ -63,6 +63,8 @@
         "js/render/render.js",
         "js/render/hud.js",
         "js/ui/widgets.js",
+        "js/ui/scenes.js",
+        "js/ui/saves.js",
         "js/ui/screens-title.js",
         "js/ui/screens-select.js",
         "js/ui/screens-meta.js",

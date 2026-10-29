@@ -115,4 +115,5 @@
     if (IS.drawStreak) IS.drawStreak(g, run, IS.DT)
     if (IS.drawBossIntro) IS.drawBossIntro(g, run)
   }
+  IS.hudKit.heart = heart
 })(typeof window !== 'undefined' ? (window.IS = window.IS || {}) : (globalThis.IS = globalThis.IS || {}))
