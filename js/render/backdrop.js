@@ -3,7 +3,7 @@
 
   var WALL = IS.WALL || 80
   var TILE = IS.TILE || 80
-  var cache = Object.create(null)
+  var cache = Object.create(null), cacheN = 0
 
   function palette (room, floor) {
     var p = (floor && (floor.palette || (floor.def && floor.def.palette))) || room.palette || {}
@@ -52,137 +52,343 @@
 
   function rr (seed, i) { return hash(seed * 31 + i * 7919) }
 
-  function floorTile (g, fam, x, y, h, seed, p, col, row) {
-    var base = h > 0.48 ? p.floor : p.floorAlt
-    g.fillStyle = base; g.fillRect(x, y, TILE + 1, TILE + 1)
-    var i
-    /* soft speckle */
-    for (i = 0; i < 9; i++) { g.fillStyle = rr(seed + col * 5 + row * 11, i) > .5 ? 'rgba(255,240,220,.05)' : 'rgba(0,0,0,.06)'; g.fillRect(x + rr(seed + col, i + 20) * 74, y + rr(seed + row, i + 40) * 74, 3 + rr(i, col + row) * 7, 2 + rr(col, i + row) * 5) }
-    if (fam === 'wood') {
-      for (i = 0; i < 4; i++) { var py = y + i * 20; g.fillStyle = i % 2 ? 'rgba(0,0,0,.07)' : 'rgba(255,230,190,.04)'; g.fillRect(x, py, TILE, 20); g.fillStyle = 'rgba(25,14,8,.45)'; g.fillRect(x, py + 19, TILE, 2); var jx = x + rr(seed + row * 4 + i, col) * 70; g.fillRect(jx, py, 2, 20) }
-      g.strokeStyle = 'rgba(40,22,12,.22)'; g.lineWidth = 1
-      for (i = 0; i < 5; i++) { var gy = y + rr(seed + col + i, row) * 76; g.beginPath(); g.moveTo(x + 4, gy); g.bezierCurveTo(x + 26, gy - 3, x + 50, gy + 3, x + 76, gy - 1); g.stroke() }
-      return
+  /* ------------------------------------------------------------------ */
+  /* Seeded helpers                                                      */
+  /* ------------------------------------------------------------------ */
+  function rng (seed) {
+    var s = (seed | 0) >>> 0
+    return function () {
+      s = (s + 0x6d2b79f5) >>> 0
+      var t = Math.imul(s ^ (s >>> 15), 1 | s)
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296
     }
-    if (fam === 'flesh') {
-      g.fillStyle = 'rgba(80,10,16,.14)'; g.beginPath(); g.ellipse(x + 20 + rr(seed + col, row) * 40, y + 20 + rr(seed + row, col) * 40, 26, 18, rr(col, row) * 3, 0, TAU); g.fill()
-      g.strokeStyle = 'rgba(120,20,34,.34)'; g.lineWidth = 1.6
-      for (i = 0; i < 2; i++) { var vx = x + rr(seed + col + i * 3, row) * 80, vy = y + rr(seed + row + i * 5, col) * 80; g.beginPath(); g.moveTo(vx, vy); g.bezierCurveTo(vx + 16, vy - 12, vx + 22, vy + 14, vx + 40, vy + 6); g.stroke() }
-      if (h < .1) { g.fillStyle = 'rgba(255,170,170,.12)'; g.beginPath(); g.ellipse(x + 40, y + 40, 18, 9, 0, 0, TAU); g.fill() }
-      return
-    }
-    g.strokeStyle = fam === 'marble' ? 'rgba(90,80,70,.28)' : fam === 'gold' ? 'rgba(80,50,10,.35)' : fam === 'dark' ? 'rgba(160,140,200,.07)' : 'rgba(25,16,12,.2)'; g.lineWidth = 1.4
-    g.strokeRect(x + .5, y + .5, TILE - 1, TILE - 1)
-    if (fam !== 'dark') { g.fillStyle = 'rgba(255,240,215,.06)'; g.fillRect(x + 1, y + 1, TILE - 2, 3); g.fillRect(x + 1, y + 1, 3, TILE - 2) }
-    if (fam === 'marble') {
-      g.strokeStyle = 'rgba(120,110,130,.22)'; g.lineWidth = 1.2
-      for (i = 0; i < 2; i++) { var mx = x + rr(seed + col, row + i) * 60, my = y + rr(seed + row, col + i) * 60; g.beginPath(); g.moveTo(mx, my); g.bezierCurveTo(mx + 20, my + 6, mx + 8, my + 30, mx + 30, my + 44); g.stroke() }
-    }
-    if (fam === 'gold') { g.fillStyle = 'rgba(255,230,120,.12)'; g.fillRect(x + 6, y + 6, TILE - 12, 3) }
-    if (fam === 'wet' && h < .22) {
-      g.fillStyle = 'rgba(40,90,120,.34)'; g.beginPath(); g.ellipse(x + 18 + rr(seed, col + row) * 44, y + 20 + rr(seed + 3, row) * 40, 26, 11, 0, 0, TAU); g.fill()
-      g.strokeStyle = 'rgba(190,230,255,.22)'; g.lineWidth = 1.2; g.beginPath(); g.ellipse(x + 40, y + 40, 16, 6, 0, 0, TAU); g.stroke()
-    }
-    if (fam === 'fire' && h > .55) {
-      g.strokeStyle = 'rgba(255,110,30,.55)'; g.lineWidth = 2; g.beginPath()
-      var fx = x + 10 + rr(seed + col, row) * 40, fy = y + 14 + rr(seed + row, col) * 40
-      g.moveTo(fx, fy); g.lineTo(fx + 12, fy + 8); g.lineTo(fx + 8, fy + 20); g.lineTo(fx + 24, fy + 30); g.stroke()
-      g.strokeStyle = 'rgba(255,220,120,.35)'; g.lineWidth = 1; g.stroke()
-    }
-    if (fam === 'bone' && h < .09) {
-      g.fillStyle = 'rgba(225,215,190,.5)'; g.beginPath(); g.ellipse(x + 30, y + 40, 12, 9, .4, 0, TAU); g.fill()
-      g.fillStyle = 'rgba(20,14,10,.75)'; g.fillRect(x + 25, y + 38, 4, 5); g.fillRect(x + 32, y + 38, 4, 5)
-    }
-    if (fam === 'dark' && h < .06) { g.fillStyle = 'rgba(210,200,255,.6)'; g.fillRect(x + 20 + rr(seed, col) * 40, y + 20 + rr(seed, row) * 40, 2, 2) }
-    if (h > .83) {
-      var cx = x + 12 + rr(seed + col * 71, row) * 52, cy = y + 15 + rr(seed + row * 83, col) * 48
-      g.strokeStyle = 'rgba(30,20,14,.35)'; g.lineWidth = 2; g.beginPath(); g.moveTo(cx - 9, cy - 2); g.lineTo(cx, cy); g.lineTo(cx + 7, cy + 8); g.stroke()
-    }
-    if (h < .055) { g.fillStyle = 'rgba(38,24,20,.2)'; g.beginPath(); g.ellipse(x + 40, y + 43, 21, 9, h * 9, 0, TAU); g.fill() }
   }
 
-  /* Wall face texture inside a rect. */
-  function wallTex (g, fam, rx, ry, rw, rh, p, seed) {
+  function al (hex, a) {
+    var m = /^#([0-9a-f]{6})$/i.exec(hex || ''); if (!m) return 'rgba(128,128,128,' + a + ')'
+    var n = parseInt(m[1], 16)
+    return 'rgba(' + (n >> 16) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')'
+  }
+
+  /* soft elliptical radial blob (no hard edge) */
+  function soft (g, x, y, rx, ry, rot, col, a) {
+    g.save(); g.translate(x, y); g.rotate(rot || 0); g.scale(1, ry / rx)
+    var gr = g.createRadialGradient(0, 0, 0, 0, 0, rx)
+    gr.addColorStop(0, al(col, a)); gr.addColorStop(.55, al(col, a * .65)); gr.addColorStop(1, al(col, 0))
+    g.fillStyle = gr; g.fillRect(-rx, -rx, rx * 2, rx * 2); g.restore()
+  }
+
+  /* irregular smooth blob path */
+  function lump (g, R, x, y, rx, ry, n) {
+    n = n || 10
+    var pts = [], i, a, k
+    for (i = 0; i < n; i++) { a = i / n * TAU; k = .68 + R() * .5; pts.push([x + Math.cos(a) * rx * k, y + Math.sin(a) * ry * k]) }
+    g.beginPath()
+    g.moveTo((pts[n - 1][0] + pts[0][0]) / 2, (pts[n - 1][1] + pts[0][1]) / 2)
+    for (i = 0; i < n; i++) { var p = pts[i], q = pts[(i + 1) % n]; g.quadraticCurveTo(p[0], p[1], (p[0] + q[0]) / 2, (p[1] + q[1]) / 2) }
+    g.closePath()
+  }
+
+  /* a stain: flat blob with a slightly darker dried rim */
+  function stain (g, R, x, y, rx, ry, col, a, rim) {
+    lump(g, R, x, y, rx, ry, 11); g.fillStyle = al(col, a); g.fill()
+    if (rim) { g.lineWidth = 1.5; g.strokeStyle = al(rim, a * .9); g.stroke() }
+  }
+
+  function crackPts (R, x, y, ang, len, wob) {
+    var pts = [[x, y]], n = Math.max(2, Math.ceil(len / 13))
+    for (var i = 0; i < n; i++) {
+      ang += (R() - .5) * (wob || .9); x += Math.cos(ang) * 13 * (.7 + R() * .6); y += Math.sin(ang) * 13 * (.7 + R() * .6); pts.push([x, y])
+    }
+    return pts
+  }
+  function strokePts (g, pts, col, w, dx, dy) {
+    g.strokeStyle = col; g.lineWidth = w; g.lineCap = 'round'; g.lineJoin = 'round'; g.beginPath()
+    g.moveTo(pts[0][0] + dx, pts[0][1] + dy); for (var i = 1; i < pts.length; i++) g.lineTo(pts[i][0] + dx, pts[i][1] + dy); g.stroke()
+  }
+  /* scattered crack with branches; dark core with a faint lit lip below-right */
+  function crack (g, R, x, y, ang, len, w, depth, o) {
+    o = o || {}
+    var pts = crackPts(R, x, y, ang, len, o.wob)
+    if (o.glow) { strokePts(g, pts, al(o.glow, .22), w * 4.5, 0, 0); strokePts(g, pts, al(o.glow, .5), w * 2, 0, 0) }
+    else strokePts(g, pts, al('#ffffff', .1), w + .6, 1, 1.4)
+    strokePts(g, pts, o.glow ? al(o.core || '#ffe9a0', .95) : al(o.dark || '#0a0605', .62), o.glow ? w * .8 : w, 0, 0)
+    if (depth < 2) for (var i = 2; i < pts.length - 1; i++) if (R() < .17) crack(g, R, pts[i][0], pts[i][1], Math.atan2(pts[i + 1][1] - pts[i][1], pts[i + 1][0] - pts[i][0]) + (R() < .5 ? -1 : 1) * (.6 + R() * .6), len * (.35 + R() * .25), w * .72, depth + 1, o)
+  }
+
+  var GRIT_D = 'rgba(8,5,4,.22)', GRIT_L = 'rgba(255,245,225,.13)', GRIT_M = 'rgba(8,5,4,.12)'
+  function grit (g, R, W, H, density) {
+    var n = (W * H / density) | 0, i, x, y, s, k
+    for (i = 0; i < n; i++) {
+      x = R() * W; y = R() * H; s = 1 + R() * 2.4; k = R()
+      g.fillStyle = k < .5 ? GRIT_D : k < .8 ? GRIT_L : GRIT_M
+      g.fillRect(x, y, s, s * (.6 + R() * .7))
+    }
+  }
+  function pebble (g, R, x, y, r, col) {
+    g.fillStyle = 'rgba(0,0,0,.3)'; g.beginPath(); g.ellipse(x + r * .25, y + r * .35, r * 1.05, r * .6, 0, 0, TAU); g.fill()
+    lump(g, R, x, y, r, r * .75, 7); g.fillStyle = sh(col, -.2); g.fill()
+    g.lineWidth = 1; g.strokeStyle = 'rgba(8,5,4,.5)'; g.stroke()
+    g.fillStyle = 'rgba(255,245,225,.22)'; g.beginPath(); g.ellipse(x - r * .3, y - r * .28, r * .45, r * .26, -.5, 0, TAU); g.fill()
+  }
+
+  /* faint, broken tile seams (never a hard grid) */
+  function tileHints (g, R, room, a, col) {
+    var c, r
+    g.lineCap = 'round'
+    for (r = 0; r <= room.h; r++) for (c = 0; c < room.w; c++) {
+      if (R() < .28) continue
+      var y = r * TILE, x0 = c * TILE, wob = (R() - .5) * 3
+      g.strokeStyle = al(col, a * (.5 + R() * .7)); g.lineWidth = 1.4
+      g.beginPath(); g.moveTo(x0 - 2, y); g.lineTo(x0 + TILE * .5, y + wob); g.lineTo(x0 + TILE + 2, y); g.stroke()
+      g.strokeStyle = 'rgba(255,245,225,' + (a * .35).toFixed(3) + ')'; g.beginPath(); g.moveTo(x0, y + 1.6); g.lineTo(x0 + TILE, y + 1.6); g.stroke()
+    }
+    for (c = 0; c <= room.w; c++) for (r = 0; r < room.h; r++) {
+      if (R() < .28) continue
+      var x = c * TILE, y0 = r * TILE, wb = (R() - .5) * 3
+      g.strokeStyle = al(col, a * (.5 + R() * .7)); g.lineWidth = 1.4
+      g.beginPath(); g.moveTo(x, y0 - 2); g.lineTo(x + wb, y0 + TILE * .5); g.lineTo(x, y0 + TILE + 2); g.stroke()
+    }
+    /* each tile gets a barely-there tone so the plane is not perfectly flat */
+    for (r = 0; r < room.h; r++) for (c = 0; c < room.w; c++) {
+      var k = R(); g.fillStyle = k > .5 ? 'rgba(255,240,215,' + ((k - .5) * .05).toFixed(3) + ')' : 'rgba(0,0,0,' + ((.5 - k) * .06).toFixed(3) + ')'
+      g.fillRect(c * TILE + 3, r * TILE + 3, TILE - 6, TILE - 6)
+    }
+  }
+
+  function floorPath (g, room) {
+    g.beginPath()
+    for (var row = 0; row < room.h; row++) for (var col = 0; col < room.w; col++) if (inShape(room, col, row)) g.rect(col * TILE, row * TILE, TILE, TILE)
+  }
+
+  function paintFloor (g, room, p, fam, R) {
+    var W = room.pxW, H = room.pxH, i, n, x, y
+    g.fillStyle = p.floor; g.fillRect(0, 0, W, H)
+    /* broad low-frequency colour variation */
+    n = Math.round(W * H / 26000)
+    var tones = [p.floorAlt, sh(p.floor, .1), sh(p.floor, -.14), p.floorAlt]
+    for (i = 0; i < n; i++) soft(g, R() * W, R() * H, 90 + R() * 150, 70 + R() * 110, R() * 3, tones[i & 3], .16 + R() * .16)
+    for (i = 0; i < 3; i++) soft(g, R() * W, R() * H, 200 + R() * 120, 150 + R() * 80, R() * 3, '#000000', .09)
+
+    if (fam === 'wood') {
+      var ph = 26, rowN = Math.ceil(H / ph), pr, pw, tone
+      for (pr = 0; pr < rowN; pr++) {
+        x = -R() * 140
+        while (x < W) {
+          pw = 110 + R() * 190; tone = R()
+          g.fillStyle = tone > .5 ? 'rgba(255,225,180,' + ((tone - .5) * .12).toFixed(3) + ')' : 'rgba(0,0,0,' + ((.5 - tone) * .2).toFixed(3) + ')'
+          g.fillRect(x, pr * ph, pw, ph)
+          g.fillStyle = 'rgba(14,7,3,.55)'; g.fillRect(x - 1, pr * ph + 1, 2.4, ph - 1)
+          g.fillStyle = 'rgba(14,7,3,.8)'; g.fillRect(x + 5, pr * ph + 5, 1.8, 1.8); g.fillRect(x + 5, pr * ph + ph - 7, 1.8, 1.8)
+          for (i = 0; i < 3; i++) {
+            var gy = pr * ph + 4 + R() * (ph - 8)
+            g.strokeStyle = 'rgba(30,16,8,' + (.1 + R() * .12).toFixed(2) + ')'; g.lineWidth = 1; g.beginPath(); g.moveTo(x + 6, gy)
+            g.bezierCurveTo(x + pw * .3, gy - 2 + R() * 3, x + pw * .6, gy + 3 - R() * 3, x + pw - 6, gy + (R() - .5) * 2); g.stroke()
+          }
+          x += pw
+        }
+        g.fillStyle = 'rgba(14,7,3,.5)'; g.fillRect(0, pr * ph + ph - 1.5, W, 2.4)
+        g.fillStyle = 'rgba(255,225,180,.06)'; g.fillRect(0, pr * ph + 1, W, 1.4)
+      }
+    } else if (fam === 'rock') {
+      for (i = 0; i < 70; i++) { x = R() * W; y = R() * H; lump(g, R, x, y, 14 + R() * 30, 10 + R() * 18, 9); g.fillStyle = R() < .5 ? 'rgba(0,0,0,.09)' : 'rgba(255,240,215,.06)'; g.fill() }
+    } else if (fam === 'stone' || fam === 'marble' || fam === 'gold' || fam === 'dark' || fam === 'fire') {
+      tileHints(g, R, room, fam === 'dark' ? .07 : .11, fam === 'marble' ? '#4a4048' : fam === 'gold' ? '#4a3208' : '#0a0605')
+    }
+
+    /* stains / puddles */
+    n = Math.round(W * H / 52000) + 3
+    for (i = 0; i < n; i++) {
+      x = R() * W; y = R() * H
+      if (fam === 'wet') {
+        var pw2 = 40 + R() * 70, ph2 = 24 + R() * 36
+        stain(g, R, x, y, pw2, ph2, '#1e4a64', .42, '#0c2434')
+        soft(g, x - pw2 * .2, y - ph2 * .25, pw2 * .6, ph2 * .5, 0, '#a8d8f0', .22)
+        g.strokeStyle = 'rgba(210,240,255,.3)'; g.lineWidth = 1.6; g.beginPath(); g.ellipse(x - pw2 * .15, y - ph2 * .1, pw2 * .45, ph2 * .3, 0, 3.6, 5.4); g.stroke()
+      } else if (fam === 'flesh') {
+        stain(g, R, x, y, 30 + R() * 50, 20 + R() * 34, R() < .5 ? '#3a0610' : '#9a3a46', .26, null)
+        soft(g, x - 6, y - 6, 22, 12, 0, '#ffc0c0', .13)
+      } else if (fam === 'fire') {
+        soft(g, x, y, 50 + R() * 50, 34 + R() * 30, R() * 3, '#050202', .35)
+      } else if (fam === 'gold') {
+        soft(g, x, y, 60 + R() * 60, 40 + R() * 30, R() * 3, R() < .5 ? '#fff0a0' : '#5a3a08', .12)
+      } else if (fam === 'dark') {
+        soft(g, x, y, 70 + R() * 60, 50 + R() * 40, R() * 3, R() < .5 ? '#2a2048' : '#000000', .25)
+      } else {
+        stain(g, R, x, y, 26 + R() * 50, 16 + R() * 30, fam === 'wood' ? '#1a0c06' : '#1a100c', .12 + R() * .1, R() < .5 ? '#0a0605' : null)
+      }
+    }
+
+    /* family details */
+    if (fam === 'flesh') {
+      for (i = 0; i < 16; i++) crack(g, R, R() * W, R() * H, R() * TAU, 80 + R() * 120, 2.4, 0, { dark: '#4a0814', wob: 1.2 })
+      for (i = 0; i < 40; i++) { x = R() * W; y = R() * H; g.fillStyle = 'rgba(255,200,200,.22)'; g.beginPath(); g.ellipse(x, y, 4 + R() * 6, 2 + R() * 2, R() * 3, 0, TAU); g.fill() }
+    } else if (fam === 'fire') {
+      for (i = 0; i < 16; i++) crack(g, R, R() * W, R() * H, R() * TAU, 90 + R() * 130, 2, 0, { glow: '#ff6a1a', core: '#ffd070' })
+      for (i = 0; i < 60; i++) { g.fillStyle = 'rgba(255,' + (110 + (R() * 90 | 0)) + ',40,' + (.4 + R() * .4).toFixed(2) + ')'; g.fillRect(R() * W, R() * H, 2, 2) }
+    } else if (fam === 'bone') {
+      for (i = 0; i < 26; i++) {
+        x = R() * W; y = R() * H; var ba = R() * TAU, bl = 12 + R() * 14
+        g.save(); g.translate(x, y); g.rotate(ba)
+        g.fillStyle = 'rgba(0,0,0,.2)'; g.fillRect(-bl / 2 + 1, 2, bl, 4)
+        g.fillStyle = 'rgba(214,204,176,.42)'; g.fillRect(-bl / 2, -2, bl, 4)
+        g.beginPath(); g.arc(-bl / 2, -1.5, 3, 0, TAU); g.arc(-bl / 2, 1.8, 3, 0, TAU); g.arc(bl / 2, -1.5, 3, 0, TAU); g.arc(bl / 2, 1.8, 3, 0, TAU); g.fill()
+        g.restore()
+      }
+      for (i = 0; i < 3; i++) {
+        x = 80 + R() * (W - 160); y = 60 + R() * (H - 120)
+        g.fillStyle = 'rgba(214,204,176,.3)'; g.beginPath(); g.ellipse(x, y, 12, 10, 0, 0, TAU); g.fill(); g.fillRect(x - 6, y + 6, 12, 7)
+        g.fillStyle = 'rgba(12,8,6,.6)'; g.beginPath(); g.ellipse(x - 4.5, y, 3, 3.6, 0, 0, TAU); g.ellipse(x + 4.5, y, 3, 3.6, 0, 0, TAU); g.fill()
+      }
+    } else if (fam === 'marble') {
+      for (i = 0; i < 12; i++) {
+        var pts = crackPts(R, R() * W, R() * H, R() * TAU, 150 + R() * 200, .5)
+        strokePts(g, pts, 'rgba(255,255,255,.2)', 3, 0, 0); strokePts(g, pts, 'rgba(80,70,95,.28)', 1.2, 0, 0)
+      }
+      var sg = g.createLinearGradient(0, 0, W, H); sg.addColorStop(0, 'rgba(255,255,255,.07)'); sg.addColorStop(.5, 'rgba(255,255,255,0)'); sg.addColorStop(1, 'rgba(0,0,0,.08)'); g.fillStyle = sg; g.fillRect(0, 0, W, H)
+    } else if (fam === 'gold') {
+      var gg = g.createLinearGradient(0, 0, W, H); gg.addColorStop(0, 'rgba(255,236,150,.14)'); gg.addColorStop(.5, 'rgba(255,236,150,0)'); gg.addColorStop(1, 'rgba(90,50,0,.12)'); g.fillStyle = gg; g.fillRect(0, 0, W, H)
+      for (i = 0; i < 14; i++) { x = R() * W; y = R() * H; g.strokeStyle = 'rgba(255,248,200,.5)'; g.lineWidth = 1.2; g.beginPath(); g.moveTo(x - 4, y); g.lineTo(x + 4, y); g.moveTo(x, y - 4); g.lineTo(x, y + 4); g.stroke() }
+    } else if (fam === 'dark') {
+      for (i = 0; i < 70; i++) { g.fillStyle = 'rgba(190,175,255,' + (.1 + R() * .35).toFixed(2) + ')'; var ss = R() < .2 ? 2.2 : 1.2; g.fillRect(R() * W, R() * H, ss, ss) }
+    }
+    if (fam === 'rock' || fam === 'stone' || fam === 'bone' || fam === 'fire') {
+      var pn = fam === 'rock' ? 46 : 18
+      for (i = 0; i < pn; i++) pebble(g, R, R() * W, R() * H, 2 + R() * (fam === 'rock' ? 5 : 3.5), p.floorAlt)
+    }
+    if (fam !== 'fire' && fam !== 'flesh') {
+      for (i = 0; i < 12; i++) crack(g, R, R() * W, R() * H, R() * TAU, 50 + R() * 120, fam === 'dark' ? 1.4 : 2.1, 0, fam === 'dark' ? { dark: '#000000' } : {})
+    }
+    grit(g, R, W, H, fam === 'dark' ? 160 : 85)
+
+    /* soft edge falloff: the floor darkens toward the room perimeter */
+    var vg = g.createRadialGradient(W / 2, H / 2, Math.min(W, H) * .26, W / 2, H / 2, Math.max(W, H) * .66)
+    vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(8,4,3,.4)'); g.fillStyle = vg; g.fillRect(0, 0, W, H)
+    for (var row = 0; row < room.h; row++) for (var col = 0; col < room.w; col++) {
+      if (!inShape(room, col, row)) continue
+      var x0 = col * TILE, y0 = row * TILE, sg2
+      /* soft wide falloff + tight contact shadow at the wall base */
+      if (!inShape(room, col - 1, row)) { sg2 = g.createLinearGradient(x0, 0, x0 + 64, 0); sg2.addColorStop(0, 'rgba(8,4,3,.62)'); sg2.addColorStop(.25, 'rgba(8,4,3,.36)'); sg2.addColorStop(1, 'rgba(8,4,3,0)'); g.fillStyle = sg2; g.fillRect(x0, y0, 64, TILE + 1) }
+      if (!inShape(room, col + 1, row)) { sg2 = g.createLinearGradient(x0 + TILE, 0, x0 + TILE - 64, 0); sg2.addColorStop(0, 'rgba(8,4,3,.55)'); sg2.addColorStop(.25, 'rgba(8,4,3,.3)'); sg2.addColorStop(1, 'rgba(8,4,3,0)'); g.fillStyle = sg2; g.fillRect(x0 + TILE - 64, y0, 64, TILE + 1) }
+      if (!inShape(room, col, row - 1)) { sg2 = g.createLinearGradient(0, y0, 0, y0 + 72); sg2.addColorStop(0, 'rgba(8,4,3,.7)'); sg2.addColorStop(.22, 'rgba(8,4,3,.4)'); sg2.addColorStop(1, 'rgba(8,4,3,0)'); g.fillStyle = sg2; g.fillRect(x0, y0, TILE + 1, 72) }
+      if (!inShape(room, col, row + 1)) { sg2 = g.createLinearGradient(0, y0 + TILE, 0, y0 + TILE - 56); sg2.addColorStop(0, 'rgba(8,4,3,.5)'); sg2.addColorStop(.25, 'rgba(8,4,3,.28)'); sg2.addColorStop(1, 'rgba(8,4,3,0)'); g.fillStyle = sg2; g.fillRect(x0, y0 + TILE - 56, TILE + 1, 56) }
+    }
+  }
+
+  /* Wall face texture inside a rect. side = which wall this is: the floor edge is the dark base. */
+  function wallTex (g, fam, rx, ry, rw, rh, p, seed, side) {
     g.save(); g.beginPath(); g.rect(rx, ry, rw, rh); g.clip()
-    var i, vert = rw < rh
-    var gr = vert ? g.createLinearGradient(rx, 0, rx + rw, 0) : g.createLinearGradient(0, ry, 0, ry + rh)
-    gr.addColorStop(0, sh(p.wall, .08)); gr.addColorStop(1, sh(p.wall, -.12)); g.fillStyle = gr; g.fillRect(rx, ry, rw, rh)
+    var i, vert = side === 'L' || side === 'R'
+    /* gradient runs from the outer lip (lit) to the floor-side base (dark) */
+    var ox = rx + (vert ? (side === 'L' ? 0 : rw) : 0), oy = ry + (vert ? 0 : (side === 'U' ? 0 : rh))
+    var fx = rx + (vert ? (side === 'L' ? rw : 0) : 0), fy = ry + (vert ? 0 : (side === 'U' ? rh : 0))
+    var gr = g.createLinearGradient(ox, oy, fx, fy)
+    gr.addColorStop(0, sh(p.wall, .16)); gr.addColorStop(.55, sh(p.wall, -.04)); gr.addColorStop(1, sh(p.wall, -.42))
+    g.fillStyle = gr; g.fillRect(rx, ry, rw, rh)
     if (fam === 'flesh') {
       for (i = 0; i < (rw * rh) / 420; i++) { g.fillStyle = i % 3 ? 'rgba(60,6,12,.28)' : 'rgba(255,140,140,.12)'; g.beginPath(); g.ellipse(rx + rr(seed + rx, i) * rw, ry + rr(seed + ry, i + 99) * rh, 8 + rr(i, rx) * 10, 5 + rr(i, ry) * 6, rr(i, 3) * 3, 0, TAU); g.fill() }
-      g.strokeStyle = 'rgba(110,16,30,.5)'; g.lineWidth = 2
+      g.strokeStyle = 'rgba(110,16,30,.5)'; g.lineWidth = 2.4
       for (i = 0; i < (rw * rh) / 2400; i++) { var vx = rx + rr(seed + i, rx) * rw, vy = ry + rr(seed + i, ry) * rh; g.beginPath(); g.moveTo(vx, vy); g.bezierCurveTo(vx + 10, vy + 14, vx - 8, vy + 24, vx + 6, vy + 38); g.stroke() }
     } else if (fam === 'wood') {
-      for (i = 0; i < (vert ? rh : rw) / 24 + 1; i++) { g.fillStyle = 'rgba(20,10,6,.5)'; if (vert) g.fillRect(rx, ry + i * 24, rw, 2); else g.fillRect(rx + i * 24, ry, 2, rh) }
+      for (i = 0; i < (vert ? rh : rw) / 26 + 2; i++) {
+        var o0 = Math.floor((vert ? ry : rx) / 26) * 26 + i * 26
+        g.fillStyle = 'rgba(20,10,6,.6)'; if (vert) g.fillRect(rx, o0, rw, 2.4); else g.fillRect(o0, ry, 2.4, rh)
+        g.fillStyle = 'rgba(255,225,180,.07)'; if (vert) g.fillRect(rx, o0 + 2.4, rw, 1.6); else g.fillRect(o0 + 2.4, ry, 1.6, rh)
+      }
     } else if (fam === 'bone') {
-      for (i = 0; i < (vert ? rh : rw) / 22 + 1; i++) {
-        g.fillStyle = 'rgba(230,220,195,.28)'; g.beginPath()
-        if (vert) g.ellipse(rx + rw / 2, ry + i * 22 + 8, rw * .38, 7, 0, 0, TAU); else g.ellipse(rx + i * 22 + 8, ry + rh / 2, 7, rh * .38, 0, 0, TAU)
-        g.fill(); g.strokeStyle = 'rgba(20,14,10,.5)'; g.lineWidth = 1.4; g.stroke()
+      for (i = 0; i < (vert ? rh : rw) / 22 + 2; i++) {
+        var o1 = Math.floor((vert ? ry : rx) / 22) * 22 + i * 22
+        g.fillStyle = 'rgba(230,220,195,.3)'; g.beginPath()
+        if (vert) g.ellipse(rx + rw / 2, o1 + 8, rw * .4, 8, 0, 0, TAU); else g.ellipse(o1 + 8, ry + rh / 2, 8, rh * .4, 0, 0, TAU)
+        g.fill(); g.strokeStyle = 'rgba(20,14,10,.55)'; g.lineWidth = 1.6; g.stroke()
       }
     } else {
-      var bh = fam === 'rock' ? 22 : 16, bw = fam === 'rock' ? 40 : 34
-      g.strokeStyle = 'rgba(14,9,7,.55)'; g.lineWidth = 1.8
+      var bh = fam === 'rock' ? 22 : 18, bw = fam === 'rock' ? 40 : 36
       var r0 = Math.floor(ry / bh), r1 = Math.ceil((ry + rh) / bh)
       for (var r = r0; r <= r1; r++) {
-        var yy = r * bh; g.beginPath(); g.moveTo(rx, yy); g.lineTo(rx + rw, yy); g.stroke()
-        var off = (r & 1) * bw / 2, c0 = Math.floor((rx - off) / bw), c1 = Math.ceil((rx + rw - off) / bw)
+        var yy = r * bh, off = (r & 1) * bw / 2, c0 = Math.floor((rx - off) / bw), c1 = Math.ceil((rx + rw - off) / bw)
         for (var c = c0; c <= c1; c++) {
-          var xx = c * bw + off; g.beginPath(); g.moveTo(xx, yy); g.lineTo(xx, yy + bh); g.stroke()
-          var hh = rr(seed + r * 13, c)
-          if (hh > .7) { g.fillStyle = 'rgba(255,240,215,.07)'; g.fillRect(xx + 1, yy + 1, bw - 2, bh - 2) } else if (hh < .22) { g.fillStyle = 'rgba(0,0,0,.14)'; g.fillRect(xx + 1, yy + 1, bw - 2, bh - 2) }
+          var xx = c * bw + off, hh = rr(seed + r * 13, c)
+          if (hh > .68) { g.fillStyle = 'rgba(255,240,215,.07)'; g.fillRect(xx, yy, bw, bh) } else if (hh < .24) { g.fillStyle = 'rgba(0,0,0,.15)'; g.fillRect(xx, yy, bw, bh) }
+          g.fillStyle = 'rgba(255,240,215,.13)'; g.fillRect(xx + 1, yy + 1, bw - 2, 2)
+          g.fillStyle = 'rgba(0,0,0,.2)'; g.fillRect(xx + 1, yy + bh - 3, bw - 2, 2)
         }
+        g.strokeStyle = 'rgba(12,8,6,.6)'; g.lineWidth = 2; g.beginPath(); g.moveTo(rx, yy); g.lineTo(rx + rw, yy); g.stroke()
+        for (c = c0; c <= c1; c++) { var xv = c * bw + off; g.beginPath(); g.moveTo(xv, yy); g.lineTo(xv, yy + bh); g.stroke() }
       }
-      if (fam === 'fire') { g.strokeStyle = 'rgba(255,100,30,.4)'; g.lineWidth = 1.6; for (i = 0; i < (rw * rh) / 3000; i++) { var qx = rx + rr(seed + i, rx) * rw, qy = ry + rr(seed + i, ry) * rh; g.beginPath(); g.moveTo(qx, qy); g.lineTo(qx + 10, qy + 8); g.lineTo(qx + 6, qy + 18); g.stroke() } }
-      if (fam === 'marble' || fam === 'gold') { g.strokeStyle = fam === 'gold' ? 'rgba(255,225,120,.35)' : 'rgba(255,255,255,.2)'; g.lineWidth = 1; g.strokeRect(rx + 1, ry + 1, rw - 2, rh - 2) }
+      if (fam === 'fire') { g.strokeStyle = 'rgba(255,100,30,.45)'; g.lineWidth = 1.8; for (i = 0; i < (rw * rh) / 3000; i++) { var qx = rx + rr(seed + i, rx) * rw, qy = ry + rr(seed + i, ry) * rh; g.beginPath(); g.moveTo(qx, qy); g.lineTo(qx + 10, qy + 8); g.lineTo(qx + 6, qy + 18); g.stroke() } }
+      if (fam === 'marble' || fam === 'gold') { g.strokeStyle = fam === 'gold' ? 'rgba(255,225,120,.4)' : 'rgba(255,255,255,.22)'; g.lineWidth = 1.2; g.strokeRect(rx + 1, ry + 1, rw - 2, rh - 2) }
     }
+    for (i = 0; i < Math.max(1, (rw * rh) / 2600); i++) soft(g, rx + rr(seed + i * 3, rx) * rw, ry + rr(seed + i * 5, ry) * rh, 18 + rr(i, 9) * 22, 12 + rr(i, 11) * 14, 0, '#000000', .16)
     g.restore()
   }
 
+  var WTEX = 60
   function build (room, p, fam) {
     if (typeof document === 'undefined') return null
     var c = document.createElement('canvas')
     c.width = room.pxW + WALL * 2
     c.height = room.pxH + WALL * 2
-    var g = c.getContext('2d'), seed = room.seed | 0
+    var g = c.getContext('2d'), seed = (room.seed | 0) + (room.index | 0) * 7919, R = rng(seed * 2654435761 >>> 0)
     g.translate(WALL, WALL)
     g.fillStyle = p.backdrop
     g.fillRect(-WALL, -WALL, room.pxW + WALL * 2, room.pxH + WALL * 2)
-    var row, col, h, x0, y0
-    for (row = 0; row < room.h; row++) for (col = 0; col < room.w; col++) {
-      if (!inShape(room, col, row)) continue
-      h = hash(seed + row * 131 + col * 977)
-      floorTile(g, fam, col * TILE, row * TILE, h, seed, p, col, row)
-    }
-    /* Edges are derived from occupied cells, so L-room cut-outs get real walls. */
+    var row, col, x0, y0
+    g.save(); floorPath(g, room); g.clip()
+    paintFloor(g, room, p, fam, R)
+    g.restore()
+
+    /* Walls are derived from occupied cells, so L-room cut-outs get real walls. */
+    var edges = []
     for (row = 0; row < room.h; row++) for (col = 0; col < room.w; col++) {
       if (!inShape(room, col, row)) continue
       x0 = col * TILE; y0 = row * TILE
-      var L = !inShape(room, col - 1, row), R = !inShape(room, col + 1, row), U = !inShape(room, col, row - 1), D = !inShape(room, col, row + 1)
-      g.fillStyle = p.wallDark
+      var L = !inShape(room, col - 1, row), Rr = !inShape(room, col + 1, row), U = !inShape(room, col, row - 1), D = !inShape(room, col, row + 1)
+      if (L || Rr || U || D) edges.push([x0, y0, L, Rr, U, D])
+      g.fillStyle = sh(p.wallDark, -.2)
       if (L) g.fillRect(x0 - WALL, y0, WALL, TILE + 1)
-      if (R) g.fillRect(x0 + TILE, y0, WALL, TILE + 1)
+      if (Rr) g.fillRect(x0 + TILE, y0, WALL, TILE + 1)
       if (U) g.fillRect(x0, y0 - WALL, TILE + 1, WALL)
       if (D) g.fillRect(x0, y0 + TILE, TILE + 1, WALL)
-      if (L) wallTex(g, fam, x0 - 47, y0, 47, TILE + 1, p, seed)
-      if (R) wallTex(g, fam, x0 + TILE, y0, 47, TILE + 1, p, seed)
-      if (U) wallTex(g, fam, x0, y0 - 47, TILE + 1, 47, p, seed)
-      if (D) wallTex(g, fam, x0, y0 + TILE, TILE + 1, 47, p, seed)
-      /* inner shadow cast onto the floor */
-      var sg
-      if (L) { sg = g.createLinearGradient(x0, 0, x0 + 34, 0); sg.addColorStop(0, 'rgba(10,5,4,.5)'); sg.addColorStop(1, 'rgba(10,5,4,0)'); g.fillStyle = sg; g.fillRect(x0, y0, 34, TILE + 1) }
-      if (R) { sg = g.createLinearGradient(x0 + TILE, 0, x0 + TILE - 34, 0); sg.addColorStop(0, 'rgba(10,5,4,.5)'); sg.addColorStop(1, 'rgba(10,5,4,0)'); g.fillStyle = sg; g.fillRect(x0 + TILE - 34, y0, 34, TILE + 1) }
-      if (U) { sg = g.createLinearGradient(0, y0, 0, y0 + 38); sg.addColorStop(0, 'rgba(10,5,4,.55)'); sg.addColorStop(1, 'rgba(10,5,4,0)'); g.fillStyle = sg; g.fillRect(x0, y0, TILE + 1, 38) }
-      if (D) { sg = g.createLinearGradient(0, y0 + TILE, 0, y0 + TILE - 30); sg.addColorStop(0, 'rgba(10,5,4,.4)'); sg.addColorStop(1, 'rgba(10,5,4,0)'); g.fillStyle = sg; g.fillRect(x0, y0 + TILE - 30, TILE + 1, 30) }
+      if (L && U) g.fillRect(x0 - WALL, y0 - WALL, WALL, WALL)
+      if (Rr && U) g.fillRect(x0 + TILE, y0 - WALL, WALL, WALL)
+      if (L && D) g.fillRect(x0 - WALL, y0 + TILE, WALL, WALL)
+      if (Rr && D) g.fillRect(x0 + TILE, y0 + TILE, WALL, WALL)
     }
-    g.lineWidth = 4
-    g.strokeStyle = fam === 'flesh' ? 'rgba(255,150,150,.2)' : fam === 'gold' ? 'rgba(255,230,130,.3)' : 'rgba(224,180,118,.16)'
-    for (row = 0; row < room.h; row++) for (col = 0; col < room.w; col++) if (inShape(room, col, row)) {
-      x0 = col * TILE; y0 = row * TILE
+    var ei, e
+    for (ei = 0; ei < edges.length; ei++) {
+      e = edges[ei]; x0 = e[0]; y0 = e[1]
+      if (e[2]) wallTex(g, fam, x0 - WTEX, y0, WTEX, TILE + 1, p, seed, 'L')
+      if (e[3]) wallTex(g, fam, x0 + TILE, y0, WTEX, TILE + 1, p, seed, 'R')
+      if (e[4]) wallTex(g, fam, x0, y0 - WTEX, TILE + 1, WTEX, p, seed, 'U')
+      if (e[5]) wallTex(g, fam, x0, y0 + TILE, TILE + 1, WTEX, p, seed, 'D')
+      if (e[2] && e[4]) wallTex(g, fam, x0 - WTEX, y0 - WTEX, WTEX, WTEX, p, seed, 'U')
+      if (e[3] && e[4]) wallTex(g, fam, x0 + TILE, y0 - WTEX, WTEX, WTEX, p, seed, 'U')
+      if (e[2] && e[5]) wallTex(g, fam, x0 - WTEX, y0 + TILE, WTEX, WTEX, p, seed, 'D')
+      if (e[3] && e[5]) wallTex(g, fam, x0 + TILE, y0 + TILE, WTEX, WTEX, p, seed, 'D')
+    }
+    /* lit top lip (light from the upper left), then the thick dark outline where wall meets floor */
+    var litCol = fam === 'flesh' ? 'rgba(255,170,170,' : fam === 'gold' ? 'rgba(255,236,150,' : 'rgba(236,205,160,'
+    var lip = 9
+    for (ei = 0; ei < edges.length; ei++) {
+      e = edges[ei]; x0 = e[0]; y0 = e[1]
+      g.lineWidth = 2.6; g.lineCap = 'butt'
       g.beginPath()
-      if (!inShape(room, col - 1, row)) { g.moveTo(x0, y0); g.lineTo(x0, y0 + TILE) }
-      if (!inShape(room, col + 1, row)) { g.moveTo(x0 + TILE, y0); g.lineTo(x0 + TILE, y0 + TILE) }
-      if (!inShape(room, col, row - 1)) { g.moveTo(x0, y0); g.lineTo(x0 + TILE, y0) }
-      if (!inShape(room, col, row + 1)) { g.moveTo(x0, y0 + TILE); g.lineTo(x0 + TILE, y0 + TILE) }
+      if (e[2]) { g.moveTo(x0 - lip, y0); g.lineTo(x0 - lip, y0 + TILE) }
+      if (e[4]) { g.moveTo(x0, y0 - lip); g.lineTo(x0 + TILE, y0 - lip) }
+      g.strokeStyle = litCol + '.3)'; g.stroke(); g.beginPath()
+      if (e[3]) { g.moveTo(x0 + TILE + lip, y0); g.lineTo(x0 + TILE + lip, y0 + TILE) }
+      if (e[5]) { g.moveTo(x0, y0 + TILE + lip); g.lineTo(x0 + TILE, y0 + TILE + lip) }
+      g.strokeStyle = litCol + '.12)'; g.stroke()
+    }
+    for (ei = 0; ei < edges.length; ei++) {
+      e = edges[ei]; x0 = e[0]; y0 = e[1]
+      g.lineWidth = 6; g.lineCap = 'square'; g.strokeStyle = 'rgba(6,3,2,.92)'; g.beginPath()
+      if (e[2]) { g.moveTo(x0 - 1, y0); g.lineTo(x0 - 1, y0 + TILE) }
+      if (e[3]) { g.moveTo(x0 + TILE + 1, y0); g.lineTo(x0 + TILE + 1, y0 + TILE) }
+      if (e[4]) { g.moveTo(x0, y0 - 1); g.lineTo(x0 + TILE, y0 - 1) }
+      if (e[5]) { g.moveTo(x0, y0 + TILE + 1); g.lineTo(x0 + TILE, y0 + TILE + 1) }
       g.stroke()
     }
     return c
@@ -191,11 +397,12 @@
   IS.drawBackdrop = function (g, room, floor) {
     if (!g || !room) return
     var p = palette(room, floor), fam = family(floor), key = [room.index, room.seed, room.shape, p.wall, p.floor, p.floorAlt, fam].join('|')
-    var c = cache[key] || (cache[key] = build(room, p, fam))
+    var c = cache[key]
+    if (!c) { if (cacheN++ > 24) { cache = Object.create(null); cacheN = 0 } c = cache[key] = build(room, p, fam) }
     if (c) g.drawImage(c, -WALL, -WALL)
     else { g.fillStyle = p.floor; g.fillRect(0, 0, room.pxW, room.pxH) }
     var grad = g.createRadialGradient(room.pxW / 2, room.pxH / 2, Math.min(room.pxW, room.pxH) * .2, room.pxW / 2, room.pxH / 2, Math.max(room.pxW, room.pxH) * .72)
-    grad.addColorStop(0, 'rgba(0,0,0,0)'); grad.addColorStop(1, 'rgba(12,8,6,.36)')
+    grad.addColorStop(0, 'rgba(0,0,0,0)'); grad.addColorStop(1, 'rgba(12,8,6,.2)')
     g.fillStyle = grad; g.fillRect(-WALL, -WALL, room.pxW + WALL * 2, room.pxH + WALL * 2)
   }
 
@@ -204,13 +411,28 @@
     else { g.fillStyle = (t && t.tint) || '#5a4537'; g.fillRect(x - s * .35, y - s * .3, s * .7, s * .6) }
   }
 
+  /* Flat floor features get no standing shadow; everything else gets a soft one (light from the upper left). */
+  var FLAT = /^(spikes|retract-spikes|retracting-spikes|pit|pit-bridge|web|water|crawlspace|corny-poop)$/
   IS.drawGridObjects = function (g, room) {
     if (!room || !room.grid) return
-    var list = room.grid.slice().sort(function (a, b) { return a.y - b.y })
+    var list = room.grid.slice().sort(function (a, b) { return a.y - b.y }), now = room.time || 0
     for (var i = 0; i < list.length; i++) {
-      var o = list[i]; if (!o || o.broken || o.kind === 'pit') continue
-      g.fillStyle = 'rgba(20,13,10,.28)'; g.beginPath(); g.ellipse(o.x, o.y + 23, 29, 10, 0, 0, Math.PI * 2); g.fill()
-      sprite(g, o.kind, o.x, o.y, TILE, { frame: room.time || 0, time: room.time || 0, variant: o.variant, tint: o.tint, charge: o.kind === 'retract-spikes' ? (o.up ? 1 : 0) : (o.lit ? 1 : 0), hp01: o.maxHp ? o.hp / o.maxHp : 1 })
+      var o = list[i]; if (!o || o.broken) continue
+      var kind = o.kind
+      if (o.kind === 'pit') { if (!o.bridged) continue; kind = 'pit-bridge' }
+      if (!FLAT.test(kind)) {
+        g.fillStyle = 'rgba(14,8,6,.3)'; g.beginPath(); g.ellipse(o.x + 5, o.y + 26, 31, 9, 0, 0, Math.PI * 2); g.fill()
+      }
+      var charge = o.lit ? 1 : 0
+      if (o.kind === 'retract-spikes') {
+        /* ease the plate between up and down so the spikes visibly slide */
+        var target = o.up ? 1 : 0, dt = Math.min(.1, Math.max(0, now - (o._vt == null ? now : o._vt)))
+        o._vc = o._vc == null ? target : o._vc + (target - o._vc) * Math.min(1, dt * 16); o._vt = now
+        charge = o._vc
+      }
+      var seed = ((o.col | 0) * 73856093) ^ ((o.row | 0) * 19349663) ^ ((typeof o.variant === 'number' ? o.variant : 0) * 83492791)
+      sprite(g, kind, o.x, o.y, TILE, { frame: now, time: now, variant: seed, tint: o.tint, charge: charge, hp01: o.maxHp ? o.hp / o.maxHp : 1 })
+      if (kind === 'poop' || kind === 'red-poop' || kind === 'corn-poop') sprite(g, 'poop-flies', o.x, o.y + 8 * (1 - Math.max(.28, o.maxHp ? o.hp / o.maxHp : 1)), TILE, { time: now })
     }
   }
 
