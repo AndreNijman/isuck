@@ -114,6 +114,7 @@
         "tools/cdp.mjs",
         "tools/validate-content.mjs",
         "tools/smoke.mjs",
+        "tools/enemy-ai.mjs",
         "tools/balance.mjs",
         "tools/card-shot.js"
       ]
