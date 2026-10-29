@@ -1,7 +1,12 @@
 ;(function (IS) {
   'use strict'
   IS.floorDef=id=>IS.floorsById[id]||null
-  IS.rollCurses=(run,floor)=>{let mask=0;const w=floor.def.curseWeights||{};for(const n in w)if(floor.rng.chance(.08*w[n]))mask|=IS.CURSE[n.toUpperCase().replace('-','_')]||0;return mask}
+  // Curses: none on the first floor, then each of the floor's weighted curses rolls
+  // on its own. onCurseEval lets items (Black Candle) rewrite the mask; a number
+  // returned by a hook replaces it. `floor` only needs { rng, def }.
+  IS.rollCurses=(run,floor)=>{let mask=0;const w=floor.def.curseWeights||{};if((floor.def.depth||1)>1)for(const n in w)if(floor.rng.chance(.08*w[n]))mask|=IS.CURSE[n.toUpperCase().replace('-','_')]||0
+    if(run.player&&IS.fireHook)for(const v of IS.fireHook(run.player,'onCurseEval',[mask],IS.state?.ctx||{run,player:run.player}))if(typeof v==='number')mask=v
+    return mask}
 
   // ---------------------------------------------------------------------------
   // Floor layout, after Isaac: rooms grow breadth-first from the start cell on a
@@ -70,8 +75,10 @@
 
   IS.generateFloor=(run,id,opts)=>{
     const def=IS.floorDef(id);if(!def)throw new Error('Unknown floor '+id)
-    const rng=run.floorRng.fork(),target=roomCount(def,rng),late=(def.depth||1)>=10
-    const need=late?1:3
+    const rng=run.floorRng.fork(),curses=IS.rollCurses(run,{rng,def}),maze=!!(curses&IS.CURSE.LABYRINTH),late=(def.depth||1)>=10
+    // Curse of the Labyrinth: an XL floor, two bosses, and a second treasure room and shop
+    const target=maze?Math.min(28,Math.ceil(roomCount(def,rng)*1.7)):roomCount(def,rng)
+    const need=late?1:maze?6:3
     let g=null,dead=[]
     for(let attempt=0;attempt<200;attempt++){
       g=grow(rng,target)
@@ -84,7 +91,8 @@
     // cell -> room type
     const type=new Map([[key(MID,MID),'start']])
     if(dead.length)type.set(key(dead[0].x,dead[0].y),'boss')
-    const rest=rng.shuffle(dead.slice(1)),specials=late?[]:['treasure','shop'].concat(optionalSpecials(def,run,rng))
+    if(maze&&dead.length>1)type.set(key(dead[1].x,dead[1].y),'boss')
+    const rest=rng.shuffle(dead.slice(maze&&dead.length>1?2:1)),specials=late?[]:(maze?['treasure','shop','treasure','shop']:['treasure','shop']).concat(optionalSpecials(def,run,rng))
     for(let i=0;i<rest.length&&i<specials.length;i++)type.set(key(rest[i].x,rest[i].y),specials[i])
 
     // secret room: the empty cell with the most room neighbours (not the boss);
@@ -122,7 +130,7 @@
       addGroup(c.x,c.y,shape,'default')
     }
 
-    const floor={id,def,depth:def.depth,rooms:[],startIndex:0,bossIndex:groups.findIndex(r=>r.type==='boss'),curses:0,visitedCount:0,layout:{grid:groups,w:SIZE,h:SIZE},rng,altPath:!!opts?.altPath,
+    const floor={id,def,depth:def.depth,rooms:[],startIndex:0,bossIndex:groups.findIndex(r=>r.type==='boss'),curses:0,bossIndices:groups.map((r,i)=>r.type==='boss'?i:-1).filter(i=>i>=0),visitedCount:0,layout:{grid:groups,w:SIZE,h:SIZE},rng,altPath:!!opts?.altPath,
       mapOffsets:groups.map(r=>({x:r.x,y:r.y,w:r.shape[0]|0,h:r.shape[2]|0}))}
     groups.forEach((r,i)=>floor.rooms.push(IS.makeRoom(pickTemplate(rng,id,r.type,r.shape),floor,run,{index:i,seed:rng.int(0xffffffff)})))
 
@@ -146,8 +154,92 @@
         door.open=!door.locked&&!door.hidden
       }
     }
-    floor.curses=IS.rollCurses(run,floor);return floor}
+    floor.curses=curses;return floor}
 
-  IS.nextFloorIds=run=>{const d=run.floor?.depth||0;const all=Object.values(IS.floors).filter(f=>f.depth===d+1);return{normal:all.find(f=>!f.alt)?.id||all[0]?.id||null,alt:run.floor?.def?.altPath||null}}
-  IS.startFloor=(run,id,ctx)=>{run.floor=IS.generateFloor(run,id,{});run.roomIndex=run.floor.startIndex;run.room=run.floor.rooms[run.roomIndex];IS.refreshCtx(ctx,run.room,0);IS.buildRoomContents(run.room,ctx);IS.fireHook(run.player,'onNewFloor',[run.floor],ctx);IS.audio?.setFloorMusic(run.floor.def);return run.floor}
+  // Dad's Note (run.flags.ascent): after the second floor of the sixth stage the way up opens,
+  // Ascent I..IV (stages 8..5, the floors you already crossed) and then Home.
+  IS.nextFloorIds=run=>{const f=run.floor,d=f?.depth||0,id=f?.def?.id||f?.id||''
+    if(run.flags?.ascent){
+      const m=/^ascent-(\d)$/.exec(id)
+      if(m)return{normal:IS.floorsById['ascent-'+(+m[1]+1)]?'ascent-'+(+m[1]+1):'home',alt:null}
+      if(id==='home')return{normal:null,alt:null}
+      if(d===6&&/-2$/.test(id))return{normal:'ascent-1',alt:null}
+    }
+    const all=Object.values(IS.floors).filter(f=>f.depth===d+1);return{normal:all.find(f=>!f.alt)?.id||all[0]?.id||null,alt:f?.def?.altPath||null}}
+
+  // ---------------------------------------------------------------------------
+  // Adding rooms to a finished floor: devil/angel rooms after the boss, red rooms
+  // (Red Key, Cracked Key) and crawlspaces. The room takes a free cell beside `from`
+  // and gets a door each way; with no free cell (or opts.virtual) it sits off the
+  // map and is only reachable by that door.
+  // ---------------------------------------------------------------------------
+  const occupied=floor=>{const s=new Set();for(const g of floor.layout.grid)for(const o of SHAPE_CELLS[g.shape]||SHAPE_CELLS['1x1'])s.add(key(g.x+o[0],g.y+o[1]));return s}
+  const doorFree=(room,dir,slot)=>!room.doors.some(d=>d.dir===dir&&d.slot===slot)
+  IS.addFloorRoom=(floor,run,type,o)=>{o=o||{}
+    const from=floor.rooms[o.from==null?floor.bossIndex:o.from],fg=from&&floor.layout.grid[from.index]
+    if(!from||!fg)return null
+    const occ=occupied(floor),prefer=o.dir?[o.dir]:['up','right','left','down']
+    let spot=null
+    if(!o.virtual)for(const dn of prefer){const d=DIRS.find(x=>x[2]===dn)
+      for(const c of SHAPE_CELLS[fg.shape]||SHAPE_CELLS['1x1']){const cx=fg.x+c[0],cy=fg.y+c[1],x=cx+d[0],y=cy+d[1]
+        if(x<0||y<0||x>=SIZE||y>=SIZE||occ.has(key(x,y)))continue
+        const slot=dn==='left'||dn==='right'?cy-fg.y:cx-fg.x
+        if(!doorFree(from,dn,slot))continue
+        spot={x,y,dir:dn,slot};break}
+      if(spot)break}
+    if(!spot&&!o.virtual&&!o.virtualOk)return null
+    const dir=spot?spot.dir:(o.dir||'up'),back=IS.DIR_OPPOSITE[dir],index=floor.rooms.length
+    const room=IS.makeRoom(pickTemplate(floor.rng,floor.id,o.template||type,'1x1'),floor,run,{index,seed:floor.rng.int(0xffffffff),type})
+    room.virtual=!spot;room.red=!!o.red;room.returnIndex=from.index
+    floor.rooms.push(room)
+    const x=spot?spot.x:0,y=spot?spot.y:0
+    floor.layout.grid.push({x,y,shape:'1x1',type});floor.mapOffsets.push({x,y,w:1,h:1})
+    if(o.noDoor)return room
+    const kind=o.doorKind||(IS.DOOR_KIND_LIST.includes(type)?type:'normal')
+    const door=IS.addDoor(from,dir,kind,index,spot?spot.slot:undefined)
+    if(door){door.locked=false;door.keys=0;door.hidden=false;door.open=!!from.cleared||!IS.roomEnemies(from).length;door.red=!!o.red}
+    const bd=IS.addDoor(room,back,kind,from.index,0);if(bd){bd.locked=false;bd.keys=0;bd.hidden=false;bd.open=true}
+    return room}
+
+  // After the last boss falls: maybe a devil and/or angel door. APPROXIMATE chances:
+  // devilChance() (base .33 + the stat) to get a door at all from stage 2 on; then an
+  // angel room instead of a devil one with 50% + angelChance (25% less once a deal is taken).
+  // Duality offers both, Eucharist (forceAngel) always an angel room.
+  IS.rollBossDoors=(floor,run,ctx)=>{
+    if(!floor||floor.dealRolled||(floor.def?.depth||1)<2||(floor.def?.depth||1)>=12||run.flags?.ascent||/^greed-/.test(floor.id))return[]
+    floor.dealRolled=true
+    const st=run.player.stats,rng=run.rng||floor.rng,got=[]
+    const door=rng.chance(IS.devilChance?IS.devilChance(run):.33)||run.flags?.forceAngel||run.flags?.duality&&rng.chance(.5)
+    if(!door)return got
+    const angelP=IS.clamp(.5+(st.angelChance||0)-((run.devilDealsTaken||0)>0?.25:0),0,1)
+    let angel=run.flags?.forceAngel||rng.chance(angelP)
+    const want=run.flags?.duality?['devil','angel']:[angel?'angel':'devil']
+    for(const t of want)if(IS.addFloorRoom(floor,run,t,{from:floor.bossIndices?.[floor.bossIndices.length-1]??floor.bossIndex,virtualOk:true}))got.push(t)
+    return got}
+
+  // Red Key / Cracked Key: a red room beside the room Isaac is in. Returns the room or null.
+  IS.openRedRoom=(run,ctx)=>{const floor=run.floor;if(!floor)return null
+    const rng=run.rng||floor.rng,types=['default','default','default','treasure','shop','curse','arcade','sacrifice','library']
+    const type=rng.pick(types),here=run.room?run.room.index:floor.startIndex
+    return IS.addFloorRoom(floor,run,type==='default'?'default':type,{from:here,red:true,doorKind:'normal'})}
+
+  // The hatch under a rock or a Crawlspace item: a one-room underground floor.
+  IS.crawlspaceFor=(run,room)=>{const floor=run.floor;if(room.crawlIndex!=null&&floor.rooms[room.crawlIndex])return floor.rooms[room.crawlIndex]
+    const c=IS.addFloorRoom(floor,run,'crawlspace',{from:room.index,virtual:true,noDoor:true});if(!c)return null
+    c.returnIndex=room.index;room.crawlIndex=c.index;return c}
+
+  // Compass / Mind / Spelunker Hat style flags decide what the map shows.
+  const SECRETS=['secret','super-secret']
+  IS.applyMapFlags=(run)=>{const f=run.floor,p=run.player;if(!f||!p)return
+    const full=p.flags.has('fullMinimap'),see=p.flags.has('seeMinimap'),sec=p.flags.has('seeSecretRooms')
+    if(!(full||see||sec))return
+    for(const r of f.rooms){if(r.virtual||r.type==='crawlspace')continue
+      const secret=SECRETS.includes(r.type)
+      if(secret?sec:r.type==='ultra-secret'||r.type==='devil'||r.type==='angel'?false:full||(see&&r.type!=='default'&&r.type!=='start'))r.mapKnown=true}}
+
+  IS.startFloor=(run,id,ctx)=>{run.floor=IS.generateFloor(run,id,{});run.curses=run.floor.curses;run.floor.damageStart=run.stats?.damageTaken||0;run.roomIndex=run.floor.startIndex;run.room=run.floor.rooms[run.roomIndex];run.room.visited=run.room.mapKnown=true;for(const d of run.room.doors){const n=d.target!=null&&run.floor.rooms[d.target];if(n&&!d.hidden)n.mapKnown=true}
+    const p=run.player;if(p){p.x=run.room.pxW/2;p.y=run.room.pxH/2;p.vx=p.vy=0}
+    IS.refreshCtx(ctx,run.room,0);IS.buildRoomContents(run.room,ctx);IS.fireHook(run.player,'onNewFloor',[run.floor],ctx);IS.applyMapFlags(run)
+    if(run.curses&&ctx&&ctx.banner)for(const k in IS.CURSE_NAMES)if(run.curses&k)ctx.banner(IS.CURSE_NAMES[k],'')
+    IS.audio?.setFloorMusic(run.floor.def);return run.floor}
 })(typeof window !== 'undefined' ? (window.IS = window.IS || {}) : (globalThis.IS = globalThis.IS || {}))

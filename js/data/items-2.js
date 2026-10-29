@@ -290,7 +290,7 @@
       pools: ["treasure", "angel", "greed-treasure", "greed-boss"],
       tags: ["offensive", "tears", "defensive", "hearts"],
       dlc: "rebirth",
-      stats: {"tears":0.2,"damage":0.3,"speed":0.3,"range":35.2},
+      stats: {"tears":0.2,"damage":0.3,"speed":0.3,"range":120},
       grant: {"maxHearts":2,"heal":2},
       transform: "seraphim",
       unlock: null
@@ -394,8 +394,7 @@
       tags: ["offensive", "bombs"],
       dlc: "rebirth",
       grant: {"bombs":5},
-      // recalcStats does not apply mult.bombDamage, so the multiplier is applied here
-      hooks: { onStats: function (p, s) { s.bombDamage *= 1.85 } },
+      mult: {"bombDamage":1.85},
       unlock: null
     },
 
@@ -482,7 +481,7 @@
       pools: ["treasure", "moms-chest", "greed-treasure", "ultra-secret", "old-chest"],
       tags: ["offensive", "tears"],
       dlc: "rebirth",
-      stats: {"range":15.2},
+      stats: {"range":120},
       transform: "mom",
       hooks: {
         onTearFire: function (p, tear, ctx) {
@@ -686,7 +685,7 @@
       pools: ["treasure", "secret", "greed-secret"],
       tags: ["offensive", "defensive", "hearts"],
       dlc: "rebirth",
-      stats: {"damage":1,"speed":-0.2,"range":35.2},
+      stats: {"damage":1,"speed":-0.2,"range":120},
       grant: {"maxHearts":2,"heal":2},
       transform: "fun-guy",
       unlock: null
@@ -1051,18 +1050,6 @@
           while (IS.removeFamiliar(p, 'best-friend')) { /* one decoy at a time */ }
           if (!ctx.spawnFamiliar('best-friend')) return { fail: true }
         },
-        // enemies drift towards the decoy
-        onUpdate: function (p, dt, ctx) {
-          if (!ctx || !ctx.room) return
-          var f = findFamiliar(p, 'best-friend')
-          if (!f) return
-          ctx.livingEnemies().forEach(function (e) {
-            if (e.boss || IS.dist(f.x, f.y, e.x, e.y) > 520) return
-            var n = IS.norm(f.x - e.x, f.y - e.y)
-            e.x += n.x * 70 * dt
-            e.y += n.y * 70 * dt
-          })
-        },
         onRoomEnter: function (p) { while (IS.removeFamiliar(p, 'best-friend')) { /* clear */ } }
       },
       unlock: null
@@ -1354,11 +1341,9 @@
       tags: ["offensive", "tears"],
       dlc: "rebirth",
       stats: {"damage":40},
-      mult: {"tears":0.33},
+      mult: {"tears":0.33,"range":0.8,"shotSpeed":0.8},
       transform: "bob",
       tearFlags: ["poison"],
-      // recalcStats does not apply mult.range / mult.shotSpeed, so x0.8 of each is applied here
-      hooks: { onStats: function (p, s) { s.range *= 0.8; s.shotSpeed *= 0.8 } },
       unlock: null
     },
 
@@ -2134,7 +2119,7 @@
     // Isaac's body while Pinking Shears is active: about 23.5 contact damage per second
     { id: "pinking-body", name: "Isaac's Body", behaviour: 'chaser', params: { r: 16, speed: 260, flying: true, dmg: 8, cooldown: 0.34, range: 900, hp: 0, blockShots: false, life: 0 } },
     // Best Friend's decoy: stands still, blows up when its 5 seconds run out
-    { id: "best-friend", name: "Best Friend", behaviour: 'wanderer', params: { r: 18, speed: 0, invulnerable: true, life: 5, explode: { dmg: 100, r: 130 } } },
+    { id: "best-friend", name: "Best Friend", behaviour: 'wanderer', params: { r: 18, speed: 0, invulnerable: true, decoy: true, life: 5, explode: { dmg: 100, r: 130 } } },
     { id: "the-peeper", name: "The Peeper", sprite: "the-peeper", behaviour: 'wanderer', params: { r: 16, speed: 90, flying: true, dmg: 6, cooldown: 0.35, hp: 0, blockShots: false, life: 0 } },
     { id: "ghost-baby", name: "Ghost Baby", sprite: "ghost-baby", behaviour: 'follower', params: { r: 16, speed: 300, flying: true, dmg: 3.5, fireDelay: 0.75, range: 520, hp: 0, blockShots: false, life: 0, tearFlags: ["spectral"] } },
     // its V of tears comes from the item's onUpdate hook

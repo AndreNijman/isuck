@@ -2,8 +2,27 @@
   'use strict'
   IS.makeEntity = (def, x, y, opts) => Object.assign({ id:def.id,def,x,y,vx:0,vy:0,kbx:0,kby:0,r:def.r||22,hp:def.hp||10,maxHp:def.hp||10,dmg:def.dmg||1,speed:def.speed==null?100:def.speed,flying:!!def.flying,dead:false,hurtT:0,status:{},ai:{},champion:null,room:null,spawnedBy:null,invuln:false,boss:!!def.boss,phase:0,attack:null,attackT:0,sprite:def.sprite||def.id,tint:def.tint||'#fff',scale:1,frame:0,dir:1,friendly:false,spawnT:0},opts)
   IS.entityHit = (a,b) => !!a && !!b && !a.dead && !b.dead && IS.circleHit(a.x,a.y,a.r||0,b.x,b.y,b.r||0)
-  IS.applyStatus = (e,s,secs) => { if (e && IS.STATUS_LIST.includes(s)) e.status[s]=Math.max(e.status[s]||0,secs||0); return e }
-  IS.updateStatuses = (e,dt,ctx) => { if (!e || !e.status) return; for (const s of Object.keys(e.status)) { e.status[s]-=dt; if (e.status[s]<=0) delete e.status[s] } if (e.status.poison && ctx && ctx.run && (ctx.run.time||0)%1 < dt) IS.damageEnemy(e,1,{silent:true},ctx); if (e.status.burn && ctx && (ctx.run.time||0)%0.5<dt) IS.damageEnemy(e,1,{silent:true},ctx) }
+  // Statuses are seconds remaining. Bosses shrug off the ones that would trivialise a fight
+  // and thaw faster from the ones that stop them.
+  const BOSS_IMMUNE=new Set(['fear','charm','confusion','shrink','baited','magnetize','sticky'])
+  const BOSS_SHORT=new Set(['freeze','petrify','ice'])
+  // freeze, ice and petrify stop an enemy dead: no movement, no attacks, no contact damage
+  IS.isStopped = e => !!(e && e.status && (e.status.freeze||e.status.petrify||e.status.ice))
+  IS.applyStatus = (e,s,secs) => { if (!e||!e.status||!IS.STATUS_LIST.includes(s)) return e; if (e.boss&&BOSS_IMMUNE.has(s)) return e; secs=(secs||0)*(e.boss&&BOSS_SHORT.has(s)?.4:1); if (e.def&&e.def.immune&&e.def.immune.includes&&e.def.immune.includes(s)) return e; e.status[s]=Math.max(e.status[s]||0,secs); return e }
+  // speed multiplier from statuses (stopped statuses are handled by the AI loop skipping the enemy)
+  IS.statusSpeed = e => { const s=e&&e.status; if(!s)return 1; return (s.slow?.55:1)*(s.sticky?.5:1)*(IS.isStopped(e)?0:1) }
+  IS.updateStatuses = (e,dt,ctx) => {
+    if (!e || !e.status) return
+    const run=ctx&&ctx.run, dmgP=ctx&&ctx.player&&ctx.player.stats?ctx.player.stats.damage:3.5
+    // a shrunk enemy has half the hitbox (and can be stepped on); it regrows when the status ends
+    if (e.status.shrink) { if (!e.rBase) e.rBase=e.r; e.r=e.rBase*.5 } else if (e.rBase) { e.r=e.rBase; e.rBase=0 }
+    const tick=(k,every,fn)=>{ if (!e.status[k]) return; e.st=e.st||{}; e.st[k]=(e.st[k]||0)+dt; while (e.st[k]>=every) { e.st[k]-=every; fn() } }
+    tick('poison',.5,()=>IS.damageEnemy(e,Math.max(.5,dmgP*.2),{silent:true,dot:true},ctx))
+    tick('burn',.5,()=>IS.damageEnemy(e,Math.max(.5,dmgP*.2),{silent:true,dot:true},ctx))
+    // bleeding costs a slice of max health, so it matters most against big enemies
+    tick('bleed',.5,()=>IS.damageEnemy(e,Math.max(.4,e.maxHp*.02),{silent:true,dot:true},ctx))
+    for (const s of Object.keys(e.status)) { e.status[s]-=dt; if (e.status[s]<=0) { delete e.status[s]; if (e.st) delete e.st[s] } }
+  }
 
   // Knockback lives in its own decaying channel. AI steering and player input
   // both overwrite vx/vy every frame, so an impulse added there is eaten at once.
@@ -37,7 +56,7 @@
 
   IS.moveEntity = (e,dt,room) => {
     if (!e || e.dead) return
-    const slow=e.status && e.status.slow?.55:1
+    const slow=IS.statusSpeed(e)
     const k=Math.exp(-dt*9)
     e.x+=((e.vx||0)*slow+(e.kbx||0))*dt; e.y+=((e.vy||0)*slow+(e.kby||0))*dt
     e.kbx=(e.kbx||0)*k; e.kby=(e.kby||0)*k
@@ -84,6 +103,8 @@
       IS.fx.shake(e.boss?10:2.5,e.boss?.5:.12)
     }
     if (ctx && ctx.sfx) ctx.sfx(e.boss?'boss-die':'enemy-die')
+    if (e.status && e.status.midas && ctx && ctx.spawnPickup) { const n=e.boss?4:1+(e.maxHp>20?1:0); for (let i=0;i<n;i++) ctx.spawnPickup('coin',e.x+ctx.range(-18,18),e.y+ctx.range(-18,18),{variant:'penny',toss:true}) }
+    if (e.status && e.status.ice && ctx && ctx.player) { const d=Math.max(1,(ctx.player.stats.damage||3.5)*.5); for (let i=0;i<8;i++) { const a=i*Math.PI/4+Math.PI/8; IS.spawnTear({x:e.x,y:e.y,vx:Math.cos(a)*420,vy:Math.sin(a)*420,dmg:d,r:6,life:.45,flags:new Set(['spectral']),tint:'#bfe8ff'},ctx) } if (IS.fx) IS.fx.poof(e.x,e.y,'#bfe8ff') }
     if (e.boss && e.attack && IS.endBossAttack) IS.endBossAttack(e)
     if (IS.enemyDeathRattle) IS.enemyDeathRattle(e,ctx)
     if (e.def&&e.def.splitInto&&ctx) e.def.splitInto.forEach((id,i)=>{const c=ctx.spawnEnemy(id,e.x+(i?14:-14),e.y); if (c) { c.spawnT=.35; IS.knockback(c,e.x,e.y,240) }})
@@ -94,5 +115,5 @@
   }
 
   IS.enemyShoot = (e,o,ctx) => { o=o||{};const count=o.count||1,spread=o.spread||0,a=o.angle==null?IS.angleTo(e.x,e.y,ctx.player.x,ctx.player.y):o.angle;for(let i=0;i<count;i++){const q=a+(i-(count-1)/2)*spread;ctx.spawnEnemyShot({x:e.x,y:e.y,vx:Math.cos(q)*(o.speed||300),vy:Math.sin(q)*(o.speed||300),dmg:o.dmg||e.dmg||1,r:o.r||9,flags:o.flags||[],life:o.life||4,gravity:o.gravity||0,homing:o.homing||0,accel:o.accel||0})}if(ctx.sfx)ctx.sfx('enemy-shoot') }
-  IS.enemyContactDamage = (e,p,ctx) => { if(e.spawnT>0||e.harmless)return; if(IS.entityHit(e,p)&&IS.damagePlayer(p,e.dmg||1,e,ctx))IS.knockback(p,e.x,e.y,520) }
+  IS.enemyContactDamage = (e,p,ctx) => { if(e.spawnT>0||e.harmless||IS.isStopped(e))return; if(e.status&&e.status.shrink&&!e.boss&&IS.entityHit(e,p)){IS.killEnemy(e,ctx);return}; if(IS.entityHit(e,p)&&IS.damagePlayer(p,e.dmg||1,e,ctx))IS.knockback(p,e.x,e.y,520) }
 })(typeof window !== 'undefined' ? (window.IS = window.IS || {}) : (globalThis.IS = globalThis.IS || {}))

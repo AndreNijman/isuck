@@ -303,7 +303,7 @@
       pools: ["boss", "greed-boss"],
       tags: ["offensive", "tears"],
       dlc: "repentance",
-      stats: {"range":60},
+      stats: {"range":200},
       unlock: null
     },
 
@@ -505,7 +505,7 @@
       pools: ["secret", "greed-secret"],
       tags: ["offensive", "tears", "defensive", "hearts"],
       dlc: "antibirth",
-      stats: {"tears":0.5,"damage":0.5,"shotSpeed":0.16,"speed":0.2,"luck":1,"range":60},
+      stats: {"tears":0.5,"damage":0.5,"shotSpeed":0.16,"speed":0.2,"luck":1,"range":200},
       grant: {"maxHearts":2,"heal":2},
       unlock: null
     },
@@ -2055,10 +2055,10 @@
     }
   })
 
-  // APPROXIMATE: the engine charges every active on room clear after onRoomClear fires, so the charge is
-  // snapshotted here and put back on the next update (see ENGINE REQUESTS: flag to skip room-clear charge).
+  // the 'noRoomCharge' flag makes the engine skip room-clear charging
   patch('4-5-volt', {
     tearFlags: null,
+    flags: ['noRoomCharge'],
     hooks: {
       onEnemyDamage: function (p, e, dmg, ctx) {
         if (!ctx || !(dmg > 0)) return
@@ -2067,19 +2067,6 @@
         while (p.cache.volt >= need) {
           p.cache.volt -= need
           for (var s = 0; s < p.active.length; s++) if (p.active[s]) IS.addCharge(p, 1, s)
-          p.cache.voltSnap = null
-        }
-      },
-      onRoomClear: function (p) {
-        p.cache.voltSnap = p.active.map(function (a) { return a ? a.charge : 0 })
-      },
-      onUpdate: function (p) {
-        var snap = p.cache.voltSnap
-        if (!snap) return
-        p.cache.voltSnap = null
-        for (var s = 0; s < p.active.length; s++) {
-          var a = p.active[s]
-          if (a && snap[s] != null && a.charge > snap[s]) a.charge = snap[s]
         }
       }
     }
@@ -2304,7 +2291,7 @@
     }
   })
 
-  // APPROXIMATE: flight is not granted (no flight flag is read by movement).
+  // Flight is the 'flying' player flag, which movement and room hazards already read.
   patch('astral-projection', {
     tearFlags: null,
     hooks: {
@@ -2324,7 +2311,7 @@
       },
       onUpdate: function (p, dt, ctx) { buffOn(p, 'astralBoost', ctx) },
       onStats: function (p, s) {
-        if (p.cache.astralBoostOn) { s.speed += 0.4; s.tears += 1.5 }
+        if (p.cache.astralBoostOn) { s.speed += 0.4; s.tears += 1.5; p.flags.add('flying') }
       },
       onRoomClear: function (p) { p.cache.astral = false; p.cache.astralShield = false },
       onRoomEnter: function (p) { p.cache.astral = false; p.cache.astralShield = false }
@@ -2622,13 +2609,11 @@
     }
   })
 
-  // APPROXIMATE: the bag cannot hide pickups from Isaac, so it only records the kinds picked up (8 max) while held.
+  // consumesPickups: while held, interact.js tryTakePickup puts up to 8 free pickups into p.cache.bag instead of
+  // giving them to Isaac. The recipe is approximate: a score from the pickup kinds sets the item quality.
   patch('bag-of-crafting', {
+    consumesPickups: true,
     hooks: {
-      onPickup: function (p, kind) {
-        var bag = p.cache.bag || (p.cache.bag = [])
-        if (bag.length < 8 && kind !== 'item' && kind !== 'trinket' && kind !== 'chest' && kind !== 'sack') bag.push(kind)
-      },
       onUse: function (p, ctx) {
         var bag = p.cache.bag || []
         if (bag.length < 8 || !ctx || !ctx.room) return { fail: true }

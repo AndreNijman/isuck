@@ -36,6 +36,8 @@
         "js/engine/pool.js",
         "js/engine/floor.js",
         "js/engine/interact.js",
+        "js/engine/portals.js",
+        "js/engine/machines.js",
         "js/engine/progress.js",
         "js/engine/ctx.js",
         "js/engine/characters.js"
@@ -47,6 +49,7 @@
       "files": [
         "js/render/art-kit.js",
         "js/render/sprites-core.js",
+        "js/render/sprites-machines.js",
         "js/render/sprites-enemies.js",
         "js/render/sprites-enemies-2.js",
         "js/render/sprites-bosses.js",
@@ -120,6 +123,7 @@
         "tools/validate-content.mjs",
         "tools/smoke.mjs",
         "tools/enemy-ai.mjs",
+        "tools/systems-check.mjs",
         "tools/balance.mjs",
         "tools/card-shot.js"
       ]

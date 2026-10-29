@@ -273,7 +273,7 @@
       var f = fn('spawnFamiliar')
       if (!f) return null
       var fam = f(p, id, ctx)
-      if (fam && opts) for (var k in opts) fam[k] = opts[k]
+      if (fam && opts) for (var k in opts) fam[k] = (k === 'life' && !opts[k]) ? null : opts[k] /* 0 or unset means permanent */
       return fam
     }
 

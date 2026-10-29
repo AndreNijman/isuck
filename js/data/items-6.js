@@ -1740,29 +1740,8 @@
       dlc: 'afterbirth+',
       pools: ['treasure', 'battery-bum', 'greed-treasure', 'crane-game'],
       tags: ['tears', 'offensive'],
-      tearFlags: ['chain'],
-      hooks: {
-        // the engine reads no 'chain' flag, so the arc is done here: on impact
-        // the spark deals half the tear's damage to up to four other enemies
-        onTearHit: function (p, tear, enemy, ctx) {
-          if (!tear || !enemy || tear.ladderSpark) return
-          var dmg = (typeof tear.dmg === 'number' ? tear.dmg : dmgOf(p)) * 0.5
-          var es = foes(ctx)
-          var near = []
-          for (var i = 0; i < es.length; i++) {
-            var e = es[i]
-            if (!e || e === enemy || e.dead) continue
-            var dd = d(enemy.x, enemy.y, e.x, e.y)
-            if (dd <= 260) near.push({ e: e, dd: dd })
-          }
-          near.sort(function (a, b) { return a.dd - b.dd })
-          for (var j = 0; j < near.length && j < 4; j++) {
-            hurt(near[j].e, dmg, ctx)
-            if (IS.fx && typeof IS.fx.burst === 'function') { try { IS.fx.burst(near[j].e.x, near[j].e.y, '#8ad0f0', 6) } catch (err) {} }
-          }
-          if (near.length) noise(ctx, 'laser-fire')
-        }
-      }
+      // the engine reads the 'chain' tear flag (tears.js chainArc)
+      tearFlags: ['chain']
     },
 
     {
@@ -2955,20 +2934,9 @@
       dlc: 'afterbirth+',
       pools: ['treasure', 'greed-treasure'],
       tags: ['tears', 'range', 'offensive'],
-      tearFlags: ['pop'],
-      hooks: {
-        // the engine reads no 'pop' flag: eyeballs are tears that bounce off
-        // walls and rocks many times and live much longer
-        // APPROXIMATE: tears do not bounce off each other
-        onTearFire: function (p, tear) {
-          if (!tear) return
-          addFlag(tear, 'bouncing')
-          tear.bounce = 99
-          var life = typeof tear.life === 'number' ? tear.life : 1
-          tear.life = Math.max(life, 8)
-          tear.life0 = tear.life
-        }
-      }
+      // the engine reads the 'pop' tear flag: eyeballs bounce off walls and rocks and live long
+      // APPROXIMATE: tears do not bounce off each other
+      tearFlags: ['pop']
     },
 
     {
@@ -3147,16 +3115,7 @@
           if (Array.isArray(p.active) && p.active.length < 2) p.active.push(null)
         },
         onRemove: function (p) { cache(p).schoolbag = false },
-        // js/engine/player.js only ever uses slot 0, so the swap key (Z)
-        // trades the two actives
-        onUpdate: function (p) {
-          if (!p || !Array.isArray(p.active) || !p.active[0] || !p.active[1]) return
-          if (!IS.input || typeof IS.input.pressed !== 'function') return
-          if (!IS.input.pressed('pocketSwap')) return
-          var t = p.active[0]
-          p.active[0] = p.active[1]
-          p.active[1] = t
-        }
+        // the swap key (Z) is handled by js/engine/player.js (IS.swapActives)
       }
     },
 
@@ -3422,10 +3381,10 @@
           c.hallowedAura = inside
           recalc(p)
         },
-        onStats: function (p, s) {
+        onStats: function (p, s, mult) {
           if (!cache(p).hallowedAura || !s) return
-          if (typeof s.tears === 'number') s.tears *= 2.5
-          if (typeof s.damage === 'number') s.damage *= 1.2
+          mult.tears *= 2.5
+          mult.damage *= 1.2
         },
         onTearFire: function (p, tear) {
           if (cache(p).hallowedAura) addFlag(tear, 'homing')

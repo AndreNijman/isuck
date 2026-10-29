@@ -101,6 +101,13 @@ function checkCollectible (d, label) {
   if (d.kind === 'active' && d.charge == null) warn(w, 'active item has no charge')
   if (d.unlock && IS.achievementsById && !IS.achievementsById[d.unlock]) err(w, `unlock "${d.unlock}" is not an achievement`)
   if (!d.name) err(w, 'no name')
+  // one displayed range unit is 80 (6.5 tiles of base range is 520): the info text and stats.range must agree
+  const rng = d.stats && d.stats.range
+  const shown = /([↑↓])\s*([+-]?\d+(?:\.\d+)?)\s*Range(?!\s*multiplier)/i.exec(d.info || '')
+  if (rng != null && shown) {
+    let n = parseFloat(shown[2]); if (shown[1] === '↓' && n > 0) n = -n
+    if (Math.abs(rng - n * 80) > 1) err(w, `stats.range ${rng} does not match "${shown[0]}" (expected ${n * 80})`)
+  }
 }
 
 for (const d of IS.items || []) checkCollectible(d, 'item')

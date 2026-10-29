@@ -112,7 +112,7 @@
         case 75: return cacheUntil(p,ctx,'sun-reversed',999999)
         case 76: return spawn(ctx,'restock-machine',p)
         case 77: return ctx&&ctx.spawnCrawlspace&&ctx.spawnCrawlspace()
-        case 78: return ctx&&ctx.unlockDoor&&ctx.unlockDoor('red')
+        case 78: return ctx&&ctx.run&&IS.openRedRoom?IS.openRedRoom(ctx.run,ctx):null
         case 79: return many(1+(ctx&&ctx.int?ctx.int(20):0),function(){spawn(ctx,'heart',p)})
         case 80: var last=ctx&&ctx.run&&ctx.run.lastPocket; return last&&ctx.useCard&&ctx.useCard(last.id)
         case 81: return ctx&&ctx.rerollPedestals&&ctx.rerollPedestals()

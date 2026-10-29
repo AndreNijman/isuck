@@ -38,6 +38,40 @@
   }
   function shadow (g, e, k) { var r = (e.r || 18) * (k || 1), lift = Math.max(.35, 1 - (e.z || 0) / 220); g.fillStyle = 'rgba(13,9,7,' + (.32 * lift).toFixed(3) + ')'; g.beginPath(); g.ellipse(e.x, e.y + r * .55, r * .85 * lift, r * .3 * lift, 0, 0, Math.PI * 2); g.fill() }
 
+  // Enemy statuses read at a glance: a colour wash over the body plus a small mark above it.
+  // The wash is an ellipse over the sprite, so it tints without needing an offscreen buffer.
+  var STATUS_WASH = { freeze: '120,200,255', ice: '170,230,255', petrify: '130,130,130', midas: '240,190,50', poison: '90,190,60', burn: '255,120,30', bleed: '170,20,30', slow: '90,120,200', sticky: '110,170,60', charm: '240,110,170', baited: '230,150,90', fear: '150,90,190', confusion: '200,200,90', magnetize: '210,60,60', shrink: '230,230,230' }
+  IS.STATUS_WASH = STATUS_WASH
+  function statusOverlay (g, e, size, t) {
+    var st = e.status; if (!st) return
+    var keys = Object.keys(st); if (!keys.length) return
+    var x = e.x, y = e.y - (e.z || 0), r = size * .36, i, k
+    var wash = ['petrify', 'ice', 'freeze', 'midas', 'burn', 'poison', 'bleed', 'slow', 'sticky', 'charm', 'fear', 'confusion', 'magnetize', 'baited', 'shrink']
+    for (i = 0; i < wash.length; i++) { k = wash[i]; if (!st[k]) continue
+      var a = (k === 'petrify' || k === 'midas' || k === 'ice' || k === 'freeze') ? .45 : .24
+      g.fillStyle = 'rgba(' + STATUS_WASH[k] + ',' + a + ')'; g.beginPath(); g.ellipse(x, y, r, r * 1.05, 0, 0, Math.PI * 2); g.fill()
+      if (a > .4) break
+    }
+    var my = y - size * .5, n = 0
+    function mark (fn) { g.save(); g.translate(x + (n - (keys.length - 1) / 2) * 12, my); fn(); g.restore(); n++ }
+    for (i = 0; i < keys.length; i++) { k = keys[i]
+      if (k === 'burn') mark(function () { var f = Math.sin(t * 18 + i) * 2; g.fillStyle = '#ff8a1e'; g.beginPath(); g.moveTo(-4, 5); g.quadraticCurveTo(-5 + f, -3, 0, -9); g.quadraticCurveTo(5 + f, -3, 4, 5); g.fill(); g.fillStyle = '#ffd25a'; g.fillRect(-1.5, 0, 3, 5) })
+      else if (k === 'poison') mark(function () { g.fillStyle = '#7ed04a'; for (var j = 0; j < 3; j++) { g.beginPath(); g.arc(-4 + j * 4, 2 - ((t * 9 + j * 3) % 8), 2.2, 0, 7); g.fill() } })
+      else if (k === 'bleed') mark(function () { g.fillStyle = '#b3141c'; g.beginPath(); g.moveTo(0, -5); g.quadraticCurveTo(5, 2, 0, 5); g.quadraticCurveTo(-5, 2, 0, -5); g.fill() })
+      else if (k === 'freeze' || k === 'ice') mark(function () { g.strokeStyle = '#e8f8ff'; g.lineWidth = 2; g.beginPath(); g.moveTo(-6, 0); g.lineTo(6, 0); g.moveTo(0, -6); g.lineTo(0, 6); g.moveTo(-4, -4); g.lineTo(4, 4); g.moveTo(4, -4); g.lineTo(-4, 4); g.stroke() })
+      else if (k === 'petrify') mark(function () { g.fillStyle = '#8e8e8e'; g.fillRect(-5, -5, 10, 10); g.fillStyle = '#5c5c5c'; g.fillRect(-1, -5, 2, 10) })
+      else if (k === 'midas') mark(function () { g.fillStyle = '#f2c230'; g.beginPath(); g.arc(0, 0, 5, 0, 7); g.fill(); g.strokeStyle = '#8a6a10'; g.lineWidth = 1.5; g.stroke() })
+      else if (k === 'charm') mark(function () { g.fillStyle = '#ee6fa6'; g.beginPath(); g.arc(-2.5, -1, 3, 0, 7); g.arc(2.5, -1, 3, 0, 7); g.fill(); g.beginPath(); g.moveTo(-5.5, 0); g.lineTo(0, 6); g.lineTo(5.5, 0); g.fill() })
+      else if (k === 'fear') mark(function () { g.fillStyle = '#b48ae0'; g.font = 'bold 14px monospace'; g.textAlign = 'center'; g.fillText('!', 0, 5) })
+      else if (k === 'confusion') mark(function () { g.strokeStyle = '#e8e07a'; g.lineWidth = 2; g.beginPath(); g.arc(0, 0, 5, t * 8, t * 8 + 4.6); g.stroke() })
+      else if (k === 'slow') mark(function () { g.fillStyle = '#7da0e8'; g.beginPath(); g.moveTo(0, 5); g.lineTo(-5, -4); g.lineTo(5, -4); g.fill() })
+      else if (k === 'sticky') mark(function () { g.fillStyle = '#86c24a'; g.beginPath(); g.arc(-2, 1, 4, 0, 7); g.arc(3, 3, 3, 0, 7); g.fill() })
+      else if (k === 'magnetize') mark(function () { g.strokeStyle = '#d83a3a'; g.lineWidth = 3; g.beginPath(); g.arc(0, 1, 5, Math.PI, 0); g.stroke(); g.fillStyle = '#e8e8e8'; g.fillRect(-7, 0, 4, 4); g.fillRect(3, 0, 4, 4) })
+      else if (k === 'baited') mark(function () { g.strokeStyle = '#e29a5a'; g.lineWidth = 2; g.beginPath(); g.arc(0, 0, 5, 0, 7); g.moveTo(-8, 0); g.lineTo(8, 0); g.stroke() })
+      else if (k === 'shrink') mark(function () { g.fillStyle = '#eee'; g.beginPath(); g.moveTo(-5, -4); g.lineTo(0, 0); g.lineTo(-5, 4); g.moveTo(5, -4); g.lineTo(0, 0); g.lineTo(5, 4); g.fill() })
+    }
+  }
+
   // An actor: shadow already drawn. Windups swell and flash; spawning fades in;
   // the player blinks through invulnerability.
   function actor (g, e, run) {
@@ -60,6 +94,7 @@
     var flash = tele > .55 && Math.floor(tele * 18) % 2 === 0
     var hurtPlayer = isPlayer && now - (e.hurtAt || -9) < .12
     spr(g, isPlayer ? run.player.charId : (e.sprite || e.id), e, size, { hurt: e.hurtT > 0 || flash || hurtPlayer, flip: !isPlayer && e.dir < 0 })
+    if (!isPlayer) statusOverlay(g, e, size, (IS.state && IS.state.time) || 0)
     if (e.shielded) { g.strokeStyle = 'rgba(232,226,200,.75)'; g.lineWidth = 4; g.beginPath(); g.arc(e.x, e.y - (e.z || 0), size * .55, 0, Math.PI * 2); g.stroke() }
     g.restore()
   }
@@ -118,7 +153,7 @@
     }
   }
 
-  function pickupName (p) { if (p.kind === 'item') return 'item-pedestal'; if (p.kind === 'card') return 'card-back'; return p.variant ? p.kind + '-' + p.variant : p.kind }
+  function pickupName (p) { if (IS.pickupSprite) return IS.pickupSprite(p); if (p.kind === 'item') return 'item-pedestal'; if (p.kind === 'card') return 'card-back'; return p.variant ? p.kind + '-' + p.variant : p.kind }
   function projectiles (g, room) {
     var groups = [['tears', 'tear'], ['shots', 'enemy-shot'], ['bombs', 'bomb'], ['knives', 'knife']]
     var a, i, list, p
@@ -129,6 +164,8 @@
       if (p.fuse0 && p.fuse < .5 && Math.floor(p.fuse * 20) % 2 === 0) size *= 1.15
       spr(g, p.sprite || groups[a][1], p, size)
     }
+    for (i = 0; i < (room.arcs || []).length; i++) { var ar = room.arcs[i]; g.strokeStyle = 'rgba(150,215,255,' + (1 - ar.t / .25).toFixed(2) + ')'; g.lineWidth = 3; for (a = 0; a < ar.to.length; a++) { g.beginPath(); g.moveTo(ar.x, ar.y); g.lineTo((ar.x + ar.to[a].x) / 2 + Math.sin(i * 7 + a) * 12, (ar.y + ar.to[a].y) / 2 - 8); g.lineTo(ar.to[a].x, ar.to[a].y); g.stroke() } }
+    for (i = 0; i < (room.beams || []).length; i++) { var bm = room.beams[i], f = 1 - bm.t / .25; g.fillStyle = 'rgba(255,244,190,' + (.55 * f).toFixed(2) + ')'; g.fillRect(bm.x - 26 * f - 6, bm.y - 600, 52 * f + 12, 600); g.fillStyle = 'rgba(255,255,235,' + f.toFixed(2) + ')'; g.fillRect(bm.x - 8 * f, bm.y - 600, 16 * f, 600) }
     for (i = 0; i < (room.lasers || []).length; i++) {
       var l = room.lasers[i], ex = l.x + Math.cos(l.angle || 0) * (l.len || 900), ey = l.y + Math.sin(l.angle || 0) * (l.len || 900)
       g.lineCap = 'round'
@@ -144,6 +181,19 @@
       g.beginPath(); g.moveTo(l.x, l.y); g.lineTo(ex, ey); g.stroke()
       g.strokeStyle = '#ffe2c8'; g.lineWidth = w * .3
       g.beginPath(); g.moveTo(l.x, l.y); g.lineTo(ex, ey); g.stroke()
+    }
+  }
+
+  // holes in the floor: the trapdoor to the next floor, a crawlspace hatch and the ladder out of one
+  function portals (g, room) {
+    var t = (IS.state && IS.state.time) || 0, list = [room.trapdoor, room.crawlspace, room.ladder], i, o
+    for (i = 0; i < list.length; i++) {
+      o = list[i]; if (!o) continue
+      var ladder = o === room.ladder, hatch = o === room.crawlspace
+      g.fillStyle = ladder ? '#2a1d14' : 'rgba(6,3,2,.95)'; g.beginPath(); g.ellipse(o.x, o.y, 38, 26, 0, 0, Math.PI * 2); g.fill()
+      g.strokeStyle = hatch ? '#6a5a48' : '#5c4230'; g.lineWidth = 5; g.stroke()
+      if (ladder) { g.strokeStyle = '#a88a5c'; g.lineWidth = 4; g.beginPath(); g.moveTo(o.x - 12, o.y - 20); g.lineTo(o.x - 12, o.y + 20); g.moveTo(o.x + 12, o.y - 20); g.lineTo(o.x + 12, o.y + 20); for (var r = -12; r <= 12; r += 12) { g.moveTo(o.x - 12, o.y + r); g.lineTo(o.x + 12, o.y + r) } g.stroke() }
+      else { g.strokeStyle = 'rgba(200,170,120,' + (.25 + Math.sin(t * 3) * .1).toFixed(2) + ')'; g.lineWidth = 2; g.beginPath(); g.ellipse(o.x, o.y, 26, 17, 0, 0, Math.PI * 2); g.stroke() }
     }
   }
 
@@ -176,8 +226,10 @@
     IS.drawBackdrop(g, room, run.floor)
     if (IS.fx && IS.fx.draw) IS.fx.draw(g, 'under')
     markers(g, room)
+    portals(g, room)
     for (var i = 0; i < room.grid.length; i++) if (room.grid[i] && room.grid[i].kind === 'pit' && !room.grid[i].broken) spr(g, 'pit', room.grid[i], IS.TILE || 80)
-    for (i = 0; i < room.pickups.length; i++) { var p = room.pickups[i]; if (!p.taken && !p.removed) { shadow(g, p); spr(g, pickupName(p), p, p.kind === 'item' ? 72 : 44); if (p.kind === 'item' && p.id) spr(g, 'item:' + p.id, { x: p.x, y: p.y - 32 + Math.sin(((IS.state && IS.state.time) || 0) * 3) * 4, z: p.z || 0, variant: p.variant }, 42) } }
+    for (i = 0; i < room.pickups.length; i++) { var p = room.pickups[i]; if (!p.taken && !p.removed) { shadow(g, p); spr(g, pickupName(p), p, p.kind === 'item' ? 72 : p.kind === 'chest' ? 56 : 44); if (IS.drawPickupExtras) IS.drawPickupExtras(g, p, run); if (p.kind === 'item' && p.id && (run.curses || 0) & (IS.CURSE && IS.CURSE.BLIND || 32)) { g.font = 'bold 34px monospace'; g.textAlign = 'center'; g.fillStyle = '#e8dcc0'; g.fillText('?', p.x, p.y - 22); g.textAlign = 'left' } else if (p.kind === 'item' && p.id) spr(g, 'item:' + p.id, { x: p.x, y: p.y - 32 + Math.sin(((IS.state && IS.state.time) || 0) * 3) * 4, z: p.z || 0, variant: p.variant }, 42) } }
+    if (IS.drawMachines) IS.drawMachines(g, room)
     var actors = (room.enemies || []).slice(); if (run.player) actors.push(run.player); Array.prototype.push.apply(actors, run.player && run.player.familiars || [])
     actors.sort(function (a, b) { return a.y - b.y })
     for (i = 0; i < actors.length; i++) if (!actors[i].hidden) shadow(g, actors[i])
@@ -186,6 +238,8 @@
     for (i = 0; i < actors.length; i++) actor(g, actors[i], run)
     projectiles(g, room)
     if (run.player) weaponOverlay(g, run.player)
+    var mk = run.player && run.player.cache && run.player.cache.marked
+    if (mk && run.player.cache.markedRoom === room) { var mt = ((IS.state && IS.state.time) || 0) * 2; g.save(); g.translate(mk.x, mk.y); g.rotate(mt); g.strokeStyle = 'rgba(214,60,52,.85)'; g.lineWidth = 3; g.beginPath(); g.arc(0, 0, 18, 0, Math.PI * 2); g.moveTo(-26, 0); g.lineTo(-10, 0); g.moveTo(26, 0); g.lineTo(10, 0); g.moveTo(0, -26); g.lineTo(0, -10); g.moveTo(0, 26); g.lineTo(0, 10); g.stroke(); g.restore() }
     if (IS.fx && IS.fx.draw) IS.fx.draw(g, 'over')
     IS.drawDoors(g, room)
     g.restore()
