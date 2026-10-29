@@ -63,6 +63,8 @@ window.__bot = function () {
   if (es.length) {
     var n = es[0], best = 1e9
     es.forEach(function (e) { var d = Math.hypot(e.x - p.x, e.y - p.y); if (d < best) { best = d; n = e } })
+    // a burrowed boss: line up on the hole it is about to come out of
+    if (n.hidden) (room.markers || []).forEach(function (m) { if (m.hole && !(m.dur != null && m.t >= m.dur)) n = { x: m.x, y: m.y, r: n.r } })
     var dx = n.x - p.x, dy = n.y - p.y
     var T = IS.TILE, clear = function (ax, ay, bx, by) {
       for (var k = 1; k < 16; k++) if (IS.solidAt(room, ax + (bx - ax) * k / 16, ay + (by - ay) * k / 16, { ignorePits: true })) return false
@@ -115,7 +117,7 @@ window.__bot = function () {
     }
     es.forEach(function (e) {
       var d = Math.hypot(e.x - p.x, e.y - p.y)
-      if (d < (melee ? 40 : 110)) { mv.x += (p.x - e.x) / d * 2.2; mv.y += (p.y - e.y) / d * 2.2 }
+      if (d > 0 && d < (melee ? 40 : 110)) { mv.x += (p.x - e.x) / d * 2.2; mv.y += (p.y - e.y) / d * 2.2 }
     })
   }
   ;(room.shots || []).forEach(function (s) {
@@ -124,6 +126,14 @@ window.__bot = function () {
     if (d > 140 || (rx * s.vx + ry * s.vy) < 0) return
     var side = (s.vx * ry - s.vy * rx) > 0 ? 1 : -1
     mv.x += -s.vy / v * side * 2.5; mv.y += s.vx / v * side * 2.5
+  })
+  // step out of telegraphed impacts (stomps, hands, falling debris) before they land
+  ;(room.markers || []).forEach(function (m) {
+    if ((m.dur != null && m.t >= m.dur) || m.hole === 'dive') return // a dive hole is where a burrower sits exposed, not an impact
+    var rx = p.x - m.x, ry = p.y - m.y, d = Math.hypot(rx, ry)
+    if (d > m.r + p.r + 24) return
+    if (d < 1) { rx = 1; ry = 0; d = 1 }
+    mv.x += rx / d * 4; mv.y += ry / d * 4
   })
   // drift off walls and out of corners
   mv.x += (cx - p.x) / room.pxW * 1.2; mv.y += (cy - p.y) / room.pxH * 1.2
