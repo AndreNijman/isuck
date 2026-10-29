@@ -54,7 +54,7 @@
     var s = expanded ? 28 : 11, bx = expanded ? 640 - 6.5 * s : 1112, by = expanded ? 360 - 6.5 * s : 18
     if (expanded) { g.fillStyle = 'rgba(17,11,9,.82)'; g.fillRect(380, 100, 520, 520) }
     for (var i = 0; i < cells.length; i++) { var r = floor.rooms[i], c = cells[i], known = r && (r.visited || r.mapKnown); if (!known) continue; var x = bx + c.x * s, y = by + c.y * s
-      g.fillStyle = i === run.roomIndex ? '#e0b963' : r.cleared ? '#aa9578' : r.visited ? '#75634f' : '#3a3028'; g.fillRect(x, y, s - 2, s - 2)
+      g.fillStyle = i === run.roomIndex ? '#e0b963' : r.cleared ? '#aa9578' : r.visited ? '#75634f' : '#3a3028'; g.fillRect(x, y, s * (c.w || 1) - 2, s * (c.h || 1) - 2)
       if (r.type && r.type !== 'default' && r.type !== 'start') { text(g, ({ treasure: 'T', shop: '$', boss: 'B', secret: '?', devil: 'D', angel: 'A', planetarium: '*' })[r.type] || '·', x + (s - 2) / 2, y + (s - 2) / 2, Math.max(7, s * .45), 'center', '#291c16') }
     }
   }

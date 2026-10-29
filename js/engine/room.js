@@ -571,7 +571,7 @@
     return out
   }
 
-  IS.addDoor = function (room, dir, kind, target) {
+  IS.addDoor = function (room, dir, kind, target, slot) {
     if (!room) return null
     if (!IS.DIR_VEC || !IS.DIR_VEC[dir]) {
       warnOnce('door-dir:' + dir, 'addDoor got bad dir "' + dir + '"')
@@ -588,6 +588,9 @@
     var slots = doorSlots(room, dir)
     if (!slots.length) return null
     var chosen = null
+    // a big room has one slot per map cell along each wall; the floor
+    // generator names the one that faces the neighbour
+    if (slot != null) for (var s0 = 0; s0 < slots.length; s0++) if (slots[s0].slot === slot) chosen = slots[s0]
     for (var i = 0; i < slots.length && !chosen; i++) {
       var taken = false
       for (var j = 0; j < room.doors.length; j++) {
@@ -647,9 +650,15 @@
     }
   }
 
-  function entryDoor (room, dir) {
+  function entryDoor (room, dir, fromIndex) {
     if (!room.doors || !room.doors.length) return null
     var i, d
+    if (fromIndex != null) {
+      for (i = 0; i < room.doors.length; i++) {
+        d = room.doors[i]
+        if (d.target === fromIndex && (!dir || d.dir === dir)) return d
+      }
+    }
     if (dir) {
       for (i = 0; i < room.doors.length; i++) {
         d = room.doors[i]
@@ -2003,7 +2012,7 @@
 
     var p = run.player
     if (p) {
-      var d = entryDoor(room, fromDir)
+      var d = entryDoor(room, fromDir, run.prevRoomIndex)
       if (d) { p.x = d.insideX; p.y = d.insideY } else { p.x = room.pxW / 2; p.y = room.pxH / 2 }
       p.vx = 0
       p.vy = 0
