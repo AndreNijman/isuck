@@ -19,6 +19,8 @@
 //   node tools/playtest.mjs --seeds 7,8,9
 //   node tools/playtest.mjs --shots            # write shots/playtest-*.png
 //   node tools/playtest.mjs --char cain
+//   node tools/playtest.mjs --boss monstro-ii        # fight a specific boss in the boss room
+//   node tools/playtest.mjs --floor caves --seeds 1   # play another floor by id (default: the Basement)
 
 import path from 'node:path'
 import { launch, ROOT } from './cdp.mjs'
@@ -29,6 +31,8 @@ const arg = (name, dflt) => {
 }
 const SEEDS = String(arg('seeds', '1,2,3')).split(',').map(Number)
 const CHAR = arg('char', 'isaac')
+const FLOOR = arg('floor', null)
+const BOSS = arg('boss', null) // swap the boss room's boss for this id
 const SHOTS = process.argv.includes('--shots')
 const roomLimit = n => 20 + 8 * n // seconds of game time to clear a room of n enemies
 const BOSS_LIMIT = 90
@@ -143,13 +147,13 @@ try {
   await page.goto('file://' + path.join(ROOT, 'index.html'))
   await page.wait(800)
   for (const seed of SEEDS) {
-    await page.evaluate(`IS.state.manual = true; IS.state.run = null; IS.startRun({ charId: ${JSON.stringify(CHAR)}, seed: ${seed} }); ${BOT}; return 1`)
+    await page.evaluate(`IS.state.manual = true; IS.state.run = null; IS.startRun({ charId: ${JSON.stringify(CHAR)}, seed: ${seed} }); ${FLOOR ? `IS.startFloor(IS.state.run, ${JSON.stringify(FLOOR)}, IS.state.ctx);` : ''} ${BOT}; return 1`)
     const rooms = JSON.parse(await page.evaluate(`return JSON.stringify(IS.state.run.floor.rooms.map(function (r, i) {
       return r && (r.type === 'default' || r.type === 'boss') ? { i: i, type: r.type } : null
     }).filter(Boolean).sort(function (a, b) { return (a.type === 'boss') - (b.type === 'boss') }))`))
     let roomsCleared = 0, hits = 0, fights = 0
     for (const r of rooms) {
-      await page.evaluate(`window.__hits = 0; IS.enterRoom(IS.state.run, ${r.i}, 'left', IS.state.ctx); return 1`)
+      await page.evaluate(`window.__hits = 0; IS.enterRoom(IS.state.run, ${r.i}, 'left', IS.state.ctx); ${BOSS && r.type === 'boss' ? `var R = IS.state.run.room; R.enemies = []; IS.spawnBoss(R, ${JSON.stringify(BOSS)}, R.pxW / 2, R.pxH / 2 - 40, {});` : ''} return 1`)
       const start = JSON.parse(await page.evaluate(state))
       if (!start.alive.length) continue
       fights++
