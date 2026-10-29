@@ -138,6 +138,21 @@
     }
   }
 
+  // Marks rooms of the current floor as known on the minimap (HUD draws any
+  // room with visited || mapKnown). `kind`: 'icons' = special rooms only
+  // (Compass), 'layout' = every non-secret room (Treasure Map), 'secret' =
+  // secret and super-secret rooms (Spelunker Hat).
+  function revealRooms (ctx, floor, kind) {
+    var f = floor || (ctx && ctx.run && ctx.run.floor)
+    if (!f || !Array.isArray(f.rooms)) return
+    for (var i = 0; i < f.rooms.length; i++) {
+      var r = f.rooms[i]
+      if (!r) continue
+      var secret = r.type === 'secret' || r.type === 'super-secret'
+      if (kind === 'secret' ? secret : kind === 'icons' ? (!secret && r.type !== 'normal' && r.type !== 'start') : !secret) r.mapKnown = true
+    }
+  }
+
   // Fires `fn` once every `interval` seconds, keyed on a cache slot.
   function everyTick (p, dt, key, interval, fn) {
     var c = cacheOf(p)
@@ -775,9 +790,13 @@
       dlc: 'rebirth',
       pools: ['shop', 'beggar', 'crane-game'],
       tags: ['utility'],
-      // 'seeMinimap' is the icon-level reveal; Treasure Map takes
-      // 'fullMinimap', which is the layout-level one.
-      flags: ['seeMinimap']
+      // Nothing in the engine reads 'seeMinimap', so the hooks mark the rooms.
+      flags: ['seeMinimap'],
+      hooks: {
+        onInit: function (p, ctx) { revealRooms(ctx, null, 'icons') },
+        onNewFloor: function (p, floor, ctx) { revealRooms(ctx, floor, 'icons') },
+        onRoomEnter: function (p, room, ctx) { revealRooms(ctx, null, 'icons') }
+      }
     },
 
     {
@@ -1570,7 +1589,12 @@
       dlc: 'rebirth',
       pools: ['shop', 'beggar'],
       tags: ['utility'],
-      flags: ['fullMinimap']
+      flags: ['fullMinimap'],
+      hooks: {
+        onInit: function (p, ctx) { revealRooms(ctx, null, 'layout') },
+        onNewFloor: function (p, floor, ctx) { revealRooms(ctx, floor, 'layout') },
+        onRoomEnter: function (p, room, ctx) { revealRooms(ctx, null, 'layout') }
+      }
     },
 
     {
@@ -1769,11 +1793,8 @@
       dlc: 'rebirth',
       pools: ['shop', 'battery-bum', 'greed-shop', 'crane-game'],
       tags: ['battery', 'charge', 'utility'],
-      // Engine-owned, not a no-op: ARCHITECTURE.md §4 gives every active slot a
-      // `batteryCharge` field alongside `charge`/`maxCharge`, and IS.addCharge
-      // is the single funnel that fills it. Overcharge therefore belongs to
-      // js/engine/player.js keyed on this id; a hook here could only duplicate
-      // it and would fight the engine's own clamping.
+      // Engine-handled: IS.addCharge in js/engine/player.js overcharges active
+      // slots when this id is held, so no hook is needed here.
       hooks: {}
     },
 
@@ -2507,6 +2528,9 @@
       tags: ['utility', 'defensive'],
       flags: ['seeSecretRooms', 'seeMinimap'],
       hooks: {
+        onInit: function (p, ctx) { revealRooms(ctx, null, 'secret') },
+        onNewFloor: function (p, floor, ctx) { revealRooms(ctx, floor, 'secret') },
+        onRoomEnter: function (p, room, ctx) { revealRooms(ctx, null, 'secret') },
         // APPROXIMATED: nothing in the damage source is guaranteed to say "this
         // fell from the ceiling", so the immunity keys off whichever marker the
         // projectile carries — a height/falls field or an explicit kind.
