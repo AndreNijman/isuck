@@ -115,6 +115,29 @@
     // attack pacing, seconds between attacks (phase one, phase two)
     var COOLDOWN = { 'mom': [[.7, 1.1], [.5, .9]], 'monstro': [[.9, 1.5], [.7, 1.2]], 'the-duke-of-flies': [[1.2, 1.8], [1, 1.5]], 'the-husk': [[1.1, 1.7], [.9, 1.4]], 'the-haunt': [[1.4, 2.1], [1.2, 1.8]] }
     var FLYERS = /duke-of-flies|the-husk|haunt|famine|the-hollow|peep|frail|the-bloat|mega-maw|the-visage|blue-baby|hush|dogma|ultra-pestilence/
+    // the final fights have phases of their own: [id, hit points left above, attacks, seconds between attacks, speed]. The attack
+    // names are scripted per boss in boss.js (BESPOKE[id].atk); a phase's `id` is what those scripts ask about.
+    var P = function (id, above, atk, cd, sp) { return { id: id, hpAbove: above, attacks: atk, weights: atk.map(function () { return 1 }), cooldown: cd, speedMult: sp || 1 } }
+    var PHASES = {
+      'mother': [P('p1', .5, ['wallHands', 'eyeLasers', 'knifeFan', 'wormBurst'], [.8, 1.3]), P('p2', 0, ['bodySlam', 'handsFast', 'eyeStorm', 'wormSwarm', 'tearSpin', 'knifeStorm'], [.6, 1], 1.15)],
+      'satan': [P('p1', .5, ['mouth', 'fists', 'mouthFan', 'imps', 'fists'], [.8, 1.2]), P('p2', 0, ['legs', 'debris', 'legs', 'flies'], [.5, .9])],
+      'the-lamb': [P('p1', .5, ['lbBrim', 'lbSpin', 'lbSummon'], [1.5, 2.2]), P('p2', 0, ['lbBrim', 'lbSpin', 'lbCross', 'lbSummon'], [1.2, 1.8], 1.1)],
+      'isaac': [P('p1', .66, ['isTears', 'isCharge', 'isFlies'], [.8, 1.2]), P('p2', .33, ['isLight', 'isOrbs', 'isTears', 'isCharge'], [.7, 1.1], 1.1), P('p3', 0, ['isLight', 'isWings', 'isOrbs', 'isCharge'], [.5, .9], 1.3)],
+      'blue-baby': [P('p1', .5, ['bbSpiral', 'bbGap', 'bbFlies', 'bbTears'], [.8, 1.2]), P('p2', 0, ['bbInvisible', 'bbSpiral', 'bbGap', 'bbRush', 'bbFlies'], [.6, 1], 1.15)],
+      'hush': [P('p1', .5, ['hsSpiral', 'hsGap', 'hsFlies', 'hsLines'], [.7, 1.1]), P('p2', 0, ['hsRush', 'hsSweep', 'hsStorm', 'hsGap', 'hsFlies2', 'hsLines'], [.5, .9], 1.2)],
+      'mega-satan': [P('p1', .5, ['msHands', 'msBrim', 'msRing', 'msImps', 'msHands'], [.8, 1.2]), P('p2', 0, ['msSkull', 'msCross', 'msBarrage', 'msSweep', 'msBones', 'msRing'], [.6, 1], 1.1)],
+      'the-beast': [P('p1', .5, ['bsBrim', 'bsCurtain', 'bsStomp', 'bsFlies'], [1, 1.5]), P('p2', 0, ['bsRush', 'bsRays', 'bsCurtain2', 'bsStomp', 'bsHowl'], [.8, 1.3], 1.15)],
+      'dogma': [P('p1', .5, ['dgStatic', 'dgPlus', 'dgScan', 'dgSpirits'], [.8, 1.2]), P('p2', 0, ['dgLight', 'dgSpin', 'dgOrbs', 'dgDive', 'dgFeathers'], [.6, 1], 1.2)],
+      'delirium': [P('p1', .5, ['dlMimic', 'dlMimic', 'dlTeleport'], [.5, .9]), P('p2', 0, ['dlMimic', 'dlMimic', 'dlTeleport', 'dlGlitch'], [.4, .8], 1.1)],
+      'ultra-greed': [P('p1', .5, ['ugCoins', 'ugLeap', 'ugBombs', 'ugSummon'], [.8, 1.2]), P('p2', 0, ['ugBarrage', 'ugLeap', 'ugBeam', 'ugRain', 'ugCoins'], [.6, 1], 1.15)],
+      'ultra-greedier': [P('p1', .5, ['ugCoins', 'ugLeap', 'ugBombs', 'ugSummon'], [.7, 1.1]), P('p2', 0, ['ugBarrage', 'ugLeap', 'ugBeam', 'ugRain', 'ugCoins'], [.5, .9], 1.2)],
+      'the-fallen': [P('p1', .5, ['flCharge', 'flFan', 'flImps'], [.8, 1.2]), P('p2', 0, ['flCharge', 'flFire', 'flHell', 'flFan'], [.6, 1], 1.15)],
+      'krampus': [P('p1', .5, ['kpCharge', 'kpHorns', 'kpCoal'], [.8, 1.2]), P('p2', 0, ['kpCharge', 'kpFlames', 'kpKnives', 'kpCoal'], [.6, 1], 1.15)],
+      'ultra-famine': [P('p1', 0, ['ufCharge', 'ufX', 'ufLocusts'], [.7, 1.1])],
+      'ultra-pestilence': [P('p1', 0, ['upCloud', 'upLocusts', 'upSpit', 'upSpin'], [.7, 1.1])],
+      'ultra-war': [P('p1', 0, ['uwBombs', 'uwCharge', 'uwSpit', 'uwThrow'], [.7, 1.1])],
+      'ultra-death': [P('p1', 0, ['udCharge', 'udScythe', 'udBones', 'udFan'], [.7, 1.1])]
+    }
     ;(IS.bosses || []).forEach(function (b) {
       // where a boss can appear is whatever the floor boss pools say; the data rows' own lists are only a default
       var pooled = (IS.floors || []).filter(function (f) { return (f.bosses || []).indexOf(b.id) >= 0 }).map(function (f) { return f.id })
@@ -124,6 +147,12 @@
         b.phases.forEach(function (ph, i) {
           var list = a[Math.min(i, a.length - 1)]
           ph.attacks = list; ph.weights = list.map(function () { return 1 })
+        })
+      }
+      if (PHASES[b.id]) {
+        var vocab = (IS.bossVocab && IS.bossVocab[b.id]) || {}
+        b.phases = PHASES[b.id].map(function (p) {
+          var q = Object.assign({}, p); q.attacks = p.attacks.map(function (n) { return vocab[n] || n }); return q
         })
       }
       // the bosses that share a name with a playable character draw as themselves
