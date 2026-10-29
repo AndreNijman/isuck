@@ -51,7 +51,7 @@
       g.save();g.globalAlpha=Math.max(.2,1-ad*.3)
       g.fillStyle='rgba(0,0,0,.4)';g.beginPath();g.ellipse(px,py+size*.42,size*.32,size*.07,0,0,6.283);g.fill()
       if(ok)portrait(g,c.id,px,py,size,t+ix,ad>.5)
-      else{g.save();g.globalAlpha=g.globalAlpha*.9;if(IS.drawPortrait)IS.drawPortrait(g,c.id,px,py,size,{time:t,silhouette:true});g.restore();g.fillStyle='rgba(8,5,4,.75)';g.beginPath();g.ellipse(px,py,size*.26,size*.38,0,0,6.283);g.fill();IS.ui.text(g,'?',px,py,{align:'center',size:size*.4,weight:'bold',colour:'#6d6257',shadow:false})}
+      else{g.save();g.globalAlpha=g.globalAlpha*.9;if(IS.drawPortrait)IS.drawPortrait(g,c.id,px,py,size,{time:t,locked:true});g.restore();g.fillStyle='rgba(8,5,4,.75)';g.beginPath();g.ellipse(px,py,size*.26,size*.38,0,0,6.283);g.fill();IS.ui.text(g,'?',px,py,{align:'center',size:size*.4,weight:'bold',colour:'#6d6257',shadow:false})}
       g.restore();cs.hit.push({i:ix,x:px-size*.32,y:py-size*.45,w:size*.64,h:size*.9})}
     var d=all[cs.cursor];if(!d){IS.ui.end();return}
     var ok=unlocked(d)
