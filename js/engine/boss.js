@@ -575,13 +575,13 @@
     if(once(s,'v')){hide(b);s.m=mk(c,c.player.x,c.player.y,b.r*1.2,1.25);s.m.hole=true;s.undo=()=>hide(b)}
     b.vx=b.vy=0
     if(s.t<.8){follow(s.m,c,dt,b.r);return false}
-    const hold=o.hold||1.1
+    const hold=o.hold||1.6
     if(s.t>=1.25&&once(s,'l')){b.x=s.m.x;b.y=s.m.y;show(b);slam(c,b.x,b.y,b.r*1.3,7);if(o.ring)ring(b,c,o.ring,{speed:225,off:c.range(0,1)});if(o.fan)fire(b,c,{count:o.fan,spread:o.sp||.25,speed:280})
       if(o.beams)for(const d of [-.6,0,.6])laser(b,c,s,{x:b.x,y:b.y,angle:aim(b,c)+d,width:22,life:.5});mk(c,b.x,b.y,b.r*1.1,hold+.3).hole='dive'}
     for(const d of o.echo||[])if(at(s,dt,1.25+d))ring(b,c,o.ring||8,{speed:200,off:d})
     return s.t>1.25+hold}
   const digger=atk=>({move:still,atk,setup:b=>{hide(b);b.attackT=.5}})
-  BESPOKE['pin']=digger({teleportSlam:burrow({ring:10}),spreadShot:burrow({fan:5}),delayedRings:burrow({ring:8,echo:[.4,.8],hold:1.3})})
+  BESPOKE['pin']=digger({teleportSlam:burrow({ring:10}),spreadShot:burrow({fan:5}),delayedRings:burrow({ring:8,echo:[.4,.8],hold:1.8})})
   BESPOKE['frail']=digger({teleportSlam:burrow({ring:8}),spreadShot:burrow({fan:5}),brimstoneBeam:burrow({beams:1,fan:3,sp:.4})})
   BESPOKE['wormwood']=digger({teleportSlam:burrow({ring:6}),spreadShot:burrow({fan:3,sp:.3}),ringShot:burrow({ring:8})})
 
