@@ -1932,4 +1932,955 @@
     { id: "vanishing-twin", name: "Vanishing Twin", sprite: "vanishing-twin", behaviour: 'follower', params: { r: 16, speed: 300, flying: true, dmg: 3.5, fireDelay: 0.75, range: 520, hp: 0, blockShots: false, life: 0, tearFlags: ["slow"] } }
   ])
 
+
+  // ---------------------------------------------------------------------------
+  // Audit pass: the generated stubs above (spawnFamiliar calls for familiars that
+  // do not exist, { fail: true } actives, flags that nothing reads) are replaced
+  // here with real behaviour. Each patch overwrites hooks/flags on the registered
+  // def, so the data above stays a readable record of what was generated.
+  // ---------------------------------------------------------------------------
+  function patch (id, fields) {
+    var d = IS.itemsById[id]
+    if (!d) return
+    for (var k in fields) {
+      if (fields[k] === null) delete d[k]
+      else d[k] = fields[k]
+    }
+  }
+  function famPatch (id, fields) {
+    var d = IS.familiarsById[id]
+    if (!d) return
+    for (var k in fields) d[k] = fields[k]
+  }
+  function now (ctx) { return ctx && ctx.run ? ctx.run.time : 0 }
+  function fams (p, id) {
+    var out = []
+    var list = p.familiars || []
+    for (var i = 0; i < list.length; i++) if (list[i].id === id) out.push(list[i])
+    return out
+  }
+  function foes (ctx) { return ctx && ctx.room ? IS.roomEnemies(ctx.room) : [] }
+  function slotOf (p, id) {
+    for (var i = 0; i < p.active.length; i++) if (p.active[i] && p.active[i].id === id) return i
+    return -1
+  }
+  function moveVec (p) {
+    var m = IS.input && IS.input.move ? IS.input.move() : { x: 0, y: 0 }
+    if (m.x || m.y) return m
+    return p.head && (p.head.x || p.head.y) ? p.head : { x: 1, y: 0 }
+  }
+  // timed stat buffs: set an expiry, recalc once on start and once on lapse
+  function buff (p, key, secs, ctx) {
+    p.cache[key] = now(ctx) + secs
+    p.cache[key + 'On'] = true
+    IS.recalcStats(p)
+  }
+  function buffOn (p, key, ctx) {
+    if (!p.cache[key + 'On']) return false
+    if (p.cache[key] > now(ctx)) return true
+    p.cache[key + 'On'] = false
+    IS.recalcStats(p)
+    return false
+  }
+  function ownDef (f, params) {
+    if (!f.ownDef) {
+      f.ownDef = true
+      f.def = { id: f.def.id, name: f.def.name, sprite: f.def.sprite, behaviour: f.def.behaviour, params: Object.assign({}, f.def.params) }
+    }
+    Object.assign(f.def.params, params)
+  }
+  function bounceMove (f, dt, ctx, speed) {
+    var room = ctx.room
+    if (!room) return
+    if (f.bvx == null) {
+      f.bvx = (ctx.chance(0.5) ? 1 : -1) * speed * 0.7071
+      f.bvy = (ctx.chance(0.5) ? 1 : -1) * speed * 0.7071
+    }
+    f.x += f.bvx * dt
+    f.y += f.bvy * dt
+    var m = 90
+    if (f.x < m) { f.x = m; f.bvx = Math.abs(f.bvx) } else if (f.x > room.pxW - m) { f.x = room.pxW - m; f.bvx = -Math.abs(f.bvx) }
+    if (f.y < m) { f.y = m; f.bvy = Math.abs(f.bvy) } else if (f.y > room.pxH - m) { f.y = room.pxH - m; f.bvy = -Math.abs(f.bvy) }
+  }
+  function shootAt (f, tx, ty, dmg, ctx, life) {
+    var a = Math.atan2(ty - f.y, tx - f.x)
+    var s = IS.TEAR_SPEED
+    return ctx.spawnTear({ x: f.x, y: f.y, vx: Math.cos(a) * s, vy: Math.sin(a) * s, dmg: dmg, r: 7, life: life || 0.9, friendly: true })
+  }
+  function clearRoomFams (p, ids) {
+    var list = p.familiars || []
+    for (var i = 0; i < list.length; i++) if (ids.indexOf(list[i].id) >= 0) list[i].dead = true
+  }
+  function pedestals (ctx, includePriced) {
+    var out = []
+    var list = ctx && ctx.room && ctx.room.pickups ? ctx.room.pickups : []
+    for (var i = 0; i < list.length; i++) {
+      var u = list[i]
+      if (u && u.kind === 'item' && !u.taken && !u.dead && !u.removed && (includePriced || !(u.price > 0))) out.push(u)
+    }
+    return out
+  }
+
+  IS.defineFamiliars([
+    { id: 'baby-plum', name: 'Baby Plum', behaviour: 'chaser', params: { r: 18, speed: 340, range: 900, dmg: 3.5, cooldown: 0.35, invulnerable: true, life: 10 } },
+    { id: 'spin-orbital', name: 'Spin To Win', behaviour: 'orbital', params: { r: 16, orbitR: 78, orbitSpeed: 2.4, dmg: 2.6, cooldown: 0.25, blockShots: true, hp: 0 } },
+    { id: 'quint', name: 'Quint', behaviour: 'wanderer', params: { r: 14, speed: 0, dmg: 0, hp: 0 } },
+    { id: 'vade-ghost', name: 'Red Ghost', behaviour: 'chaser', params: { r: 12, speed: 250, range: 800, dmg: 1, cooldown: 0.5, flying: true } },
+    { id: 'friend-pal', name: 'Friend', behaviour: 'follower', params: { r: 18, speed: 300, inherit: 0.5, fireDelay: 0.4, range: 520 } },
+    { id: 'clot-red', name: 'Red Clot', behaviour: 'follower', params: { r: 14, speed: 300, inherit: 0.5, fireDelay: 0.4, range: 480, hp: 4 } },
+    { id: 'clot-soul', name: 'Soul Clot', behaviour: 'follower', params: { r: 14, speed: 300, inherit: 0.4, fireDelay: 0.4, range: 480, hp: 6, tearFlags: ['homing'] } },
+    { id: 'clot-black', name: 'Black Clot', behaviour: 'follower', params: { r: 14, speed: 300, inherit: 0.4, fireDelay: 0.4, range: 480, hp: 6, tearFlags: ['slow'] } },
+    { id: 'gello-demon', name: 'Gello', behaviour: 'orbitShooter', params: { r: 18, speed: 300, flying: true, orbitR: 64, orbitSpeed: 1.2, inherit: 0.75, fireDelay: 0.4, range: 560 } },
+    { id: 'ghost-bomb', name: 'Bomb Ghost', behaviour: 'chaser', params: { r: 14, speed: 260, range: 800, dmg: 3.5, cooldown: 0.5, flying: true, invulnerable: true, life: 10, explode: { dmg: 30, r: 90 } } },
+    { id: 'lemegeton-wisp', name: 'Lemegeton Wisp', behaviour: 'orbital', params: { r: 12, flying: true, orbitR: 70, orbitSpeed: 1.8, dmg: 0, blockShots: true, hp: 4 } }
+  ])
+  famPatch('fruity-plum', { behaviour: 'wanderer', params: { r: 16, speed: 0, flying: true, dmg: 3, cooldown: 0.5 } })
+  famPatch('cube-baby', { behaviour: 'wanderer', params: { r: 18, speed: 0, dmg: 0 } })
+  famPatch('quints', { behaviour: 'wanderer', params: { r: 14, speed: 0, dmg: 0 } })
+  famPatch('lil-abaddon', { params: { r: 16, speed: 300, flying: true } })
+  famPatch('lil-portal', { behaviour: 'wanderer', params: { r: 16, speed: 0, flying: true, dmg: 3.5, cooldown: 0.4 } })
+  famPatch('vanishing-twin', { params: { r: 16, speed: 300, flying: true, inherit: 0.5, fireDelay: 0.5, range: 520 } })
+
+  // ---- passives ------------------------------------------------------------
+
+  patch('brimstone-bombs', {
+    hooks: {
+      onBombExplode: function (p, bomb, ctx) {
+        if (!ctx || !ctx.room || !bomb) return
+        for (var i = 0; i < 4; i++) {
+          ctx.spawnLaser({ x: bomb.x, y: bomb.y, angle: i * Math.PI / 2, len: 420, width: 28, life: 0.5, tick: 0.1, dmg: Math.max(1, p.stats.damage), friendly: true })
+        }
+        ctx.sfx('brimstone-fire')
+      }
+    }
+  })
+
+  // APPROXIMATE: the engine charges every active on room clear after onRoomClear fires, so the charge is
+  // snapshotted here and put back on the next update (see ENGINE REQUESTS: flag to skip room-clear charge).
+  patch('4-5-volt', {
+    tearFlags: null,
+    hooks: {
+      onEnemyDamage: function (p, e, dmg, ctx) {
+        if (!ctx || !(dmg > 0)) return
+        var need = 24 + 12 * Math.max(1, ctx.floorDepth())
+        p.cache.volt = (p.cache.volt || 0) + dmg
+        while (p.cache.volt >= need) {
+          p.cache.volt -= need
+          for (var s = 0; s < p.active.length; s++) if (p.active[s]) IS.addCharge(p, 1, s)
+          p.cache.voltSnap = null
+        }
+      },
+      onRoomClear: function (p) {
+        p.cache.voltSnap = p.active.map(function (a) { return a ? a.charge : 0 })
+      },
+      onUpdate: function (p) {
+        var snap = p.cache.voltSnap
+        if (!snap) return
+        p.cache.voltSnap = null
+        for (var s = 0; s < p.active.length; s++) {
+          var a = p.active[s]
+          if (a && snap[s] != null && a.charge > snap[s]) a.charge = snap[s]
+        }
+      }
+    }
+  })
+
+  patch('fruity-plum', {
+    hooks: {
+      onUpdate: function (p, dt, ctx) {
+        if (!ctx || !ctx.room) return
+        var list = fams(p, 'fruity-plum')
+        for (var i = 0; i < list.length; i++) {
+          var f = list[i]
+          bounceMove(f, dt, ctx, 230)
+          f.fireT = (f.fireT || 0) - dt
+          if (f.fireT <= 0) {
+            f.fireT = 0.45
+            var a = ctx.range(0, 6.2832)
+            ctx.spawnTear({ x: f.x, y: f.y, vx: Math.cos(a) * IS.TEAR_SPEED, vy: Math.sin(a) * IS.TEAR_SPEED, dmg: 3, r: 7, life: 0.6, friendly: true })
+          }
+        }
+      }
+    }
+  })
+
+  patch('plum-flute', {
+    hooks: {
+      onUse: function (p, ctx) {
+        if (!ctx || !ctx.room) return { fail: true }
+        var f = ctx.spawnFamiliar('baby-plum')
+        if (!f) return { fail: true }
+        f.x = p.x; f.y = p.y
+        ctx.sfx('familiar-spawn')
+      }
+    }
+  })
+
+  // APPROXIMATE: the star sits at the room centre instead of travelling floor-wide, and the x2.5 tears / x1.8
+  // damage multipliers are folded into additive stat ups while Isaac stands in the aura.
+  patch('star-of-bethlehem', {
+    hooks: {
+      onUpdate: function (p, dt, ctx) {
+        if (!ctx || !ctx.room) return
+        var room = ctx.room
+        var inside = IS.dist(p.x, p.y, room.pxW / 2, room.pxH / 2) < 150
+        if (inside !== !!p.cache.inStar) { p.cache.inStar = inside; IS.recalcStats(p) }
+      },
+      onStats: function (p, s) {
+        if (p.cache.inStar) { s.tears += 1.4; s.damage += 1.2 }
+      },
+      onTearFire: function (p, tear) {
+        if (p.cache.inStar && tear) tear.flags.add('homing')
+      },
+      onPlayerDamage: function (p, n, src, ctx) {
+        if (p.cache.inStar && ctx && ctx.chance(0.5)) return { cancel: true }
+      }
+    }
+  })
+
+  patch('cube-baby', {
+    tearFlags: null,
+    hooks: {
+      onUpdate: function (p, dt, ctx) {
+        if (!ctx || !ctx.room) return
+        var room = ctx.room
+        var list = fams(p, 'cube-baby')
+        for (var i = 0; i < list.length; i++) {
+          var f = list[i]
+          f.cvx = f.cvx || 0; f.cvy = f.cvy || 0
+          f.kickT = (f.kickT || 0) - dt
+          if (f.kickT <= 0 && IS.dist(p.x, p.y, f.x, f.y) < p.r + f.r + 6) {
+            var n = IS.norm(f.x - p.x, f.y - p.y)
+            var sp = Math.max(420, Math.hypot(p.vx || 0, p.vy || 0) * 2)
+            f.cvx = n.x * sp; f.cvy = n.y * sp
+            f.kickT = 0.3
+          }
+          f.x += f.cvx * dt; f.y += f.cvy * dt
+          var damp = Math.max(0, 1 - 1.4 * dt)
+          f.cvx *= damp; f.cvy *= damp
+          if (f.x < 90) { f.x = 90; f.cvx = Math.abs(f.cvx) * 0.8 } else if (f.x > room.pxW - 90) { f.x = room.pxW - 90; f.cvx = -Math.abs(f.cvx) * 0.8 }
+          if (f.y < 90) { f.y = 90; f.cvy = Math.abs(f.cvy) * 0.8 } else if (f.y > room.pxH - 90) { f.y = room.pxH - 90; f.cvy = -Math.abs(f.cvy) * 0.8 }
+          var spd = Math.hypot(f.cvx, f.cvy)
+          if (spd < 60) continue
+          var dmg = Math.min(17.5, spd / 700 * 17.5)
+          var es = foes(ctx)
+          for (var j = 0; j < es.length; j++) {
+            var e = es[j]
+            if (e.hidden || IS.dist(f.x, f.y, e.x, e.y) > f.r + e.r) continue
+            if (now(ctx) - (f.hit.get(e) || -9) < 0.3) continue
+            f.hit.set(e, now(ctx))
+            IS.damageEnemy(e, dmg, { src: f, silent: true }, ctx)
+            IS.applyStatus(e, 'slow', 1.5, ctx)
+          }
+        }
+      }
+    }
+  })
+
+  // APPROXIMATE: ghosts follow the item rather than being tied to the room's enemy spawns; "kills ghost enemies
+  // with under 50% HP" matches enemy ids containing ghost/wisp.
+  patch('vade-retro', {
+    hooks: {
+      onEnemyKill: function (p, e, ctx) {
+        if (!ctx || !e || /ghost|wisp/.test(String(e.id || ''))) return
+        if (fams(p, 'vade-ghost').length >= 10) return
+        var g = ctx.spawnFamiliar('vade-ghost')
+        if (g) { g.x = e.x; g.y = e.y }
+      },
+      onUse: function (p, ctx) {
+        if (!ctx || !ctx.room) return { fail: true }
+        var gs = fams(p, 'vade-ghost')
+        for (var i = 0; i < gs.length; i++) {
+          IS.bombExplode(gs[i].x, gs[i].y, { dmg: 25, r: 90, playerSafe: true }, ctx)
+          gs[i].dead = true
+        }
+        var es = foes(ctx)
+        for (var j = 0; j < es.length; j++) {
+          var e = es[j]
+          if (/ghost|wisp/.test(String(e.id || '')) && e.hp < e.maxHp * 0.5) IS.damageEnemy(e, e.hp + 1, { silent: true }, ctx)
+        }
+      }
+    }
+  })
+
+  patch('false-phd', {
+    hooks: {
+      onPillUse: function (p, id, ctx) {
+        if (!ctx || p.cache.phdBusy || !IS.pillsById) return
+        var def = IS.pillsById[id]
+        if (!def) return
+        if (def.good) {
+          var bad = []
+          for (var k in IS.pillsById) if (!IS.pillsById[k].good) bad.push(k)
+          if (!bad.length) return
+          p.cache.phdBusy = true
+          try { ctx.usePill(ctx.pick(bad)) } finally { p.cache.phdBusy = false }
+          return { cancel: true }
+        }
+        if (/down/.test(id)) {
+          p.base.damage += 0.6
+          IS.recalcStats(p)
+        } else if (ctx.room) {
+          ctx.spawnPickup('black', p.x + 50, p.y)
+        }
+      }
+    }
+  })
+
+  patch('spin-to-win', {
+    familiars: ['spin-orbital'],
+    hooks: {
+      onUse: function (p, ctx) {
+        buff(p, 'spin', 8, ctx)
+      },
+      onStats: function (p, s) {
+        if (p.cache.spinOn) s.speed += 0.5
+      },
+      onUpdate: function (p, dt, ctx) {
+        var on = buffOn(p, 'spin', ctx)
+        var list = fams(p, 'spin-orbital')
+        for (var i = 0; i < list.length; i++) ownDef(list[i], on ? { orbitSpeed: 4.8, dmg: 5.2 } : { orbitSpeed: 2.4, dmg: 2.6 })
+      }
+    }
+  })
+
+  patch('tropicamide', {
+    hooks: { onStats: function (p, s) { s.tearSize = (s.tearSize || 1) + 0.22 } }
+  })
+
+  patch('quints', {
+    familiars: null,
+    hooks: {
+      onEnemyKill: function (p, e, ctx) {
+        if (!ctx || !e || fams(p, 'quint').length >= 5) return
+        var f = ctx.spawnFamiliar('quint')
+        if (f) { f.x = e.x; f.y = e.y }
+      },
+      onUpdate: function (p, dt, ctx) {
+        if (!ctx || !ctx.room) return
+        var list = fams(p, 'quint')
+        for (var i = 0; i < list.length; i++) {
+          var f = list[i]
+          f.fireT = (f.fireT || 0) - dt
+          if (f.fireT > 0) continue
+          var e = ctx.nearestEnemy(f.x, f.y)
+          if (!e) continue
+          f.fireT = 1.1
+          shootAt(f, e.x, e.y, 3.5, ctx)
+        }
+      }
+    }
+  })
+
+  // APPROXIMATE: pedestals do not cycle with a food item; picking up a food item (detected by inventory growth)
+  // heals 2 hearts, grants +3.6 damage for 45s and costs 0.03 speed.
+  var FOODS = ['breakfast', 'dessert', 'dinner', 'lunch', 'supper', 'snack', 'midnight-snack', 'sausage', 'rotten-meat', 'crickets-head']
+  patch('binge-eater', {
+    hooks: {
+      onInit: function (p) {
+        if (p.cache.bingeN == null) p.cache.bingeN = p.items.length
+      },
+      onUpdate: function (p, dt, ctx) {
+        if (p.cache.bingeN == null) p.cache.bingeN = p.items.length
+        buffOn(p, 'binge', ctx)
+        if (p.items.length <= p.cache.bingeN) { p.cache.bingeN = p.items.length; return }
+        for (var i = p.cache.bingeN; i < p.items.length; i++) {
+          if (p.items[i] === 'binge-eater' || FOODS.indexOf(p.items[i]) < 0) continue
+          IS.healRed(p, 4)
+          p.base.speed -= 0.03
+          buff(p, 'binge', 45, ctx)
+        }
+        p.cache.bingeN = p.items.length
+      },
+      onStats: function (p, s) {
+        if (p.cache.bingeOn) s.damage += 3.6
+      }
+    }
+  })
+
+  patch('sausage', {
+    hooks: {
+      onStats: function (p, s) { s.devilChance = (s.devilChance || 0) + 0.069; s.angelChance = (s.angelChance || 0) + 0.069 }
+    }
+  })
+
+  // APPROXIMATE: flight is not granted (no flight flag is read by movement).
+  patch('astral-projection', {
+    tearFlags: null,
+    hooks: {
+      onPlayerHurt: function (p, n, src, ctx) {
+        if (!ctx || !ctx.room || ctx.room.cleared) return
+        p.cache.astral = true
+        p.cache.astralShield = true
+        buff(p, 'astralBoost', 2, ctx)
+        var es = foes(ctx)
+        for (var i = 0; i < es.length; i++) IS.applyStatus(es[i], 'freeze', 2, ctx)
+      },
+      onPlayerDamage: function (p) {
+        if (p.cache.astralShield) { p.cache.astralShield = false; return { cancel: true } }
+      },
+      onTearFire: function (p, tear) {
+        if (p.cache.astral && tear) tear.flags.add('spectral')
+      },
+      onUpdate: function (p, dt, ctx) { buffOn(p, 'astralBoost', ctx) },
+      onStats: function (p, s) {
+        if (p.cache.astralBoostOn) { s.speed += 0.4; s.tears += 1.5 }
+      },
+      onRoomClear: function (p) { p.cache.astral = false; p.cache.astralShield = false },
+      onRoomEnter: function (p) { p.cache.astral = false; p.cache.astralShield = false }
+    }
+  })
+
+  // APPROXIMATE: Maw of the Void is a damaging puddle; it charges on a timer (6s) while enemies are present.
+  patch('lil-abaddon', {
+    hooks: {
+      onUpdate: function (p, dt, ctx) {
+        if (!ctx || !ctx.room) return
+        var list = fams(p, 'lil-abaddon')
+        for (var i = 0; i < list.length; i++) {
+          var f = list[i]
+          if (!ctx.nearestEnemy(f.x, f.y)) { f.chargeT = 0; continue }
+          f.chargeT = (f.chargeT || 0) + dt
+          if (f.chargeT < 6) continue
+          f.chargeT = 0
+          IS.spawnPuddle({ x: f.x, y: f.y, r: 120, dmg: 26.25, life: 1, colour: '#1a0f1f', friendly: true }, ctx)
+          ctx.sfx('brimstone-fire')
+        }
+      }
+    }
+  })
+
+  // APPROXIMATE: no portal is opened after four pickups (every pickup just feeds the plum another fly).
+  patch('lil-portal', {
+    hooks: {
+      onUpdate: function (p, dt, ctx) {
+        if (!ctx || !ctx.room) return
+        var list = fams(p, 'lil-portal')
+        for (var i = 0; i < list.length; i++) {
+          var f = list[i]
+          f.eaten = f.eaten || 0
+          f.r = 16 + f.eaten * 2
+          ownDef(f, { dmg: 3.5 + f.eaten })
+          bounceMove(f, dt, ctx, 200)
+          var pk = ctx.room.pickups || []
+          for (var j = 0; j < pk.length; j++) {
+            var u = pk[j]
+            if (!u || u.taken || u.dead || u.removed || u.price > 0 || u.shop || u.kind === 'item' || u.kind === 'chest') continue
+            if (IS.dist(f.x, f.y, u.x, u.y) > f.r + (u.r || 14)) continue
+            u.removed = true
+            f.eaten++
+            ctx.spawnFamiliar('blue-fly')
+            break
+          }
+        }
+      }
+    }
+  })
+
+  // APPROXIMATE: the grab is modelled as a petrify (cannot move) with 8 damage/second for 3 seconds.
+  patch('worm-friend', {
+    tearFlags: null,
+    hooks: {
+      onUpdate: function (p, dt, ctx) {
+        if (!ctx || !ctx.room) return
+        var w = p.cache.worm
+        if (w && w.e && !w.e.dead && w.t > 0) {
+          w.t -= dt
+          w.tick -= dt
+          IS.applyStatus(w.e, 'petrify', 0.2, ctx)
+          if (w.tick <= 0) { w.tick = 0.5; IS.damageEnemy(w.e, 4, { silent: true }, ctx) }
+          return
+        }
+        p.cache.worm = null
+        p.cache.wormCd = (p.cache.wormCd == null ? ctx.range(3, 7) : p.cache.wormCd) - dt
+        if (p.cache.wormCd > 0) return
+        p.cache.wormCd = ctx.range(6, 10)
+        var e = ctx.randomEnemy()
+        if (e) p.cache.worm = { e: e, t: 3, tick: 0 }
+      }
+    }
+  })
+
+  patch('jar-of-wisps', {
+    hooks: {
+      onUse: function (p, ctx) {
+        if (!ctx || !ctx.room) return { fail: true }
+        var n = Math.min(12, (p.cache.jarUses = (p.cache.jarUses || 0) + 1))
+        for (var i = 0; i < n; i++) ctx.spawnFamiliar(ctx.pick(['wisp', 'wisp', 'white-wisp', 'black-wisp', 'blue-wisp']))
+        ctx.sfx('familiar-spawn')
+      },
+      onRoomEnter: function (p) { p.cache.jarUses = 0 }
+    }
+  })
+
+  patch('soul-locket', {
+    hooks: {
+      onPickup: function (p, kind, amount, ctx) {
+        if (kind !== 'soul' && kind !== 'black') return
+        var k = ctx ? ctx.pick(['damage', 'tears', 'speed', 'range', 'luck', 'shotSpeed']) : 'damage'
+        var v = { damage: 0.25, tears: 0.15, speed: 0.04, range: 20, luck: 0.4, shotSpeed: 0.05 }[k]
+        p.base[k] = (p.base[k] || 0) + v
+        IS.recalcStats(p)
+      }
+    }
+  })
+
+  patch('friend-finder', {
+    hooks: {
+      onUse: function (p, ctx) {
+        if (!ctx || !ctx.room) return { fail: true }
+        var f = ctx.spawnFamiliar('friend-pal')
+        if (!f) return { fail: true }
+        ctx.sfx('familiar-spawn')
+      },
+      onRoomEnter: function (p) { clearRoomFams(p, ['friend-pal']) }
+    }
+  })
+
+  // APPROXIMATE: broken hearts shrink red capacity 1:1 (2 half hearts each) and the extra +2 on a fatal hit
+  // is not modelled; death at 12 broken hearts is.
+  patch('heartbreak', {
+    hooks: {
+      onInit: function (p) {
+        if (p.cache.hbDone) return
+        p.cache.hbDone = true
+        p.hearts.broken = (p.hearts.broken || 0) + 3
+        IS.addMaxHearts(p, -6)
+        IS.recalcStats(p)
+      },
+      onStats: function (p, s) { s.damage += 0.25 * (p.hearts.broken || 0) },
+      onUpdate: function (p, dt, ctx) {
+        if (p.dead || !ctx) return
+        if (p.cache.hbSeen !== p.hearts.broken) { p.cache.hbSeen = p.hearts.broken; IS.recalcStats(p) }
+        if ((p.hearts.broken || 0) >= 12) { p.hearts.red = 0; p.hearts.soul = 0; p.hearts.black = 0; p.hearts.bone = 0; IS.killPlayer(p, ctx) }
+      }
+    }
+  })
+
+  patch('vanishing-twin', {
+    tearFlags: null,
+    hooks: {
+      onRoomEnter: function (p, room, ctx) {
+        if (!ctx || !room || room.vtwin || room.cleared || !ctx.isBossRoom()) return
+        var boss = null
+        var es = IS.roomEnemies(room)
+        for (var i = 0; i < es.length; i++) if (es[i].boss && !es[i].twin) { boss = es[i]; break }
+        if (!boss) return
+        var c = ctx.spawnBoss(boss.id, room.pxW - boss.x, boss.y, {})
+        if (!c) return
+        room.vtwin = true
+        c.twin = true
+        c.maxHp = Math.max(1, Math.round((boss.maxHp || boss.hp) * 0.75))
+        c.hp = c.maxHp
+        c.speed = (c.speed || 100) * 0.8
+      },
+      onEnemyKill: function (p, e, ctx) {
+        if (!ctx || !e || !e.twin || !ctx.room) return
+        var id = ctx.rollItem('treasure')
+        if (id) IS.spawnPedestal(ctx.room, id, e.x, e.y, {})
+      }
+    }
+  })
+
+  // APPROXIMATE: Esau Jr. is not a second character. First use gives 3 black hearts; each use toggles an
+  // "Esau" form with +2 damage.
+  patch('esau-jr', {
+    hooks: {
+      onUse: function (p, ctx) {
+        if (!p.cache.esauGiven) { p.cache.esauGiven = true; IS.addBlackHearts(p, 6) }
+        p.cache.esauOn = !p.cache.esauOn
+        IS.recalcStats(p)
+        if (ctx) ctx.sfx('transform')
+      },
+      onStats: function (p, s) { if (p.cache.esauOn) s.damage += 2 }
+    }
+  })
+
+  // APPROXIMATE: the melee-only restriction is not modelled, and the x0.5 fire-rate mult is folded into a
+  // smaller tears bonus.
+  patch('berserk', {
+    hooks: {
+      onEnemyDamage: function (p, e, dmg) {
+        if (!(dmg > 0)) return
+        p.cache.bzAcc = (p.cache.bzAcc || 0) + dmg
+        var s = slotOf(p, 'berserk')
+        while (p.cache.bzAcc >= 60) {
+          p.cache.bzAcc -= 60
+          if (s >= 0) IS.addCharge(p, 1, s)
+        }
+      },
+      onUse: function (p, ctx) {
+        buff(p, 'bz', 5, ctx)
+        if (ctx) ctx.sfx('charge-ready')
+      },
+      onEnemyKill: function (p, e, ctx) {
+        if (!buffOn(p, 'bz', ctx)) return
+        p.cache.bz += 1
+        p.status.invincible = Math.max(p.status.invincible || 0, 0.5)
+      },
+      onUpdate: function (p, dt, ctx) { buffOn(p, 'bz', ctx) },
+      onStats: function (p, s) {
+        if (p.cache.bzOn) { s.speed += 0.4; s.tears += 1; s.damage += 3 }
+      }
+    }
+  })
+
+  patch('dark-arts', {
+    hooks: {
+      onUse: function (p, ctx) {
+        if (!ctx || !ctx.room) return { fail: true }
+        p.cache.darkArts = { t: 1, hit: [], shots: 0 }
+        p.status.invincible = Math.max(p.status.invincible || 0, 1.1)
+        buff(p, 'dark', 1.2, ctx)
+      },
+      onStats: function (p, s) { if (p.cache.darkOn) s.speed += 1 },
+      onUpdate: function (p, dt, ctx) {
+        buffOn(p, 'dark', ctx)
+        var d = p.cache.darkArts
+        if (!d || !ctx || !ctx.room) return
+        d.t -= dt
+        p.status.invincible = Math.max(p.status.invincible || 0, 0.1)
+        var es = foes(ctx), i
+        for (i = 0; i < es.length; i++) {
+          var e = es[i]
+          if (d.hit.indexOf(e) < 0 && IS.dist(p.x, p.y, e.x, e.y) < p.r + e.r + 12) { d.hit.push(e); IS.applyStatus(e, 'petrify', 1.5, ctx) }
+        }
+        var sh = ctx.room.shots || []
+        for (i = 0; i < sh.length; i++) {
+          if (!sh[i].dead && !sh[i].friendly && IS.dist(p.x, p.y, sh[i].x, sh[i].y) < p.r + 40) { sh[i].dead = true; d.shots++ }
+        }
+        var shooting = IS.input && IS.input.shoot ? IS.input.shoot() : { x: 0, y: 0 }
+        if (d.t > 0 && !(shooting.x || shooting.y)) return
+        p.cache.darkArts = null
+        var n = d.hit.length + d.shots
+        for (i = 0; i < d.hit.length; i++) if (!d.hit[i].dead) IS.damageEnemy(d.hit[i], 8 + 4 * n, { silent: true }, ctx)
+        IS.bombExplode(p.x, p.y, { dmg: 10 + 5 * n, r: 100, playerSafe: true }, ctx)
+      }
+    }
+  })
+
+  var LOCUSTS = ['red-locust', 'locust-of-pestilence', 'locust-of-death']
+  patch('abyss', {
+    hooks: {
+      onUse: function (p, ctx) {
+        var list = pedestals(ctx, true)
+        if (!list.length) return { fail: true }
+        for (var i = 0; i < list.length; i++) {
+          list[i].removed = true
+          list[i].taken = true
+          var f = ctx.spawnFamiliar(ctx.pick(LOCUSTS))
+          if (f) { f.x = list[i].x; f.y = list[i].y }
+        }
+        ctx.sfx('familiar-spawn')
+      }
+    }
+  })
+
+  patch('stapler', {
+    hooks: {
+      onTearFire: function (p, tear) {
+        if (!tear || p.stats.multishot > 0) return
+        var a = Math.atan2(tear.vy, tear.vx)
+        var off = p.r * 0.35 * (p.eye || 1)
+        var want = -p.r * 0.35
+        tear.x += -Math.sin(a) * (want - off)
+        tear.y += Math.cos(a) * (want - off)
+      }
+    }
+  })
+
+  // APPROXIMATE: the slam is a damaging blast on the enemy touched during the dash (no pickup animation or
+  // rock waves).
+  patch('suplex', {
+    hooks: {
+      onUse: function (p, ctx) {
+        if (!ctx || !ctx.room) return { fail: true }
+        var m = moveVec(p)
+        var n = IS.norm(m.x, m.y)
+        p.cache.suplex = { t: 0.35, dx: n.x, dy: n.y, done: false }
+        p.status.invincible = Math.max(p.status.invincible || 0, 0.8)
+        ctx.sfx('stomp')
+      },
+      onUpdate: function (p, dt, ctx) {
+        var s = p.cache.suplex
+        if (!s || !ctx || !ctx.room) return
+        s.t -= dt
+        p.vx = s.dx * 1100
+        p.vy = s.dy * 1100
+        var es = foes(ctx)
+        for (var i = 0; i < es.length && !s.done; i++) {
+          var e = es[i]
+          if (e.hidden || IS.dist(p.x, p.y, e.x, e.y) > p.r + e.r + 10) continue
+          s.done = true
+          s.t = 0
+          IS.damageEnemy(e, 20 + p.stats.damage * 3, { silent: true }, ctx)
+          IS.bombExplode(e.x, e.y, { dmg: 10 + p.stats.damage * 2, r: 90, playerSafe: true }, ctx)
+          ctx.shake(6, 0.3)
+        }
+        if (s.t <= 0) { p.cache.suplex = null; p.vx = 0; p.vy = 0 }
+      }
+    }
+  })
+
+  // APPROXIMATE: the bag cannot hide pickups from Isaac, so it only records the kinds picked up (8 max) while held.
+  patch('bag-of-crafting', {
+    hooks: {
+      onPickup: function (p, kind) {
+        var bag = p.cache.bag || (p.cache.bag = [])
+        if (bag.length < 8 && kind !== 'item' && kind !== 'trinket' && kind !== 'chest' && kind !== 'sack') bag.push(kind)
+      },
+      onUse: function (p, ctx) {
+        var bag = p.cache.bag || []
+        if (bag.length < 8 || !ctx || !ctx.room) return { fail: true }
+        var score = 0
+        for (var i = 0; i < bag.length; i++) score += { coin: 1, key: 2, bomb: 2, heart: 2, soul: 3, black: 4, card: 3, pill: 3, rune: 4, battery: 4 }[bag[i]] || 1
+        var q = Math.max(0, Math.min(4, Math.floor(score / 6)))
+        var id = ctx.rollItem('treasure', { quality: q }) || ctx.rollItem('treasure')
+        p.cache.bag = []
+        if (id) IS.spawnPedestal(ctx.room, id, p.x, p.y + 90, {})
+        ctx.sfx('item-pickup')
+      }
+    }
+  })
+
+  // APPROXIMATE: each pedestal holds a hidden second item rolled on room entry; Flip swaps them. Taking the first
+  // item does not leave the other claimable.
+  patch('flip', {
+    hooks: {
+      onRoomEnter: function (p, room, ctx) {
+        if (!ctx || !room || !room.pickups) return
+        for (var i = 0; i < room.pickups.length; i++) {
+          var u = room.pickups[i]
+          if (u && u.kind === 'item' && !u.taken && !u.alt && !(u.price > 0)) u.alt = ctx.rollItem('treasure')
+        }
+      },
+      onUse: function (p, ctx) {
+        var list = pedestals(ctx, false)
+        var did = false
+        for (var i = 0; i < list.length; i++) {
+          var u = list[i]
+          if (!u.alt || !IS.itemsById[u.alt]) continue
+          var prev = u.itemId || u.id
+          swapPedestal(u, u.alt)
+          u.alt = prev
+          did = true
+        }
+        if (!did) return { fail: true }
+        ctx.sfx('card-use')
+      }
+    }
+  })
+
+  // APPROXIMATE: each use grants the rolled item's effect through a wisp; the effect lasts until the wisp dies.
+  patch('lemegeton', {
+    hooks: {
+      onUse: function (p, ctx) {
+        if (!ctx || !ctx.room) return { fail: true }
+        var id = ctx.rollItem(ctx.chance(0.25) ? 'treasure' : ctx.pick(['treasure', 'shop', 'devil', 'angel', 'secret']))
+        var def = id && IS.itemsById[id]
+        if (!def || def.kind !== 'passive') return { fail: true }
+        var f = ctx.spawnFamiliar('lemegeton-wisp')
+        if (!f) return { fail: true }
+        ;(p.cache.lem || (p.cache.lem = [])).push({ f: f, id: id })
+        ctx.giveItem(id)
+      },
+      onUpdate: function (p, dt, ctx) {
+        var list = p.cache.lem
+        if (!list || !list.length || !ctx) return
+        for (var i = list.length - 1; i >= 0; i--) {
+          if (p.familiars.indexOf(list[i].f) >= 0 && !list[i].f.dead) continue
+          IS.removeItem(p, list[i].id, ctx)
+          list.splice(i, 1)
+        }
+      }
+    }
+  })
+
+  patch('sumptorium', {
+    hooks: {
+      onUse: function (p, ctx) {
+        if (!ctx) return { fail: true }
+        var h = p.hearts, id
+        if (h.red >= 1) { h.red -= 1; id = 'clot-red' } else if (h.black >= 1) { h.black -= 1; id = 'clot-black' } else if (h.soul >= 1) { h.soul -= 1; id = 'clot-soul' } else return { fail: true }
+        ctx.spawnFamiliar(id)
+        ctx.sfx('player-hurt')
+      }
+    }
+  })
+
+  // APPROXIMATE: the Forgotten's body is not modelled; the item only grants the soul's brief invincibility.
+  patch('recall', {
+    hooks: {
+      onUse: function (p) { p.status.invincible = Math.max(p.status.invincible || 0, 1.5) }
+    }
+  })
+
+  // APPROXIMATE: stores the next poop Isaac destroys and replays it as a normal poop.
+  patch('hold', {
+    hooks: {
+      onUse: function (p, ctx) {
+        if (p.cache.holdPoop) {
+          if (!ctx || !ctx.room) return { fail: true }
+          p.cache.holdPoop = false
+          ctx.spawnPoop(p.x + 60, p.y)
+          return {}
+        }
+        p.cache.holdArmed = true
+        return { keepCharge: true }
+      },
+      onGridBreak: function (p, g, ctx) {
+        if (!p.cache.holdArmed || !g || g.kind !== 'poop') return
+        p.cache.holdArmed = false
+        p.cache.holdPoop = true
+        if (ctx) ctx.floater('Poop stored')
+      }
+    }
+  })
+
+  patch('keepers-box', {
+    hooks: {
+      onUse: function (p, ctx) {
+        if (!ctx || !ctx.room) return { fail: true }
+        if (ctx.chance(0.5)) {
+          var id = ctx.rollItem('shop')
+          if (!id) return { fail: true }
+          IS.spawnPedestal(ctx.room, id, p.x + 80, p.y, { price: 15 })
+        } else {
+          IS.spawnPickup(ctx.room, ctx.pick(['heart', 'bomb', 'key']), p.x + 80, p.y, { price: 5 })
+        }
+      }
+    }
+  })
+
+  // APPROXIMATE: item charges are not user-visible counters; the jar counts rooms cleared since last use (up to
+  // 12) and rewards that count when used.
+  patch('everything-jar', {
+    hooks: {
+      onRoomClear: function (p) { p.cache.jarN = Math.min(12, (p.cache.jarN || 0) + 1) },
+      onUse: function (p, ctx) {
+        if (!ctx || !ctx.room) return { fail: true }
+        var n = Math.max(4, p.cache.jarN || 0)
+        p.cache.jarN = 0
+        if (n >= 12) {
+          var id = ctx.rollItem('treasure')
+          if (id) IS.spawnPedestal(ctx.room, id, p.x, p.y + 90, {})
+          return
+        }
+        var count = Math.ceil(n / 2)
+        for (var i = 0; i < count; i++) {
+          ctx.spawnPickup(ctx.pick(['coin', 'heart', 'bomb', 'key']), p.x + ctx.range(-70, 70), p.y + ctx.range(40, 100))
+        }
+      }
+    }
+  })
+
+  patch('anima-sola', {
+    hooks: {
+      onUse: function (p, ctx) {
+        if (!ctx || !ctx.room) return { fail: true }
+        var e = ctx.nearestEnemy(p.x, p.y)
+        if (!e) return { fail: true }
+        IS.applyStatus(e, 'petrify', 5, ctx)
+        ctx.sfx('holy-shield')
+      }
+    }
+  })
+
+  patch('spindown-dice', {
+    hooks: {
+      onUse: function (p, ctx) {
+        var list = pedestals(ctx, true)
+        var did = false
+        for (var i = 0; i < list.length; i++) {
+          var cur = IS.itemsById[list[i].itemId || list[i].id]
+          if (!cur) continue
+          for (var n = cur.num - 1; n > 0 && !did; n--) {
+            var d = null
+            for (var k = 0; k < IS.items.length; k++) if (IS.items[k].num === n) { d = IS.items[k]; break }
+            if (d && !/^item-/.test(d.id) && !/does not exist/.test(d.desc || '')) { swapPedestal(list[i], d.id); did = true }
+          }
+          if (did) break
+        }
+        if (!did) return { fail: true }
+        ctx.sfx('card-use')
+      }
+    }
+  })
+
+  // APPROXIMATE: IBS charges on damage dealt (100 per flash) and fires its random effect when the fire keys are
+  // released while charged.
+  patch('ibs', {
+    tearFlags: null,
+    hooks: {
+      onEnemyDamage: function (p, e, dmg) {
+        if (dmg > 0 && !p.cache.ibsReady) {
+          p.cache.ibsAcc = (p.cache.ibsAcc || 0) + dmg
+          if (p.cache.ibsAcc >= 100) { p.cache.ibsAcc = 0; p.cache.ibsReady = true }
+        }
+      },
+      onUpdate: function (p, dt, ctx) {
+        if (!p.cache.ibsReady || !ctx || !ctx.room) return
+        var d = IS.input && IS.input.shoot ? IS.input.shoot() : { x: 0, y: 0 }
+        if (d.x || d.y) { p.cache.ibsHeld = true; return }
+        if (!p.cache.ibsHeld) return
+        p.cache.ibsHeld = false
+        p.cache.ibsReady = false
+        var r = ctx.int(4)
+        if (r === 0) ctx.spawnPoop(p.x, p.y + 60)
+        else if (r === 1) IS.spawnPuddle({ x: p.x, y: p.y, r: 90, dmg: 0, life: 6, friendly: true, colour: '#d8a040' }, ctx)
+        else if (r === 2) { IS.spawnPuddle({ x: p.x, y: p.y, r: 100, dmg: 1.5, life: 4, status: [['poison', 3]], friendly: true, colour: '#7fbf4f' }, ctx); ctx.sfx('fart') }
+        else for (var i = 0; i < 5; i++) ctx.spawnBomb(p.x + ctx.range(-90, 90), p.y + ctx.range(-90, 90), { fuse: 1.5 })
+      }
+    }
+  })
+
+  patch('ghost-bombs', {
+    hooks: {
+      onBombExplode: function (p, bomb, ctx) {
+        if (!ctx || !ctx.room || !bomb) return
+        var f = ctx.spawnFamiliar('ghost-bomb')
+        if (!f) return
+        f.x = bomb.x; f.y = bomb.y
+        ownDef(f, { dmg: p.stats.damage })
+      }
+    }
+  })
+
+  patch('gello', {
+    hooks: {
+      onUse: function (p, ctx) {
+        if (!ctx || !ctx.room) return { fail: true }
+        var f = ctx.spawnFamiliar('gello-demon')
+        if (!f) return { fail: true }
+        ctx.sfx('familiar-spawn')
+      },
+      onRoomEnter: function (p) { clearRoomFams(p, ['gello-demon']) }
+    }
+  })
+
+  // APPROXIMATE: Isaac keeps his head; the thrown head is a big piercing tear and does not land to fire tears.
+  patch('decap-attack', {
+    hooks: {
+      onUse: function (p, ctx) {
+        if (!ctx || !ctx.room) return { fail: true }
+        var d = p.head && (p.head.x || p.head.y) ? p.head : { x: 1, y: 0 }
+        var n = IS.norm(d.x, d.y)
+        var t = ctx.spawnTear({ x: p.x, y: p.y, vx: n.x * IS.TEAR_SPEED * 0.9, vy: n.y * IS.TEAR_SPEED * 0.9, dmg: Math.max(3.5, p.stats.damage * 2), r: 24, life: 1.1, friendly: true, flags: ['piercing', 'spectral'] })
+        if (!t) return { fail: true }
+        ctx.sfx('knife-throw')
+      }
+    }
+  })
+
+  patch('moms-ring', {
+    hooks: {
+      onInit: function (p, ctx) {
+        if (p.cache.ringDone || !ctx || !ctx.room) return
+        p.cache.ringDone = true
+        var id = ctx.rollRune()
+        if (id) ctx.spawnPickup('rune', p.x + 70, p.y, { id: id })
+      }
+    }
+  })
+
 })(window.IS)

@@ -94,6 +94,88 @@
     if (e && !e.dead && typeof IS.killEnemy === 'function') IS.killEnemy(e, ctx)
   }
 
+  function aimDir () {
+    var d = IS.input && typeof IS.input.shoot === 'function' ? IS.input.shoot() : null
+    return d && (d.x || d.y) ? { x: d.x, y: d.y } : null
+  }
+
+  // Leo: the engine never reads a 'rock' tear flag, so tears that touch a
+  // breakable rock smash it from here.
+  function breakRocksNearTears (ctx) {
+    var tears = ctx.room.tears || []
+    var grid = ctx.gridObjects()
+    if (!tears.length || !grid.length) return
+    for (var i = 0; i < tears.length; i++) {
+      var t = tears[i]
+      if (!t || t.dead || !t.friendly) continue
+      for (var k = 0; k < grid.length; k++) {
+        var g = grid[k]
+        if (!g || g.broken || !g.rockFamily || !g.destructible || g.bombOnly) continue
+        var dx = g.x - t.x
+        var dy = g.y - t.y
+        var rr = (g.r || 20) + (t.r || 8) + 6
+        if (dx * dx + dy * dy <= rr * rr) ctx.destroyGrid(g)
+      }
+    }
+  }
+
+  function killRings (c) {
+    var rings = c.txRings || []
+    for (var i = 0; i < rings.length; i++) {
+      for (var k = 0; k < rings[i].segs.length; k++) if (rings[i].segs[k]) rings[i].segs[k].dead = true
+    }
+    c.txRings = []
+  }
+
+  function placeRing (rg) {
+    var n = rg.segs.length
+    var len = 2 * rg.r * Math.sin(Math.PI / n) * 1.08
+    for (var i = 0; i < n; i++) {
+      var s = rg.segs[i]
+      if (!s) continue
+      var th = (i / n) * Math.PI * 2
+      var ta = th + Math.PI / 2
+      s.x = rg.x + Math.cos(th) * rg.r - Math.cos(ta) * len / 2
+      s.y = rg.y + Math.sin(th) * rg.r - Math.sin(ta) * len / 2
+      s.angle = ta
+      s.len = len
+      s.life = 0.2
+    }
+  }
+
+  function spawnRing (c, p, ctx, dir, r, dmg) {
+    var rg = { x: p.x + dir.x * r, y: p.y - 10 + dir.y * r, vx: dir.x * 320, vy: dir.y * 320, r: r, t: 0, max: 0.35 + ((p.stats && p.stats.range) || 400) / 900, segs: [] }
+    for (var i = 0; i < 12; i++) {
+      var l = ctx.spawnLaser({ x: rg.x, y: rg.y, angle: 0, len: 10, width: 10, life: 0.2, dmg: dmg, tick: 0.25, friendly: true })
+      if (l) l.techx = true
+      rg.segs.push(l)
+    }
+    placeRing(rg)
+    if (!c.txRings) c.txRings = []
+    c.txRings.push(rg)
+    ctx.sfx('laser-fire')
+  }
+
+  function stepRings (c, p, dt, ctx) {
+    var rings = c.txRings || []
+    var keep = []
+    for (var i = 0; i < rings.length; i++) {
+      var rg = rings[i]
+      rg.t += dt
+      rg.x += rg.vx * dt
+      rg.y += rg.vy * dt
+      var room = ctx.room
+      var out = room && (rg.x < 0 || rg.y < 0 || rg.x > roomW(room) || rg.y > roomH(room))
+      if (rg.t >= rg.max || out) {
+        for (var k = 0; k < rg.segs.length; k++) if (rg.segs[k]) rg.segs[k].dead = true
+        continue
+      }
+      placeRing(rg)
+      keep.push(rg)
+    }
+    c.txRings = keep
+  }
+
   function addFlag (tear, f) {
     if (tear && tear.flags && typeof tear.flags.add === 'function') tear.flags.add(f)
   }
@@ -1358,10 +1440,9 @@
       tags: ['shop', 'utility', 'coins'],
       dlc: 'afterbirth',
       hooks: {
-        // APPROXIMATED: the shop entry's internals belong to interact.js, so
-        // rather than un-selling an object whose field names we would have to
-        // guess, we spawn a fresh shop pedestal on the same spot and track the
-        // escalating price ourselves.
+        // APPROXIMATE: rather than un-selling the bought entry (interact.js
+        // owns it), a fresh entry of the same kind is spawned on the same spot
+        // at an escalating price.
         onPurchase: function (p, entry, ctx) {
           if (!entry || typeof entry.x !== 'number' || typeof entry.y !== 'number') return
           var room = ctx && ctx.room
@@ -1369,9 +1450,11 @@
           var c = cache(p)
           var n = (c.restockCount || 0) + 1
           c.restockCount = n
-          var base = typeof entry.price === 'number' && entry.price > 0 ? entry.price : 15
+          var isItem = entry.kind === 'item' || entry.itemId != null
+          var base = typeof entry.price === 'number' && entry.price > 0 ? entry.price : (isItem ? 15 : 5)
           var price = Math.ceil(base * (1 + 0.5 * n))
-          ctx.spawnPickup('item', entry.x, entry.y, { pool: 'shop', price: price, shop: true })
+          if (isItem) ctx.spawnPickup('item', entry.x, entry.y, { pool: 'shop', price: price, shop: true })
+          else ctx.spawnPickup(entry.kind || 'heart', entry.x, entry.y, { variant: entry.variant, price: price, shop: true })
           ctx.sfx('pedestal-appear')
         }
       }
@@ -1511,10 +1594,10 @@
       dlc: 'afterbirth',
       stats: { tears: 0.72 },
       hooks: {
-        // APPROXIMATED: nothing in the data layer survives to the next run —
-        // IS.save's schema is owned by js/core/save.js and no other file would
-        // read a key we invented, which would make the blessing a silent
-        // no-op. The gift is therefore delivered on the next floor of this run.
+        // APPROXIMATE: the real item hands a random item to the start of the
+        // next run. save.js owns the schema and nothing reads a key we invent
+        // (ENGINE REQUEST: run-start item grant), so the gift arrives on the
+        // next floor of this run instead.
         onNewFloor: function (p, floor, ctx) {
           var c = cache(p)
           if (c.edensBlessingGiven) return
@@ -1694,27 +1777,33 @@
       charge: 6,
       chargeType: 'normal',
       hooks: {
-        // APPROXIMATED: ctx can create poop, crawlspaces and trapdoors but has
-        // no generic grid spawner, so a rerolled obstacle becomes poop unless
-        // the rare roll turns it into a crawlspace or a trapdoor.
+        // APPROXIMATE: pits, metal blocks and key blocks are left alone and the
+        // new-obstacle odds are tuned by eye. Everything else becomes another
+        // obstacle in place, rarely a crawlspace or trapdoor.
         onUse: function (p, ctx) {
+          var room = ctx && ctx.room
           var grid = ctx.gridObjects()
-          if (!grid.length) return { fail: true }
           var targets = []
           for (var i = 0; i < grid.length; i++) {
             var g = grid[i]
             if (!g || g.broken) continue
-            if (g.kind === 'metal' || g.kind === 'pit' || g.kind === 'pit-bridge') continue
+            if (g.kind === 'metal' || g.kind === 'pit' || g.kind === 'pit-bridge' || g.kind === 'key-block') continue
             targets.push(g)
           }
           if (!targets.length) return { fail: true }
+          var kinds = ['rock', 'rock', 'rock', 'rock', 'tinted-rock', 'poop', 'poop', 'poop', 'red-poop', 'tnt', 'fire', 'spikes', 'web', 'mushroom']
           for (var k = 0; k < targets.length; k++) {
             var t = targets[k]
             var x = t.x
             var y = t.y
-            ctx.destroyGrid(t)
-            if (ctx.chance(0.04)) ctx.spawnCrawlspace(x, y)
+            // Swap the object out silently: no drops, no rock-break sound.
+            t.broken = true
+            var gi = room && room.grid ? room.grid.indexOf(t) : -1
+            if (gi >= 0) room.grid.splice(gi, 1)
+            if (room && room.obstacles && room.obstacles[t.row * room.w + t.col] === t) room.obstacles[t.row * room.w + t.col] = null
+            if (ctx.chance(0.03)) ctx.spawnCrawlspace(x, y)
             else if (ctx.chance(0.02)) ctx.spawnTrapdoor(x, y)
+            else if (typeof IS.addGrid === 'function') IS.addGrid(room, ctx.pick(kinds), x, y, null)
             else ctx.spawnPoop(x, y)
           }
           ctx.sfx('rock-break')
@@ -1844,7 +1933,7 @@
       tags: ['devil', 'utility'],
       dlc: 'afterbirth',
       hooks: {
-        // APPROXIMATED: projectile friendly-fire is engine-side. Charm is the
+        // APPROXIMATE: projectile friendly-fire is engine-side. Charm is the
         // mechanism the engine already owns for making enemies infight, so the
         // item applies that instead of rewriting shot ownership.
         onPlayerDamage: function (p, amount, source, ctx) {
@@ -1893,6 +1982,7 @@
         },
         onUpdate: function (p, dt, ctx) {
           var z = ZODIAC[cache(p).zodiacSign]
+          if (z && z.tearFlag === 'rock' && ctx && ctx.room) breakRocksNearTears(ctx)
           if (!z || !z.creep) return
           var c = cache(p)
           c.zodiacCreepT = (c.zodiacCreepT || 0) + dt
@@ -1918,6 +2008,9 @@
       hooks: {
         onTearFire: function (p, tear, ctx) {
           if (ctx.roll(0.15, 0.03, 1)) addFlag(tear, 'poison')
+        },
+        onTearHit: function (p, tear, enemy, ctx) {
+          if (enemy && tear && tear.flags && tear.flags.has && tear.flags.has('poison')) enemy.serpentKissed = true
         },
         onUpdate: function (p, dt, ctx) {
           var list = livingList(ctx)
@@ -1954,10 +2047,57 @@
       tags: ['tears', 'range', 'offensive'],
       dlc: 'afterbirth',
       stats: { tears: 0.72, range: 132 },
-      // APPROXIMATED: the movable red target needs the input layer, which no
-      // data file can read. Homing tears are the closest honest stand-in — the
-      // tears still choose their own target instead of the player's.
-      flags: ['homingTears']
+      // The target is p.cache.marked ({x, y}); a renderer may draw it.
+      hooks: {
+        onUpdate: function (p, dt, ctx) {
+          if (!ctx || !ctx.room) return
+          var c = cache(p)
+          var room = ctx.room
+          if (!c.marked || c.markedRoom !== room) {
+            c.marked = { x: p.x, y: p.y }
+            c.markedRoom = room
+          }
+          var m = c.marked
+          var d = aimDir()
+          if (d) {
+            m.x += d.x * 340 * dt
+            m.y += d.y * 340 * dt
+          }
+          m.x = Math.max(40, Math.min(roomW(room) - 40, m.x))
+          m.y = Math.max(40, Math.min(roomH(room) - 40, m.y))
+          // The target fires for you: with no fire key held, tears still go
+          // out at the mark.
+          var dx = m.x - p.x
+          var dy = m.y - p.y
+          var dist = Math.sqrt(dx * dx + dy * dy)
+          if (!d && dist > 24 && !p.dead && (p.weapon == null || p.weapon === 'tears') &&
+              (p.nextShot || 0) <= 0 && typeof IS.firePlayerTears === 'function') {
+            c.markedAuto = true
+            IS.firePlayerTears(p, { x: dx / dist, y: dy / dist }, ctx)
+            c.markedAuto = false
+            p.nextShot = p.stats ? p.stats.fireDelay : 0.4
+          }
+        },
+        // Held fire keys still shoot, but the tears are bent onto the mark.
+        onTearFire: function (p, tear, ctx) {
+          var c = cache(p)
+          var m = c.marked
+          if (!tear || !m || c.markedAuto) return
+          var d = aimDir()
+          if (!d) return
+          var dx = m.x - p.x
+          var dy = m.y - p.y
+          if (dx * dx + dy * dy < 24 * 24) return
+          var delta = Math.atan2(dy, dx) - Math.atan2(d.y, d.x)
+          var cs = Math.cos(delta)
+          var sn = Math.sin(delta)
+          var vx = tear.vx
+          var vy = tear.vy
+          if (typeof vx !== 'number' || typeof vy !== 'number') return
+          tear.vx = vx * cs - vy * sn
+          tear.vy = vx * sn + vy * cs
+        }
+      }
     },
 
     // ---------------------------------------------------------------- 395
@@ -1973,7 +2113,43 @@
       tags: ['laser', 'offensive', 'tears'],
       dlc: 'afterbirth',
       flags: ['laser'],
-      tearFlags: ['technology', 'piercing', 'spectral']
+      tearFlags: ['technology', 'piercing', 'spectral'],
+      // The engine's 'tech' weapon fires straight lasers on a cooldown; this
+      // hook swallows those and instead charges while the fire key is held and
+      // releases a travelling ring of laser segments.
+      // APPROXIMATE: the ring is built from short laser segments, and the
+      // charge time, size and damage curves are tuned by eye, not copied.
+      hooks: {
+        onRemove: function (p, ctx) {
+          var c = cache(p)
+          killRings(c)
+          c.txCharge = null
+        },
+        onUpdate: function (p, dt, ctx) {
+          if (!ctx || !ctx.room) return
+          var c = cache(p)
+          var room = ctx.room
+          var ls = room.lasers || []
+          for (var i = 0; i < ls.length; i++) {
+            var l = ls[i]
+            if (l && l.friendly && !l.techx && l.width === 9 && l.len === 1500) l.dead = true
+          }
+          if (c.txRoom !== room) { killRings(c); c.txRoom = room; c.txCharge = null }
+          var d = aimDir()
+          var full = Math.max(0.4, ((p.stats && p.stats.fireDelay) || 0.4) * 1.5)
+          if (d) {
+            c.txCharge = Math.min(full, (c.txCharge || 0) + dt)
+            c.txDir = d
+          } else if (c.txCharge != null) {
+            var f = c.txCharge / full
+            var dir = c.txDir || { x: 1, y: 0 }
+            c.txCharge = null
+            var dmg = (p.stats && p.stats.damage) || IS.BASE_DAMAGE
+            spawnRing(c, p, ctx, dir, 26 + 64 * f, dmg * (0.4 + 0.8 * f))
+          }
+          stepRings(c, p, dt, ctx)
+        }
+      }
     },
 
     // ---------------------------------------------------------------- 396

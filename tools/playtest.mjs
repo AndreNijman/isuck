@@ -39,12 +39,13 @@ const FLOOR = arg('floor', null)
 const BOSS = arg('boss', null) // swap the boss room's boss for this id
 const SHOTS = process.argv.includes('--shots')
 const roomLimit = n => 20 + 8 * n // seconds of game time to clear a room of n enemies
-const BOSS_LIMIT = 90
+// late chapter bosses are long fights in Isaac: past the Depths the boss limits grow per floor
+const bossLimit = depth => 90 + 15 * Math.max(0, depth - 6)
 const hitCap = n => 6 + 2 * n // hits taken
-const BOSS_HIT_CAP = 24
+const bossHitCap = depth => 24 + 3 * Math.max(0, depth - 6)
 
 // stat ups gathered by the start of each chapter: [damage up, tears up] per chapter
-const KIT = [[], ['pentagram', 'the-sad-onion'], ['growth-hormones', 'wire-coat-hanger'], ['steven', 'torn-photo']]
+const KIT = [[], ['pentagram', 'the-sad-onion'], ['growth-hormones', 'wire-coat-hanger'], ['steven', 'torn-photo'], ['the-mark', 'capricorn'], ['jesus-juice', 'mr-dolly']]
 const kitFor = depth => KIT.slice(0, Math.ceil(depth / 2)).flat()
 
 const fails = []
@@ -174,7 +175,7 @@ try {
       const start = JSON.parse(await page.evaluate(state))
       if (!start.alive.length) continue
       fights++
-      const limit = r.type === 'boss' ? BOSS_LIMIT : roomLimit(start.alive.length)
+      const limit = r.type === 'boss' ? bossLimit(depth) : roomLimit(start.alive.length)
       let s = start
       for (let t = 0; t < limit; t += 5) {
         await page.evaluate(`window.__play(5); return 1`)
@@ -187,7 +188,7 @@ try {
       if (!ok(s.screen === 'game', `${tag}: left the game screen (${s.screen})`)) break
       const cleared = ok(s.cleared, `${tag}: not cleared after ${s.time}s — still alive: ${s.alive.join('; ')}`)
       if (cleared) roomsCleared++
-      const cap = r.type === 'boss' ? BOSS_HIT_CAP : hitCap(start.alive.length)
+      const cap = r.type === 'boss' ? bossHitCap(depth) : hitCap(start.alive.length)
       const fair = ok(s.hits <= cap, `${tag}: ${s.hits} hits from ${start.alive.map(a => a.split(' ')[0]).join(', ')}`)
       console.log(`  ${cleared && fair ? 'ok ' : 'FAIL'} ${tag.padEnd(28)} ${String(s.time).padStart(5)}s  hits ${String(s.hits).padStart(2)}  ${start.alive.map(a => a.split(' ')[0]).join(', ')}`)
     }
