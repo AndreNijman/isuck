@@ -95,6 +95,15 @@
   }
   var FLYING = /^(flyerDrift|flyerChase|flyerOrbit|flyerDart|swarm|ghost)$/
 
+  // Whether an enemy flies is a property of the Isaac enemy, not of the archetype
+  // it used to be filed under. Per-id overrides win over the archetype regex.
+  var FLIES = ('fly attackfly pot pooter super-pooter sucker blue-sucker soul-sucker dinga para-bite tumor blue-tumor revenant ' +
+    'spiked-revenant ministro red-ghost poof lil-haunt reaper fred poison-mind hell-bird grudge-bat fat-bat deaths-head ' +
+    'cursed-deaths-head red-floater locust-of-famine locust-of-pestilence locust-of-war locust-of-death willo hanger one-tooth ' +
+    'eternal-fly eternal-heart-fly angelic-baby molten-baby pride super-pride ultra-pride moms-hand moms-dead-hand swinger ' +
+    'boom-fly red-boom-fly drowned-boom-fly fly-bomb floating-knight').split(' ')
+  var GROUND = ('nerve-ending maw psychic-maw black-maw blue-maw mr-maw gaping-maw ash-pile null wrath super-wrath').split(' ')
+
   function depthOf (e) {
     var d = 99
     ;(e.floors || []).forEach(function (fid) {
@@ -118,6 +127,8 @@
         e.speed = Math.max(60, Math.min(170, e.speed))
       }
       if (FLYING.test(e.archetype) || (e.params && e.params.flying)) e.flying = true
+      if (FLIES.indexOf(e.id) > -1) e.flying = true
+      if (GROUND.indexOf(e.id) > -1) e.flying = false
       if (t && t[3] && t[3].r) e.r = t[3].r
       // keep bodies readable: nothing smaller than a tear-and-a-half
       e.r = Math.max(e.r || 18, e.flying ? 15 : 18)
