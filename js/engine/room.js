@@ -1091,6 +1091,8 @@
     var y = cellY(row)
     var e = null
     if (isBoss || def.boss) {
+      // the first boss of a boss room stands in the middle, not wherever the legend put it
+      if (room.type === 'boss' && !room.boss && room.pxW) { x = room.pxW / 2; y = room.pxH / 2 - 40 }
       if (typeof IS.spawnBoss === 'function') e = IS.spawnBoss(room, eid, x, y, {})
       room.boss = room.boss || eid
     } else if (typeof IS.spawnEnemy === 'function') {

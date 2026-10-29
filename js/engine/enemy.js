@@ -91,9 +91,10 @@
       e.frame+=dt*8
       if(e.spawnT>0){e.spawnT-=dt;e.vx*=.8;e.vy*=.8;IS.moveEntity(e,dt,room,ctx);continue}
       IS.updateStatuses(e,dt,ctx);if(e.status.freeze)continue
-      if(e.boss)IS.updateBoss(e,dt,ctx);else(IS.archetypes[e.def.archetype]||map.wanderer)(e,dt,ctx)
+      if(!e.boss&&(e.status.fear||e.status.confusion||e.status.charm)){if(e.status.fear){const n=toPlayer(e,ctx);steer(e,-n.x,-n.y,e.speed||90,(e.speed||90)*5,dt)}else wander(e,dt,ctx,.6)}
+      else if(e.boss)IS.updateBoss(e,dt,ctx);else(IS.archetypes[e.def.archetype]||map.wanderer)(e,dt,ctx)
       if(e.vx)e.dir=e.vx<0?-1:1
-      IS.moveEntity(e,dt,room,ctx);IS.enemyContactDamage(e,ctx.player,ctx)
+      IS.moveEntity(e,dt,room,ctx);if(!e.status.charm)IS.enemyContactDamage(e,ctx.player,ctx)
     }
     IS.separateEnemies(room.enemies)
     if(room.markers&&room.markers.length){for(const m of room.markers)m.t+=dt;room.markers=room.markers.filter(m=>m.t<m.dur)}

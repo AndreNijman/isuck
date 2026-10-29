@@ -5,20 +5,37 @@
   IS.hud = IS.hud || {}
   function text (g, s, x, y, size, align, colour) { g.font = 'bold ' + size + 'px monospace'; g.textAlign = align || 'left'; g.textBaseline = 'middle'; g.fillStyle = 'rgba(20,12,9,.7)'; g.fillText(String(s), x + 2, y + 2); g.fillStyle = colour || '#eadcc7'; g.fillText(String(s), x, y) }
   function icon (g, name, x, y, s, t) { if (IS.drawSprite) IS.drawSprite(g, name, x, y, s, t || {}); else { g.fillStyle = '#b99362'; g.fillRect(x - s / 4, y - s / 4, s / 2, s / 2) } }
-  function heart (g, kind, half, x, y, keeper) {
-    if (keeper) { icon(g, 'penny', x, y, 27, { variant: half ? 'half' : '' }); return }
-    var name = kind === 'red' ? (half ? 'half-heart' : 'red-heart') : kind === 'soul' ? 'soul-heart' : kind === 'black' ? 'black-heart' : kind === 'bone' ? 'bone-heart' : kind === 'rotten' ? 'rotten-heart' : kind === 'eternal' ? 'eternal-heart' : kind === 'gold' ? 'gold-heart' : kind + '-heart'
-    icon(g, name, x, y, 30, {})
+  // Hearts are drawn here rather than from the pickup sprites so a half heart is
+  // visibly half and an empty container reads as an outline, as in Isaac.
+  var HEART = { red: '#d42a2a', rotten: '#7d8a3a', soul: '#8aa6d8', black: '#2b2430', bone: '#e6dfcc', eternal: '#f4f4f4', gold: '#e8c040', broken: '#5a4a4a' }
+  function heartPath (g, x, y, s) { g.beginPath(); g.moveTo(x, y + s * .42); g.bezierCurveTo(x - s * .55, y + s * .08, x - s * .45, y - s * .42, x, y - s * .14); g.bezierCurveTo(x + s * .45, y - s * .42, x + s * .55, y + s * .08, x, y + s * .42); g.closePath() }
+  function heart (g, kind, fill, x, y, keeper, s) {
+    if (keeper) { icon(g, 'penny', x, y, 27, { variant: fill < 1 ? 'half' : '' }); return }
+    g.save()
+    heartPath(g, x, y, s); g.fillStyle = 'rgba(0,0,0,.45)'; g.fill()
+    if (fill > 0) {
+      g.save(); heartPath(g, x, y, s); g.clip()
+      g.fillStyle = HEART[kind] || '#d42a2a'; g.fillRect(x - s * .6, y - s * .6, fill >= 1 ? s * 1.2 : s * .6, s * 1.2)
+      g.fillStyle = 'rgba(255,255,255,.35)'; g.beginPath(); g.ellipse(x - s * .2, y - s * .12, s * .09, s * .06, -.6, 0, 7); g.fill()
+      g.restore()
+    }
+    heartPath(g, x, y, s); g.lineWidth = Math.max(1.5, s * .08); g.strokeStyle = kind === 'broken' ? '#8a7070' : '#1a0d0d'; g.stroke()
+    if (kind === 'broken') { g.beginPath(); g.moveTo(x, y - s * .14); g.lineTo(x - s * .08, y + s * .08); g.lineTo(x + s * .06, y + s * .16); g.lineTo(x, y + s * .42); g.stroke() }
+    if (kind === 'eternal' || kind === 'gold') { heartPath(g, x, y, s * .55); g.lineWidth = 1; g.strokeStyle = kind === 'gold' ? '#fff3b0' : '#c8c8c8'; g.stroke() }
+    g.restore()
   }
   function hearts (g, p, u) {
     var h = p.hearts || {}, cells = [], i
-    for (i = 0; i < (h.bone || 0); i += 2) cells.push(['bone', h.bone - i === 1])
-    for (i = 0; i < (h.red || 0); i += 2) cells.push([i < (h.rotten || 0) ? 'rotten' : 'red', h.red - i === 1])
-    for (i = 0; i < (h.soul || 0); i += 2) cells.push(['soul', h.soul - i === 1])
-    for (i = 0; i < (h.black || 0); i += 2) cells.push(['black', h.black - i === 1])
-    if (h.eternal) cells.push(['eternal', true]); if (h.gold) cells.push(['gold', false])
-    for (i = 0; i < (h.broken || 0); i++) cells.push(['broken', false])
-    for (i = 0; i < cells.length; i++) heart(g, cells[i][0], cells[i][1], 26 * u + (i % 6) * 31 * u, 25 * u + ((i / 6) | 0) * 29 * u, p.flags && p.flags.has('keeperHearts'))
+    var red = h.red || 0, max = h.maxRed || 0
+    for (i = 0; i < max; i += 2) cells.push([i < (h.rotten || 0) ? 'rotten' : 'red', Math.max(0, Math.min(2, red - i)) / 2])
+    for (i = 0; i < (h.bone || 0); i += 2) cells.push(['bone', Math.min(2, h.bone - i) / 2])
+    for (i = 0; i < (h.soul || 0); i += 2) cells.push(['soul', Math.min(2, h.soul - i) / 2])
+    for (i = 0; i < (h.black || 0); i += 2) cells.push(['black', Math.min(2, h.black - i) / 2])
+    if (h.eternal) cells.push(['eternal', 1])
+    for (i = 0; i < (h.broken || 0); i++) cells.push(['broken', 0])
+    var keeper = p.flags && p.flags.has('keeperHearts')
+    for (i = 0; i < cells.length; i++) heart(g, cells[i][0], cells[i][1], 26 * u + (i % 6) * 31 * u, 25 * u + ((i / 6) | 0) * 29 * u, keeper, 30 * u)
+    for (i = 0; i < (h.gold || 0) && i < cells.length; i++) { var gx = 26 * u + (i % 6) * 31 * u, gy = 25 * u + ((i / 6) | 0) * 29 * u; heartPath(g, gx, gy, 30 * u); g.lineWidth = 2.5 * u; g.strokeStyle = HEART.gold; g.stroke() }
   }
   function consumables (g, p, u) {
     var y = 86 * u, vals = [['penny', p.coins], ['bomb', p.bombs], ['key', p.keys]]

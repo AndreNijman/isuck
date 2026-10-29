@@ -64,6 +64,25 @@
     g.restore()
   }
 
+  // what the player is holding: Mom's Knife, a charge bar, an Epic Fetus target
+  function weaponOverlay (g, p) {
+    var t = (IS.state && IS.state.time) || 0
+    if (p.weapon === 'knife' && p.knife) {
+      g.save(); g.translate(p.knife.x, p.knife.y - 10); g.rotate(p.knife.angle)
+      IS.drawSprite(g, 'knife', 0, 0, 46, { time: t }); g.restore()
+    }
+    if (p.charge > 0) {
+      var w = 40, x = p.x - w / 2, y = p.y - p.r * 2.4
+      g.fillStyle = 'rgba(15,10,8,.7)'; g.fillRect(x - 2, y - 2, w + 4, 9)
+      g.fillStyle = p.charge >= 1 ? (Math.floor(t * 16) % 2 ? '#f3e2b0' : '#d8322a') : '#d8322a'; g.fillRect(x, y, w * p.charge, 5)
+    }
+    if (p.target) {
+      g.strokeStyle = 'rgba(220,40,30,.9)'; g.lineWidth = 3
+      g.beginPath(); g.arc(p.target.x, p.target.y, 26, 0, Math.PI * 2); g.stroke()
+      g.beginPath(); g.moveTo(p.target.x - 38, p.target.y); g.lineTo(p.target.x + 38, p.target.y); g.moveTo(p.target.x, p.target.y - 38); g.lineTo(p.target.x, p.target.y + 38); g.stroke()
+    }
+  }
+
   function markers (g, room) {
     var list = room.markers || [], t = (IS.state && IS.state.time) || 0
     for (var i = 0; i < list.length; i++) {
@@ -142,6 +161,7 @@
     IS.drawGridObjects(g, room, run.floor)
     for (i = 0; i < actors.length; i++) actor(g, actors[i], run)
     projectiles(g, room)
+    if (run.player) weaponOverlay(g, run.player)
     if (IS.fx && IS.fx.draw) IS.fx.draw(g, 'over')
     IS.drawDoors(g, room)
     g.restore()
