@@ -49,7 +49,7 @@
     if(s.mode==='w'){if(lt<=.3)s.warn.angle=aim(b,c);s.warn.x=b.x;s.warn.y=b.y;b.ai.telegraph=Math.min(1,lt/.5);b.vx*=.8;b.vy*=.8;if(lt<.5)return false
       s.a=s.warn.angle;s.warn.life=0;s.dx=Math.cos(s.a);s.dy=Math.sin(s.a);s.mode='g';s.t0=s.t;b.ai.telegraph=0;c.sfx&&c.sfx('charge');return false}
     if(s.mode==='g'){b.vx=s.dx*speed;b.vy=s.dy*speed;if((b.bumped&&lt>.12)||lt>.8){b.vx=b.vy=0;s.n++;s.mode='r';s.t0=s.t;IS.fx&&IS.fx.shake(4,.2)}return false}
-    if(lt<.25)return false
+    if(lt<(s.n<count?.4:.25))return false
     if(s.n>=count){if(end&&once(s,'e'))end(b,c);return lt>(end?.5:.25)}
     s.mode='w';s.t0=s.t;s.warn=beam(b,c,s,{angle:aim(b,c)});return false}}
   // like multiDash but the charge ricochets off the walls
@@ -197,7 +197,7 @@
   }
 
   // ---- Dingle: three charges in a row, then a three-tear spread; calls Dips ----
-  const dingleDash=multiDash(3,520,(b,c)=>fire(b,c,{count:3,spread:.3,speed:300,r:11}))
+  const dingleDash=multiDash(3,450,(b,c)=>fire(b,c,{count:3,spread:.3,speed:300,r:11}))
   BESPOKE['dingle']={
     move:weave(.5,.4),
     atk:{
@@ -231,7 +231,7 @@
   // ---- stationary / drifting bosses ----
   BESPOKE['gurdy']={setup:(b,c)=>{b.y=b.r+10},move:still}
   BESPOKE['gurdy-jr']={move:weave(.35,.3)}
-  BESPOKE['the-haunt']={move:wanderMove(.6)}
+  BESPOKE['the-haunt']={move:weave(.7,.8)}
   BESPOKE['peep']={move:wanderMove(.5)}
   BESPOKE['fistula']={move:weave(.5,.5)}
   const heart={move:still,atk:{
