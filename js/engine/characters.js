@@ -204,13 +204,6 @@
     var w = WEAPON[p.charId]
     if (w && w(p, d, dt, ctx, !!(d.x || d.y)) === true) return
     var before = p.beam
-    // Azazel's short beam fires the moment it is fully charged instead of waiting for the release,
-    // so holding fire keeps him shooting (simplification of Repentance's release-to-fire).
-    if ((p.charId === 'azazel' || p.charId === 'tainted-azazel') && (d.x || d.y) && p.charge >= 1 && !(p.beam && p.beam.life > 0 && ((ctx.room || ctx.run.room).lasers || []).indexOf(p.beam) >= 0)) {
-      var dir = p.chargeDir || d
-      origWeapon(p, { x: 0, y: 0 }, dt, ctx)
-      p.chargeDir = dir
-    }
     var az = p.charId === 'azazel' || p.charId === 'tainted-azazel'
     origWeapon(p, d, az ? dt * 1.8 : dt, ctx) // Azazel's short beam charges quickly
     // short beam, about 4.5 tiles: long enough to reach across the gap a cautious player keeps

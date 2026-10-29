@@ -94,17 +94,19 @@ window.__bot = function () {
       return true
     }
     var pathing = !clear(p.x, p.y, n.x, n.y) && route()
+    // melee bodies (Forgotten's club, Tainted Magdalene, Tainted Lilith) close in; shooters keep their distance
+    var melee = p.flags.has('melee'), near = melee ? 45 : 170, far = melee ? 90 : 340
     if (Math.abs(dx) > Math.abs(dy)) {
       sh.x = Math.sign(dx)
       if (!pathing) {
         if (Math.abs(dy) > 10) mv.y = Math.sign(dy)
-        if (Math.abs(dx) < 170) mv.x = -Math.sign(dx); else if (Math.abs(dx) > 340) mv.x = Math.sign(dx)
+        if (Math.abs(dx) < near) mv.x = -Math.sign(dx); else if (Math.abs(dx) > far) mv.x = Math.sign(dx)
       }
     } else {
       sh.y = Math.sign(dy)
       if (!pathing) {
         if (Math.abs(dx) > 10) mv.x = Math.sign(dx)
-        if (Math.abs(dy) < 170) mv.y = -Math.sign(dy); else if (Math.abs(dy) > 340) mv.y = Math.sign(dy)
+        if (Math.abs(dy) < near) mv.y = -Math.sign(dy); else if (Math.abs(dy) > far) mv.y = Math.sign(dy)
       }
     }
     if (!pathing && (mv.x || mv.y)) {
@@ -113,7 +115,7 @@ window.__bot = function () {
     }
     es.forEach(function (e) {
       var d = Math.hypot(e.x - p.x, e.y - p.y)
-      if (d < 110) { mv.x += (p.x - e.x) / d * 2.2; mv.y += (p.y - e.y) / d * 2.2 }
+      if (d < (melee ? 40 : 110)) { mv.x += (p.x - e.x) / d * 2.2; mv.y += (p.y - e.y) / d * 2.2 }
     })
   }
   ;(room.shots || []).forEach(function (s) {
@@ -125,6 +127,8 @@ window.__bot = function () {
   })
   // drift off walls and out of corners
   mv.x += (cx - p.x) / room.pxW * 1.2; mv.y += (cy - p.y) / room.pxH * 1.2
+  // charge weapons (Brimstone, Mom's Knife, Azazel) fire on release: let go once fully charged
+  if (p.chargeReady || p.charge >= 1) sh = { x: 0, y: 0 }
   window.__mv = IS.norm(mv.x, mv.y); window.__sh = sh
 }
 window.__hits = 0
