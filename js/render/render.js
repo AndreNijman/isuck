@@ -160,7 +160,8 @@
     for (a = 0; a < groups.length; a++) for (i = 0, list = room[groups[a][0]] || []; i < list.length; i++) { p = list[i]; if (p.z) shadow(g, p, .7) }
     for (a = 0; a < groups.length; a++) for (i = 0, list = room[groups[a][0]] || []; i < list.length; i++) {
       p = list[i]
-      var size = Math.max(16, (p.r || 8) * 2.6)
+      // a bomb's r is its blast radius, not its body
+      var size = groups[a][0] === 'bombs' ? 40 * (p.scale || 1) : Math.max(16, (p.r || 8) * 2.6)
       if (p.fuse0 && p.fuse < .5 && Math.floor(p.fuse * 20) % 2 === 0) size *= 1.15
       spr(g, p.sprite || groups[a][1], p, size)
     }
