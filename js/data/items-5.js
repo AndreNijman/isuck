@@ -271,7 +271,8 @@
   }
   // Scale the damage "ups" so the final damage is multiplied by m (player.js turns ups into damage
   // as charDamage * sqrt(1 + 1.2 * ups)); the multiplier can only be approximated from inside onStats.
-  function damageMultUps (p, s, m) {
+  function damageMultUps (p, s, m, mult) {
+    if (mult) { mult.damage *= m; return }
     var u = s.damage || 0
     s.damage = u + ((m * m) * (1 + 1.2 * u) - 1) / 1.2 - u
   }
@@ -418,13 +419,13 @@
         ctx.sfx('charge-ready')
         ctx.floater('x' + c.d8.damage.toFixed(1) + ' dmg', p.x, p.y - 44, '#d8d8d8')
       },
-      onStats: function (p, s) {
+      onStats: function (p, s, mult) {
         var m = cache(p).d8
         if (!m) return
-        damageMultUps(p, s, m.damage)
-        s.tears += (m.tears - 1) * (2.73 + s.tears)
-        s.range += (m.range - 1) * (s.range || 0)
-        s.speed += (m.speed - 1) * (s.speed || 1)
+        mult.damage *= m.damage
+        mult.tears *= m.tears
+        mult.range = (mult.range || 1) * m.range
+        mult.speed = (mult.speed || 1) * m.speed
       }
     },
     purity: {
@@ -536,9 +537,9 @@
       }
     },
     'crown-of-light': {
-      onStats: function (p, s) {
+      onStats: function (p, s, mult) {
         if (!fullRed(p) || cache(p).crownLost) return
-        damageMultUps(p, s, 2)
+        mult.damage *= 2
         s.shotSpeed -= 0.3
       },
       onUpdate: function (p) { watch(p, 'crownFull', fullRed(p) && !cache(p).crownLost) },
@@ -1268,25 +1269,25 @@
       tags: ['damage', 'offensive'],
       dlc: 'afterbirth',
       hooks: {
-        // onStats only sees additive "ups", so the streak multiplier is applied to each tear as it is fired.
-        onTearFire: function (p, tear) {
-          var n = cache(p).deadEyeStreak || 0
-          if (tear && n > 0) tear.dmg = (tear.dmg || p.stats.damage) * (1 + 0.25 * Math.min(4, n))
-        },
+        // the streak is a real damage multiplier: +25% per consecutive hit, up to x2
+        onStats: function (p, s, mult) { mult.damage *= 1 + 0.25 * Math.min(4, cache(p).deadEyeStreak || 0) },
         onTearHit: function (p, tear, enemy, ctx) {
           var c = cache(p)
           if ((c.deadEyeStreak || 0) >= 4) return
           c.deadEyeStreak = (c.deadEyeStreak || 0) + 1
+          recalc(p)
           if (c.deadEyeStreak === 4) ctx.sfx('charge-ready')
         },
         onTearDeath: function (p, tear, ctx) {
           var c = cache(p)
           if (!c.deadEyeStreak) return
           c.deadEyeStreak = 0
+          recalc(p)
         },
         onRoomEnter: function (p, room, ctx) {
           var c = cache(p)
           c.deadEyeStreak = 0
+          recalc(p)
         }
       }
     },

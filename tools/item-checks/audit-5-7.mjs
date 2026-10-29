@@ -20,14 +20,12 @@ export default h => {
     'dead-eye': () => {
       const w = h.fresh(); h.give(w, 'dead-eye')
       const e = h.enemy(w, 'fly'); e.hp = 1000
-      const t0 = tearOf()
-      IS.fireHook(w.p, 'onTearFire', [t0], w.ctx)
-      for (let i = 0; i < 3; i++) { const t = tearOf(); IS.fireHook(w.p, 'onTearFire', [t], w.ctx); IS.fireHook(w.p, 'onTearHit', [t, e], w.ctx) }
-      const t1 = tearOf(); IS.fireHook(w.p, 'onTearFire', [t1], w.ctx)
-      h.gt(t1.dmg, t0.dmg, 'streak of hits raises tear damage')
+      const d0 = w.p.stats.damage
+      for (let i = 0; i < 3; i++) IS.fireHook(w.p, 'onTearHit', [tearOf(), e], w.ctx)
+      const d1 = w.p.stats.damage
+      h.gt(d1, d0, 'streak of hits raises damage (real multiplier)')
       IS.fireHook(w.p, 'onTearDeath', [tearOf()], w.ctx)
-      const t2 = tearOf(); IS.fireHook(w.p, 'onTearFire', [t2], w.ctx)
-      h.lt(t2.dmg, t1.dmg, 'a miss resets the streak')
+      h.lt(w.p.stats.damage, d1, 'a miss resets the streak')
     },
     'farting-baby': () => {
       const w = h.fresh(); h.give(w, 'farting-baby')

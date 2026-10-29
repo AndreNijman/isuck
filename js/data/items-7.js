@@ -997,7 +997,7 @@
     },
 
     'mega-mush': {
-      // APPROXIMATE: the damage multiplier is an equivalent damage-up; crushing is not modelled.
+      // APPROXIMATE: crushing is not modelled.
       onUse: function (p) {
         set(p, 'mush', 30)
         if (!p.status) p.status = {}
@@ -1017,8 +1017,8 @@
           recalc(p)
         }
       },
-      onStats: function (p, s) {
-        if (get(p, 'mush', 0) > 0) { multUps(s, 4); s.range = num(s.range, 0) + 64; s.tears = num(s.tears, 0) - 1.9 }
+      onStats: function (p, s, mult) {
+        if (get(p, 'mush', 0) > 0) { mult.damage *= 4; s.range = num(s.range, 0) + 64; s.tears = num(s.tears, 0) - 1.9 }
       }
     },
 

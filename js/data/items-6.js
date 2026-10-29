@@ -3115,16 +3115,7 @@
           if (Array.isArray(p.active) && p.active.length < 2) p.active.push(null)
         },
         onRemove: function (p) { cache(p).schoolbag = false },
-        // js/engine/player.js only ever uses slot 0, so the swap key (Z)
-        // trades the two actives
-        onUpdate: function (p) {
-          if (!p || !Array.isArray(p.active) || !p.active[0] || !p.active[1]) return
-          if (!IS.input || typeof IS.input.pressed !== 'function') return
-          if (!IS.input.pressed('pocketSwap')) return
-          var t = p.active[0]
-          p.active[0] = p.active[1]
-          p.active[1] = t
-        }
+        // the swap key (Z) is handled by js/engine/player.js (IS.swapActives)
       }
     },
 
@@ -3390,10 +3381,10 @@
           c.hallowedAura = inside
           recalc(p)
         },
-        onStats: function (p, s) {
+        onStats: function (p, s, mult) {
           if (!cache(p).hallowedAura || !s) return
-          if (typeof s.tears === 'number') s.tears *= 2.5
-          if (typeof s.damage === 'number') s.damage *= 1.2
+          mult.tears *= 2.5
+          mult.damage *= 1.2
         },
         onTearFire: function (p, tear) {
           if (cache(p).hallowedAura) addFlag(tear, 'homing')
