@@ -54,7 +54,9 @@
     if(IS.solidAt(room,a.tx,a.ty,{})){a.tx=e.x;a.ty=e.y}e.harmless=true;a.wasFlying=e.flying;e.flying=true}
 
   // Flies: drifters wobble about aimlessly, chasers home with a buzz, orbiters circle.
-  function flyDrift(e,dt,c){e.ai.a=(e.ai.a==null?c.range(0,6.28):e.ai.a)+c.range(-4,4)*dt;const n=toPlayer(e,c),pull=P(e,'pull',.35),v=IS.fromAngle(e.ai.a,1);steer(e,v.x+n.x*pull,v.y+n.y*pull,e.speed,e.speed*4,dt)}
+  // a drifting flier that reaches the room edge turns back in instead of pressing into the wall
+  function edgeTurn(e,c){const rm=e.room||c.room;if(!rm)return;const r=(e.r||0)+4,a=e.ai.a,cx=Math.cos(a),cy=Math.sin(a);if((e.x<=r&&cx<0)||(e.x>=rm.pxW-r&&cx>0))e.ai.a=Math.PI-a;if((e.y<=r&&cy<0)||(e.y>=rm.pxH-r&&cy>0))e.ai.a=-e.ai.a}
+  function flyDrift(e,dt,c){e.ai.a=(e.ai.a==null?c.range(0,6.28):e.ai.a)+c.range(-4,4)*dt;edgeTurn(e,c);const n=toPlayer(e,c),pull=P(e,'pull',.35),v=IS.fromAngle(e.ai.a,1);steer(e,v.x+n.x*pull,v.y+n.y*pull,e.speed,e.speed*4,dt)}
   function flyChase(e,dt,c){e.ai.w=(e.ai.w||c.range(0,6))+dt*9;const n=toPlayer(e,c),w=Math.sin(e.ai.w)*.6;steer(e,n.x-n.y*w,n.y+n.x*w,e.speed,e.speed*3,dt)}
   function flyOrbit(e,dt,c){e.ai.a=(e.ai.a==null?IS.angleTo(c.player.x,c.player.y,e.x,e.y):e.ai.a)+dt*1.4;const R=P(e,'radius',150),tx=c.player.x+Math.cos(e.ai.a)*R,ty=c.player.y+Math.sin(e.ai.a)*R,n=IS.norm(tx-e.x,ty-e.y);steer(e,n.x,n.y,e.speed*1.3,e.speed*6,dt)}
   function flyDart(e,dt,c){const a=e.ai;if(a.dash>0){a.dash-=dt;return}if(a.winding){stop(e,dt);if(windup(e,dt,.4)){a.winding=false;a.dash=.45;const n=toPlayer(e,c);e.vx=n.x*e.speed*3.4;e.vy=n.y*e.speed*3.4}return}flyDrift(e,dt,c);a.t=(a.t==null?c.range(1,2.5):a.t)-dt;if(a.t<=0){a.t=c.range(1.6,2.8);a.winding=true}}
