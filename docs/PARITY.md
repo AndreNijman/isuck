@@ -129,3 +129,21 @@ build against this contract.
 | `run.bossIntro` | `{ bossId, name, t, dur }` or `null` | versus card; room frozen while set |
 | `p.headDir` / `p.walkDir` | `{x,y}` | facing for head (shooting) and body (moving) |
 | `p.walkT` | number | walk-cycle clock (already exists) |
+
+## Status (2026-10-30)
+
+Engine items 1–8 and art/UI items 1–11 are merged on `feat/game-feel`
+(engine: c878521, 935883f, e3c8ce5; art: merge f28f89a; follow-ups efa18ce,
+9aade3b). Checked by real input in `tools/walkthrough-engine.mjs` (PASS),
+plus screenshot tours in `tools/walkthrough.mjs` and `tools/art-walkthrough.mjs`.
+
+- In-game characters now use big-head proportions (body squashed toward the
+  feet, head scaled about the neck); portraits keep the drawn shape.
+- Item 6 (hit i-frames) did not reproduce: hits land `INVULN_TIME` apart in
+  sim time. The "many hearts at once" seen earlier came from the screenshot
+  tour, where each software-rendered screenshot takes seconds of real time.
+
+Open:
+- The four worm bosses still look alike.
+- Software render runs 15–25 fps headless; real-browser frame rate not measured.
+- Humanoid enemies (gapers etc.) keep the old proportions.
