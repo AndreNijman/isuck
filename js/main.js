@@ -197,8 +197,10 @@
             IS.updateRoom(run.room, IS.DT, ctx)
             run.time += IS.DT
           }
-          for (var pi = 0; pi < run.room.pickups.length; pi++) {
-            var pickup = run.room.pickups[pi]
+          // only what was there on arrival: a swapped-out active drops as a new pedestal
+          var found = run.room.pickups.slice()
+          for (var pi = 0; pi < found.length; pi++) {
+            var pickup = found[pi]
             if (pickup.kind === 'item' && IS.tryTakePickup(run.player, pickup, ctx)) run.itemsTaken.push(pickup.id)
           }
         }
