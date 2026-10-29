@@ -50,6 +50,8 @@
         "js/render/art-kit.js",
         "js/render/sprites-core.js",
         "js/render/sprites-machines.js",
+        "js/render/sprites-grid.js",
+        "js/render/sprites-players.js",
         "js/render/sprites-enemies.js",
         "js/render/sprites-enemies-2.js",
         "js/render/sprites-bosses.js",
