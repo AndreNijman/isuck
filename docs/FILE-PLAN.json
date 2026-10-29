@@ -46,6 +46,7 @@
       "files": [
         "js/render/sprites-core.js",
         "js/render/sprites-enemies.js",
+        "js/render/sprites-enemies-2.js",
         "js/render/sprites-bosses.js",
         "js/render/sprites-items.js",
         "js/render/backdrop.js",
