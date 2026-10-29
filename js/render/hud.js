@@ -72,6 +72,7 @@
     var tr = run.player.trinkets || []; for (i = 0; i < tr.length; i++) if (tr[i]) icon(g, 'item:' + tr[i], (28 + i * 42) * u, 674 * u, 34 * u, {})
     var mins = Math.floor((run.time || 0) / 60), secs = Math.floor(run.time || 0) % 60; text(g, (run.floor && run.floor.def && run.floor.def.name) || (run.floor && run.floor.id) || '', 18, 186, 14); text(g, mins + ':' + String(secs).padStart(2, '0'), 18, 207, 13, 'left', '#bba88c')
     if (IS.save && IS.save.option && IS.save.option('seedDisplay')) text(g, run.seedStr || '', 18, 228, 12, 'left', '#9e8a70')
+    if (IS.charHud) IS.charHud(g, run, u) // characters worker: pocket-active ring, extra bodies, counters
     drawBanner(g, IS.DT)
   }
 })(typeof window !== 'undefined' ? (window.IS = window.IS || {}) : (globalThis.IS = globalThis.IS || {}))
