@@ -35,15 +35,60 @@
     return { wall:p[0], wallDark:p[1], floor:p[2], floorAlt:p[3], accent:p[4], creep:p[5], backdrop:p[6] }
   }
   var pools = {
-    base: ['gaper','frowning-gaper','pooter','clotty','horf','hopper','attackfly','fly','charger','boom-fly','mulligan'],
-    rain: ['blurb','drowned-charger','drowned-boom-fly','gutted-fatty','grackle','mole','dinga','drowned-hive'],
-    cave: ['hive','maggot','black-globin','vis','bony','swarmer','boil','rock-spider','wall-creep','nest'],
-    mine: ['fissure','poly','ash-pile','cinder','molten-baby','coal-boy','stonehead','dust'],
-    depth: ['knight','selfless-knight','guts','imp','wall-hugger','wizoob','snapper','deaths-head'],
-    maus: ['poof','hell-bird','grudge-bat','blood-puppy','lil-blub','floating-knight','red-ghost'],
-    womb: ['walking-sack','bloodshot-eye','conjoined-fatty','gurgle','swinger','spitty','lump','blood-hulk'],
-    corpse: ['locust-of-pestilence','locust-of-war','fly-bomb','big-bony','kamikaze-leech','null'],
-    holy: ['angelic-baby','vassal','holy-keeper','big-bony','soul-sucker'],
+    basement: ['gaper','frowning-gaper','pooter','fatty','clotty','horf','hopper','trite','attackfly','fly','dip','squirt','sucker','charger',
+      'boom-fly','mulligan','host','hive','mr-maw','maw','leech','gusher','i-blob','round-worm'],
+    cellar: ['gaper','frowning-gaper','pooter','fatty','clotty','horf','hopper','trite','attackfly','fly','dip','squirt','sucker','charger',
+      'boom-fly','mulligan','host','hive','mr-maw','maw','leech','gusher','i-blob','round-worm','nest','rock-spider'],
+    'burning-basement': ['gaper','frowning-gaper','pooter','fatty','clotty','horf','hopper','trite','attackfly','fly','dip','squirt','sucker',
+      'charger','boom-fly','mulligan','host','hive','mr-maw','maw','leech','gusher','i-blob','round-worm','flaming-gaper','flaming-fatty',
+      'flaming-hopper'],
+    downpour: ['blurb','dinga','mole','drowned-boom-fly','drowned-charger','gutted-fatty','grackle','drowned-hive','attackfly','fly','gaper','pooter',
+      'horf','clotty','dip','squirt','leech'],
+    dross: ['blurb','dinga','mole','drowned-boom-fly','drowned-charger','gutted-fatty','grackle','drowned-hive','attackfly','fly','gaper','pooter',
+      'horf','poppy-gaper','dank-dip','hopper'],
+    caves: ['hive','maggot','globin','black-globin','vis','double-vis','chubber','bony','swarmer','boil','rock-spider','wall-creep','nest','host',
+      'mulligan','round-worm','charger','boom-fly','fly','attackfly','sucker','pooter','fatty','gusher','leech','dip','squirt','frowning-gaper'],
+    catacombs: ['hive','maggot','globin','black-globin','vis','double-vis','chubber','bony','swarmer','boil','rock-spider','wall-creep','nest','host',
+      'mulligan','round-worm','charger','boom-fly','fly','attackfly','sucker','pooter','fatty','gusher','leech','revenant','black-bony',
+      'tinted-rock-spider','camillo-jr'],
+    'flooded-caves': ['hive','maggot','globin','black-globin','vis','double-vis','chubber','bony','swarmer','boil','rock-spider','wall-creep','nest',
+      'host','mulligan','round-worm','charger','boom-fly','fly','attackfly','sucker','pooter','fatty','gusher','leech','drowned-hive',
+      'drowned-boom-fly','drowned-charger','blurb'],
+    mines: ['fissure','poly','dust','stonehead','bony','boil','swarmer','rock-spider','tinted-rock-spider','hive','maggot','charger','boom-fly',
+      'mulligan','fly','attackfly','pooter','cinder','molten-baby','coal-boy','mr-mine','mole','wall-creep'],
+    ashpit: ['fissure','poly','dust','stonehead','bony','boil','swarmer','rock-spider','tinted-rock-spider','hive','maggot','charger','boom-fly',
+      'mulligan','fly','attackfly','pooter','cinder','molten-baby','coal-boy','ash-pile','grudge','imp'],
+    depths: ['knight','selfless-knight','loose-knight','guts','imp','wall-hugger','wizoob','snapper','deaths-head','brain','stone-grimace','grimace',
+      'vomit-grimace','whipper','ragling','poison-mind','fred','black-bony','host','bony','boil','vis','swarmer'],
+    necropolis: ['knight','selfless-knight','loose-knight','guts','imp','wall-hugger','wizoob','snapper','deaths-head','brain','stone-grimace',
+      'grimace','vomit-grimace','whipper','ragling','poison-mind','fred','black-bony','host','bony','boil','revenant','spiked-revenant',
+      'cursed-deaths-head'],
+    'dank-depths': ['knight','selfless-knight','loose-knight','guts','imp','wall-hugger','wizoob','snapper','deaths-head','brain','stone-grimace',
+      'grimace','vomit-grimace','whipper','ragling','poison-mind','fred','black-bony','host','bony','boil','dank-dip','black-maw','black-globin'],
+    ascent: ['knight','selfless-knight','loose-knight','guts','imp','wall-hugger','wizoob','snapper','deaths-head','brain','stone-grimace','grimace',
+      'vomit-grimace','whipper','ragling','poison-mind','fred','black-bony','host','bony','boil'],
+    mausoleum: ['poof','hell-bird','grudge-bat','blood-puppy','lil-blub','floating-knight','red-ghost','wizoob','imp','loose-knight',
+      'cursed-deaths-head','ragling','whipper','stone-grimace','deaths-head','knight','selfless-knight','sanguine-bond'],
+    gehenna: ['poof','hell-bird','grudge-bat','blood-puppy','lil-blub','floating-knight','red-ghost','wizoob','imp','loose-knight',
+      'cursed-deaths-head','ragling','whipper','stone-grimace','deaths-head','knight','fred','poison-mind','grudge'],
+    'mothers-shadow': ['poof','hell-bird','grudge-bat','blood-puppy','lil-blub','floating-knight','red-ghost','wizoob','imp','loose-knight',
+      'cursed-deaths-head','ragling','whipper','stone-grimace','deaths-head','knight'],
+    womb: ['walking-sack','bloodshot-eye','conjoined-fatty','gurgle','swinger','spitty','lump','blood-hulk','bloated-fatty','blood-feeder',
+      'flesh-maiden','moms-hand','moms-dead-hand','membrane','leaper','tissue','camillo','brain','gurgling','tumor'],
+    utero: ['walking-sack','bloodshot-eye','conjoined-fatty','gurgle','swinger','spitty','lump','blood-hulk','bloated-fatty','blood-feeder',
+      'flesh-maiden','moms-hand','moms-dead-hand','membrane','leaper','tissue','camillo','brain','handsome-gurgle','red-floater','lil-haunt'],
+    'scarred-womb': ['walking-sack','bloodshot-eye','conjoined-fatty','gurgle','swinger','spitty','lump','blood-hulk','bloated-fatty','blood-feeder',
+      'flesh-maiden','moms-hand','moms-dead-hand','membrane','leaper','tissue','camillo','brain','walking-boil','stone-eye','corn-mine'],
+    blue: ['blue-gaper','blue-maw','blue-boil','blue-globin','blue-conjoined-fatty','blue-fatty','blue-horf','blue-sucker','blue-tumor'],
+    corpse: ['locust-of-famine','locust-of-pestilence','locust-of-war','locust-of-death','fly-bomb','willo','big-bony','kamikaze-leech','null',
+      'hanger','one-tooth','fat-bat'],
+    sheol: ['locust-of-famine','locust-of-pestilence','locust-of-war','locust-of-death','fly-bomb','willo','big-bony','kamikaze-leech','null',
+      'hanger','one-tooth','fat-bat','imp','brimstone-head'],
+    'dark-room': ['locust-of-famine','locust-of-pestilence','locust-of-war','locust-of-death','fly-bomb','willo','big-bony','kamikaze-leech','null',
+      'hanger','one-tooth','fat-bat','sanguine-bond','red-ghost'],
+    void: ['locust-of-famine','locust-of-pestilence','locust-of-war','locust-of-death','fly-bomb','willo','big-bony','kamikaze-leech','null','hanger',
+      'one-tooth','fat-bat'],
+    holy: ['angelic-baby','vassal','holy-keeper','holy-bony','soul-sucker','big-bony','eternal-fly','eternal-heart-fly'],
     greed: ['keeper','greed','super-greed','ultra-coin','pincushion','grilled-clotty']
   }
   // Repentance floor boss pools (from memory of the wiki; a few placements are best guesses).
@@ -72,20 +117,20 @@
     tense={root:'E',mode:'phrygian',tempo:116,mood:'tense'}, dread={root:'B',mode:'locrian',tempo:126,mood:'dread'},
     sacred={root:'C',mode:'lydian',tempo:76,mood:'sacred'}
   var earlyCurse={darkness:1,labyrinth:1,lost:1,maze:1,blind:1}
-  ;[['basement','Basement','basement'],['cellar','Cellar','cellar'],['burning-basement','Burning Basement','burning']].forEach(function(x){add(x[0],x[1],1,x[2],'base','early',['basement','cellar','burning-basement'].filter(function(v){return v!==x[0]}),'downpour',[6,9],calm,['spikes','fire'],earlyCurse);add(x[0]+'-2',x[1]+' II',2,x[2],'base','early',[],x[0]==='basement'?'downpour-2':null,[7,10],calm,['spikes','fire'],earlyCurse)})
-  ;[['downpour','Downpour','downpour'],['dross','Dross','dross']].forEach(function(x){add(x[0],x[1],1,x[2],'rain','rain',[],null,[6,9],wet,['water','pits'],earlyCurse);add(x[0]+'-2',x[1]+' II',2,x[2],'rain','rain',[],null,[7,10],wet,['water','pits'],earlyCurse)})
-  ;[['caves','Caves','caves'],['catacombs','Catacombs','catacombs'],['flooded-caves','Flooded Caves','flooded']].forEach(function(x){add(x[0],x[1],3,x[2],'cave','cave',['caves','catacombs','flooded-caves'].filter(function(v){return v!==x[0]}),'mines',[8,11],tense,['pits','spikes'],earlyCurse);add(x[0]+'-2',x[1]+' II',4,x[2],'cave','cave',[],x[0]==='caves'?'mines-2':null,[8,12],tense,['pits','spikes'],earlyCurse)})
-  ;[['mines','Mines','mines'],['ashpit','Ashpit','ashpit']].forEach(function(x){add(x[0],x[1],3,x[2],'mine','mine',[],null,[8,11],tense,['tnt','pits'],earlyCurse);add(x[0]+'-2',x[1]+' II',4,x[2],'mine','mine',[],null,[9,12],tense,['tnt','pits'],earlyCurse)})
-  ;[['depths','Depths','depths'],['necropolis','Necropolis','necropolis'],['dank-depths','Dank Depths','dank']].forEach(function(x){add(x[0],x[1],5,x[2],'depth','depth',['depths','necropolis','dank-depths'].filter(function(v){return v!==x[0]}),'mausoleum',[9,12],tense,['spikes','fire']);add(x[0]+'-2',x[1]+' II',6,x[2],'depth','depth',[],x[0]==='depths'?'mausoleum-2':null,[10,13],tense,['spikes','fire'])})
-  ;[['mausoleum','Mausoleum','mausoleum'],['gehenna','Gehenna','gehenna']].forEach(function(x){add(x[0],x[1],5,x[2],'maus','maus',[],null,[9,12],dread,['pillars','spikes']);add(x[0]+'-2',x[1]+' II',6,x[2],'maus','maus',[],null,[10,13],dread,['pillars','spikes'])})
-  ;[['womb','Womb','womb'],['utero','Utero','utero'],['scarred-womb','Scarred Womb','scarred']].forEach(function(x){add(x[0],x[1],7,x[2],'womb','womb',['womb','utero','scarred-womb'].filter(function(v){return v!==x[0]}),'corpse',[10,14],dread,['spikes','red-poop']);add(x[0]+'-2',x[1]+' II',8,x[2],'womb','womb',[],x[0]==='womb'?'corpse-2':null,[11,14],dread,['spikes','red-poop'])})
+  ;[['basement','Basement','basement'],['cellar','Cellar','cellar'],['burning-basement','Burning Basement','burning']].forEach(function(x){add(x[0],x[1],1,x[2],x[0],'early',['basement','cellar','burning-basement'].filter(function(v){return v!==x[0]}),'downpour',[6,9],calm,['spikes','fire'],earlyCurse);add(x[0]+'-2',x[1]+' II',2,x[2],x[0],'early',[],x[0]==='basement'?'downpour-2':null,[7,10],calm,['spikes','fire'],earlyCurse)})
+  ;[['downpour','Downpour','downpour'],['dross','Dross','dross']].forEach(function(x){add(x[0],x[1],1,x[2],x[0],'rain',[],null,[6,9],wet,['water','pits'],earlyCurse);add(x[0]+'-2',x[1]+' II',2,x[2],x[0],'rain',[],null,[7,10],wet,['water','pits'],earlyCurse)})
+  ;[['caves','Caves','caves'],['catacombs','Catacombs','catacombs'],['flooded-caves','Flooded Caves','flooded']].forEach(function(x){add(x[0],x[1],3,x[2],x[0],'cave',['caves','catacombs','flooded-caves'].filter(function(v){return v!==x[0]}),'mines',[8,11],tense,['pits','spikes'],earlyCurse);add(x[0]+'-2',x[1]+' II',4,x[2],x[0],'cave',[],x[0]==='caves'?'mines-2':null,[8,12],tense,['pits','spikes'],earlyCurse)})
+  ;[['mines','Mines','mines'],['ashpit','Ashpit','ashpit']].forEach(function(x){add(x[0],x[1],3,x[2],x[0],'mine',[],null,[8,11],tense,['tnt','pits'],earlyCurse);add(x[0]+'-2',x[1]+' II',4,x[2],x[0],'mine',[],null,[9,12],tense,['tnt','pits'],earlyCurse)})
+  ;[['depths','Depths','depths'],['necropolis','Necropolis','necropolis'],['dank-depths','Dank Depths','dank']].forEach(function(x){add(x[0],x[1],5,x[2],x[0],'depth',['depths','necropolis','dank-depths'].filter(function(v){return v!==x[0]}),'mausoleum',[9,12],tense,['spikes','fire']);add(x[0]+'-2',x[1]+' II',6,x[2],x[0],'depth',[],x[0]==='depths'?'mausoleum-2':null,[10,13],tense,['spikes','fire'])})
+  ;[['mausoleum','Mausoleum','mausoleum'],['gehenna','Gehenna','gehenna']].forEach(function(x){add(x[0],x[1],5,x[2],x[0],'maus',[],null,[9,12],dread,['pillars','spikes']);add(x[0]+'-2',x[1]+' II',6,x[2],x[0],'maus',[],null,[10,13],dread,['pillars','spikes'])})
+  ;[['womb','Womb','womb'],['utero','Utero','utero'],['scarred-womb','Scarred Womb','scarred']].forEach(function(x){add(x[0],x[1],7,x[2],x[0],'womb',['womb','utero','scarred-womb'].filter(function(v){return v!==x[0]}),'corpse',[10,14],dread,['spikes','red-poop']);add(x[0]+'-2',x[1]+' II',8,x[2],x[0],'womb',[],x[0]==='womb'?'corpse-2':null,[11,14],dread,['spikes','red-poop'])})
   add('corpse','Corpse',7,'corpse','corpse','corpse',[],null,[10,14],dread,['webs','corn-poop']); add('corpse-2','Corpse II',8,'corpse','corpse','corpse',[],null,[11,14],dread,['webs','corn-poop'])
-  add('blue-womb','Blue Womb',9,'blue','womb','end',[],null,[12,15],dread,['pits','spikes'])
-  add('sheol','Sheol',10,'sheol','corpse','end',[],null,[10,14],dread,['fire','spikes']); add('cathedral','Cathedral',10,'cathedral','holy','end',[],null,[10,14],sacred,['blue-fire'])
-  add('dark-room','Dark Room',11,'dark','corpse','end',[],null,[11,15],dread,['spikes','fire']); add('the-chest','The Chest',11,'chest','holy','end',[],null,[11,15],sacred,['pits'])
-  add('the-void','The Void',12,'void','corpse','end',[],null,[14,19],dread,['spikes','pits','fire'])
-  ;[['ascent-1','Ascent I',8],['ascent-2','Ascent II',7],['ascent-3','Ascent III',6],['ascent-4','Ascent IV',5]].forEach(function(x){add(x[0],x[1],x[2],'home','depth','end',[],null,[6,9],sacred,['pits'])})
-  add('home','Home',13,'home','holy','end',[],null,[4,6],sacred,[]); add('mothers-shadow',"Mother's Shadow",6,'mausoleum','maus','maus',[],null,[6,8],dread,['spikes'])
+  add('blue-womb','Blue Womb',9,'blue','blue','end',[],null,[12,15],dread,['pits','spikes'])
+  add('sheol','Sheol',10,'sheol','sheol','end',[],null,[10,14],dread,['fire','spikes']); add('cathedral','Cathedral',10,'cathedral','holy','end',[],null,[10,14],sacred,['blue-fire'])
+  add('dark-room','Dark Room',11,'dark','dark-room','end',[],null,[11,15],dread,['spikes','fire']); add('the-chest','The Chest',11,'chest','holy','end',[],null,[11,15],sacred,['pits'])
+  add('the-void','The Void',12,'void','void','end',[],null,[14,19],dread,['spikes','pits','fire'])
+  ;[['ascent-1','Ascent I',8],['ascent-2','Ascent II',7],['ascent-3','Ascent III',6],['ascent-4','Ascent IV',5]].forEach(function(x){add(x[0],x[1],x[2],'home','ascent','end',[],null,[6,9],sacred,['pits'])})
+  add('home','Home',13,'home','holy','end',[],null,[4,6],sacred,[]); add('mothers-shadow',"Mother's Shadow",6,'mausoleum','mothers-shadow','maus',[],null,[6,8],dread,['spikes'])
   ;[['greed-basement','Greed Basement',1,'basement'],['greed-caves','Greed Caves',3,'caves'],['greed-depths','Greed Depths',5,'depths'],['greed-womb','Greed Womb',7,'womb'],['greed-sheol','Greed Sheol',10,'sheol'],['greed-shop','Greed Shop',11,'greed'],['greed-ultra','Ultra Greed',12,'greed']].forEach(function(x){add(x[0],x[1],x[2],x[3],'greed','greed',[],null,[1,3],dread,['spikes'])})
   IS.defineFloors(defs)
 })(typeof window !== 'undefined' ? (window.IS = window.IS || {}) : (globalThis.IS = globalThis.IS || {}))
