@@ -127,7 +127,6 @@
   // volley: fn(b,c,i,s) runs n times, `gap` seconds apart, after the windup
   const volley=(n,gap,fn,wind)=>(b,dt,s,c)=>{const w=wind||.45;if(!tele(b,s,w))return false;for(let i=0;i<n;i++)if(at(s,dt,w+i*gap))fn(b,c,i,s);return s.t>w+n*gap+.2}
   const plus=(b,c,o)=>ring(b,c,4,Object.assign({off:c.range(0,1)<.5?0:Math.PI/4},o))
-  const trail=(r,every,life)=>(b,dt,c)=>{b.ai.cr=(b.ai.cr||0)-dt;if(b.ai.cr<=0&&!b.hidden&&!b.z){b.ai.cr=every;c.spawnCreep(b.x,b.y,r,{life,dmg:1})}}
   // n short hops toward you; land(b,c,i) runs on each landing
   const hopper=(n,maxD,T,land,hgt)=>(b,dt,s,c)=>{const R=room(c),i=Math.floor(s.t/T)
     if(!s.undo)s.undo=()=>{b.harmless=false;b.z=0}
@@ -304,7 +303,7 @@
   BESPOKE['rag-man']=S(weave(.4,.4),{teleportSlam:blink((b,c)=>ring(b,c,8,{speed:240,r:11,off:c.range(0,1)})),spawnMinions:call('ragling',2),ringShot:timedRing(10)})
   BESPOKE['rag-mega']=S(weave(.4,.4),{teleportSlam:blink((b,c)=>ring(b,c,8,{speed:250,r:11,off:c.range(0,1)})),spawnMinions:call('ragling',2),brimstoneBeam:attacks.brimstoneBeam})
   // Turdlings burst into Turdlets
-  BESPOKE['the-turdlings']=S(wanderMove(.5),{hop:hopper(2,180,.8,(b,c)=>c.spawnCreep(b.x,b.y,44,{life:5,dmg:1})),spreadShot:spit(3,.3),spawnMinions:call('dip',3)},{die:(b,c)=>kids(b,c,'turdlet',3,.35,.7)})
+  BESPOKE['the-turdlings']=S(wanderMove(.5),{hop:hopper(2,180,.8,(b,c)=>c.spawnCreep(b.x,b.y,44,{life:5,dmg:1})),spreadShot:spit(3,.3),spawnMinions:(b,dt,s,c)=>{if(minions(b,c)>=4)return true;return call('dip',2)(b,dt,s,c)}},{die:(b,c)=>kids(b,c,'turdlet',3,.2,.7)})
   BESPOKE['turdlet']=S(wanderMove(.6),{hop:hopper(2,160,.7),spreadShot:spit(3,.3),creepPuddle:attacks.creepPuddle})
   // Teratoma, The Bloat, The Wretched, The Pile: slow, bloated, spit and spawn
   BESPOKE['teratoma']=S(weave(.3,.3),{spreadShot:spit(5,.22,{speed:260,r:11}),spawnMinions:call('tumor',2),ringShot:timedRing(10)})
@@ -319,7 +318,8 @@
   wormAtk('the-hollow',{spreadShot:spit(3,.3,{speed:280}),chargeDash:multiDash(1,560),ringShot:timedRing(10)})
   // Peep: drifts about, spits, pops an eye that comes for you
   BESPOKE['peep']=S(wanderMove(.5),{spreadShot:spit(3,.28),spawnMinions:call('bloodshot-eye',2)})
-  BESPOKE['the-haunt']=S(weave(.7,.8),{homingShots:attacks.homingShots,spawnMinions:call('lil-haunt',2)})
+  // The Haunt: drifts, spits homing tears, lets one Lil' Haunt out at a time
+  BESPOKE['the-haunt']=S(weave(.7,.8),{homingShots:attacks.homingShots,spawnMinions:(b,dt,s,c)=>{if(minions(b,c)>=2)return true;return call('lil-haunt',1)(b,dt,s,c)}})
   // Gurdy and Mama Gurdy sit at the top: rings, Chargers, hands
   BESPOKE['gurdy']={setup:(b,c)=>{b.y=b.r+10},move:still,atk:{spawnMinions:call('charger',2),ringShot:timedRing(12)}}
   BESPOKE['mama-gurdy']={setup:(b,c)=>{b.y=b.r+10},move:still,atk:{spawnMinions:call('charger',2),ringShot:timedRing(14)}}

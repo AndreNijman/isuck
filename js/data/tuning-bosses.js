@@ -113,7 +113,7 @@
       'chimera': 500, 'rotgut': 600, 'mother': 2400
     }
     // attack pacing, seconds between attacks (phase one, phase two)
-    var COOLDOWN = { 'mom': [[.7, 1.1], [.5, .9]], 'monstro': [[.9, 1.5], [.7, 1.2]], 'the-duke-of-flies': [[1.2, 1.8], [1, 1.5]], 'the-husk': [[1.1, 1.7], [.9, 1.4]] }
+    var COOLDOWN = { 'mom': [[.7, 1.1], [.5, .9]], 'monstro': [[.9, 1.5], [.7, 1.2]], 'the-duke-of-flies': [[1.2, 1.8], [1, 1.5]], 'the-husk': [[1.1, 1.7], [.9, 1.4]], 'the-haunt': [[1.4, 2.1], [1.2, 1.8]] }
     var FLYERS = /duke-of-flies|the-husk|haunt|famine|the-hollow|peep|frail|the-bloat|mega-maw|the-visage|blue-baby|hush|dogma|ultra-pestilence/
     ;(IS.bosses || []).forEach(function (b) {
       // where a boss can appear is whatever the floor boss pools say; the data rows' own lists are only a default
