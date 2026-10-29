@@ -59,6 +59,7 @@
         "js/render/doors.js",
         "js/render/sprites-items.js",
         "js/render/backdrop.js",
+        "js/render/overlays.js",
         "js/render/render.js",
         "js/render/hud.js",
         "js/ui/widgets.js",
