@@ -572,7 +572,7 @@
         "speed": 120,
         "fireDelay": 2
       },
-      "sprite": "poof",
+      "sprite": "poof-ghost",
       "tint": "#6d536f",
       "champion": true,
       "splitInto": null,

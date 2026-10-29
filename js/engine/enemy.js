@@ -39,8 +39,8 @@
   // Airborne it neither collides nor hurts, which is the whole read of the enemy.
   function leaper(e,dt,c,big){const a=e.ai;if(a.air){a.t+=dt;const k=Math.min(1,a.t/a.dur);e.x=IS.lerp(a.sx,a.tx,k);e.y=IS.lerp(a.sy,a.ty,k);e.z=Math.sin(k*Math.PI)*P(e,'hopHeight',70)*(big?1.4:1);e.vx=e.vy=0;if(k>=1){a.air=false;e.z=0;e.harmless=false;e.flying=a.wasFlying;a.t=P(e,'hopDelay',1.1)*c.range(.7,1.2);if(IS.fx)IS.fx.ring(e.x,e.y+e.r*.5,{colour:'#c9b9a0',r0:e.r*.6,r1:e.r*2.2,life:.25,width:3,layer:'under'});if(big){IS.fx&&IS.fx.shake(3,.15);for(let i=0;i<6;i++)shoot(e,c,{angle:i*Math.PI/3,speed:220})}}return}
     stop(e,dt);a.t=(a.t==null?c.range(.3,1):a.t)-dt;if(a.t>0)return;if(!windup(e,dt,.25))return
-    const n=toPlayer(e,c),reach=Math.min(distPlayer(e,c),big?260:200)*c.range(.7,1.1),ang=Math.atan2(n.y,n.x)+c.range(-.5,.5)
-    a.air=true;a.t=0;a.dur=big?.75:.5;a.sx=e.x;a.sy=e.y;const room=e.room||c.room;a.tx=IS.clamp(e.x+Math.cos(ang)*reach,e.r,room.pxW-e.r);a.ty=IS.clamp(e.y+Math.sin(ang)*reach,e.r,room.pxH-e.r)
+    const n=toPlayer(e,c),reach=Math.min(distPlayer(e,c),big?260:P(e,'hopReach',200))*c.range(.7,1.1),ang=Math.atan2(n.y,n.x)+c.range(-.5,.5)
+    a.air=true;a.t=0;a.dur=big?.75:P(e,'hopTime',.5);a.sx=e.x;a.sy=e.y;const room=e.room||c.room;a.tx=IS.clamp(e.x+Math.cos(ang)*reach,e.r,room.pxW-e.r);a.ty=IS.clamp(e.y+Math.sin(ang)*reach,e.r,room.pxH-e.r)
     if(IS.solidAt(room,a.tx,a.ty,{})){a.tx=e.x;a.ty=e.y}e.harmless=true;a.wasFlying=e.flying;e.flying=true}
 
   // Flies: drifters wobble about aimlessly, chasers home with a buzz, orbiters circle.
@@ -53,7 +53,7 @@
 
   // Burrower: dives, tunnels toward you unseen, surfaces with a spray.
   function burrower(e,dt,c){const a=e.ai;a.t=(a.t==null?c.range(.5,1.5):a.t)-dt;if(a.under){e.harmless=true;e.hidden=true;chase(e,dt,c,1.2);if(a.t<=0){a.under=false;a.t=1.6;a.surf=.5}return}
-    if(a.surf>0){stop(e,dt);a.surf-=dt;e.ai.telegraph=1-a.surf/.5;if(a.surf<=0){e.hidden=false;e.harmless=false;e.ai.telegraph=0;cross(e,c)}return}
+    if(a.surf>0){stop(e,dt);a.surf-=dt;e.ai.telegraph=1-a.surf/.5;if(a.surf<=0){e.hidden=false;e.harmless=false;e.ai.telegraph=0;if(P(e,'pattern','cross')==='aimed')aimed(e,c);else cross(e,c)}return}
     stop(e,dt);if(a.t<=0){a.under=true;a.t=P(e,'submergeTime',1.3);IS.fx&&IS.fx.poof(e.x,e.y,'#7a5f48')}}
   function teleporter(e,dt,c){const a=e.ai;a.t=(a.t==null?c.range(1.5,3):a.t)-dt;wander(e,dt,c,.5);if(a.t<=0){if(!windup(e,dt,.5))return;IS.fx&&IS.fx.poof(e.x,e.y,'#9b7fd0');const p=c.freeFloorPos();if(p&&IS.dist(p.x,p.y,c.player.x,c.player.y)>180){e.x=p.x;e.y=p.y}IS.fx&&IS.fx.poof(e.x,e.y,'#9b7fd0');e.spawnT=.35;a.t=c.range(2,3.5);a.fire=.5}gun(e,dt,c,aimed)}
   function summoner(e,dt,c){wander(e,dt,c,.45);const kind=P(e,'spawns','attackfly'),cap=P(e,'spawnCap',3);gun(e,dt,c,(e,c)=>{const room=e.room||c.room,mine=room.enemies.filter(x=>!x.dead&&x.spawnedBy===e).length;if(mine>=cap){aimed(e,c);return}const m=c.spawnEnemy(IS.enemiesById[kind]?kind:'attackfly',e.x,e.y);if(m){m.spawnedBy=e;m.spawnT=.3;IS.knockback(m,e.x+c.range(-5,5),e.y+c.range(-5,5),200)}},P(e,'fireDelay',3))}
@@ -81,8 +81,64 @@
   }
   IS.ARCHETYPE_LIST.forEach(n=>IS.defineArchetype(n,map[n]||map.wanderer))
 
-  // death throes that the archetype implies
-  IS.enemyDeathRattle=(e,ctx)=>{if(!ctx||e.boss)return;const a=e.def.archetype;if(a==='exploder')IS.bombExplode(e.x,e.y,{dmg:40,r:100,hurtsPlayer:true},ctx);else if(a==='sucker')for(let i=0;i<4;i++)IS.enemyShoot(e,{angle:i*Math.PI/2+Math.PI/4,speed:240},ctx)}
+  // ---------------------------------------------------------------------------
+  // Per-ID behaviour. An enemy whose id is listed here ignores its archetype and
+  // plays like its Isaac namesake; everything else falls back to the archetype.
+  // ---------------------------------------------------------------------------
+  const spawnKid=(e,c,kind,cap)=>{const room=e.room||c.room;if(cap&&room.enemies.filter(x=>!x.dead&&x.spawnedBy===e).length>=cap)return false;const m=c.spawnEnemy(IS.enemiesById[kind]?kind:'fly',e.x,e.y);if(!m)return false;m.spawnedBy=e;m.spawnT=.3;IS.knockback(m,e.x+c.range(-5,5),e.y+c.range(-5,5),220);return true}
+  const burst=(e,c,kind,n)=>{for(let i=0;i<n;i++){const m=c.spawnEnemy(IS.enemiesById[kind]?kind:'fly',e.x+Math.cos(i*6.283/n)*12,e.y+Math.sin(i*6.283/n)*12);if(m){m.spawnT=.35;IS.knockback(m,e.x,e.y,260)}}}
+  const turnTo=(a,n,k)=>{a.fx+=(n.x-a.fx)*k;a.fy+=(n.y-a.fy)*k;const l=Math.hypot(a.fx,a.fy)||1;a.fx/=l;a.fy/=l}
+  // Knights wear their armour on the front: facing is tracked, rendered as e.variant
+  // (0 side, 1 toward camera, 3 away) and read by the damage guard below.
+  function knight(e,dt,c,m){const a=e.ai;if(a.fx==null){a.fx=0;a.fy=1}turnTo(a,toPlayer(e,c),Math.min(1,dt*P(e,'turn',2)));steer(e,a.fx,a.fy,e.speed*(m||1),e.speed*4,dt);e.variant=Math.abs(a.fx)>Math.abs(a.fy)?0:a.fy>0?1:3}
+  // Gooey enemies collapse instead of dying and stand back up unless hit while down.
+  function globin(e,dt,c){const a=e.ai;if(a.goo>0){a.goo-=dt;stop(e,dt);e.harmless=true;e.variant=1;if(a.goo<=0){a.goo=0;e.hp=e.maxHp*.6;e.harmless=false;e.variant=0;IS.fx&&IS.fx.poof(e.x,e.y,'#3b3027')}return}e.variant=0;chase(e,dt,c,1)}
+  // Wall hugger: slides round the room's edge, firing as it passes.
+  function hugger(e,dt,c){if(gun(e,dt,c,aimed)){stop(e,dt);return}const room=e.room||c.room,m=e.r+6,W=room.pxW,H=room.pxH,a=e.ai;if(a.dir==null)a.dir=1;if(e.bumped)a.dir=-a.dir
+    const tx=IS.clamp(e.x,m,W-m),ty=IS.clamp(e.y,m,H-m),dl=e.x-m,dr=W-m-e.x,dtp=e.y-m,db=H-m-e.y,k=Math.min(dl,dr,dtp,db)
+    let vx=0,vy=0;if(k>10){if(k===dl)vx=-1;else if(k===dr)vx=1;else if(k===dtp)vy=-1;else vy=1}
+    else if(dtp<=10&&dr>10){vx=1}else if(dr<=10&&db>10){vy=1}else if(db<=10&&dl>10){vx=-1}else vy=-1
+    if(k<=10){vx*=a.dir;vy*=a.dir}steer(e,vx,vy,e.speed,e.speed*6,dt)}
+  function mulligan(e,dt,c){const a=e.ai,d=distPlayer(e,c);if(a.side==null)a.side=c.chance(.5)?1:-1;if(e.bumped)a.side=-a.side
+    if(gun(e,dt,c,(e,c)=>{spawnKid(e,c,'fly',P(e,'spawnCap',3))},P(e,'fireDelay',2.8))){stop(e,dt);return}
+    if(d<240){const n=toPlayer(e,c);steer(e,-n.x-n.y*.7*a.side,-n.y+n.x*.7*a.side,e.speed*1.15,e.speed*5,dt)}else if(d>420)chase(e,dt,c,.6);else wander(e,dt,c,.5)}
+  function clotty(e,dt,c){if(gun(e,dt,c,cross)){stop(e,dt);return}e.ai.hop=(e.ai.hop==null?c.range(0,1):e.ai.hop)+dt;if(e.ai.hop%1<.45)wander(e,dt,c,1.5);else stop(e,dt)}
+  const BEH={
+    horf:(e,d,c)=>{stop(e,d);gun(e,d,c,aimed)},
+    'blue-horf':(e,d,c)=>{stop(e,d);gun(e,d,c,aimed)},
+    pooter:(e,d,c)=>{if(gun(e,d,c,aimed))stop(e,d);else flyDrift(e,d,c)},
+    clotty, 'grilled-clotty':clotty, mulligan, 'mulliboom':(e,d,c)=>chase(e,d,c,1), gusher:(e,d,c)=>wander(e,d,c,1),
+    maggot:(e,d,c)=>wander(e,d,c,1),
+    globin, 'black-globin':globin, 'blue-globin':globin,
+    knight:(e,d,c)=>knight(e,d,c,1), 'selfless-knight':(e,d,c)=>knight(e,d,c,1.15), 'floating-knight':(e,d,c)=>{e.flying=true;knight(e,d,c,.9)}, 'loose-knight':(e,d,c)=>knight(e,d,c,1),
+    'wall-hugger':hugger, 'wall-creep':hugger,
+    'deaths-head':(e,d,c)=>flyChase(e,d,c),
+    'bloodshot-eye':(e,d,c)=>{stop(e,d);gun(e,d,c,aimed)},
+    bony:(e,d,c)=>{if(!gun(e,d,c,aimed))wander(e,d,c,.6);else stop(e,d)}
+  }
+  const GUARDED={knight:1,'selfless-knight':1,'floating-knight':1,'loose-knight':1}
+  const REGEN={globin:1,'black-globin':1,'blue-globin':1}
+  // Isaac's knights shrug off anything that hits their front; globins collapse.
+  // This wraps the base damage rule (entity.js) rather than replacing it.
+  const baseDamage=IS.damageEnemy
+  IS.damageEnemy=(e,dmg,opts,ctx)=>{
+    if(e&&!e.dead&&!e.boss&&!e.invuln&&e.ai){
+      const s=opts&&opts.src
+      if(GUARDED[e.id]&&s&&(s.vx||s.vy)&&e.ai.fx!=null&&!(e.spawnT>0)){const n=IS.norm(s.vx,s.vy);if(n.x*e.ai.fx+n.y*e.ai.fy<-.35){if(ctx&&ctx.sfx)ctx.sfx('tear-hit');return false}}
+      if(REGEN[e.id]&&!(e.ai.goo>0)&&e.hp-(dmg||0)<=0){e.ai.goo=P(e,'gooTime',2.8);e.hp=1;e.hurtT=.1;e.harmless=true;e.variant=1;if(IS.fx)IS.fx.blood(e.x,e.y,8,'#2a211a');if(ctx&&ctx.sfx)ctx.sfx('enemy-hurt');return false}
+    }
+    return baseDamage(e,dmg,opts,ctx)
+  }
+
+  // death throes: some by id, others that the archetype implies
+  const diag=(e,c)=>{for(let i=0;i<4;i++)IS.enemyShoot(e,{angle:i*Math.PI/2+Math.PI/4,speed:240},c)}
+  const boom=(e,c)=>IS.bombExplode(e.x,e.y,{dmg:40,r:100,hurtsPlayer:true},c)
+  const DEATH={
+    mulligan:(e,c)=>burst(e,c,'fly',3), hive:(e,c)=>burst(e,c,'attackfly',2), 'drowned-hive':(e,c)=>burst(e,c,'attackfly',2), nest:(e,c)=>burst(e,c,'fly',2),
+    'walking-sack':(e,c)=>burst(e,c,'attackfly',2), 'deaths-head':diag,
+    gusher:(e,c)=>{for(let i=0;i<4;i++)IS.enemyShoot(e,{angle:i*Math.PI/2,speed:230},c)}
+  }
+  IS.enemyDeathRattle=(e,ctx)=>{if(!ctx||e.boss)return;const f=DEATH[e.id];if(f)f(e,ctx);const a=e.def.archetype;if(a==='exploder')boom(e,ctx);else if(a==='sucker')diag(e,ctx)}
 
   IS.updateEnemies=(room,dt,ctx)=>{
     for(const e of room.enemies){
@@ -92,7 +148,7 @@
       if(e.spawnT>0){e.spawnT-=dt;e.vx*=.8;e.vy*=.8;IS.moveEntity(e,dt,room,ctx);continue}
       IS.updateStatuses(e,dt,ctx);if(e.status.freeze)continue
       if(!e.boss&&(e.status.fear||e.status.confusion||e.status.charm)){if(e.status.fear){const n=toPlayer(e,ctx);steer(e,-n.x,-n.y,e.speed||90,(e.speed||90)*5,dt)}else wander(e,dt,ctx,.6)}
-      else if(e.boss)IS.updateBoss(e,dt,ctx);else(IS.archetypes[e.def.archetype]||map.wanderer)(e,dt,ctx)
+      else if(e.boss)IS.updateBoss(e,dt,ctx);else(BEH[e.id]||IS.archetypes[e.def.archetype]||map.wanderer)(e,dt,ctx)
       if(e.vx)e.dir=e.vx<0?-1:1
       IS.moveEntity(e,dt,room,ctx);if(!e.status.charm)IS.enemyContactDamage(e,ctx.player,ctx)
     }
