@@ -594,12 +594,7 @@
       },
       onTearHit: function (p, tear, e, ctx) {
         if (!tear || !e) return
-        if (tear.flags.has('bleed')) ctx.applyStatus(e, 'bleed', 3)
-        if (tear.flags.has('shrink')) ctx.applyStatus(e, 'shrink', 4)
-        if (tear.flags.has('midas')) ctx.applyStatus(e, 'midas', 6)
-        if (tear.flags.has('magnetize')) ctx.applyStatus(e, 'magnetize', 3)
-        if (tear.flags.has('sticky')) ctx.applyStatus(e, 'sticky', 3)
-        if (tear.flags.has('holy') || tear.flags.has('light')) lightBeam(p, tear, e, ctx)
+        // bleed, shrink, midas, magnetize, sticky and holy are applied by the engine (tears.js)
       }
     },
     'teleport-2-0': {

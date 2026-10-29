@@ -11,7 +11,7 @@ export default h => {
       const a = h.enemy(w, 'fly', 300, 300), b = h.enemy(w, 'fly', 380, 300)
       a.hp = b.hp = 1000
       const hp0 = b.hp
-      IS.fireHook(w.p, 'onTearHit', [{ dmg: 10, flags: new Set() }, a], w.ctx)
+      IS.onTearImpact({ dmg: 10, flags: new Set(['chain']), x: a.x, y: a.y, vx: 1, vy: 0 }, a, w.ctx)
       h.lt(b.hp, hp0, 'spark reached the second enemy')
       h.eq(a.hp, 1000, 'spark skips the enemy that was hit')
     },

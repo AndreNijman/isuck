@@ -264,6 +264,9 @@
   const CHAMP_DEATH=(e,c)=>{const t=IS.CHAMPIONS[e.champion];if(!t)return;if(t.deathRing)for(let i=0;i<8;i++)IS.enemyShoot(e,{angle:i*Math.PI/4,speed:240},c);if(t.splash)diag(e,c);if(t.explode)boom(e,c);if(t.ghostOnDeath&&IS.enemiesById.poof)burst(e,c,'poof',1);if(t.creep)c.spawnCreep(e.x,e.y,50,{life:5,dmg:1})}
   IS.enemyDeathRattle=(e,ctx)=>{if(!ctx||e.boss)return;const f=DEATH[e.id];if(f)f(e,ctx);if(e.champion)CHAMP_DEATH(e,ctx)}
 
+  // A charmed enemy fights for Isaac: it chases the nearest other enemy (a baited one first) and bites it.
+  function charmFight(e,room,dt,ctx){let best=null,bd=1e9;for(const o of room.enemies){if(o===e||o.dead||o.status.charm||o.hidden||o.spawnT>0)continue;const d=IS.dist(e.x,e.y,o.x,o.y)-(o.status.baited?400:0);if(d<bd){bd=d;best=o}}if(!best)return false
+    const n=IS.norm(best.x-e.x,best.y-e.y);steer(e,n.x,n.y,e.speed||90,(e.speed||90)*5,dt);e.ai.bite=(e.ai.bite||0)-dt;if(e.ai.bite<=0&&IS.entityHit(e,best)){e.ai.bite=.5;IS.damageEnemy(best,Math.max(1,e.dmg||1),{silent:true},ctx)}return true}
   IS.updateEnemies=(room,dt,ctx)=>{
     // Walking into a room: everything in it is already awake, so Isaac gets a short
     // window of invulnerability instead of the enemies being frozen.
@@ -273,8 +276,8 @@
       if(e.hurtT>0)e.hurtT=Math.max(0,e.hurtT-dt)
       e.frame+=dt*8
       if(e.spawnT>0){e.spawnT-=dt;e.vx*=.8;e.vy*=.8;IS.moveEntity(e,dt,room,ctx);continue}
-      IS.updateStatuses(e,dt,ctx);if(e.status.freeze)continue
-      if(!e.boss&&(e.status.fear||e.status.confusion||e.status.charm)){if(e.status.fear){const n=toPlayer(e,ctx);steer(e,-n.x,-n.y,e.speed||90,(e.speed||90)*5,dt)}else wander(e,dt,ctx,.6)}
+      IS.updateStatuses(e,dt,ctx);if(IS.isStopped(e)){e.vx=0;e.vy=0;IS.moveEntity(e,dt,room,ctx);continue}
+      if(!e.boss&&(e.status.fear||e.status.confusion||e.status.charm)){if(e.status.fear){const n=toPlayer(e,ctx);steer(e,-n.x,-n.y,e.speed||90,(e.speed||90)*5,dt)}else if(e.status.charm&&charmFight(e,room,dt,ctx))null;else wander(e,dt,ctx,.6)}
       else if(e.boss)IS.updateBoss(e,dt,ctx);else(BEH[e.id]||IS.archetypes[e.def.archetype]||map.wanderer)(e,dt,ctx)
       if(e.vx)e.dir=e.vx<0?-1:1
       if(e.champion==='green'&&!e.harmless){e.ai.gc=(e.ai.gc||0)-dt;if(e.ai.gc<=0){e.ai.gc=.5;ctx.spawnCreep(e.x,e.y,18,{life:3,dmg:1})}}
