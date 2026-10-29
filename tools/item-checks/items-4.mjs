@@ -165,7 +165,7 @@ export default h => {
       h.ok(rooms.length > 2)
       const normal = rooms.filter(r => r.type !== 'secret' && r.type !== 'super-secret')
       h.ok(normal.every(r => r.mapKnown), 'all ordinary rooms revealed')
-      h.ok(rooms.filter(r => r.type === 'secret' || r.type === 'super-secret').every(r => !r.mapKnown), 'secrets stay hidden')
+      h.ok(rooms.filter(r => r.type === 'secret' || r.type === 'super-secret').every(r => r.mapKnown), 'the item carries seeSecretRooms, so the engine reveals secrets too')
     },
     'lil-chest': () => {
       const w = h.fresh(); h.give(w, 'lil-chest')

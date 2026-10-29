@@ -828,6 +828,11 @@
         break
     }
 
+    // chests and sacks pick their contents now so a revealed chest can show them
+    if ((kind === 'chest' || kind === 'sack') && !pu.contents && typeof IS.rollChestContents === 'function') {
+      pu.contents = IS.rollChestContents(room, pu, run, rng)
+    }
+
     if (o.price == null && (o.shop || pu.shop)) {
       var base = SHOP_PRICE[kind]
       if (kind === 'heart' && pu.variant === 'soul') base = SHOP_PRICE.soul
@@ -1062,6 +1067,7 @@
     }
 
     populateByType(room, ctx, rng)
+    if (typeof IS.populateMachines === 'function') IS.populateMachines(room, ctx, rng)
 
     if (IS.roomEnemies(room).length) room.hadEnemies = true
     scatterDecor(room, rng)
@@ -1267,6 +1273,17 @@
         break
       case 'sacrifice':
         if (!gridUnder(room, cx, cy)) IS.addGrid(room, 'spikes', cx, cy, null)
+        break
+      case 'crawlspace':
+        // the ladder back up; down here sits an underground shop, an item or a stash
+        room.ladder = { x: cx, y: room.pxH - TILE * 1.2 }
+        var roll = rng ? rng.next() : 0
+        if (roll < 0.4) { room.meta.shopSlots = [{ col: 3, row: 2 }, { col: 6, row: 2 }, { col: 9, row: 2 }]; fillShop(room, ctx, rng, pedestal) }
+        else if (roll < 0.8) { if (!hasPedestal()) pedestal('treasure', cx, cy - 60, { announce: true }) }
+        else {
+          IS.spawnPickup(room, 'chest', cx, cy - 40, { rng: rng })
+          IS.spawnPickup(room, 'coin', cx - 70, cy, { rng: rng })
+        }
         break
       case 'secret':
       case 'super-secret':
@@ -1500,6 +1517,7 @@
     updateGridObjects(room, dt, ctx)
     updateHazards(room, dt, ctx)
     updatePickups(room, dt, ctx)
+    if (typeof IS.updateMachines === 'function') IS.updateMachines(room, dt, ctx)
     drainPending(room, dt, ctx)
 
     if (typeof IS.updateEnemies === 'function') IS.updateEnemies(room, dt, ctx)
@@ -1840,7 +1858,7 @@
     if (p && typeof IS.fireHook === 'function') IS.fireHook(p, 'onRoomClear', [room], ctx)
 
     // Only a fight charges an active item.
-    if (p && room.hadEnemies && typeof IS.addCharge === 'function' && Array.isArray(p.active)) {
+    if (p && room.hadEnemies && !(p.flags && p.flags.has && p.flags.has('noRoomCharge')) && typeof IS.addCharge === 'function' && Array.isArray(p.active)) {
       for (var s = 0; s < p.active.length; s++) {
         var slot = p.active[s]
         if (!slot || !slot.id) continue
@@ -1871,11 +1889,18 @@
       case 'boss':
       case 'boss-double': {
         var itemId = ctx && typeof ctx.rollItem === 'function' ? ctx.rollItem('boss') : null
-        if (itemId) IS.spawnPedestal(room, itemId, cx, cy - 50, { pool: 'boss', announce: true })
+        if (run && run.flags && run.flags.satanicBible && room.type === 'boss' && typeof IS.spawnDevilDeal === 'function') {
+          // Satanic Bible used before the fight: the reward is a devil deal instead of the boss item
+          run.flags.satanicBible = false
+          IS.spawnDevilDeal(room, run, ctx)
+        } else if (itemId) IS.spawnPedestal(room, itemId, cx, cy - 50, { pool: 'boss', announce: true })
 
         // The room the harness builds standalone has index -1 and is not on the
         // floor: no trapdoor, no floor progress from it.
-        if (room.index >= 0) {
+        // Curse of the Labyrinth floors have two bosses: the way down opens with the last one
+        var bosses = floor && floor.bossIndices
+        var lastBoss = !bosses || bosses.every(function (bi) { return !floor.rooms[bi] || floor.rooms[bi].cleared })
+        if (room.index >= 0 && lastBoss) {
           if (typeof IS.spawnTrapdoor === 'function' && hasNextFloor(run)) {
             IS.spawnTrapdoor(room, cx, cy + 110, {})
           }
@@ -1885,6 +1910,7 @@
               IS.progress.record('floor-cleared', { floor: floor.id || (floor.def && floor.def.id) || null }, run)
             }
             if (p && typeof IS.fireHook === 'function') IS.fireHook(p, 'onFloorClear', [floor], ctx)
+            if (typeof IS.rollBossDoors === 'function') IS.rollBossDoors(floor, run, ctx)
           }
         }
         if (ctx && ctx.sfx) ctx.sfx('floor-clear')
@@ -1981,6 +2007,12 @@
       return null
     }
 
+    // Curse of the Maze: a door sometimes leads to a different ordinary room
+    if (fromDir && IS.CURSE && (num(run.curses, 0) & IS.CURSE.MAZE) && room.type === 'default' && run.rng && run.rng.chance(0.4)) {
+      var alts = floor.rooms.filter(function (r) { return r && r.type === 'default' && r !== room && r !== run.room && !r.virtual })
+      if (alts.length) { room = run.rng.pick(alts); roomIndex = room.index; fromDir = null }
+    }
+
     var old = run.room
     if (old && old !== room) {
       // Projectiles never survive a transition; grid, pickups and clear state do.
@@ -2029,6 +2061,7 @@
       var nb = floor.rooms[door.target]
       if (nb) nb.mapKnown = true
     }
+    if (typeof IS.applyMapFlags === 'function') IS.applyMapFlags(run)
 
     if (!room.cleared && (room.type === 'challenge' || room.type === 'boss-rush')) {
       startAmbush(room, ctx)

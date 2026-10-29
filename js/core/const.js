@@ -109,7 +109,7 @@
     'brimstone', 'laser', 'knife', 'bookOfVirtues', 'bloodOath',
     'seeSecretRooms', 'seeItemPools', 'seeEnemyHealth', 'seeMinimap', 'fullMinimap',
     'freeDevilDeals', 'freeShopItems', 'cursedDoors', 'luckyFooting', 'noKnockback',
-    'doubleTears', 'quadTears', 'eternalDeath', 'gnawedLeaf', 'camoUndies'
+    'noRoomCharge', 'doubleTears', 'quadTears', 'eternalDeath', 'gnawedLeaf', 'camoUndies'
   ]
 
   IS.STATUS_LIST = [

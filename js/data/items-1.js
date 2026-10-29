@@ -493,7 +493,7 @@
       // The reference stats block omits the damage and luck lines the
       // description prints; the description is the specification, so both are
       // declared here. range/shotSpeed already contain the printed multipliers.
-      stats: { damage: 1.5, range: 256, shotSpeed: 0.6, luck: -1 },
+      stats: { damage: 1.5, range: 120, shotSpeed: 0.6, luck: -1 },
       tearFlags: ['boomerang']
     },
 
@@ -508,7 +508,7 @@
       dlc: 'rebirth',
       pools: ['treasure', 'greed-treasure'],
       tags: ['tears', 'range', 'stat-down'],
-      stats: { tears: 1.75, range: -82 }
+      stats: { tears: 1.75, range: -120 }
     },
 
     {
@@ -634,7 +634,7 @@
       pools: ['treasure', 'greed-treasure', 'greed-boss', 'ultra-secret'],
       tags: ['damage', 'speed', 'range', 'hearts', 'mushroom'],
       transform: 'fun-guy',
-      stats: { damage: 0.3, range: 80, speed: 0.3 },
+      stats: { damage: 0.3, range: 200, speed: 0.3 },
       mult: { damage: 1.5 },
       grant: { maxHearts: 2, heal: 24 },
       hooks: {
@@ -691,7 +691,7 @@
       pools: ['treasure', 'boss', 'demon-beggar', 'greed-boss'],
       tags: ['speed', 'range', 'syringe'],
       transform: 'spun',
-      stats: { range: 80, speed: 0.3 }
+      stats: { range: 200, speed: 0.3 }
     },
 
     {
@@ -909,7 +909,7 @@
       pools: ['boss', 'golden-chest', 'moms-chest', 'greed-boss', 'old-chest'],
       tags: ['range', 'fly'],
       transform: 'mom',
-      stats: { range: 80 },
+      stats: { range: 200 },
       hooks: {
         onInit: function (p, ctx) {
           var c = cacheOf(p)
@@ -935,7 +935,7 @@
       pools: ['boss', 'moms-chest', 'greed-boss', 'ultra-secret', 'old-chest'],
       tags: ['range', 'offensive'],
       transform: 'mom',
-      stats: { range: 80 },
+      stats: { range: 200 },
       hooks: {
         // 12 damage twice a second = the stated 24/s.
         onUpdate: function (p, dt, ctx) {
@@ -959,7 +959,7 @@
       pools: ['boss', 'moms-chest', 'greed-boss', 'ultra-secret', 'old-chest'],
       tags: ['range', 'hearts'],
       transform: 'mom',
-      stats: { range: 110 },
+      stats: { range: 300 },
       hooks: {
         onInit: function (p, ctx) {
           var c = cacheOf(p)
@@ -1963,7 +1963,7 @@
       pools: ['treasure', 'greed-boss'],
       tags: ['speed', 'range', 'mushroom'],
       transform: 'fun-guy',
-      stats: { range: 120, speed: 0.3 },
+      stats: { range: 200, speed: 0.3 },
       hooks: {
         // Size down is a smaller hitbox — the part of it that matters.
         onInit: function (p) {

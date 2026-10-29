@@ -14,7 +14,7 @@
 
 import fs from 'node:fs'
 import path from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 import { loadGame } from './loader.mjs'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
@@ -22,7 +22,7 @@ const game = loadGame()
 const IS = game.IS
 if (game.failures.length) { console.error('load failures', game.failures); process.exit(1) }
 
-const failures = []
+export const failures = []
 let passed = 0
 
 // --- harness -----------------------------------------------------------------
@@ -109,27 +109,30 @@ export const h = {
 
 // --- run ---------------------------------------------------------------------
 
-const only = process.argv.slice(2).filter(a => !a.startsWith('--'))
-const dir = path.join(HERE, 'item-checks')
-const checks = {}
-if (fs.existsSync(dir)) {
-  for (const f of fs.readdirSync(dir).filter(f => f.endsWith('.mjs')).sort()) {
-    const mod = await import(path.join(dir, f))
-    Object.assign(checks, mod.default(h))
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+  const only = process.argv.slice(2).filter(a => !a.startsWith('--'))
+  const dir = path.join(HERE, 'item-checks')
+  const checks = {}
+  if (fs.existsSync(dir)) {
+    for (const f of fs.readdirSync(dir).filter(f => f.endsWith('.mjs')).sort()) {
+      const mod = await import(path.join(dir, f))
+      Object.assign(checks, mod.default(h))
+    }
   }
+
+  // every formerly dead item must have a check
+  const PLACEHOLDERS = new Set(['item-43', 'item-61', 'item-235', 'item-648', 'item-662', 'item-666', 'item-718'])
+  const dead = JSON.parse(fs.readFileSync(path.join(dir, 'dead-items.json'), 'utf8'))
+  for (const id of dead) if (!only.length && !PLACEHOLDERS.has(id) && !checks[id]) failures.push(`${id}: no check written`)
+
+  for (const id of Object.keys(checks)) {
+    if (only.length && !only.includes(id)) continue
+    if (!IS.itemsById[id]) { failures.push(`${id}: not an item`); continue }
+    try { checks[id](); passed++ } catch (e) { failures.push(`${id}: ${e.message}`) }
+  }
+
+  console.log(`item-check: ${passed} passed, ${failures.length} failed`)
+  for (const f of failures) console.log('  FAIL ' + f)
+  process.exit(failures.length ? 1 : 0)
+
 }
-
-// every formerly dead item must have a check
-const PLACEHOLDERS = new Set(['item-43', 'item-61', 'item-235', 'item-648', 'item-662', 'item-666', 'item-718'])
-const dead = JSON.parse(fs.readFileSync(path.join(dir, 'dead-items.json'), 'utf8'))
-for (const id of dead) if (!only.length && !PLACEHOLDERS.has(id) && !checks[id]) failures.push(`${id}: no check written`)
-
-for (const id of Object.keys(checks)) {
-  if (only.length && !only.includes(id)) continue
-  if (!IS.itemsById[id]) { failures.push(`${id}: not an item`); continue }
-  try { checks[id](); passed++ } catch (e) { failures.push(`${id}: ${e.message}`) }
-}
-
-console.log(`item-check: ${passed} passed, ${failures.length} failed`)
-for (const f of failures) console.log('  FAIL ' + f)
-process.exit(failures.length ? 1 : 0)

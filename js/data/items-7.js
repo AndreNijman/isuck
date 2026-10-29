@@ -519,9 +519,9 @@
     },
 
     'red-key': {
-      // APPROXIMATE: red rooms are not generated; the key teleports Isaac to a random room instead.
+      // Opens a red room beside the current room (IS.openRedRoom); fails when no free cell is left.
       onUse: function (p, ctx) {
-        if (!hasRoom(ctx) || !ctx.teleport('random')) return { fail: true }
+        if (!ctx || !ctx.run || !IS.openRedRoom(ctx.run, ctx)) return { fail: true }
       }
     },
 
@@ -997,7 +997,7 @@
     },
 
     'mega-mush': {
-      // APPROXIMATE: the damage multiplier is an equivalent damage-up; crushing is not modelled.
+      // APPROXIMATE: crushing is not modelled.
       onUse: function (p) {
         set(p, 'mush', 30)
         if (!p.status) p.status = {}
@@ -1017,8 +1017,8 @@
           recalc(p)
         }
       },
-      onStats: function (p, s) {
-        if (get(p, 'mush', 0) > 0) { multUps(s, 4); s.range = num(s.range, 0) + 64; s.tears = num(s.tears, 0) - 1.9 }
+      onStats: function (p, s, mult) {
+        if (get(p, 'mush', 0) > 0) { mult.damage *= 4; s.range = num(s.range, 0) + 64; s.tears = num(s.tears, 0) - 1.9 }
       }
     },
 
@@ -1870,7 +1870,7 @@
       pools: ["devil","greed-devil","ultra-secret"],
       tags: ["damage","offensive"],
       dlc: "antibirth",
-      stats: {"damage":1,"range":80,"shotSpeed":-0.16},
+      stats: {"damage":1,"range":160,"shotSpeed":-0.16},
       transform: "leviathan",
       hooks: referenceHooks("↑ +1 Damage · ↑ +2 Range · ↓ -0.16 Shot speed · Isaac's tears can be controlled in mid-air", false, "eye-of-the-occult")
     },
