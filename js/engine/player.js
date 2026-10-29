@@ -27,7 +27,7 @@
   const add=(p,k,n)=>{p[k]=Math.max(0,Math.min(99,p[k]+n));return p[k]};IS.addCoins=(p,n)=>add(p,'coins',n);IS.addBombs=(p,n)=>add(p,'bombs',n);IS.addKeys=(p,n)=>add(p,'keys',n)
   IS.hasItem=(p,id)=>(p.itemCounts[id]||0)>0;IS.itemCount=(p,id)=>p.itemCounts[id]||0
   IS.giveItem=(p,id,opts)=>{const d=IS.itemsById[id];if(!d)return false;p.items.push(id);p.itemCounts[id]=(p.itemCounts[id]||0)+1;if(d.kind==='active'){const i=p.active[0]?1:0;p.active[i]={id,charge:d.charge||0,maxCharge:d.charge||0,batteryCharge:0}}if(d.grant){IS.addMaxHearts(p,d.grant.maxHearts||0,!!d.grant.heal);IS.healRed(p,d.grant.heal||0);IS.addSoulHearts(p,d.grant.soul||0);IS.addBlackHearts(p,d.grant.black||0);IS.addCoins(p,d.grant.coins||0);IS.addBombs(p,d.grant.bombs||0);IS.addKeys(p,d.grant.keys||0)}(d.familiars||[]).forEach(x=>IS.spawnFamiliar(p,x,opts?.ctx));IS.recalcStats(p);if(opts?.ctx)IS.fireHook(p,'onInit',[],opts.ctx);IS.save?.seeItem(id);return true}
-  IS.removeItem=(p,id)=>{const i=p.items.indexOf(id);if(i<0)return false;p.items.splice(i,1);p.itemCounts[id]--;IS.recalcStats(p);return true}
+  IS.removeItem=(p,id,ctx)=>{const i=p.items.indexOf(id);if(i<0)return false;try{IS.itemsById[id]?.hooks?.onRemove?.(p,ctx)}catch(e){console.warn('onRemove '+id,e)}p.items.splice(i,1);p.itemCounts[id]--;IS.recalcStats(p);return true}
   IS.giveTrinket=(p,id)=>{const i=p.trinkets.indexOf(null);if(i<0)return false;p.trinkets[i]=id;IS.recalcStats(p);return true}
   IS.dropTrinket=(p,slot,ctx)=>{const id=p.trinkets[slot];if(!id)return false;p.trinkets[slot]=null;ctx?.spawnPickup('trinket',p.x,p.y,{id});IS.recalcStats(p);return true}
   IS.givePocket=(p,kind,id)=>{if(p.pocket.length>=4)return false;p.pocket.push({kind,id});return true}
