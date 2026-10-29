@@ -34,30 +34,9 @@
     return p.cache
   }
 
+  // Generated stubs were replaced by IMPL (below); an id with no entry has no hooks.
   function referenceHooks (info, active, id) {
-    var text = String(info || '').toLowerCase()
-    if (active) return {
-      onUse: function (p, ctx) {
-        if (!ctx) return { fail: true }
-        if (text.indexOf('creep') >= 0 && typeof ctx.spawnCreep === 'function') ctx.spawnCreep(p.x, p.y, 180, { kind: 'yellow', dmg: 24, life: 8 })
-        else if (text.indexOf('bomb') >= 0 && typeof ctx.spawnBomb === 'function') ctx.spawnBomb(p.x, p.y, { fuse: 1.2, friendly: true })
-        else if (text.indexOf('card') >= 0 && typeof ctx.spawnPickup === 'function') ctx.spawnPickup('card')
-        else if (text.indexOf('key') >= 0 && typeof ctx.spawnPickup === 'function') ctx.spawnPickup('key')
-        else if (typeof ctx.spawnEffect === 'function') ctx.spawnEffect('burst', num(p.x, 0), num(p.y, 0), { colour: '#d8c890', n: 10 })
-      }
-    }
-    return {
-      onTearFire: function (p, tear, ctx) {
-        if (!tear || !ctx) return
-        var chance = text.indexOf('chance') >= 0 ? 0.14 : 0.04
-        if (typeof ctx.chance === 'function' && !ctx.chance(chance)) return
-        if (text.indexOf('poison') >= 0) addFlag(tear, 'poison')
-        else if (text.indexOf('charm') >= 0) addFlag(tear, 'charm')
-        else if (text.indexOf('freeze') >= 0 || text.indexOf('petrif') >= 0) addFlag(tear, 'freeze')
-        else if (text.indexOf('knockback') >= 0) addFlag(tear, 'knockback')
-        else tear.referenceEffect = id
-      }
-    }
+    return IMPL[id]
   }
 
   function get (p, key, dflt) {
@@ -354,16 +333,880 @@
   // The worm trinkets and the tear-shape items Almond Milk borrows from.
   var MILK_FLAGS = [
     'wiggle', 'homing', 'spectral', 'piercing', 'bouncing', 'sinusoid',
-    'magnetize', 'knockback', 'booger', 'lodge', 'shrink'
+    'magnetize', 'knockback', 'boomerang', 'slow', 'freeze'
   ]
 
   // Playdough Cookie cycles its tear colours; each colour is a status.
   var PLAYDOUGH_FLAGS = [
-    'poison', 'petrify', 'homing', 'fear', 'freeze', 'slow', 'charm',
-    'confusion', 'bleed', 'burn'
+    'poison', 'freeze', 'homing', 'fear', 'freeze', 'slow', 'charm',
+    'confusion', 'knockback', 'burn'
   ]
 
   var NANCY_EFFECTS = ['poison', 'burn', 'holy', 'rock', 'pull', 'scatter', 'giant']
+
+  // ---------------------------------------------------------------------------
+  // Real implementations for the items that used to be generated stubs.
+  // referenceHooks(info, active, id) returns IMPL[id] when one exists (otherwise
+  // undefined, so an item is either implemented or has stats/grants only).
+  // Non-hook fields (familiars, grants, stat corrections) are in PATCH below the
+  // item table. Anything the engine cannot express is marked // APPROXIMATE.
+  // ---------------------------------------------------------------------------
+
+  function hasRoom (ctx) { return !!(ctx && ctx.room) }
+  function shootingNow () {
+    var s = IS.input && typeof IS.input.shoot === 'function' ? IS.input.shoot() : null
+    return !!(s && (s.x || s.y))
+  }
+  function aimAng (p) { var a = aim(p); return Math.atan2(a.y, a.x) }
+  function dmgNow (p) { return pstat(p, 'damage', IS.BASE_DAMAGE || 3.5) }
+  function fams7 (p, id) {
+    var out = []
+    var l = (p && p.familiars) || []
+    for (var i = 0; i < l.length; i++) if (l[i] && l[i].id === id) out.push(l[i])
+    return out
+  }
+  function dist7 (a, b, c, d) { var x = a - c; var y = b - d; return Math.sqrt(x * x + y * y) }
+  // Scale the damage "ups" so the final damage is multiplied by m (player.js turns ups into damage as
+  // charDamage * sqrt(1 + 1.2 * ups)); a true multiplier cannot be expressed inside onStats.
+  function multUps (s, m) {
+    var u = num(s.damage, 0)
+    s.damage = ((m * m) * (1 + 1.2 * u) - 1) / 1.2
+  }
+  function luckChance (p, base, per) { return clamp(base + per * pstat(p, 'luck', 0), 0, 1) }
+  // Re-run the stat pass only when a watched value flips.
+  function watch7 (p, key, now) {
+    if (get(p, key, null) === now) return
+    set(p, key, now)
+    recalc(p)
+  }
+
+  function lastBomb (ctx, p) {
+    var l = ctx.room.bombs
+    if (!Array.isArray(l)) return null
+    for (var i = l.length - 1; i >= 0; i--) {
+      var b = l[i]
+      if (b && !b.dead && b.friendly && dist7(b.x, b.y, p.x, p.y) < 4) return b
+    }
+    return null
+  }
+
+  function stealTrail (p, ctx) {
+    var tr = get(p, 'trail', null)
+    if (!Array.isArray(tr)) tr = set(p, 'trail', [])
+    var now = (ctx.run && ctx.run.time) || 0
+    var last = tr[tr.length - 1]
+    if (!last || last.t !== now) tr.push({ t: now, x: p.x, y: p.y })
+    while (tr.length > 2 && tr[0].t < now - 0.7) tr.shift()
+    return tr
+  }
+
+  function knifeCheck (p) {
+    if (IS.hasItem && IS.hasItem(p, 'knife-piece-1') && IS.hasItem(p, 'knife-piece-2') && p.flags && p.flags.add) p.flags.add('knife')
+  }
+
+  function openRift (p, x, y, ctx, tear) {
+    tear.riftDone = true
+    queue(p, 'rifts').push({ x: x, y: y, t: 3 })
+    IS.spawnPuddle({ x: x, y: y, r: 70, dmg: dmgNow(p) * 1.5, tick: 0.5, life: 3, colour: '#8040c0' }, ctx)
+  }
+
+  var IMPL = {
+    // Immune to creep and floor spikes.
+    'orphan-socks': {
+      onPlayerDamage: function (p, n, src) {
+        if (srcIs(src, ['creep', 'spike'])) return { cancel: true }
+      }
+    },
+
+    'eye-of-the-occult': {
+      // APPROXIMATE: the real tears are steered by the aim keys mid-air; the engine has no tear steering,
+      // so they home on enemies instead.
+      onTearFire: function (p, tear) { if (tear) addFlag(tear, 'homing') }
+    },
+
+    'immaculate-heart': {
+      // APPROXIMATE: the extra tear is a spectral shot at half damage rather than a true orbital.
+      onTearFire: function (p, tear, ctx) {
+        if (!tear || !hasRoom(ctx) || !ctx.chance(0.2)) return
+        var a = Math.atan2(num(tear.vy, 0), num(tear.vx, 1)) + ctx.range(-0.35, 0.35)
+        fireTear(ctx, p, p.x, p.y, a, IS.TEAR_SPEED * 0.8, num(tear.dmg, dmgNow(p)) * 0.5, ['spectral'], 0.7)
+      }
+    },
+
+    // Aura that hurts more the closer an enemy is.
+    monstrance: {
+      onUpdate: function (p, dt, ctx) {
+        if (!hasRoom(ctx) || !timer(p, 'mon', dt, 0.25)) return
+        var list = nearby(ctx, p.x, p.y, 130)
+        for (var i = 0; i < list.length; i++) {
+          var k = 1 - dist7(list[i].x, list[i].y, p.x, p.y) / 130
+          hurt(list[i], (3 + 12 * clamp(k, 0, 1)) * 0.25, ctx)
+        }
+      }
+    },
+
+    'the-intruder': {
+      // APPROXIMATE: there is no head-hiding spider. Four slowing 1.5 damage tears are fired alongside
+      // Isaac's own, and a hit has a 25% chance to send a spider-bite at the nearest enemy.
+      onUpdate: function (p, dt, ctx) {
+        if (!hasRoom(ctx) || !shootingNow()) return
+        if (!timer(p, 'intr', dt, Math.max(0.4, pstat(p, 'fireDelay', 0.4)) * 1.5)) return
+        var a = aimAng(p)
+        var d = [-0.3, -0.1, 0.1, 0.3]
+        for (var i = 0; i < d.length; i++) fireTear(ctx, p, p.x, p.y, a + d[i], IS.TEAR_SPEED * 0.85, 1.5, ['slow'], 0.55)
+      },
+      onPlayerHurt: function (p, n, src, ctx) {
+        if (!hasRoom(ctx) || !ctx.chance(0.25)) return
+        var e = nearby(ctx, p.x, p.y, 420)[0]
+        if (!e) return
+        hurt(e, 15, ctx)
+        ctx.applyStatus(e, 'slow', 2)
+      }
+    },
+
+    'dirty-mind': {
+      // APPROXIMATE: Dips do not exist as an enemy, so friendly flies stand in; the poop-replacing-rocks
+      // and friendly-Dip parts are not modelled.
+      onGridBreak: function (p, g, ctx) {
+        if (!hasRoom(ctx) || !g || String(g.kind || '').indexOf('poop') < 0) return
+        if (!IS.enemiesById || !IS.enemiesById.fly) return
+        var n = 1 + ctx.int(4)
+        for (var i = 0; i < n; i++) ctx.spawnEnemy('fly', g.x + ctx.range(-14, 14), g.y + ctx.range(-14, 14), { friendly: true })
+      }
+    },
+
+    damocles: {
+      // Doubles unpriced pedestals; once hurt, every frame carries a tiny chance of instant death.
+      // APPROXIMATE: the sword's invincibility and the exact chance are not modelled.
+      onUpdate: function (p, dt, ctx) {
+        if (!hasRoom(ctx)) return
+        if (get(p, 'dmcHurt', false) && ctx.chance(1 / 9000)) { ctx.damagePlayer(99, 'damocles'); return }
+        if (!timer(p, 'dmc', dt, 0.5)) return
+        var list = (ctx.room.pickups || []).slice()
+        for (var i = 0; i < list.length; i++) {
+          var pk = list[i]
+          if (!isPedestal(pk) || pk.dmcDone || pk.price || pk.optionsGroup) continue
+          pk.dmcDone = true
+          var id = pedestalId(pk)
+          if (!id) continue
+          var c = ctx.spawnPickup('item', pk.x + 46, pk.y, { itemId: id })
+          if (c) c.dmcDone = true
+        }
+      },
+      onPlayerHurt: function (p) { set(p, 'dmcHurt', true) },
+      onNewFloor: function (p) { set(p, 'dmcHurt', false) }
+    },
+
+    'free-lemonade': {
+      onUse: function (p, ctx) {
+        if (!hasRoom(ctx)) return { fail: true }
+        IS.spawnPuddle({ x: p.x, y: p.y, r: 150, dmg: 12, tick: 0.5, life: 14, colour: '#e8d840' }, ctx)
+      }
+    },
+
+    'spirit-sword': {
+      // APPROXIMATE: no melee weapon exists, so tears become a very short, piercing, spectral swing worth
+      // 3x damage + 3.5. Charge spin and the full-health beam are not modelled.
+      onTearFire: function (p, tear) {
+        if (!tear) return
+        tear.dmg = num(tear.dmg, dmgNow(p)) * 3 + 3.5
+        tear.life = 0.14
+        tear.r = num(tear.r, 8) * 2.4
+        addFlag(tear, 'piercing')
+        addFlag(tear, 'spectral')
+        addFlag(tear, 'knockback')
+      }
+    },
+
+    'red-key': {
+      // Opens a red room beside the current room (IS.openRedRoom); fails when no free cell is left.
+      onUse: function (p, ctx) {
+        if (!ctx || !ctx.run || !IS.openRedRoom(ctx.run, ctx)) return { fail: true }
+      }
+    },
+
+    'wavy-cap': {
+      // APPROXIMATE: no screen distortion and the recharge does not lengthen. Stacks fade as rooms pass.
+      onUse: function (p) {
+        set(p, 'wavy', get(p, 'wavy', 0) + 1)
+        recalc(p)
+      },
+      onStats: function (p, s) {
+        var w = get(p, 'wavy', 0)
+        if (w > 0) { s.tears = num(s.tears, 0) + 0.75 * w; s.speed = num(s.speed, 0) - 0.03 * w }
+      },
+      onRoomEnter: function (p) { var w = get(p, 'wavy', 0); if (w > 0) { set(p, 'wavy', Math.max(0, w - 0.5)); recalc(p) } },
+      onRoomClear: function (p) { var w = get(p, 'wavy', 0); if (w > 0) { set(p, 'wavy', Math.max(0, w - 0.5)); recalc(p) } }
+    },
+
+    'rocket-in-a-jar': {
+      // APPROXIMATE: the engine places the bomb before this hook runs, so the freshly placed bomb is
+      // removed (the bomb it cost pays for the rocket) and an explosive tear is fired instead.
+      onUpdate: function (p, dt, ctx) {
+        if (!hasRoom(ctx) || !IS.input.pressed('bomb') || !shootingNow()) return
+        var b = lastBomb(ctx, p)
+        if (!b) return
+        b.dead = true
+        b.fuse = 0
+        var s = IS.input.shoot()
+        fireTear(ctx, p, p.x, p.y, Math.atan2(s.y, s.x), IS.TEAR_SPEED * 0.9, Math.max(20, pstat(p, 'bombDamage', 60) / 2), ['explosive', 'spectral'], 1.4)
+      }
+    },
+
+    'alabaster-box': {
+      // APPROXIMATE: charges from Soul Hearts (and from clearing rooms, as the engine charges all
+      // actives). The devil-deal reduction is not tracked.
+      onPickup: function (p, kind, amount, ctx) {
+        if (ctx && (kind === 'soul' || kind === 'black')) ctx.addCharge(2)
+      },
+      onUse: function (p, ctx) {
+        if (!hasRoom(ctx)) return { fail: true }
+        for (var i = 0; i < 3; i++) ctx.spawnPickup('soul', p.x + (i - 1) * 40, p.y + 60, { amount: 2 })
+        ctx.spawnPickup('item', p.x - 40, p.y - 50, { pool: 'angel' })
+        ctx.spawnPickup('item', p.x + 40, p.y - 50, { pool: 'angel' })
+      }
+    },
+
+    'the-stairway': {
+      // APPROXIMATE: no ladder or angel shop; the first room of each floor offers one priced Angel item.
+      onRoomEnter: function (p, room, ctx) {
+        if (!hasRoom(ctx) || !ctx.floor) return
+        var key = 'stairs.' + (ctx.floor.id || ctx.floor.depth || 0)
+        if (get(p, key, false) || ctx.room.type !== 'start') return
+        set(p, key, true)
+        ctx.spawnPickup('item', null, null, { pool: 'angel', price: 15 })
+      }
+    },
+
+    sol: {
+      onRoomClear: function (p, room, ctx) {
+        if (!hasRoom(ctx) || get(p, 'sol', 0) || !ctx.isBossRoom()) return
+        set(p, 'sol', 1)
+        recalc(p)
+        ctx.addCharge(12)
+        if (ctx.banner) ctx.banner('The Sun')
+      },
+      onStats: function (p, s) {
+        if (get(p, 'sol', 0)) { s.damage = num(s.damage, 0) + 3; s.luck = num(s.luck, 0) + 1 }
+      },
+      onNewFloor: function (p) { if (get(p, 'sol', 0)) { set(p, 'sol', 0); recalc(p) } }
+    },
+
+    luna: {
+      // APPROXIMATE: beams of light are not spawned; entering a secret room grants the fire-rate bonus.
+      onRoomEnter: function (p, room, ctx) {
+        if (!hasRoom(ctx)) return
+        var t = ctx.room.type
+        if (t !== 'secret' && t !== 'super-secret') return
+        var k = 'luna.' + (ctx.room.id || ctx.room.index || t)
+        if (get(p, k, false)) return
+        set(p, k, true)
+        set(p, 'luna', get(p, 'luna', 0) + (get(p, 'luna', 0) ? 1 : 2))
+        recalc(p)
+      },
+      onStats: function (p, s) { s.tears = num(s.tears, 0) + get(p, 'luna', 0) * 0.25 },
+      onNewFloor: function (p) { if (get(p, 'luna', 0)) { set(p, 'luna', 0); recalc(p) } }
+    },
+
+    // Mercurius is stats only. APPROXIMATE: doors do not stay permanently open.
+
+    venus: {
+      onUpdate: function (p, dt, ctx) {
+        if (!hasRoom(ctx) || !timer(p, 'venus', dt, 0.5)) return
+        var list = nearby(ctx, p.x, p.y, 150)
+        for (var i = 0; i < list.length; i++) ctx.applyStatus(list[i], 'charm', 1.2)
+      }
+    },
+
+    terra: {
+      // APPROXIMATE: tears become knockback shots of random damage; rocks cannot break obstacles.
+      onTearFire: function (p, tear, ctx) {
+        if (!tear || !hasRoom(ctx)) return
+        tear.dmg = num(tear.dmg, dmgNow(p)) * ctx.range(0.5, 2)
+        tear.r = num(tear.r, 8) * 1.5
+        addFlag(tear, 'knockback')
+      }
+    },
+
+    mars: {
+      onUpdate: function (p, dt, ctx) {
+        if (!hasRoom(ctx)) return
+        var cd = Math.max(0, get(p, 'marsCd', 0) - dt)
+        set(p, 'marsCd', cd)
+        var dash = get(p, 'marsDash', 0)
+        var dirs = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] }
+        var now = (ctx.run && ctx.run.time) || 0
+        for (var k in dirs) {
+          if (!IS.input.pressed(k)) continue
+          if (cd <= 0 && dash <= 0 && get(p, 'marsLast.' + k, -9) > now - 0.25) {
+            set(p, 'marsDir', dirs[k])
+            set(p, 'marsDash', 0.22)
+            set(p, 'marsCd', 3)
+            set(p, 'marsHit', [])
+            dash = 0.22
+          }
+          set(p, 'marsLast.' + k, now)
+        }
+        if (dash <= 0) return
+        var d = get(p, 'marsDir', [1, 0])
+        set(p, 'marsDash', dash - dt)
+        p.vx = d[0] * 1500
+        p.vy = d[1] * 1500
+        if (!p.status) p.status = {}
+        p.status.invincible = Math.max(p.status.invincible || 0, 0.3)
+        var hit = get(p, 'marsHit', [])
+        var list = nearby(ctx, p.x, p.y, 55)
+        for (var i = 0; i < list.length; i++) {
+          if (hit.indexOf(list[i]) >= 0) continue
+          hit.push(list[i])
+          hurt(list[i], dmgNow(p) * 4 + 8, ctx)
+        }
+      }
+    },
+
+    jupiter: {
+      onUpdate: function (p, dt, ctx) {
+        if (!hasRoom(ctx)) return
+        var m = IS.input.move()
+        var moving = !!(m && (m.x || m.y))
+        var still = moving ? 0 : Math.min(3, get(p, 'jupStill', 0) + dt)
+        set(p, 'jupStill', still)
+        watch7(p, 'jupBucket', Math.floor(still / 0.75))
+        if (moving && timer(p, 'jupCloud', dt, 0.5)) {
+          IS.spawnPuddle({ x: p.x, y: p.y, r: 55, dmg: 1.5, tick: 0.5, life: 3, colour: '#80c040', status: [['poison', 2]] }, ctx)
+        }
+      },
+      onStats: function (p, s) { s.speed = num(s.speed, 0) + get(p, 'jupBucket', 0) * 0.2 },
+      onPlayerDamage: function (p, n, src) { if (srcIs(src, ['poison'])) return { cancel: true } }
+    },
+
+    saturnus: {
+      // APPROXIMATE: the orbiting tears are orbital familiars; stealing enemy shots is not modelled.
+      onRoomEnter: function (p, room, ctx) {
+        if (!hasRoom(ctx) || ctx.room.cleared) return
+        for (var i = 0; i < 7; i++) ctx.spawnFamiliar('saturnus-tear')
+      }
+    },
+
+    uranus: {
+      onTearFire: function (p, tear) { if (tear) addFlag(tear, 'freeze') },
+      onUpdate: function (p, dt, ctx) {
+        if (!hasRoom(ctx)) return
+        var list = nearby(ctx, p.x, p.y, num(p.r, 26) + 30)
+        for (var i = 0; i < list.length; i++) {
+          var e = list[i]
+          if (!(e.status && e.status.freeze > 0) || e.uranusDone) continue
+          e.uranusDone = true
+          for (var k = 0; k < 10; k++) fireTear(ctx, p, e.x, e.y, k * TAU / 10, IS.TEAR_SPEED * 0.7, dmgNow(p) * 0.5, ['spectral'], 0.5)
+          hurt(e, 1e4, ctx)
+        }
+      }
+    },
+
+    neptunus: {
+      onUpdate: function (p, dt, ctx) {
+        if (!hasRoom(ctx)) return
+        var t = get(p, 'nepT', 0)
+        t = shootingNow() ? Math.max(0, t - dt * 1.5) : Math.min(3, t + dt)
+        set(p, 'nepT', t)
+        watch7(p, 'nepB', Math.floor(t / 0.5))
+      },
+      onStats: function (p, s) { s.tears = num(s.tears, 0) + get(p, 'nepB', 0) * 0.4 }
+    },
+
+    pluto: {
+      // APPROXIMATE: Isaac is shrunk (smaller hitbox); passing under projectiles is not modelled.
+      onInit: function (p) {
+        if (once(p, 'plutoShrink')) { set(p, 'plutoR', p.r); p.r = Math.max(14, num(p.r, 26) * 0.75) }
+      },
+      onRemove: function (p) { var r = get(p, 'plutoR', 0); if (r) { p.r = r; set(p, 'plutoR', 0) } }
+    },
+
+    'voodoo-head': {
+      // APPROXIMATE: no extra Curse Room; every Curse Room you enter drops a coin.
+      onRoomEnter: function (p, room, ctx) {
+        if (!hasRoom(ctx) || ctx.room.type !== 'curse' || ctx.room.voodoo) return
+        ctx.room.voodoo = true
+        ctx.spawnPickup('coin')
+      }
+    },
+
+    'member-card': {
+      // APPROXIMATE: no trapdoor/underground shop; each shop gets one extra priced pedestal and trinket.
+      onRoomEnter: function (p, room, ctx) {
+        if (!hasRoom(ctx) || ctx.room.type !== 'shop' || ctx.room.memberCard) return
+        ctx.room.memberCard = true
+        ctx.spawnPickup('item', null, null, { pool: 'shop', price: 20 })
+        ctx.spawnPickup('trinket', null, null, { price: 12 })
+      }
+    },
+
+    'battery-pack': {
+      onInit: function (p, ctx) {
+        if (!hasRoom(ctx) || !once(p, 'batteryPack')) return
+        var n = 2 + ctx.int(3)
+        for (var i = 0; i < n; i++) ctx.spawnPickup('battery')
+        ctx.addCharge(12)
+      }
+    },
+
+    'moms-bracelet': {
+      // APPROXIMATE: nothing is carried; the nearest obstacle is smashed and the nearest enemy takes the throw.
+      onUse: function (p, ctx) {
+        if (!hasRoom(ctx)) return { fail: true }
+        var best = null
+        var bd = 160
+        var g = ctx.gridObjects ? ctx.gridObjects() : []
+        for (var i = 0; i < g.length; i++) {
+          var o = g[i]
+          if (!o || o.broken || !CRUSHABLE[o.kind]) continue
+          var d = dist7(o.x, o.y, p.x, p.y)
+          if (d < bd) { bd = d; best = o }
+        }
+        if (!best) return { fail: true }
+        ctx.destroyGrid(best)
+        var e = nearby(ctx, p.x, p.y, 500)[0]
+        if (e) hurt(e, 15 + dmgNow(p), ctx)
+      }
+    },
+
+    'the-scooper': {
+      onUse: function (p, ctx) {
+        if (!hasRoom(ctx)) return { fail: true }
+        ctx.spawnFamiliar('the-scooper')
+      },
+      onUpdate: function (p, dt, ctx) {
+        if (!hasRoom(ctx) || !timer(p, 'scoop', dt, 0.3)) return
+        var fs = fams7(p, 'the-scooper')
+        for (var i = 0; i < fs.length; i++) ctx.spawnCreep(fs[i].x, fs[i].y, 28, { dmg: 6, friendly: true, life: 5, colour: '#a01818' })
+      },
+      onRoomEnter: function (p) {
+        if (!p.familiars) return
+        for (var i = p.familiars.length - 1; i >= 0; i--) if (p.familiars[i] && p.familiars[i].id === 'the-scooper') p.familiars.splice(i, 1)
+      }
+    },
+
+    'ocular-rift': {
+      onTearFire: function (p, tear, ctx) {
+        if (tear && hasRoom(ctx) && ctx.chance(luckChance(p, 0.05, 0.01))) tear.rift = true
+      },
+      onTearHit: function (p, tear, e, ctx) {
+        if (tear && tear.rift && !tear.riftDone && hasRoom(ctx)) openRift(p, tear.x, tear.y, ctx, tear)
+      },
+      onTearDeath: function (p, tear, ctx) {
+        if (tear && tear.rift && !tear.riftDone && hasRoom(ctx)) openRift(p, tear.x, tear.y, ctx, tear)
+      },
+      onUpdate: function (p, dt, ctx) {
+        if (!hasRoom(ctx)) return
+        tickQueue(p, 'rifts', dt, function (r) {
+          var list = nearby(ctx, r.x, r.y, 170)
+          for (var i = 0; i < list.length; i++) {
+            var e = list[i]
+            var d = dist7(e.x, e.y, r.x, r.y) || 1
+            e.x += (r.x - e.x) / d * 90 * dt
+            e.y += (r.y - e.y) / d * 90 * dt
+          }
+          return r.t > 0
+        })
+      },
+      onRoomEnter: function (p) { set(p, 'rifts', []) }
+    },
+
+    'boiled-baby': {
+      onUpdate: function (p, dt, ctx) {
+        if (!hasRoom(ctx) || !shootingNow()) return
+        var fs = fams7(p, 'boiled-baby')
+        for (var i = 0; i < fs.length; i++) {
+          var f = fs[i]
+          f.boilT = (f.boilT || 0) - dt
+          if (f.boilT > 0) continue
+          f.boilT = 0.55
+          var n = 1 + ctx.int(3)
+          for (var k = 0; k < n; k++) fireTear(ctx, p, f.x, f.y, ctx.range(0, TAU), IS.TEAR_SPEED * 0.7, ctx.chance(0.5) ? 5.25 : 3.5, null, 0.7)
+        }
+      }
+    },
+
+    'freezer-baby': {
+      // APPROXIMATE: tears freeze; the freeze-on-kill part is not modelled.
+      onUpdate: function (p, dt, ctx) {
+        if (!hasRoom(ctx) || !shootingNow()) return
+        var fs = fams7(p, 'freezer-baby')
+        for (var i = 0; i < fs.length; i++) {
+          var f = fs[i]
+          f.frzT = (f.frzT || 0) - dt
+          if (f.frzT > 0) continue
+          f.frzT = Math.max(0.3, pstat(p, 'fireDelay', 0.4)) * 1.4
+          fireTear(ctx, p, f.x, f.y, aimAng(p), IS.TEAR_SPEED, 3.5, ['freeze'], 0.8)
+        }
+      }
+    },
+
+    'eternal-d6': {
+      onUse: function (p, ctx) {
+        if (!hasRoom(ctx)) return { fail: true }
+        var list = ctx.room.pickups || []
+        for (var i = 0; i < list.length; i++) {
+          var pk = list[i]
+          if (isPedestal(pk) && !pk.price && ctx.chance(0.25)) { pk.dead = true; pk.taken = true }
+        }
+        ctx.rerollPedestals()
+      }
+    },
+
+    'bird-cage': {
+      // APPROXIMATE: the leap is an instant 45 damage strike on the attacker (or the nearest enemy); the
+      // rock wave is not modelled. The chasing form is the familiar itself.
+      onPlayerHurt: function (p, n, src, ctx) {
+        if (!hasRoom(ctx) || get(p, 'cageRoom', null) === ctx.room) return
+        set(p, 'cageRoom', ctx.room)
+        var e = src && typeof src === 'object' && src.hp != null ? src : nearby(ctx, p.x, p.y, 600)[0]
+        if (e) hurt(e, 45, ctx)
+      }
+    },
+
+    larynx: {
+      onUse: function (p, ctx) {
+        if (!hasRoom(ctx)) return { fail: true }
+        var list = nearby(ctx, p.x, p.y, 280)
+        for (var i = 0; i < list.length; i++) {
+          hurt(list[i], 10 + dmgNow(p) * 2, ctx)
+          shove(list[i], p.x, p.y, 700)
+        }
+        ctx.shake(8, 0.3)
+      }
+    },
+
+    'lost-soul': {
+      onUpdate: function (p, dt, ctx) {
+        if (!hasRoom(ctx) || !timer(p, 'lost', dt, 0.5)) return
+        if (get(p, 'lostAlive', false) && !fams7(p, 'lost-soul').length) set(p, 'lostAlive', false)
+      },
+      onInit: function (p) { if (fams7(p, 'lost-soul').length && get(p, 'lostAlive', null) === null) set(p, 'lostAlive', true) },
+      onNewFloor: function (p, floor, ctx) {
+        if (!ctx) return
+        if (get(p, 'lostAlive', false) && ctx.room) {
+          var r = ctx.int(4)
+          if (r === 0) ctx.addSoul(6)
+          else if (r === 1) ctx.addSoul(2)
+          else if (r === 2) ctx.spawnPickup('item', null, null, { pool: 'treasure' })
+          else ctx.spawnPickup('item', null, null, { pool: 'angel' })
+        }
+        if (!fams7(p, 'lost-soul').length) ctx.spawnFamiliar('lost-soul')
+        set(p, 'lostAlive', true)
+      }
+    },
+
+    'blood-bombs': {
+      onBombExplode: function (p, bomb, ctx) {
+        if (!hasRoom(ctx) || !bomb) return
+        ctx.spawnCreep(bomb.x, bomb.y, 80, { dmg: 6, friendly: true, life: 6, colour: '#a01818' })
+      },
+      // With no bombs left, the press places one for half a heart.
+      onUpdate: function (p, dt, ctx) {
+        if (!hasRoom(ctx) || !IS.input.pressed('bomb') || num(p.bombs, 0) > 0 || p.goldenBomb) return
+        if (!p.hearts || p.hearts.red < 2) return
+        p.hearts.red -= 1
+        ctx.spawnBomb(p.x, p.y, { dmg: pstat(p, 'bombDamage', 60) })
+      }
+    },
+
+    'lil-dumpy': {
+      // APPROXIMATE: it blocks one hit and re-arms after a few seconds instead of when it is touched.
+      onPlayerDamage: function (p) {
+        if (!get(p, 'dumpy', true)) return
+        set(p, 'dumpy', false)
+        set(p, 'dumpyT', 5)
+        return { cancel: true }
+      },
+      onUpdate: function (p, dt) {
+        var t = get(p, 'dumpyT', 0)
+        if (t > 0) { set(p, 'dumpyT', t - dt); if (t - dt <= 0) set(p, 'dumpy', true) }
+      }
+    },
+
+    'birds-eye': {
+      // APPROXIMATE: the red fire is a burning, piercing, spectral tear instead of a shot-blocking flame.
+      onTearFire: function (p, tear, ctx) {
+        if (!tear || !hasRoom(ctx) || !ctx.chance(luckChance(p, 0.08, 0.042))) return
+        addFlag(tear, 'burn')
+        addFlag(tear, 'piercing')
+        addFlag(tear, 'spectral')
+      }
+    },
+
+    lodestone: {
+      onTearFire: function (p, tear, ctx) {
+        if (tear && hasRoom(ctx) && ctx.chance(luckChance(p, 0.17, 0.166))) addFlag(tear, 'magnetize')
+      }
+    },
+
+    'rotten-tomato': {
+      // APPROXIMATE: enemies do not target each other; marked enemies are slowed.
+      onTearFire: function (p, tear, ctx) {
+        if (tear && hasRoom(ctx) && ctx.chance(luckChance(p, 0.17, 0.166))) { addFlag(tear, 'slow'); tear.marked = true }
+      }
+    },
+
+    birthright: {
+      // APPROXIMATE: the per-character effect is a generic boost: +1 soul heart and +0.5 luck.
+      onInit: function (p, ctx) { if (hasRoom(ctx) && once(p, 'birthright')) ctx.addSoul(2) },
+      onStats: function (p, s) { s.luck = num(s.luck, 0) + 0.5 }
+    },
+
+    'red-stew': {
+      onInit: function (p, ctx) {
+        if (!once(p, 'stew')) return
+        set(p, 'stewT', 180)
+        if (ctx) ctx.healRed(99)
+        recalc(p)
+      },
+      onUpdate: function (p, dt) {
+        var t = get(p, 'stewT', 0)
+        if (t <= 0) return
+        t = Math.max(0, t - dt)
+        set(p, 'stewT', t)
+        watch7(p, 'stewB', Math.ceil(t / 6))
+      },
+      onEnemyKill: function (p) { if (get(p, 'stewT', 0) > 0) set(p, 'stewT', Math.min(180, get(p, 'stewT', 0) + 3)) },
+      onStats: function (p, s) { s.damage = num(s.damage, 0) + 21.6 * (get(p, 'stewT', 0) / 180) }
+    },
+
+    genesis: {
+      // APPROXIMATE: no bedroom; every held passive is rerolled instead of offering a choice of three.
+      onUse: function (p, ctx) {
+        if (!hasRoom(ctx)) return { fail: true }
+        ctx.rerollPlayerItems()
+        return { consumed: true }
+      }
+    },
+
+    'sharp-key': {
+      onUse: function (p, ctx) {
+        if (!hasRoom(ctx) || num(p.keys, 0) < 1) return { fail: true }
+        ctx.addKeys(-1)
+        fireTear(ctx, p, p.x, p.y, aimAng(p), IS.TEAR_SPEED * 1.1, 10 + dmgNow(p), ['piercing', 'spectral'], 1.2)
+      }
+    },
+
+    'booster-pack': {
+      onInit: function (p, ctx) {
+        if (!hasRoom(ctx) || !once(p, 'booster')) return
+        for (var i = 0; i < 5; i++) ctx.spawnPickup('card')
+      }
+    },
+
+    'mega-mush': {
+      // APPROXIMATE: crushing is not modelled.
+      onUse: function (p) {
+        set(p, 'mush', 30)
+        if (!p.status) p.status = {}
+        p.status.invincible = 30
+        set(p, 'mushR', p.r)
+        p.r = num(p.r, 26) * 1.6
+        recalc(p)
+      },
+      onUpdate: function (p, dt) {
+        var t = get(p, 'mush', 0)
+        if (t <= 0) return
+        t -= dt
+        set(p, 'mush', t)
+        if (t <= 0) {
+          var r = get(p, 'mushR', 0)
+          if (r) p.r = r
+          recalc(p)
+        }
+      },
+      onStats: function (p, s, mult) {
+        if (get(p, 'mush', 0) > 0) { mult.damage *= 4; s.range = num(s.range, 0) + 64; s.tears = num(s.tears, 0) - 1.9 }
+      }
+    },
+
+    // APPROXIMATE: holding both pieces gives the knife weapon (Mom's Knife style), not a thrown 25 damage blade.
+    'knife-piece-1': { onStats: function (p) { knifeCheck(p) } },
+    'knife-piece-2': { onStats: function (p) { knifeCheck(p) } },
+
+    'death-certificate': {
+      // APPROXIMATE: no all-items floor; offers a choose-one of four random items right here.
+      onUse: function (p, ctx) {
+        if (!hasRoom(ctx)) return { fail: true }
+        var pools = ['treasure', 'shop', 'boss', 'devil', 'angel', 'secret', 'library', 'curse']
+        for (var i = 0; i < 4; i++) ctx.spawnPickup('item', p.x + (i - 1.5) * 64, p.y - 70, { pool: ctx.pick(pools), optionsGroup: 'death-certificate' })
+      }
+    },
+
+    'meat-cleaver': {
+      onUse: function (p, ctx) {
+        if (!hasRoom(ctx)) return { fail: true }
+        var list = living(ctx).slice()
+        for (var i = 0; i < list.length; i++) {
+          var e = list[i]
+          if (!e || e.dead) continue
+          if (e.boss || e.isBoss || !e.id) { hurt(e, 25, ctx); continue }
+          var mhp = num(e.maxHp, num(e.hp, 10))
+          var c = ctx.spawnEnemy(e.id, e.x + 24, e.y, null)
+          e.hp = Math.max(1, mhp * 0.4)
+          e.maxHp = e.hp
+          if (c) { c.hp = e.hp; c.maxHp = e.hp }
+        }
+      }
+    },
+
+    'evil-charm': {
+      onUpdate: function (p) {
+        if (!p.status) return
+        var bad = ['poison', 'burn', 'confusion', 'fear']
+        for (var i = 0; i < bad.length; i++) if (p.status[bad[i]]) delete p.status[bad[i]]
+      }
+    },
+
+    dogma: {
+      onStats: function (p, s) { if (p.flags && p.flags.add) p.flags.add('flying'); s.shieldCount = num(s.shieldCount, 0) + 1 }
+    },
+
+    purgatory: {
+      // APPROXIMATE: cracks are invisible and spawn three per hostile room.
+      onRoomEnter: function (p, room, ctx) {
+        set(p, 'cracks', [])
+        if (!hasRoom(ctx) || ctx.room.cleared) return
+        var q = get(p, 'cracks', [])
+        for (var i = 0; i < 3; i++) { var pos = ctx.freeFloorPos(); q.push({ x: pos.x, y: pos.y, t: 999 }) }
+      },
+      onUpdate: function (p, dt, ctx) {
+        if (!hasRoom(ctx)) return
+        tickQueue(p, 'cracks', dt, function (c) {
+          if (dist7(c.x, c.y, p.x, p.y) > 36) return true
+          fireTear(ctx, p, c.x, c.y, ctx.range(0, TAU), IS.TEAR_SPEED * 0.4, 12, ['homing', 'explosive', 'spectral'], 3)
+          return false
+        })
+      }
+    },
+
+    stitches: {
+      onUse: function (p, ctx) {
+        if (!hasRoom(ctx)) return { fail: true }
+        var f = fams7(p, 'stitches')[0]
+        if (!f) return { fail: true }
+        var x = p.x
+        var y = p.y
+        p.x = f.x
+        p.y = f.y
+        f.x = x
+        f.y = y
+        if (!p.status) p.status = {}
+        p.status.invincible = Math.max(p.status.invincible || 0, 1)
+        var list = nearby(ctx, p.x, p.y, 60)
+        for (var i = 0; i < list.length; i++) hurt(list[i], 20, ctx)
+      }
+    },
+
+    'r-key': {
+      // APPROXIMATE: returns to the first floor with every item and pickup kept; the run timer carries on.
+      onUse: function (p, ctx) {
+        if (!hasRoom(ctx) || !IS.floors || !IS.floors[0]) return { fail: true }
+        ctx.teleport(IS.floors[0].id)
+      }
+    },
+
+    'knockout-drops': {
+      // APPROXIMATE: wall-slam damage is not modelled.
+      onTearFire: function (p, tear, ctx) {
+        if (!tear || !hasRoom(ctx) || !ctx.chance(luckChance(p, 0.1, 0.1))) return
+        addFlag(tear, 'knockback')
+        addFlag(tear, 'confusion')
+      }
+    },
+
+    eraser: {
+      onUse: function (p, ctx) {
+        if (!hasRoom(ctx) || get(p, 'eraserFloor', false)) return { fail: true }
+        var e = ctx.nearestEnemy(p.x, p.y)
+        if (!e) return { fail: true }
+        set(p, 'eraserFloor', true)
+        if (e.boss || e.isBoss) { hurt(e, 15, ctx); return }
+        if (e.id && ctx.run) { if (!ctx.run.erased) ctx.run.erased = {}; ctx.run.erased[e.id] = true }
+        hurt(e, 1e5, ctx)
+      },
+      onRoomEnter: function (p, room, ctx) {
+        if (!hasRoom(ctx) || !ctx.run || !ctx.run.erased) return
+        var list = living(ctx)
+        for (var i = 0; i < list.length; i++) if (list[i] && ctx.run.erased[list[i].id] && !list[i].boss) hurt(list[i], 1e5, ctx)
+      },
+      onNewFloor: function (p) { set(p, 'eraserFloor', false) }
+    },
+
+    'yuck-heart': {
+      // APPROXIMATE: the engine has no rotten hearts, so the item restores 2 red hearts.
+      onUse: function (p, ctx) { if (ctx) ctx.healRed(2) }
+    },
+
+    'urn-of-souls': {
+      onUse: function (p) { set(p, 'urnT', 2.5) },
+      onUpdate: function (p, dt, ctx) {
+        var t = get(p, 'urnT', 0)
+        if (t <= 0 || !hasRoom(ctx)) return
+        set(p, 'urnT', t - dt)
+        if (!timer(p, 'urnShot', dt, 0.07)) return
+        fireTear(ctx, p, p.x, p.y, aimAng(p) + ctx.range(-0.14, 0.14), IS.TEAR_SPEED * 0.7, Math.max(2, dmgNow(p) * 0.6), ['burn', 'spectral'], 0.4)
+      },
+      onEnemyKill: function (p, e, ctx) { if (ctx) ctx.addCharge(1) }
+    },
+
+    akeldama: {
+      // APPROXIMATE: the chain is an invisible set of damage points that follow Isaac.
+      onUpdate: function (p, dt, ctx) {
+        if (!hasRoom(ctx) || ctx.room.cleared) return
+        var tr = stealTrail(p, ctx)
+        if (!timer(p, 'akel', dt, 0.5)) return
+        var now = (ctx.run && ctx.run.time) || 0
+        for (var k = 1; k <= 3; k++) {
+          var pt = null
+          for (var i = tr.length - 1; i >= 0; i--) if (tr[i].t <= now - 0.18 * k) { pt = tr[i]; break }
+          if (!pt) continue
+          var list = nearby(ctx, pt.x, pt.y, 26)
+          for (var j = 0; j < list.length; j++) hurt(list[j], 3.5, ctx)
+        }
+      }
+    },
+
+    'magic-skin': {
+      onUse: function (p, ctx) {
+        if (!hasRoom(ctx) || !p.hearts || p.hearts.maxRed < 2) return { fail: true }
+        ctx.addMaxHearts(-2)
+        ctx.spawnPickup('item', null, null, { pool: ROOM_POOL[ctx.room.type] || 'treasure' })
+      }
+    },
+
+    revelation: {
+      // APPROXIMATE: the chargeable holy beam is not modelled; flight is.
+      onStats: function (p) { if (p.flags && p.flags.add) p.flags.add('flying') }
+    },
+
+    'consolation-prize': {
+      onInit: function (p, ctx) {
+        if (!hasRoom(ctx) || !once(p, 'consolation')) return
+        var st = p.stats || {}
+        var rel = { speed: num(st.speed, 1), tears: num(st.tears, 2.73) / 2.73, damage: num(st.damage, 3.5) / 3.5, range: num(st.range, 520) / 520 }
+        var low = 'speed'
+        for (var k in rel) if (rel[k] < rel[low]) low = k
+        set(p, 'consStat', low)
+        recalc(p)
+        var c = num(p.coins, 0)
+        var b = num(p.bombs, 0)
+        var kc = num(p.keys, 0)
+        if (c <= b && c <= kc) { for (var i = 0; i < 3; i++) ctx.spawnPickup('coin') }
+        else if (b <= kc) ctx.spawnPickup('bomb')
+        else ctx.spawnPickup('key')
+      },
+      onStats: function (p, s) {
+        var low = get(p, 'consStat', null)
+        if (low === 'speed') s.speed = num(s.speed, 0) + 0.2
+        else if (low === 'tears') s.tears = num(s.tears, 0) + 0.5
+        else if (low === 'damage') s.damage = num(s.damage, 0) + 1
+        else if (low === 'range') s.range = num(s.range, 0) + 48
+      }
+    }
+  }
 
   // ---------------------------------------------------------------------------
   // 553 … 570
@@ -500,20 +1343,19 @@
       hooks: {
         onUse: function (p, ctx) {
           set(p, 'sulfur', get(p, 'sulfur', 0) + 1)
+          recalc(p)
           ctx.spawnEffect('flash', num(p.x, 0), num(p.y, 0), { colour: '#8a2020', secs: 0.2 })
           ctx.sfx('brimstone-fire')
         },
-        onTearFire: function (p, tear, ctx) {
+        // Brimstone is a player flag the weapon code reads; it is applied in onStats while the buff lasts.
+        onStats: function (p, s) {
           var n = get(p, 'sulfur', 0)
-          if (!n || !tear) return
-          // The engine owns what 'brimstone' does; stacking uses only scale it.
-          addFlag(tear, 'brimstone')
-          addFlag(tear, 'piercing')
-          tear.dmg = num(tear.dmg, dmgOf(p)) * (1 + 0.25 * (n - 1))
-          tear.r = num(tear.r, 8) * (1 + 0.2 * (n - 1))
+          if (!n) return
+          if (p.flags && p.flags.add) p.flags.add('brimstone')
+          s.damage = num(s.damage, 0) + 0.5 * (n - 1)
         },
         onRoomEnter: function (p) {
-          if (get(p, 'sulfur', 0)) set(p, 'sulfur', 0)
+          if (get(p, 'sulfur', 0)) { set(p, 'sulfur', 0); recalc(p) }
         }
       }
     },
@@ -1028,7 +1870,7 @@
       pools: ["devil","greed-devil","ultra-secret"],
       tags: ["damage","offensive"],
       dlc: "antibirth",
-      stats: {"damage":1,"range":80,"shotSpeed":-0.16},
+      stats: {"damage":1,"range":160,"shotSpeed":-0.16},
       transform: "leviathan",
       hooks: referenceHooks("↑ +1 Damage · ↑ +2 Range · ↓ -0.16 Shot speed · Isaac's tears can be controlled in mid-air", false, "eye-of-the-occult")
     },
@@ -1256,7 +2098,7 @@
       pools: [],
       tags: [],
       dlc: "repentance",
-      hooks: referenceHooks("\u003cItem does not exist>", false, "item-587")
+      stats: {}
     },
 
     {
@@ -1637,7 +2479,7 @@
       pools: [],
       tags: [],
       dlc: "repentance",
-      hooks: referenceHooks("\u003cItem does not exist>", false, "item-613")
+      stats: {}
     },
 
     {
@@ -1736,7 +2578,7 @@
       pools: [],
       tags: [],
       dlc: "repentance",
-      hooks: referenceHooks("\u003cItem does not exist>", false, "item-620")
+      stats: {}
     },
 
     {
@@ -1885,7 +2727,7 @@
       pools: [],
       tags: [],
       dlc: "repentance",
-      hooks: referenceHooks("\u003cItem does not exist>", false, "item-630")
+      stats: {}
     },
 
     {
@@ -2102,6 +2944,48 @@
       hooks: referenceHooks("↑ Increases Isaac's lowest stat out of Speed, Fire rate, Damage, and Range · Spawns either 3 coins, 1 bomb, or 1 key depending on what Isaac has the least of", false, "consolation-prize")
     }
 
+  ])
+
+  // Fields that are not hooks: familiars, grants and stat corrections.
+  var PATCH = {
+    venus: { grant: { maxHearts: 2, heal: 2 } },
+    'rocket-in-a-jar': { grant: { bombs: 5 } },
+    'sharp-key': { grant: { keys: 5 } },
+    'book-of-virtues': { stats: { angelChance: 0.125 }, familiars: ['book-of-virtues'] },
+    // APPROXIMATE: the engine has no eternal hearts; +1 heart container stands in for the +1 Eternal Heart.
+    'act-of-contrition': { grant: { maxHearts: 2 } },
+    'blood-bombs': { grant: { maxHearts: 2, heal: 8 } },
+    jupiter: { stats: { speed: -0.3 }, grant: { maxHearts: 4, heal: 1 } },
+    // APPROXIMATE: the left-eye fire-rate multiplier is an overall +0.55 tears.
+    'eye-drops': { stats: { tears: 0.55 } },
+    // APPROXIMATE: the right-eye damage multiplier is an overall x1.15.
+    'the-scooper': { mult: { damage: 1.15 } },
+    'psy-fly': { familiars: ['psy-fly'] },
+    'bot-fly': { familiars: ['bot-fly'] },
+    'boiled-baby': { familiars: ['boiled-baby'] },
+    'freezer-baby': { familiars: ['freezer-baby'] },
+    'bird-cage': { familiars: ['bird-cage'] },
+    'lost-soul': { familiars: ['lost-soul'] },
+    'lil-dumpy': { familiars: ['lil-dumpy'] },
+    stitches: { familiars: ['stitches'] }
+  }
+  Object.keys(PATCH).forEach(function (id) {
+    var d = IS.itemsById && IS.itemsById[id]
+    if (d) for (var k in PATCH[id]) d[k] = PATCH[id][k]
+  })
+
+  IS.defineFamiliars([
+    { id: 'psy-fly', name: 'Psy Fly', sprite: 'psy-fly', behaviour: 'chaser', params: { r: 14, speed: 300, flying: true, dmg: 7, range: 800, cooldown: 0.5, hp: 0, blockShots: true, life: 0 } },
+    { id: 'bot-fly', name: 'Bot Fly', sprite: 'bot-fly', behaviour: 'orbital', params: { r: 12, speed: 300, flying: true, orbitR: 70, orbitSpeed: 2.4, dmg: 1.5, cooldown: 0.5, hp: 0, blockShots: true, life: 0 } },
+    { id: 'saturnus-tear', name: 'Saturnus Tear', sprite: 'tear', behaviour: 'orbital', params: { r: 9, speed: 300, flying: true, orbitR: 78, orbitSpeed: 2.2, dmg: 10, cooldown: 0.5, hp: 0, blockShots: false, life: 13 } },
+    { id: 'the-scooper', name: 'Peeper', sprite: 'the-scooper', behaviour: 'chaser', params: { r: 16, speed: 320, flying: false, dmg: 9, range: 900, cooldown: 0.25, hp: 0, blockShots: false, life: 0 } },
+    { id: 'book-of-virtues', name: 'Wisp', sprite: 'wisp', behaviour: 'orbitShooter', params: { r: 13, speed: 300, flying: true, orbitR: 62, orbitSpeed: 1.7, dmg: 3.5, fireDelay: 0.7, range: 420, blockShots: false } },
+    { id: 'boiled-baby', name: 'Boiled Baby', sprite: 'boiled-baby', behaviour: 'follower', params: { r: 16, speed: 320, flying: true, hp: 0, blockShots: false } },
+    { id: 'freezer-baby', name: 'Freezer Baby', sprite: 'freezer-baby', behaviour: 'follower', params: { r: 16, speed: 320, flying: true, hp: 0, blockShots: false } },
+    { id: 'bird-cage', name: 'Bird Cage', sprite: 'bird-cage', behaviour: 'chaser', params: { r: 16, speed: 330, flying: false, dmg: 3, range: 900, cooldown: 0.45, hp: 0, blockShots: false, life: 0 } },
+    { id: 'lost-soul', name: 'Lost Soul', sprite: 'lost-soul', behaviour: 'follower', params: { r: 14, speed: 300, flying: true, hp: 1, blockShots: true } },
+    { id: 'lil-dumpy', name: 'Lil Dumpy', sprite: 'lil-dumpy', behaviour: 'follower', params: { r: 16, speed: 300, flying: false, hp: 0, blockShots: false } },
+    { id: 'stitches', name: 'Stitches', sprite: 'stitches', behaviour: 'follower', params: { r: 16, speed: 300, flying: false, hp: 0, blockShots: false } }
   ])
 
   IS.defineFamiliars([

@@ -17,12 +17,8 @@
   // ---------------------------------------------------------------------------
   // FILE-WIDE APPROXIMATIONS (each is also noted at its use site)
   //
-  // 1. "While firing" / "hold the fire button for N seconds" — a data file
-  //    cannot read js/core/input.js, and the player object in §4 exposes no
-  //    fire flag. `firing(p)` reads whichever flag player.js ends up exposing
-  //    and falls back to the aim vector, so charge-up items (No. 2, Maw of the
-  //    Void, Dead Tooth, Linger Bean, Kidney Stone) charge while the player is
-  //    aiming rather than strictly while holding fire.
+  // 1. Charge-up items (No. 2, Maw of the Void, Dead Tooth, Linger Bean, Kidney Stone) read
+  //    IS.input.shoot() through firing(p), so they charge while a fire key is held.
   //
   // 2. Familiar-anchored auras — ctx exposes no familiar positions, so the
   //    auras of Censer, Succubus and Circle of Protection are centred on the
@@ -39,33 +35,9 @@
     return p.cache
   }
 
-  // Reference-tail items use this compact dispatcher so every entry has a
-  // working effect without duplicating the same guarded hook boilerplate.
+  // Items that are only stats/grants/familiars have no hooks; everything else is in IMPL below.
   function referenceHooks (info, active, id) {
-    var text = String(info || '').toLowerCase()
-    if (active) return {
-      onUse: function (p, ctx) {
-        if (!ctx) return { fail: true }
-        if (text.indexOf('charm') >= 0 && typeof ctx.charmAllEnemies === 'function') ctx.charmAllEnemies(5)
-        else if (text.indexOf('slow') >= 0 && typeof ctx.applyStatus === 'function') {
-          var es = livingList(ctx); for (var i = 0; i < es.length; i++) ctx.applyStatus(es[i], 'slow', 8)
-        } else if (text.indexOf('bomb') >= 0 && typeof ctx.spawnBomb === 'function') ctx.spawnBomb(p.x, p.y, { fuse: 1.2, friendly: true })
-        else if (text.indexOf('fly') >= 0 && typeof ctx.spawnFamiliar === 'function') ctx.spawnFamiliar('blue-fly')
-        else if (typeof ctx.spawnEffect === 'function') ctx.spawnEffect('burst', p.x, p.y, { colour: '#d8c890', n: 10 })
-      }
-    }
-    return {
-      onTearFire: function (p, tear, ctx) {
-        if (!tear || !ctx) return
-        var chance = text.indexOf('chance') >= 0 ? 0.12 : 0.04
-        if (typeof ctx.chance === 'function' && !ctx.chance(chance)) return
-        if (text.indexOf('poison') >= 0) addFlag(tear, 'poison')
-        else if (text.indexOf('charm') >= 0) addFlag(tear, 'charm')
-        else if (text.indexOf('freeze') >= 0 || text.indexOf('petrif') >= 0) addFlag(tear, 'freeze')
-        else if (text.indexOf('knockback') >= 0) addFlag(tear, 'knockback')
-        else tear.referenceEffect = id
-      }
-    }
+    return IMPL[id]
   }
 
   function recalc (p) {
@@ -85,15 +57,11 @@
     return { x: 1, y: 0 }
   }
 
-  // See FILE-WIDE APPROXIMATIONS #1.
+  // True while a fire key is held (the player's shoot vector), not merely while a head direction exists.
   function firing (p) {
     if (!p) return false
-    if (p.firing != null) return !!p.firing
-    if (p.isFiring != null) return !!p.isFiring
-    if (p.shooting != null) return !!p.shooting
-    if (p.fireHeld != null) return !!p.fireHeld
-    var h = p.head
-    return !!(h && (h.x || h.y))
+    var s = IS.input && typeof IS.input.shoot === 'function' ? IS.input.shoot() : null
+    return !!(s && (s.x || s.y))
   }
 
   function livingList (ctx) {
@@ -124,6 +92,88 @@
 
   function killIt (e, ctx) {
     if (e && !e.dead && typeof IS.killEnemy === 'function') IS.killEnemy(e, ctx)
+  }
+
+  function aimDir () {
+    var d = IS.input && typeof IS.input.shoot === 'function' ? IS.input.shoot() : null
+    return d && (d.x || d.y) ? { x: d.x, y: d.y } : null
+  }
+
+  // Leo: the engine never reads a 'rock' tear flag, so tears that touch a
+  // breakable rock smash it from here.
+  function breakRocksNearTears (ctx) {
+    var tears = ctx.room.tears || []
+    var grid = ctx.gridObjects()
+    if (!tears.length || !grid.length) return
+    for (var i = 0; i < tears.length; i++) {
+      var t = tears[i]
+      if (!t || t.dead || !t.friendly) continue
+      for (var k = 0; k < grid.length; k++) {
+        var g = grid[k]
+        if (!g || g.broken || !g.rockFamily || !g.destructible || g.bombOnly) continue
+        var dx = g.x - t.x
+        var dy = g.y - t.y
+        var rr = (g.r || 20) + (t.r || 8) + 6
+        if (dx * dx + dy * dy <= rr * rr) ctx.destroyGrid(g)
+      }
+    }
+  }
+
+  function killRings (c) {
+    var rings = c.txRings || []
+    for (var i = 0; i < rings.length; i++) {
+      for (var k = 0; k < rings[i].segs.length; k++) if (rings[i].segs[k]) rings[i].segs[k].dead = true
+    }
+    c.txRings = []
+  }
+
+  function placeRing (rg) {
+    var n = rg.segs.length
+    var len = 2 * rg.r * Math.sin(Math.PI / n) * 1.08
+    for (var i = 0; i < n; i++) {
+      var s = rg.segs[i]
+      if (!s) continue
+      var th = (i / n) * Math.PI * 2
+      var ta = th + Math.PI / 2
+      s.x = rg.x + Math.cos(th) * rg.r - Math.cos(ta) * len / 2
+      s.y = rg.y + Math.sin(th) * rg.r - Math.sin(ta) * len / 2
+      s.angle = ta
+      s.len = len
+      s.life = 0.2
+    }
+  }
+
+  function spawnRing (c, p, ctx, dir, r, dmg) {
+    var rg = { x: p.x + dir.x * r, y: p.y - 10 + dir.y * r, vx: dir.x * 320, vy: dir.y * 320, r: r, t: 0, max: 0.35 + ((p.stats && p.stats.range) || 400) / 900, segs: [] }
+    for (var i = 0; i < 12; i++) {
+      var l = ctx.spawnLaser({ x: rg.x, y: rg.y, angle: 0, len: 10, width: 10, life: 0.2, dmg: dmg, tick: 0.25, friendly: true })
+      if (l) l.techx = true
+      rg.segs.push(l)
+    }
+    placeRing(rg)
+    if (!c.txRings) c.txRings = []
+    c.txRings.push(rg)
+    ctx.sfx('laser-fire')
+  }
+
+  function stepRings (c, p, dt, ctx) {
+    var rings = c.txRings || []
+    var keep = []
+    for (var i = 0; i < rings.length; i++) {
+      var rg = rings[i]
+      rg.t += dt
+      rg.x += rg.vx * dt
+      rg.y += rg.vy * dt
+      var room = ctx.room
+      var out = room && (rg.x < 0 || rg.y < 0 || rg.x > roomW(room) || rg.y > roomH(room))
+      if (rg.t >= rg.max || out) {
+        for (var k = 0; k < rg.segs.length; k++) if (rg.segs[k]) rg.segs[k].dead = true
+        continue
+      }
+      placeRing(rg)
+      keep.push(rg)
+    }
+    c.txRings = keep
   }
 
   function addFlag (tear, f) {
@@ -161,7 +211,7 @@
 
   // Shared by Host Hat, Circle of Protection and Metal Plate: roll once per
   // shot, then flip the survivors back at whoever fired them.
-  function reflectNearbyShots (p, ctx, radius, odds) {
+  function reflectNearbyShots (p, ctx, radius, odds, flag) {
     if (!p) return 0
     var list = hostileShots(ctx)
     var n = 0
@@ -178,6 +228,7 @@
       s.vy = -s.vy
       s.friendly = true
       if (p.stats && p.stats.damage > 0) s.dmg = p.stats.damage
+      if (flag && s.flags && typeof s.flags.add === 'function') s.flags.add(flag)
       n++
     }
     if (n) ctx.sfx('tear-fire')
@@ -195,7 +246,8 @@
         y: y,
         angle: (i / beams) * Math.PI * 2,
         len: radius,
-        dmg: dmg / beams,
+        dmg: dmg / (life / 0.25),
+        tick: 0.25,
         width: 18,
         life: life,
         brimstone: true,
@@ -248,6 +300,902 @@
     'poison', 'burn', 'freeze', 'slow', 'charm', 'fear', 'confusion', 'bleed',
     'shrink', 'baited', 'magnetize'
   ]
+
+  // ---------------------------------------------------------------------------
+  // Real implementations for the items that used to be generated stubs.
+  // referenceHooks(info, active, id) now returns IMPL[id] when one exists. Fields
+  // that are not hooks (familiars, grants, stat fixes) are in PATCH, applied right
+  // after IS.defineItems.
+  // ---------------------------------------------------------------------------
+
+  function shootTear (ctx, p, x, y, angle, speed, dmg, flags, life, r) {
+    var base = typeof IS.tearBaseOpts === 'function' ? IS.tearBaseOpts(p) : {}
+    var o = {}
+    for (var k in base) o[k] = base[k]
+    o.x = x
+    o.y = y
+    o.vx = Math.cos(angle) * speed
+    o.vy = Math.sin(angle) * speed
+    o.friendly = true
+    if (dmg != null) o.dmg = dmg
+    if (life != null) o.life = life
+    if (r != null) o.r = r
+    var f = []
+    if (o.flags && typeof o.flags.forEach === 'function') o.flags.forEach(function (v) { f.push(v) })
+    for (var i = 0; flags && i < flags.length; i++) if (f.indexOf(flags[i]) < 0) f.push(flags[i])
+    o.flags = f
+    return ctx.spawnTear(o)
+  }
+
+  function dmgNow (p) { return (p && p.stats && p.stats.damage) || IS.BASE_DAMAGE || 3.5 }
+  function aimAngle (p) { var a = aim(p); return Math.atan2(a.y, a.x) }
+  function pickups (ctx) { return (ctx && ctx.room && ctx.room.pickups) || [] }
+  function famsOf (p, id) {
+    var out = []
+    var l = (p && p.familiars) || []
+    for (var i = 0; i < l.length; i++) if (l[i] && l[i].id === id) out.push(l[i])
+    return out
+  }
+  function tickList (c, key, dt, fn) {
+    var q = c[key]
+    if (!q || !q.length) return
+    for (var i = q.length - 1; i >= 0; i--) {
+      q[i].t -= dt
+      if (fn(q[i]) === false || q[i].t <= 0) q.splice(i, 1)
+    }
+  }
+  function every (c, key, dt, period) {
+    c[key] = (c[key] || 0) + dt
+    if (c[key] < period) return false
+    c[key] -= period
+    if (c[key] > period) c[key] = 0
+    return true
+  }
+  // Scale the damage "ups" so the final damage is multiplied by m (player.js turns ups into damage
+  // as charDamage * sqrt(1 + 1.2 * ups)); the multiplier can only be approximated from inside onStats.
+  function damageMultUps (p, s, m, mult) {
+    if (mult) { mult.damage *= m; return }
+    var u = s.damage || 0
+    s.damage = u + ((m * m) * (1 + 1.2 * u) - 1) / 1.2 - u
+  }
+  function hasRoom (ctx) { return !!(ctx && ctx.room) }
+  function hostile (ctx) { return hasRoom(ctx) && !ctx.room.cleared }
+  // Re-runs the stat pass only when a watched condition flips.
+  function watch (p, key, now) {
+    var c = cache(p)
+    if (c[key] === now) return
+    c[key] = now
+    recalc(p)
+  }
+  function noRedHearts (p) { return !!p.hearts && p.hearts.red <= 0 }
+  function fullRed (p) { return !!p.hearts && p.hearts.maxRed > 0 && p.hearts.red >= p.hearts.maxRed }
+  function randomPickupKind (ctx) { return ctx.pick(['coin', 'key', 'bomb', 'heart', 'soul', 'card', 'pill']) || 'coin' }
+
+  var CHAOS_POOLS = ['treasure', 'shop', 'boss', 'devil', 'angel', 'secret', 'curse', 'library', 'golden-chest', 'red-chest', 'planetarium']
+
+  var IMPL = {
+    explosivo: {
+      onTearFire: function (p, tear, ctx) {
+        if (!tear || !ctx.chance(0.25)) return
+        addFlag(tear, 'sticky')
+        tear.explosivo = true
+      },
+      onTearHit: function (p, tear, enemy, ctx) {
+        if (!tear || !tear.explosivo || !enemy) return
+        ctx.applyStatus(enemy, 'sticky', 2.5)
+        var q = cache(p).explosivoQ || (cache(p).explosivoQ = [])
+        q.push({ t: 2, e: enemy, x: enemy.x, y: enemy.y, dmg: (tear.dmg || dmgNow(p)) + 60 })
+      },
+      onUpdate: function (p, dt, ctx) {
+        if (!hasRoom(ctx)) return
+        tickList(cache(p), 'explosivoQ', dt, function (it) {
+          if (it.e && !it.e.dead) { it.x = it.e.x; it.y = it.e.y }
+          if (it.t > 0) return true
+          ctx.bombExplode(it.x, it.y, { dmg: it.dmg, r: 90, playerSafe: true, friendly: true })
+          return false
+        })
+      },
+      onRoomEnter: function (p) { cache(p).explosivoQ = [] }
+    },
+    chaos: {
+      onInit: function (p, ctx) {
+        var c = cache(p)
+        if (c.chaosGiven || !hasRoom(ctx)) return
+        c.chaosGiven = 1
+        var n = 1 + ctx.int(6)
+        for (var i = 0; i < n; i++) ctx.spawnPickup(randomPickupKind(ctx))
+      },
+      onRoomEnter: function (p, room, ctx) {
+        if (!hasRoom(ctx)) return
+        var list = pickups(ctx)
+        for (var i = 0; i < list.length; i++) {
+          var pu = list[i]
+          if (!pu || pu.kind !== 'item' || pu.taken || pu.price || pu.chaosRolled) continue
+          pu.chaosRolled = true
+          var id = ctx.rollItem(ctx.pick(CHAOS_POOLS) || 'treasure')
+          var def = id && IS.itemsById && IS.itemsById[id]
+          if (!def) continue
+          pu.id = id
+          pu.itemId = id
+          pu.def = def
+          pu.variant = def.kind || 'passive'
+        }
+      }
+    },
+    'spider-mod': {
+      // APPROXIMATE: the damage / health bar overlay is not drawn.
+      onUpdate: function (p, dt, ctx) {
+        if (!hasRoom(ctx)) return
+        var list = nearEnemies(ctx, p.x, p.y, (p.r || 26) + 34)
+        for (var i = 0; i < list.length; i++) {
+          if (list[i].spiderModded) continue
+          list[i].spiderModded = true
+          ctx.applyStatus(list[i], ctx.pick(SPIDER_MOD_STATUS) || 'slow', 3)
+        }
+      },
+      onEnemyKill: function (p, e, ctx) {
+        if (!hasRoom(ctx) || !e || !ctx.chance(0.1)) return
+        if (ctx.chance(0.5)) ctx.spawnPickup('battery', e.x, e.y)
+        else ctx.spawnFamiliar('blue-spider')
+      }
+    },
+    'farting-baby': {
+      onPlayerHurt: function (p, n, src, ctx) {
+        if (!hasRoom(ctx) || !ctx.chance(0.1)) return
+        var f = famsOf(p, 'farting-baby')[0]
+        var x = f ? f.x : p.x
+        var y = f ? f.y : p.y
+        var list = nearEnemies(ctx, x, y, 150)
+        var kind = ctx.pick(['charm', 'poison', 'knock']) || 'poison'
+        for (var i = 0; i < list.length; i++) {
+          hurtEnemy(list[i], 5 + ctx.int(2), ctx)
+          if (kind === 'knock') { if (typeof IS.knockback === 'function' && !list[i].boss) IS.knockback(list[i], x, y, 560) } else ctx.applyStatus(list[i], kind, 3)
+        }
+        ctx.spawnEffect('burst', x, y, { colour: '#a0b040', n: 14 })
+        ctx.sfx('fart')
+      }
+    },
+    'gb-bug': {
+      // APPROXIMATE: the bug wanders instead of being thrown with a double tap.
+      onUpdate: function (p, dt, ctx) {
+        if (!hasRoom(ctx)) return
+        var bugs = famsOf(p, 'gb-bug')
+        for (var b = 0; b < bugs.length; b++) {
+          var f = bugs[b]
+          var list = nearEnemies(ctx, f.x, f.y, (f.r || 14) + 22)
+          for (var i = 0; i < list.length; i++) {
+            var e = list[i]
+            if (e.boss || e.gbBugged || e.friendly) continue
+            var pool = (IS.enemies || []).filter(function (d) { return d && !d.boss && d.id !== e.id })
+            var d = ctx.pick(pool)
+            if (!d) continue
+            var ne = ctx.spawnEnemy(d.id, e.x, e.y)
+            if (!ne) continue
+            ne.gbBugged = true
+            e.gbBugged = true
+            e.dead = true
+            e.hp = 0
+            ctx.spawnEffect('burst', e.x, e.y, { colour: '#6ad06a', n: 10 })
+          }
+          var pl = pickups(ctx)
+          for (var j = 0; j < pl.length; j++) {
+            var u = pl[j]
+            if (!u || u.taken || u.removed || u.shop || u.price || u.gbBugged) continue
+            if (u.kind !== 'coin' && u.kind !== 'key' && u.kind !== 'bomb' && u.kind !== 'heart') continue
+            var dx = u.x - f.x
+            var dy = u.y - f.y
+            if (dx * dx + dy * dy > 40 * 40) continue
+            u.taken = u.removed = true
+            var np = ctx.spawnPickup(randomPickupKind(ctx), u.x, u.y)
+            if (np) np.gbBugged = true
+          }
+        }
+      }
+    },
+    d8: {
+      onUse: function (p, ctx) {
+        var c = cache(p)
+        var r = function () { return 0.5 + ctx.range(0, 1.5) }
+        c.d8 = { damage: r(), tears: r(), range: r(), speed: r() }
+        recalc(p)
+        ctx.sfx('charge-ready')
+        ctx.floater('x' + c.d8.damage.toFixed(1) + ' dmg', p.x, p.y - 44, '#d8d8d8')
+      },
+      onStats: function (p, s, mult) {
+        var m = cache(p).d8
+        if (!m) return
+        mult.damage *= m.damage
+        mult.tears *= m.tears
+        mult.range = (mult.range || 1) * m.range
+        mult.speed = (mult.speed || 1) * m.speed
+      }
+    },
+    purity: {
+      onInit: function (p, ctx) {
+        var c = cache(p)
+        if (c.purityIdx != null || !ctx) return
+        c.purityIdx = ctx.int(PURITY.length)
+        recalc(p)
+      },
+      onPlayerHurt: function (p) {
+        var c = cache(p)
+        c.purityIdx = -1
+        recalc(p)
+      },
+      onRoomEnter: function (p, room, ctx) {
+        var c = cache(p)
+        if (c.purityIdx != null && c.purityIdx >= 0) return
+        c.purityIdx = ctx.int(PURITY.length)
+        recalc(p)
+        ctx.banner('Purity', PURITY[c.purityIdx].name)
+      },
+      onStats: function (p, s) {
+        var z = PURITY[cache(p).purityIdx]
+        if (!z) return
+        for (var k in z.stats) s[k] = (s[k] || 0) + z.stats[k]
+      }
+    },
+    athame: {
+      onEnemyKill: function (p, e, ctx) {
+        if (!hasRoom(ctx) || !e || !ctx.roll(0.25, 0.025, 1)) return
+        brimstoneRing(ctx, e.x, e.y, 120, dmgNow(p) * 30, 2)
+      }
+    },
+    'empty-vessel': {
+      // APPROXIMATE: the shield is a fixed 10s invincibility.
+      onStats: function (p) { if (noRedHearts(p)) p.flags.add('flying') },
+      onUpdate: function (p, dt, ctx) {
+        var c = cache(p)
+        watch(p, 'vesselNoRed', noRedHearts(p))
+        if (!noRedHearts(p) || !hostile(ctx)) { c.vesselT = 0; return }
+        if (every(c, 'vesselT', dt, 40)) { p.status.invincible = Math.max(p.status.invincible || 0, 10); ctx.sfx('holy-shield') }
+      }
+    },
+    'evil-eye': {
+      onTearFire: function (p, tear, ctx) {
+        if (!tear || !ctx.roll(0.0333, 0.0033, 0.1)) return
+        tear.vx *= 0.5
+        tear.vy *= 0.5
+        tear.life = Math.max(tear.life, 2.6)
+        tear.life0 = tear.life
+        tear.r = 14
+        addFlag(tear, 'spectral')
+        addFlag(tear, 'piercing')
+        tear.evilEye = { dir: Math.atan2(tear.vy, tear.vx), t: 0.3 }
+      },
+      onUpdate: function (p, dt, ctx) {
+        if (!hasRoom(ctx)) return
+        var l = friendlyTears(ctx)
+        for (var i = 0; i < l.length; i++) {
+          var e = l[i].evilEye
+          if (!e) continue
+          e.t -= dt
+          if (e.t > 0) continue
+          e.t = 0.4
+          shootTear(ctx, p, l[i].x, l[i].y, e.dir, IS.TEAR_SPEED, dmgNow(p) * 0.6)
+        }
+      }
+    },
+    'lusty-blood': {
+      onEnemyKill: function (p) { var c = cache(p); c.lusty = Math.min(10, (c.lusty || 0) + 1); recalc(p) },
+      onRoomEnter: function (p) { if (cache(p).lusty) { cache(p).lusty = 0; recalc(p) } },
+      onStats: function (p, s) { s.damage += 0.5 * (cache(p).lusty || 0) }
+    },
+    'cambion-conception': {
+      onPlayerHurt: function (p, n, src, ctx) {
+        var c = cache(p)
+        var have = famsOf(p, 'cambion-conception').length
+        if (have >= 4) return
+        c.cambionHits = (c.cambionHits || 0) + 1
+        if (c.cambionHits < (have >= 2 ? 30 : 15)) return
+        c.cambionHits = 0
+        ctx.spawnFamiliar('cambion-conception')
+        ctx.sfx('familiar-spawn')
+      }
+    },
+    'immaculate-conception': {
+      onPickup: function (p, kind, amount, ctx) {
+        if (kind !== 'heart' && kind !== 'soul' && kind !== 'black' && kind !== 'eternal') return
+        var c = cache(p)
+        if (famsOf(p, 'immaculate-conception').length >= 5) return
+        c.immacHearts = (c.immacHearts || 0) + 1
+        if (c.immacHearts < 15) return
+        c.immacHearts = 0
+        ctx.spawnFamiliar('immaculate-conception')
+        ctx.addSoul(1)
+        ctx.sfx('familiar-spawn')
+      }
+    },
+    'more-options': {
+      onRoomEnter: function (p, room, ctx) {
+        if (!hasRoom(ctx) || !room || room.type !== 'treasure' || room.moreOptionsDone) return
+        room.moreOptionsDone = true
+        var list = pickups(ctx).filter(function (u) { return u && u.kind === 'item' && !u.taken && !u.price })
+        for (var i = 0; i < list.length; i++) {
+          var grp = 'more-options-' + i
+          list[i].optionsGroup = grp
+          ctx.spawnPickup('item', list[i].x + 90, list[i].y, { pool: 'treasure', options: grp })
+        }
+      }
+    },
+    'crown-of-light': {
+      onStats: function (p, s, mult) {
+        if (!fullRed(p) || cache(p).crownLost) return
+        mult.damage *= 2
+        s.shotSpeed -= 0.3
+      },
+      onUpdate: function (p) { watch(p, 'crownFull', fullRed(p) && !cache(p).crownLost) },
+      onPlayerHurt: function (p) { cache(p).crownLost = true; recalc(p) },
+      onRoomEnter: function (p) { if (cache(p).crownLost) { cache(p).crownLost = false; recalc(p) } }
+    },
+    'deep-pockets': {
+      // APPROXIMATE: the 999 coin cap needs an engine change (player.js add() caps everything at 99).
+      onRoomClear: function (p, room, ctx) {
+        cache(p).deepCheck = { t: 0.5, n: pickups(ctx).length }
+      },
+      onUpdate: function (p, dt, ctx) {
+        var c = cache(p)
+        var d = c.deepCheck
+        if (!d || !hasRoom(ctx)) return
+        d.t -= dt
+        if (d.t > 0) return
+        c.deepCheck = null
+        if (pickups(ctx).length > d.n) return
+        var n = 1 + ctx.int(3)
+        for (var i = 0; i < n; i++) ctx.spawnPickup('coin', null, null, { variant: 'penny' })
+      }
+    },
+    succubus: {
+      onUpdate: function (p, dt, ctx) {
+        if (!hasRoom(ctx)) return
+        var c = cache(p)
+        c.succubusIn = false
+        var fs = famsOf(p, 'succubus')
+        for (var i = 0; i < fs.length; i++) {
+          var f = fs[i]
+          var dx = p.x - f.x
+          var dy = p.y - f.y
+          if (dx * dx + dy * dy < 130 * 130) c.succubusIn = true
+        }
+        if (!fs.length || !every(c, 'succubusT', dt, 0.25)) return
+        for (var k = 0; k < fs.length; k++) {
+          var near = nearEnemies(ctx, fs[k].x, fs[k].y, 130)
+          for (var j = 0; j < near.length; j++) hurtEnemy(near[j], 9 * 0.25, ctx)
+        }
+      },
+      onEnemyDamage: function (p, e, dmg) { if (cache(p).succubusIn && dmg > 0) return dmg * 1.5 }
+    },
+    'fruit-cake': {
+      onTearFire: function (p, tear, ctx) {
+        var f = ctx.pick(FRUITCAKE) || 'poison'
+        // tint + the flag; the engine reads the status/behaviour flags it knows, the rest are cosmetic.
+        addFlag(tear, f)
+        if (f === 'bleed') addFlag(tear, 'slow')
+        if (f === 'shrink') tear.shrinkHit = true
+        if (f === 'midas') tear.midasHit = true
+        if (f === 'sticky' || f === 'booger') tear.stickyHit = true
+      },
+      onTearHit: function (p, tear, e, ctx) {
+        if (!tear || !e) return
+        // bleed, shrink, midas, magnetize, sticky and holy are applied by the engine (tears.js)
+      }
+    },
+    'teleport-2-0': {
+      onUse: function (p, ctx) {
+        var floor = ctx.floor
+        var here = ctx.room && ctx.room.index
+        var list = []
+        var rooms = (floor && floor.rooms) || []
+        for (var i = 0; i < rooms.length; i++) {
+          var r = rooms[i]
+          if (!r || i === here || r.cleared || r.type === 'secret' || r.type === 'super-secret') continue
+          list.push(i)
+        }
+        var pick = ctx.pick(list)
+        if (pick == null) return { fail: true }
+        ctx.teleport(pick)
+      }
+    },
+    'black-powder': {
+      // Walking a closed loop of at least ~500 units draws the pentagram: 130 damage over 4 seconds.
+      onUpdate: function (p, dt, ctx) {
+        if (!hasRoom(ctx)) return
+        var c = cache(p)
+        var path = c.bpPath || (c.bpPath = [])
+        var last = path[path.length - 1]
+        if (!last || Math.abs(last.x - p.x) + Math.abs(last.y - p.y) > 22) path.push({ x: p.x, y: p.y })
+        if (path.length > 60) path.shift()
+        if (path.length < 24) return
+        var len = 0
+        var cx = 0
+        var cy = 0
+        for (var i = 1; i < path.length; i++) len += Math.abs(path[i].x - path[i - 1].x) + Math.abs(path[i].y - path[i - 1].y)
+        var a = path[0]
+        var b = path[path.length - 1]
+        if (len < 520 || Math.abs(a.x - b.x) + Math.abs(a.y - b.y) > 70) return
+        for (var j = 0; j < path.length; j++) { cx += path[j].x; cy += path[j].y }
+        c.bpPath = []
+        IS.spawnPuddle({ x: cx / path.length, y: cy / path.length, r: 140, dmg: 130 / 8, life: 4, colour: '#401030' }, ctx)
+        ctx.sfx('curse-sting')
+      },
+      onRoomEnter: function (p) { cache(p).bpPath = [] }
+    },
+    'kidney-bean': {
+      onUse: function (p, ctx) {
+        var list = nearEnemies(ctx, p.x, p.y, 220)
+        for (var i = 0; i < list.length; i++) ctx.applyStatus(list[i], 'charm', 5)
+        ctx.spawnEffect('ring', p.x, p.y, { colour: '#e89ab0', r0: 10, r1: 220, life: 0.4 })
+        ctx.sfx('fart')
+      }
+    },
+    'glowing-hourglass': {
+      onUse: function (p, ctx) {
+        var c = cache(p)
+        if ((c.ghUses || 0) < 3 && ctx.rewind()) { c.ghUses = (c.ghUses || 0) + 1; return }
+        var list = livingList(ctx)
+        for (var i = 0; i < list.length; i++) ctx.applyStatus(list[i], 'slow', 8)
+        ctx.sfx('charge-ready')
+      },
+      onNewFloor: function (p) { cache(p).ghUses = 0 }
+    },
+    'circle-of-protection': {
+      onUpdate: function (p, dt, ctx) {
+        if (!hasRoom(ctx)) return
+        var c = cache(p)
+        reflectNearbyShots(p, ctx, 125, 0.25)
+        if (!every(c, 'cirT', dt, 0.25)) return
+        var l = nearEnemies(ctx, p.x, p.y, 125)
+        for (var i = 0; i < l.length; i++) hurtEnemy(l[i], dmgNow(p) * 0.25, ctx)
+      }
+    },
+    'sack-head': {
+      onInit: function (p, ctx) {
+        var c = cache(p)
+        if (c.sackGiven || !hasRoom(ctx)) return
+        c.sackGiven = 1
+        ctx.spawnPickup('sack')
+      },
+      onRoomEnter: function (p, room, ctx) {
+        if (!hasRoom(ctx)) return
+        var list = pickups(ctx)
+        for (var i = 0; i < list.length; i++) {
+          var u = list[i]
+          if (!u || u.taken || u.shop || u.price || u.sackRolled) continue
+          u.sackRolled = true
+          var odds = u.kind === 'coin' ? 0.1 : (u.kind === 'key' || u.kind === 'bomb') ? 0.2 : 0
+          if (!odds || !ctx.chance(odds)) continue
+          u.taken = u.removed = true
+          ctx.spawnPickup('sack', u.x, u.y)
+        }
+      }
+    },
+    'night-light': {
+      // APPROXIMATE: the cone follows the aim direction; Curse of Darkness is not removed.
+      onUpdate: function (p, dt, ctx) {
+        if (!hasRoom(ctx) || !every(cache(p), 'nlT', dt, 0.3)) return
+        var a = aimAngle(p)
+        var l = livingList(ctx)
+        for (var i = 0; i < l.length; i++) {
+          var dx = l[i].x - p.x
+          var dy = l[i].y - p.y
+          var d = Math.sqrt(dx * dx + dy * dy)
+          if (d > 300 || d < 1) continue
+          var diff = Math.atan2(dy, dx) - a
+          while (diff > Math.PI) diff -= Math.PI * 2
+          while (diff < -Math.PI) diff += Math.PI * 2
+          if (Math.abs(diff) < 0.5) ctx.applyStatus(l[i], 'slow', 0.6)
+        }
+      }
+    },
+    'obsessed-fan': {
+      onUpdate: function (p, dt, ctx) { mimicContact(p, 'obsessed-fan', 30, ctx) }
+    },
+    'mine-crafter': {
+      onUse: function (p, ctx) {
+        var c = cache(p)
+        var room = ctx.room
+        if (!room || !IS.addGrid) return { fail: true }
+        if (c.mineBarrel && c.mineRoom === room && c.mineBarrel.hp > 0 && room.grid.indexOf(c.mineBarrel) >= 0) {
+          var g = c.mineBarrel
+          c.mineBarrel = null
+          IS.destroyGrid(room, g, ctx)
+          return { keepCharge: false }
+        }
+        var a = aim(p)
+        var g2 = IS.addGrid(room, 'tnt', p.x + a.x * 70, p.y + a.y * 70, {})
+        if (!g2) return { fail: true }
+        c.mineBarrel = g2
+        c.mineRoom = room
+      }
+    },
+    pjs: {
+      onInit: function (p) {
+        var c = cache(p)
+        if (c.pjsDone) return
+        c.pjsDone = 1
+        IS.healRed(p, p.hearts.maxRed)
+      }
+    },
+    'head-of-the-keeper': {
+      onTearHit: function (p, tear, e, ctx) {
+        if (hasRoom(ctx) && ctx.chance(0.05)) ctx.spawnPickup('coin', e ? e.x : p.x, e ? e.y : p.y, { variant: 'penny' })
+      }
+    },
+    'papa-fly': {
+      onUpdate: function (p, dt, ctx) {
+        mimicContact(p, 'papa-fly', 0, ctx)
+        var fs = famsOf(p, 'papa-fly')
+        for (var i = 0; i < fs.length; i++) {
+          var f = fs[i]
+          f.papaT = (f.papaT || 0) - dt
+          if (f.papaT > 0 || !hasRoom(ctx)) continue
+          var e = ctx.nearestEnemy(f.x, f.y)
+          if (!e || (e.x - f.x) * (e.x - f.x) + (e.y - f.y) * (e.y - f.y) > 420 * 420) continue
+          f.papaT = Math.max(0.2, (p.stats && p.stats.fireDelay) || 0.4)
+          shootTear(ctx, p, f.x, f.y, Math.atan2(e.y - f.y, e.x - f.x), IS.TEAR_SPEED, dmgNow(p), null, 1.1)
+        }
+      }
+    },
+    'multidimensional-baby': {
+      onUpdate: function (p, dt, ctx) {
+        mimicContact(p, 'multidimensional-baby', 0, ctx)
+        if (!hasRoom(ctx)) return
+        var fs = famsOf(p, 'multidimensional-baby')
+        var l = friendlyTears(ctx)
+        for (var i = 0; i < l.length; i++) {
+          var t = l[i]
+          if (t.mdbDone || t.noDeathHook) continue
+          for (var k = 0; k < fs.length; k++) {
+            var dx = t.x - fs[k].x
+            var dy = t.y - fs[k].y
+            if (dx * dx + dy * dy > 34 * 34) continue
+            t.mdbDone = true
+            t.vx *= 1.25
+            t.vy *= 1.25
+            t.life += 0.4
+            var c = shootTear(ctx, p, t.x, t.y, Math.atan2(t.vy, t.vx), Math.sqrt(t.vx * t.vx + t.vy * t.vy), t.dmg, null, t.life)
+            if (c) { c.mdbDone = true; c.noDeathHook = true; t.flags.forEach(function (f) { c.flags.add(f) }) }
+            break
+          }
+        }
+      }
+    },
+    'glitter-bombs': {
+      onBombExplode: function (p, bomb, ctx) {
+        if (!hasRoom(ctx) || !bomb) return
+        var c = cache(p)
+        var odds = Math.max(0, 0.63 - 0.01 * (c.glitterSpawns || 0))
+        if (ctx.chance(odds)) { c.glitterSpawns = (c.glitterSpawns || 0) + 1; ctx.spawnPickup(randomPickupKind(ctx), bomb.x, bomb.y) }
+        if (ctx.chance(0.15)) {
+          var l = nearEnemies(ctx, bomb.x, bomb.y, 160)
+          for (var i = 0; i < l.length; i++) ctx.applyStatus(l[i], 'charm', 4)
+        }
+      },
+      onNewFloor: function (p) { cache(p).glitterSpawns = 0 }
+    },
+    'my-shadow': {
+      onUpdate: function (p, dt, ctx) {
+        if (!hasRoom(ctx)) return
+        var f = famsOf(p, 'my-shadow')[0]
+        if (!f) return
+        var c = cache(p)
+        c.shadowCd = Math.max(0, (c.shadowCd || 0) - dt)
+        if (c.shadowCd > 0) return
+        var l = nearEnemies(ctx, f.x, f.y, (f.r || 14) + 18)
+        if (!l.length) return
+        c.shadowCd = 4
+        var ally = ctx.spawnEnemy('charger', f.x, f.y, { friendly: true, friendlyFireImmune: true })
+        if (ally) ally.friendly = true
+      }
+    },
+    'jar-of-flies': {
+      onEnemyKill: function (p) { var c = cache(p); c.jarFlies = Math.min(20, (c.jarFlies || 0) + 1) },
+      onUse: function (p, ctx) {
+        var c = cache(p)
+        var n = c.jarFlies || 0
+        if (!n) return { fail: true }
+        c.jarFlies = 0
+        for (var i = 0; i < n; i++) ctx.spawnFamiliar('blue-fly')
+        ctx.sfx('familiar-spawn')
+      }
+    },
+    'lil-loki': {
+      onUpdate: function (p, dt, ctx) { lokiFire(p, 'lil-loki', dt, ctx, 3.5, [0, 1, 2, 3]) }
+    },
+    milk: {
+      onPlayerHurt: function (p) { cache(p).milkUp = true; recalc(p) },
+      onRoomEnter: function (p) { if (cache(p).milkUp) { cache(p).milkUp = false; recalc(p) } },
+      onStats: function (p, s) { if (cache(p).milkUp) s.tears += 1 }
+    },
+    d7: {
+      onUse: function (p, ctx) {
+        var room = ctx.room
+        var list = room && room.meta && room.meta.spawns
+        if (!list || !list.length) return { fail: true }
+        room.cleared = false
+        room.clearing = false
+        room.pendingSpawns = room.pendingSpawns || []
+        for (var i = 0; i < list.length; i++) {
+          if (list[i].boss) continue
+          room.pendingSpawns.push({ id: list[i].id, x: list[i].x, y: list[i].y, boss: false, t: 0.4 + i * 0.1 })
+        }
+        ctx.sfx('beep')
+      }
+    },
+    'moms-box': {
+      // APPROXIMATE: doubling of held trinket effects is not modelled; +1 Luck comes from the stat block.
+      onUse: function (p, ctx) { ctx.spawnPickup('trinket') }
+    },
+    'kidney-stone': {
+      onUpdate: function (p, dt, ctx) {
+        var c = cache(p)
+        if (!hasRoom(ctx) || !firing(p)) { c.stoneT = 0; return }
+        c.stoneT = (c.stoneT || 0) + dt
+        if (c.stoneNext == null) c.stoneNext = 9 + ctx.range(0, 6)
+        if (c.stoneT < c.stoneNext) return
+        c.stoneT = 0
+        c.stoneNext = 9 + ctx.range(0, 6)
+        for (var i = 0; i < 12; i++) shootTear(ctx, p, p.x, p.y, (i / 12) * Math.PI * 2, IS.TEAR_SPEED * 0.8, dmgNow(p) * 0.7)
+        shootTear(ctx, p, p.x, p.y, aimAngle(p), IS.TEAR_SPEED * 0.9, dmgNow(p) * 3, ['piercing'], null, 18)
+        ctx.shake(3, 0.2)
+      }
+    },
+    'mega-blast': {
+      // APPROXIMATE: the beam does not persist across rooms.
+      onUse: function (p, ctx) {
+        var c = cache(p)
+        c.megaBeam = ctx.spawnLaser({ x: p.x, y: p.y - 10, angle: aimAngle(p), len: 1800, width: 90, life: 15, tick: 0.1, dmg: dmgNow(p) * 0.9, friendly: true, brimstone: true })
+        ctx.sfx('brimstone-fire')
+        ctx.shake(6, 0.6)
+      },
+      onUpdate: function (p, dt, ctx) {
+        var b = cache(p).megaBeam
+        if (!b) return
+        if (b.dead || b.life <= 0) { cache(p).megaBeam = null; return }
+        b.x = p.x
+        b.y = p.y - 10
+        var s = IS.input && IS.input.shoot ? IS.input.shoot() : null
+        if (s && (s.x || s.y)) b.angle = Math.atan2(s.y, s.x)
+      }
+    },
+    'dark-princes-crown': {
+      onStats: function (p, s) {
+        if (!p.hearts || p.hearts.red !== 2) return
+        s.tears += 2
+        s.range += 48
+        s.shotSpeed += 0.2
+      },
+      onUpdate: function (p) { watch(p, 'dpcOn', !!p.hearts && p.hearts.red === 2) }
+    },
+    apple: {
+      onTearFire: function (p, tear, ctx) {
+        if (!tear || !ctx.roll(0.0666, 0.0667, 1)) return
+        tear.dmg = (tear.dmg || dmgNow(p)) * 4
+        addFlag(tear, 'piercing')
+        tear.tint = '#c8c8d8'
+      }
+    },
+    'lead-pencil': {
+      onTearFire: function (p, tear, ctx) {
+        var c = cache(p)
+        c.pencilN = (c.pencilN || 0) + 1
+        if (c.pencilN < 15) return
+        c.pencilN = 0
+        var a = Math.atan2(tear.vy, tear.vx)
+        for (var i = 0; i < 12; i++) shootTear(ctx, p, tear.x, tear.y, a + ctx.range(-0.35, 0.35), IS.TEAR_SPEED * (0.7 + ctx.range(0, 0.5)), (tear.dmg || dmgNow(p)))
+      }
+    },
+    'dead-tooth': {
+      onUpdate: function (p, dt, ctx) {
+        if (!hasRoom(ctx) || !firing(p) || !every(cache(p), 'deadToothT', dt, 0.4)) return
+        var l = nearEnemies(ctx, p.x, p.y, 120)
+        for (var i = 0; i < l.length; i++) ctx.applyStatus(l[i], 'poison', 2)
+      }
+    },
+    'linger-bean': {
+      onUpdate: function (p, dt, ctx) {
+        var c = cache(p)
+        if (!hasRoom(ctx) || !firing(p)) { c.lingerT = 0; return }
+        c.lingerT = (c.lingerT || 0) + dt
+        if (c.lingerT < 7.5) return
+        c.lingerT = 0
+        IS.spawnPuddle({ x: p.x, y: p.y, r: 70, dmg: dmgNow(p) * 2.5, life: 15, status: [['poison', 2]], colour: '#6a5a2a' }, ctx)
+        ctx.sfx('fart')
+      }
+    },
+    'shard-of-glass': {
+      onPlayerHurt: function (p, n, src, ctx) {
+        var c = cache(p)
+        if (hasRoom(ctx) && ctx.chance(0.25)) ctx.spawnPickup('heart', null, null, { variant: 'red' })
+        c.shardBleed = true
+        c.shardT = 0
+      },
+      onPickup: function (p, kind) { if (kind === 'heart') cache(p).shardBleed = false },
+      onUpdate: function (p, dt, ctx) {
+        var c = cache(p)
+        if (!c.shardBleed || !hasRoom(ctx)) return
+        if (p.hearts.red <= 1) { c.shardBleed = false; return }
+        c.shardTear = (c.shardTear || 0) + dt
+        if (c.shardTear > 0.6 && firing(p)) { c.shardTear = 0; shootTear(ctx, p, p.x, p.y, aimAngle(p) + ctx.range(-0.25, 0.25), IS.TEAR_SPEED * 0.8, dmgNow(p) * 0.5, null, 0.5) }
+        if (!every(c, 'shardT', dt, 20)) return
+        p.hearts.red -= 1
+        ctx.sfx('player-hurt')
+      }
+    },
+    'metal-plate': {
+      onUpdate: function (p, dt, ctx) { if (hasRoom(ctx)) reflectNearbyShots(p, ctx, 90, 0.25, 'confusion') }
+    },
+    'eye-of-greed': {
+      onTearFire: function (p, tear, ctx) {
+        var c = cache(p)
+        c.greedN = (c.greedN || 0) + 1
+        if (c.greedN < 20 || (p.coins || 0) < 1) return
+        c.greedN = 0
+        ctx.addCoins(-1)
+        tear.dmg = (tear.dmg || dmgNow(p)) * 1.5 + 10
+        tear.greedCoin = true
+        tear.tint = '#e0c040'
+      },
+      onTearHit: function (p, tear, e, ctx) {
+        if (tear && tear.greedCoin && e) { ctx.applyStatus(e, 'freeze', 2); ctx.applyStatus(e, 'midas', 30) }
+      },
+      onEnemyKill: function (p, e, ctx) {
+        if (!e || !e.status || !e.status.midas || !hasRoom(ctx)) return
+        var n = 1 + ctx.int(3)
+        for (var i = 0; i < n; i++) ctx.spawnPickup('coin', e.x, e.y, { variant: 'penny' })
+      }
+    },
+    'tarot-cloth': {
+      // APPROXIMATE: the enhanced Tarot card effects are not modelled; only the card is granted.
+      onInit: function (p, ctx) {
+        var c = cache(p)
+        if (c.clothGiven || !hasRoom(ctx)) return
+        c.clothGiven = 1
+        ctx.spawnPickup('card')
+      }
+    },
+    'varicose-veins': {
+      onPlayerHurt: function (p, n, src, ctx) {
+        if (!hasRoom(ctx)) return
+        for (var i = 0; i < 10; i++) shootTear(ctx, p, p.x, p.y, (i / 10) * Math.PI * 2, IS.TEAR_SPEED * 0.9, dmgNow(p) + 25)
+        ctx.sfx('tear-fire')
+      }
+    },
+    'compound-fracture': {
+      onTearHit: function (p, tear, e, ctx) {
+        if (!tear || tear.bone || !hasRoom(ctx)) return
+        var n = 1 + ctx.int(3)
+        for (var i = 0; i < n; i++) {
+          var t = shootTear(ctx, p, tear.x, tear.y, ctx.range(0, Math.PI * 2), IS.TEAR_SPEED * 0.7, (tear.dmg || dmgNow(p)) * 0.5, null, 0.35, 5)
+          if (t) { t.bone = true; t.noDeathHook = true }
+        }
+      }
+    },
+    polydactyly: {
+      onInit: function (p, ctx) {
+        var c = cache(p)
+        if (c.polyGiven || !hasRoom(ctx)) return
+        c.polyGiven = 1
+        ctx.spawnPickup(ctx.pick(['card', 'rune', 'pill']) || 'card')
+      }
+    },
+    'dads-lost-coin': {
+      onInit: function (p, ctx) {
+        var c = cache(p)
+        if (c.dlcGiven || !hasRoom(ctx)) return
+        c.dlcGiven = 1
+        ctx.spawnPickup('coin', null, null, { variant: 'lucky' })
+      }
+    },
+    'midnight-snack': {
+      onInit: function (p) {
+        var c = cache(p)
+        if (c.snackDone) return
+        c.snackDone = 1
+        IS.healRed(p, 2)
+      }
+    },
+    'cone-head': {
+      onPlayerDamage: function (p, n, src, ctx) { if (ctx.chance(0.2)) { ctx.sfx('holy-shield'); return { cancel: true } } }
+    },
+    'belly-button': {
+      onInit: function (p, ctx) {
+        var c = cache(p)
+        if (c.bellyGiven) return
+        c.bellyGiven = 1
+        if (p.trinkets.length < 3) p.trinkets.push(null)
+        if (hasRoom(ctx)) ctx.spawnPickup('trinket')
+      },
+      onRemove: function (p) {
+        while (p.trinkets.length > 2 && p.trinkets[p.trinkets.length - 1] == null) p.trinkets.pop()
+      }
+    },
+    'sinus-infection': {
+      onTearFire: function (p, tear, ctx) {
+        if (!tear || !ctx.chance(0.2)) return
+        addFlag(tear, 'sticky')
+        tear.booger = true
+        tear.tint = '#9ab050'
+      },
+      onTearHit: function (p, tear, e, ctx) {
+        if (!tear || !tear.booger || !e) return
+        ctx.applyStatus(e, 'sticky', 10)
+        ;(cache(p).boogers || (cache(p).boogers = [])).push({ t: 10, e: e, tick: 1, dmg: tear.dmg || dmgNow(p) })
+      },
+      onUpdate: function (p, dt, ctx) {
+        tickList(cache(p), 'boogers', dt, function (b) {
+          if (!b.e || b.e.dead) return false
+          b.tick -= dt
+          if (b.tick <= 0) { b.tick = 1; hurtEnemy(b.e, b.dmg, ctx) }
+          return true
+        })
+      },
+      onRoomEnter: function (p) { cache(p).boogers = [] }
+    },
+    glaucoma: {
+      // APPROXIMATE: the screen is not darkened.
+      onTearFire: function (p, tear, ctx) {
+        if (!tear || !ctx.chance(0.05)) return
+        addFlag(tear, 'confusion')
+        addFlag(tear, 'knockback')
+      }
+    }
+  }
+
+  // Helpers used by the table above (function declarations are hoisted).
+  function lightBeam (p, tear, e, ctx) {
+    if (!e || !hasRoom(ctx) || (tear && tear.holyDone)) return
+    if (tear) tear.holyDone = true
+    var d = ((tear && tear.dmg) || dmgNow(p)) * 3
+    ctx.spawnEffect('beam', e.x, e.y - 160, { angle: Math.PI / 2, len: 160, colour: '#fff4b0' })
+    hurtEnemy(e, d, ctx)
+    ctx.sfx('holy-shield')
+  }
+
+  function lokiFire (p, id, dt, ctx, dmg, dirs) {
+    if (!hasRoom(ctx)) return
+    var fs = famsOf(p, id)
+    var shooting = firing(p)
+    for (var i = 0; i < fs.length; i++) {
+      var f = fs[i]
+      f.lokiT = (f.lokiT || 0) - dt
+      if (f.lokiT > 0 || !shooting) continue
+      f.lokiT = Math.max(0.25, (p.stats && p.stats.fireDelay) || 0.4) * 1.6
+      var base = aimAngle(p)
+      for (var k = 0; k < dirs.length; k++) shootTear(ctx, p, f.x, f.y, base + dirs[k] * Math.PI / 2, IS.TEAR_SPEED, dmg, null, 0.9)
+    }
+  }
+
+  // Obsessed Fan / Papa Fly / Multidimensional Baby copy Isaac's movement 0.66s late.
+  function mimicContact (p, id, dps, ctx) {
+    if (!hasRoom(ctx)) return
+    var c = cache(p)
+    var fs = famsOf(p, id)
+    if (!fs.length) return
+    var tr = c.trail || (c.trail = [])
+    var now = (ctx.run && ctx.run.time) || 0
+    var last = tr[tr.length - 1]
+    if (!last || last.t !== now) tr.push({ t: now, x: p.x, y: p.y })
+    while (tr.length > 2 && tr[1].t < now - 0.66) tr.shift()
+    var old = tr[0]
+    for (var i = 0; i < fs.length; i++) {
+      fs[i].mimic = true
+      fs[i].x = old.x
+      fs[i].y = old.y
+      fs[i].vx = fs[i].vy = 0
+    }
+    if (!dps) return
+    var f = fs[0]
+    c.fanT = (c.fanT || 0) + (ctx.dt || 0.016)
+    if (c.fanT < 0.25) return
+    c.fanT = 0
+    var l = nearEnemies(ctx, f.x, f.y, (f.r || 16) + 20)
+    for (var j = 0; j < l.length; j++) hurtEnemy(l[j], dps * 0.25, ctx)
+  }
+
+  // The 'copycat' behaviour is only used by the mimic familiars above: park the familiar where the
+  // hook put it (the stock behaviour would walk it back to the player).
+  if (typeof IS.defineFamiliarBehaviour === 'function') IS.defineFamiliarBehaviour('copycat', function (f) {})
 
   IS.defineItems([
 
@@ -383,7 +1331,7 @@
             ctx.sfx('charge-ready')
           } else {
             var list = livingList(ctx)
-            for (var i = 0; i < list.length; i++) ctx.applyStatus(list[i], 'petrify', 3)
+            for (var i = 0; i < list.length; i++) ctx.applyStatus(list[i], 'freeze', 3)
             ctx.sfx('beep')
           }
         }
@@ -403,10 +1351,8 @@
       tags: ['damage', 'offensive'],
       dlc: 'afterbirth',
       hooks: {
-        onStats: function (p, s) {
-          var n = cache(p).deadEyeStreak || 0
-          if (n > 0) s.damage *= 1 + 0.25 * Math.min(4, n)
-        },
+        // the streak is a real damage multiplier: +25% per consecutive hit, up to x2
+        onStats: function (p, s, mult) { mult.damage *= 1 + 0.25 * Math.min(4, cache(p).deadEyeStreak || 0) },
         onTearHit: function (p, tear, enemy, ctx) {
           var c = cache(p)
           if ((c.deadEyeStreak || 0) >= 4) return
@@ -417,13 +1363,11 @@
         onTearDeath: function (p, tear, ctx) {
           var c = cache(p)
           if (!c.deadEyeStreak) return
-          if (!ctx.chance(0.5)) return
           c.deadEyeStreak = 0
           recalc(p)
         },
         onRoomEnter: function (p, room, ctx) {
           var c = cache(p)
-          if (!c.deadEyeStreak) return
           c.deadEyeStreak = 0
           recalc(p)
         }
@@ -444,10 +1388,13 @@
       dlc: 'afterbirth',
       transform: 'seraphim',
       hooks: {
-        // 10% -> 50% over 9 luck. The 'holy' and 'light' flags own the beam.
+        // 10% -> 50% over 9 luck. The engine ignores 'holy'/'light', so the beam is dealt here on hit.
         onTearFire: function (p, tear, ctx) {
           if (!ctx.roll(0.1, 0.0444, 0.5)) return
           addFlags(tear, ['holy', 'light'])
+        },
+        onTearHit: function (p, tear, enemy, ctx) {
+          if (tear && tear.flags && tear.flags.has('holy')) lightBeam(p, tear, enemy, ctx)
         }
       }
     },
@@ -493,10 +1440,9 @@
       tags: ['shop', 'utility', 'coins'],
       dlc: 'afterbirth',
       hooks: {
-        // APPROXIMATED: the shop entry's internals belong to interact.js, so
-        // rather than un-selling an object whose field names we would have to
-        // guess, we spawn a fresh shop pedestal on the same spot and track the
-        // escalating price ourselves.
+        // APPROXIMATE: rather than un-selling the bought entry (interact.js
+        // owns it), a fresh entry of the same kind is spawned on the same spot
+        // at an escalating price.
         onPurchase: function (p, entry, ctx) {
           if (!entry || typeof entry.x !== 'number' || typeof entry.y !== 'number') return
           var room = ctx && ctx.room
@@ -504,9 +1450,11 @@
           var c = cache(p)
           var n = (c.restockCount || 0) + 1
           c.restockCount = n
-          var base = typeof entry.price === 'number' && entry.price > 0 ? entry.price : 15
+          var isItem = entry.kind === 'item' || entry.itemId != null
+          var base = typeof entry.price === 'number' && entry.price > 0 ? entry.price : (isItem ? 15 : 5)
           var price = Math.ceil(base * (1 + 0.5 * n))
-          ctx.spawnPickup('item', entry.x, entry.y, { pool: 'shop', price: price, shop: true })
+          if (isItem) ctx.spawnPickup('item', entry.x, entry.y, { pool: 'shop', price: price, shop: true })
+          else ctx.spawnPickup(entry.kind || 'heart', entry.x, entry.y, { variant: entry.variant, price: price, shop: true })
           ctx.sfx('pedestal-appear')
         }
       }
@@ -646,10 +1594,10 @@
       dlc: 'afterbirth',
       stats: { tears: 0.72 },
       hooks: {
-        // APPROXIMATED: nothing in the data layer survives to the next run —
-        // IS.save's schema is owned by js/core/save.js and no other file would
-        // read a key we invented, which would make the blessing a silent
-        // no-op. The gift is therefore delivered on the next floor of this run.
+        // APPROXIMATE: the real item hands a random item to the start of the
+        // next run. save.js owns the schema and nothing reads a key we invent
+        // (ENGINE REQUEST: run-start item grant), so the gift arrives on the
+        // next floor of this run instead.
         onNewFloor: function (p, floor, ctx) {
           var c = cache(p)
           if (c.edensBlessingGiven) return
@@ -829,27 +1777,33 @@
       charge: 6,
       chargeType: 'normal',
       hooks: {
-        // APPROXIMATED: ctx can create poop, crawlspaces and trapdoors but has
-        // no generic grid spawner, so a rerolled obstacle becomes poop unless
-        // the rare roll turns it into a crawlspace or a trapdoor.
+        // APPROXIMATE: pits, metal blocks and key blocks are left alone and the
+        // new-obstacle odds are tuned by eye. Everything else becomes another
+        // obstacle in place, rarely a crawlspace or trapdoor.
         onUse: function (p, ctx) {
+          var room = ctx && ctx.room
           var grid = ctx.gridObjects()
-          if (!grid.length) return { fail: true }
           var targets = []
           for (var i = 0; i < grid.length; i++) {
             var g = grid[i]
             if (!g || g.broken) continue
-            if (g.kind === 'metal' || g.kind === 'pit' || g.kind === 'pit-bridge') continue
+            if (g.kind === 'metal' || g.kind === 'pit' || g.kind === 'pit-bridge' || g.kind === 'key-block') continue
             targets.push(g)
           }
           if (!targets.length) return { fail: true }
+          var kinds = ['rock', 'rock', 'rock', 'rock', 'tinted-rock', 'poop', 'poop', 'poop', 'red-poop', 'tnt', 'fire', 'spikes', 'web', 'mushroom']
           for (var k = 0; k < targets.length; k++) {
             var t = targets[k]
             var x = t.x
             var y = t.y
-            ctx.destroyGrid(t)
-            if (ctx.chance(0.04)) ctx.spawnCrawlspace(x, y)
+            // Swap the object out silently: no drops, no rock-break sound.
+            t.broken = true
+            var gi = room && room.grid ? room.grid.indexOf(t) : -1
+            if (gi >= 0) room.grid.splice(gi, 1)
+            if (room && room.obstacles && room.obstacles[t.row * room.w + t.col] === t) room.obstacles[t.row * room.w + t.col] = null
+            if (ctx.chance(0.03)) ctx.spawnCrawlspace(x, y)
             else if (ctx.chance(0.02)) ctx.spawnTrapdoor(x, y)
+            else if (typeof IS.addGrid === 'function') IS.addGrid(room, ctx.pick(kinds), x, y, null)
             else ctx.spawnPoop(x, y)
           }
           ctx.sfx('rock-break')
@@ -904,13 +1858,20 @@
       dlc: 'afterbirth',
       familiars: ['key-bum'],
       hooks: {
-        onPickup: function (p, kind, amount, ctx) {
-          if (kind !== 'key') return
-          var n = amount || 1
-          for (var i = 0; i < n; i++) {
-            if (!ctx.chance(0.6)) continue
-            ctx.spawnPickup('chest')
-            ctx.sfx('chest-open')
+        // The familiar eats keys lying on the floor (collector behaviour, collects: ['key']) and
+        // each key it swallows has a chance to come back as a chest.
+        onUpdate: function (p, dt, ctx) {
+          if (!ctx || !ctx.room) return
+          var fs = p.familiars || []
+          for (var i = 0; i < fs.length; i++) {
+            var f = fs[i]
+            if (f.id !== 'key-bum') continue
+            while (f.got >= 1) {
+              f.got -= 1
+              if (!ctx.chance(0.4)) continue
+              ctx.spawnPickup('chest', f.x, f.y)
+              ctx.sfx('chest-open')
+            }
           }
         }
       }
@@ -972,7 +1933,7 @@
       tags: ['devil', 'utility'],
       dlc: 'afterbirth',
       hooks: {
-        // APPROXIMATED: projectile friendly-fire is engine-side. Charm is the
+        // APPROXIMATE: projectile friendly-fire is engine-side. Charm is the
         // mechanism the engine already owns for making enemies infight, so the
         // item applies that instead of rewriting shot ownership.
         onPlayerDamage: function (p, amount, source, ctx) {
@@ -1021,6 +1982,7 @@
         },
         onUpdate: function (p, dt, ctx) {
           var z = ZODIAC[cache(p).zodiacSign]
+          if (z && z.tearFlag === 'rock' && ctx && ctx.room) breakRocksNearTears(ctx)
           if (!z || !z.creep) return
           var c = cache(p)
           c.zodiacCreepT = (c.zodiacCreepT || 0) + dt
@@ -1046,6 +2008,9 @@
       hooks: {
         onTearFire: function (p, tear, ctx) {
           if (ctx.roll(0.15, 0.03, 1)) addFlag(tear, 'poison')
+        },
+        onTearHit: function (p, tear, enemy, ctx) {
+          if (enemy && tear && tear.flags && tear.flags.has && tear.flags.has('poison')) enemy.serpentKissed = true
         },
         onUpdate: function (p, dt, ctx) {
           var list = livingList(ctx)
@@ -1082,10 +2047,57 @@
       tags: ['tears', 'range', 'offensive'],
       dlc: 'afterbirth',
       stats: { tears: 0.72, range: 132 },
-      // APPROXIMATED: the movable red target needs the input layer, which no
-      // data file can read. Homing tears are the closest honest stand-in — the
-      // tears still choose their own target instead of the player's.
-      flags: ['homingTears']
+      // The target is p.cache.marked ({x, y}); a renderer may draw it.
+      hooks: {
+        onUpdate: function (p, dt, ctx) {
+          if (!ctx || !ctx.room) return
+          var c = cache(p)
+          var room = ctx.room
+          if (!c.marked || c.markedRoom !== room) {
+            c.marked = { x: p.x, y: p.y }
+            c.markedRoom = room
+          }
+          var m = c.marked
+          var d = aimDir()
+          if (d) {
+            m.x += d.x * 340 * dt
+            m.y += d.y * 340 * dt
+          }
+          m.x = Math.max(40, Math.min(roomW(room) - 40, m.x))
+          m.y = Math.max(40, Math.min(roomH(room) - 40, m.y))
+          // The target fires for you: with no fire key held, tears still go
+          // out at the mark.
+          var dx = m.x - p.x
+          var dy = m.y - p.y
+          var dist = Math.sqrt(dx * dx + dy * dy)
+          if (!d && dist > 24 && !p.dead && (p.weapon == null || p.weapon === 'tears') &&
+              (p.nextShot || 0) <= 0 && typeof IS.firePlayerTears === 'function') {
+            c.markedAuto = true
+            IS.firePlayerTears(p, { x: dx / dist, y: dy / dist }, ctx)
+            c.markedAuto = false
+            p.nextShot = p.stats ? p.stats.fireDelay : 0.4
+          }
+        },
+        // Held fire keys still shoot, but the tears are bent onto the mark.
+        onTearFire: function (p, tear, ctx) {
+          var c = cache(p)
+          var m = c.marked
+          if (!tear || !m || c.markedAuto) return
+          var d = aimDir()
+          if (!d) return
+          var dx = m.x - p.x
+          var dy = m.y - p.y
+          if (dx * dx + dy * dy < 24 * 24) return
+          var delta = Math.atan2(dy, dx) - Math.atan2(d.y, d.x)
+          var cs = Math.cos(delta)
+          var sn = Math.sin(delta)
+          var vx = tear.vx
+          var vy = tear.vy
+          if (typeof vx !== 'number' || typeof vy !== 'number') return
+          tear.vx = vx * cs - vy * sn
+          tear.vy = vx * sn + vy * cs
+        }
+      }
     },
 
     // ---------------------------------------------------------------- 395
@@ -1101,7 +2113,43 @@
       tags: ['laser', 'offensive', 'tears'],
       dlc: 'afterbirth',
       flags: ['laser'],
-      tearFlags: ['technology', 'piercing', 'spectral']
+      tearFlags: ['technology', 'piercing', 'spectral'],
+      // The engine's 'tech' weapon fires straight lasers on a cooldown; this
+      // hook swallows those and instead charges while the fire key is held and
+      // releases a travelling ring of laser segments.
+      // APPROXIMATE: the ring is built from short laser segments, and the
+      // charge time, size and damage curves are tuned by eye, not copied.
+      hooks: {
+        onRemove: function (p, ctx) {
+          var c = cache(p)
+          killRings(c)
+          c.txCharge = null
+        },
+        onUpdate: function (p, dt, ctx) {
+          if (!ctx || !ctx.room) return
+          var c = cache(p)
+          var room = ctx.room
+          var ls = room.lasers || []
+          for (var i = 0; i < ls.length; i++) {
+            var l = ls[i]
+            if (l && l.friendly && !l.techx && l.width === 9 && l.len === 1500) l.dead = true
+          }
+          if (c.txRoom !== room) { killRings(c); c.txRoom = room; c.txCharge = null }
+          var d = aimDir()
+          var full = Math.max(0.4, ((p.stats && p.stats.fireDelay) || 0.4) * 1.5)
+          if (d) {
+            c.txCharge = Math.min(full, (c.txCharge || 0) + dt)
+            c.txDir = d
+          } else if (c.txCharge != null) {
+            var f = c.txCharge / full
+            var dir = c.txDir || { x: 1, y: 0 }
+            c.txCharge = null
+            var dmg = (p.stats && p.stats.damage) || IS.BASE_DAMAGE
+            spawnRing(c, p, ctx, dir, 26 + 64 * f, dmg * (0.4 + 0.8 * f))
+          }
+          stepRings(c, p, dt, ctx)
+        }
+      }
     },
 
     // ---------------------------------------------------------------- 396
@@ -1198,6 +2246,13 @@
         onTearFire: function (p, tear, ctx) {
           if (ctx.roll(0.1, 0.02, 1)) addFlag(tear, 'shrink')
         },
+        onTearHit: function (p, tear, enemy, ctx) {
+          // The engine has no shrink effect: mark the status and halve the body.
+          if (!tear || !enemy || !tear.flags.has('shrink') || enemy.boss || enemy.shrunk) return
+          enemy.shrunk = true
+          enemy.r = (enemy.r || 22) * 0.5
+          ctx.applyStatus(enemy, 'shrink', 120)
+        },
         onUpdate: function (p, dt, ctx) {
           var list = livingList(ctx)
           var pr = p.r || IS.PLAYER_R
@@ -1206,7 +2261,7 @@
             if (!e.status || !e.status.shrink || e.boss) continue
             var dx = e.x - p.x
             var dy = e.y - p.y
-            var rr = (e.r || 22) * 0.5 + pr
+            var rr = (e.r || 22) + pr
             if (dx * dx + dy * dy > rr * rr) continue
             killIt(e, ctx)
             ctx.spawnEffect('burst', e.x, e.y, { colour: '#d8c8a0', n: 12 })
@@ -2034,7 +3089,7 @@
       pools: ["treasure","greed-treasure"],
       tags: ["offensive"],
       dlc: "afterbirth+",
-      stats: {"range":15.2},
+      stats: {"range":120},
       hooks: referenceHooks("↑ +1.5 Range · Tears shatter into 1-3 bone shards upon hitting anything", false, "compound-fracture")
     },
 
@@ -2063,7 +3118,7 @@
       pools: ["boss","golden-chest","beggar","greed-boss","old-chest"],
       tags: [],
       dlc: "afterbirth+",
-      stats: {"range":15.2},
+      stats: {"range":200},
       hooks: referenceHooks("↑ +2.5 Range · Spawns a Lucky Penny", false, "dads-lost-coin")
     },
 
@@ -2141,6 +3196,28 @@
 
   ])
 
+  // Fields that are not hooks: familiars, stat and grant corrections.
+  var PATCH = {
+    continuum: { stats: { range: 96 } },
+    marked: { stats: { tears: 0.72, range: 96 } },
+    binky: { mult: { tearSize: 0.9 } },
+    'dads-lost-coin': { stats: { range: 200 } },
+    'compound-fracture': { stats: { range: 120 } },
+    'jar-of-flies': { charge: 0 },
+    'farting-baby': { familiars: ['farting-baby'] },
+    'gb-bug': { familiars: ['gb-bug'] },
+    succubus: { familiars: ['succubus'] },
+    'obsessed-fan': { familiars: ['obsessed-fan'] },
+    'papa-fly': { familiars: ['papa-fly'] },
+    'multidimensional-baby': { familiars: ['multidimensional-baby'] },
+    'my-shadow': { familiars: ['my-shadow'] },
+    'lil-loki': { familiars: ['lil-loki'] }
+  }
+  Object.keys(PATCH).forEach(function (id) {
+    var d = IS.itemsById && IS.itemsById[id]
+    if (d) for (var k in PATCH[id]) d[k] = PATCH[id][k]
+  })
+
   // Bumbo's level from the coins it has eaten (6 / 12 / 24).
   function bumboLevel (coins) {
     if (coins >= 24) return 4
@@ -2150,11 +3227,21 @@
   }
 
   IS.defineFamiliars([
-    { id: 'charged-baby', name: 'Charged Baby', sprite: 'charged-baby', behaviour: 'follower', params: { r: 16, speed: 320, flying: true, dmg: 3.5, fireDelay: 0.9, range: 460, hp: 0, blockShots: false, life: 0 } },
+    { id: 'charged-baby', name: 'Charged Baby', sprite: 'charged-baby', behaviour: 'follower', params: { r: 16, speed: 320, flying: true, hp: 0, blockShots: false, life: 0 } },
     { id: 'lil-gurdy', name: 'Lil Gurdy', sprite: 'lil-gurdy', behaviour: 'chaser', params: { r: 22, speed: 440, flying: false, dmg: 8, range: 1000, cooldown: 0.35, hp: 0, blockShots: true, life: 0 } },
     { id: 'bumbo', name: 'Bumbo', sprite: 'bumbo', behaviour: 'collector', params: { r: 22, speed: 300, flying: false, dmg: 4, range: 700, cooldown: 0.5, hp: 0, blockShots: false, life: 0 } },
     { id: 'censer', name: 'Censer', sprite: 'censer', behaviour: 'buffer', params: { r: 20, speed: 300, flying: true, dmg: 0, hp: 0, blockShots: false, life: 0 } },
-    { id: 'key-bum', name: 'Key Bum', sprite: 'key-bum', behaviour: 'collector', params: { r: 18, speed: 315, flying: false, dmg: 0, range: 700, cooldown: 0.5, hp: 0, blockShots: false, life: 0 } },
+    { id: 'key-bum', name: 'Key Bum', sprite: 'key-bum', behaviour: 'collector', params: { r: 18, speed: 315, flying: false, dmg: 0, collects: ['key'], range: 700, cooldown: 0.5, hp: 0, blockShots: false, life: 0 } },
+    { id: 'farting-baby', name: 'Farting Baby', sprite: 'farting-baby', behaviour: 'follower', params: { r: 16, speed: 300, flying: true, hp: 0, blockShots: true } },
+    { id: 'gb-bug', name: 'GB Bug', sprite: 'gb-bug', behaviour: 'wanderer', params: { r: 14, speed: 160, flying: true, hp: 0 } },
+    { id: 'cambion-conception', name: 'Demon Baby', sprite: 'cambion-conception', behaviour: 'follower', params: { r: 16, speed: 320, flying: true, dmg: 3.5, fireDelay: 0.5, range: 520, hp: 0 } },
+    { id: 'immaculate-conception', name: 'Angelic Baby', sprite: 'immaculate-conception', behaviour: 'follower', params: { r: 16, speed: 320, flying: true, dmg: 3.5, fireDelay: 0.5, range: 520, hp: 0 } },
+    { id: 'succubus', name: 'Succubus', sprite: 'succubus', behaviour: 'wanderer', params: { r: 20, speed: 240, flying: true, hp: 0 } },
+    { id: 'obsessed-fan', name: 'Obsessed Fan', sprite: 'obsessed-fan', behaviour: 'copycat', params: { r: 16, speed: 0, flying: true, hp: 0 } },
+    { id: 'papa-fly', name: 'Papa Fly', sprite: 'papa-fly', behaviour: 'copycat', params: { r: 16, speed: 0, flying: true, hp: 0 } },
+    { id: 'multidimensional-baby', name: 'Multidimensional Baby', sprite: 'multidimensional-baby', behaviour: 'copycat', params: { r: 18, speed: 0, flying: true, hp: 0 } },
+    { id: 'my-shadow', name: 'My Shadow', sprite: 'my-shadow', behaviour: 'follower', params: { r: 12, speed: 340, flying: true, hp: 0 } },
+    { id: 'lil-loki', name: 'Lil Loki', sprite: 'lil-loki', behaviour: 'follower', params: { r: 16, speed: 320, flying: true, hp: 0 } },
     { id: 'seraphim', name: 'Seraphim', sprite: 'seraphim', behaviour: 'follower', params: { r: 18, speed: 325, flying: true, dmg: 10, fireDelay: 1.1, range: 560, tearFlags: ['homing'], hp: 0, blockShots: false, life: 0 } }
   ])
 

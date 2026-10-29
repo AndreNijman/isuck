@@ -71,7 +71,7 @@
     'onInit', 'onRemove', 'onStats', 'onUpdate',
     'onTearFire', 'onTearHit', 'onTearDeath',
     'onEnemyDamage', 'onEnemyKill',
-    'onPlayerDamage', 'onPlayerDeath',
+    'onPlayerDamage', 'onPlayerHurt', 'onPlayerDeath',
     'onRoomEnter', 'onRoomClear', 'onNewFloor', 'onFloorClear',
     'onPickup', 'onBombExplode', 'onGridBreak',
     'onUse', 'onCardUse', 'onPillUse', 'onPurchase', 'onDoorOpen', 'onCurseEval'
@@ -109,7 +109,7 @@
     'brimstone', 'laser', 'knife', 'bookOfVirtues', 'bloodOath',
     'seeSecretRooms', 'seeItemPools', 'seeEnemyHealth', 'seeMinimap', 'fullMinimap',
     'freeDevilDeals', 'freeShopItems', 'cursedDoors', 'luckyFooting', 'noKnockback',
-    'doubleTears', 'quadTears', 'eternalDeath', 'gnawedLeaf', 'camoUndies'
+    'noRoomCharge', 'doubleTears', 'quadTears', 'eternalDeath', 'gnawedLeaf', 'camoUndies'
   ]
 
   IS.STATUS_LIST = [
@@ -256,7 +256,7 @@
     'trapdoor', 'secret-found', 'charge-up', 'charge-ready', 'menu-move',
     'menu-select', 'menu-back', 'curse-sting', 'holy-shield', 'laser-fire',
     'brimstone-fire', 'knife-throw', 'familiar-spawn', 'transform', 'fart',
-    'web-shot', 'beep'
+    'web-shot', 'beep', 'enemy-shoot', 'charge', 'stomp'
   ]
 
   IS.SCREEN_LIST = [

@@ -4,6 +4,99 @@
   // Generated from docs/reference/slices/items-2.json. Declarative effects are
   // preferred; hooks use only ARCHITECTURE §5.2 names and seeded ctx RNG.
 
+  function puddle(tear, ctx) {
+    if (!tear || !tear.flags || !tear.flags.has("holywater") || tear.hwDone || !ctx) return
+    tear.hwDone = true
+    IS.spawnPuddle({ x: tear.x, y: tear.y, r: 70, dmg: 3, life: 4, status: [["freeze", 1.5]], colour: "#7fb8e8" }, ctx)
+  }
+
+  // ---- shared helpers for the hooks below ----------------------------------------
+
+  function cacheOf(p) { return p.cache || (p.cache = {}) }
+
+  // true on every nth call; the room-clear counters of Sack of Pennies and friends
+  function everyRooms(p, key, n) {
+    var c = cacheOf(p)
+    c[key] = (c[key] || 0) + 1
+    if (c[key] < n) return false
+    c[key] = 0
+    return true
+  }
+
+  // a pickup tossed out beside Isaac
+  function drop(ctx, p, kind, opts) {
+    if (!ctx || !ctx.room || !kind) return null
+    var o = { toss: true }
+    for (var k in opts) o[k] = opts[k]
+    return ctx.spawnPickup(kind, p.x, p.y, o)
+  }
+
+  function findFamiliar(p, id) {
+    var list = p.familiars || []
+    for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i]
+    return null
+  }
+
+  // the held fire direction, or null when Isaac is not shooting
+  function shootDir() {
+    var d = IS.input && IS.input.shoot ? IS.input.shoot() : null
+    return d && (d.x || d.y) ? d : null
+  }
+
+  // self-inflicted damage (Razor Blade, IV Bag): red hearts go first, no invulnerability frames
+  function selfHurt(p, n, ctx, name) {
+    var h = p.hearts
+    var take = Math.min(h.red, n)
+    h.red -= take
+    n -= take
+    if (n > 0) IS.damagePlayer(p, n, { name: name, self: true }, ctx)
+    else if (IS.totalHearts(p) <= 0) IS.killPlayer(p, ctx)
+  }
+
+  // A Pony / White Pony: a short burst of speed in the direction Isaac is moving that
+  // hurts what it runs through. onStep runs every 0.1 s of the dash.
+  function startDash(p, secs) {
+    var m = IS.input && IS.input.move ? IS.input.move() : null
+    var d = m && (m.x || m.y) ? m : (p.head || { x: 1, y: 0 })
+    var n = IS.norm(d.x, d.y)
+    cacheOf(p).dash = { t: secs, dx: n.x, dy: n.y, hit: [], step: 0 }
+  }
+
+  function updateDash(p, dt, ctx, onStep) {
+    var d = p.cache && p.cache.dash
+    if (!d) return
+    d.t -= dt
+    if (d.t <= 0) { p.cache.dash = null; return }
+    p.vx = d.dx * 900
+    p.vy = d.dy * 900
+    if (!ctx || !ctx.room) return
+    ctx.livingEnemies().forEach(function (e) {
+      if (d.hit.indexOf(e) >= 0 || IS.dist(p.x, p.y, e.x, e.y) > p.r + e.r) return
+      d.hit.push(e)
+      IS.damageEnemy(e, p.stats.damage * 2, { silent: true }, ctx)
+    })
+    d.step -= dt
+    if (d.step <= 0) { d.step = 0.1; if (onStep) onStep(p, ctx) }
+  }
+
+  // a baby that fires its own pattern while Isaac shoots; fireTear(p, f, angle, ctx) per familiar
+  function babyFire(p, dt, ctx, id, key, delay, fireTear) {
+    if (!ctx || !ctx.room) return
+    var c = cacheOf(p)
+    c[key] = (c[key] || 0) - dt
+    if (c[key] > 0) return
+    var d = shootDir()
+    if (!d) return
+    c[key] = delay
+    var a = Math.atan2(d.y, d.x)
+    ;(p.familiars || []).forEach(function (f) { if (f.id === id) fireTear(p, f, a, ctx) })
+  }
+
+  function babyTear(ctx, f, a, dmg, flags) {
+    var s = IS.TEAR_SPEED
+    return ctx.spawnTear({ x: f.x, y: f.y, vx: Math.cos(a) * s, vy: Math.sin(a) * s, dmg: dmg, r: 7, life: 520 / s, flags: flags || new Set(), friendly: true })
+  }
+
   IS.defineItems([
     {
       id: "the-gamekid",
@@ -16,10 +109,39 @@
       pools: ["treasure", "greed-treasure", "crane-game"],
       tags: ["offensive", "defensive", "hearts", "utility", "charge"],
       dlc: "rebirth",
-      tearFlags: ["fear"],
-      charge: 4,
+      charge: 2,
       chargeType: "normal",
-      hooks: { onUse: function (p, ctx) { if (!p.status) p.status={}; p.status.invincible=6 } },
+      hooks: {
+        onUse: function (p, ctx) {
+          var c = cacheOf(p)
+          c.gamekid = 6.5
+          c.gamekidKills = 0
+          c.gamekidTick = 0
+          if (!p.status) p.status = {}
+          p.status.invincible = Math.max(p.status.invincible || 0, 6.5)
+          if (ctx && ctx.room) ctx.livingEnemies().forEach(function (e) { IS.applyStatus(e, 'fear', 6.5, ctx) })
+        },
+        onUpdate: function (p, dt, ctx) {
+          var c = p.cache
+          if (!c || !(c.gamekid > 0) || !ctx || !ctx.room) return
+          c.gamekid -= dt
+          c.gamekidTick -= dt
+          if (c.gamekidTick > 0) return
+          c.gamekidTick = 0.1
+          // 40 contact damage per second, in 0.1 s ticks
+          ctx.livingEnemies().forEach(function (e) {
+            if (IS.dist(p.x, p.y, e.x, e.y) < p.r + e.r + 6) IS.damageEnemy(e, 4, { silent: true }, ctx)
+          })
+        },
+        // Isaac can't shoot while the effect lasts
+        onTearFire: function (p, tear) { if (p.cache && p.cache.gamekid > 0) { tear.dead = true; tear.life = 0 } },
+        onEnemyKill: function (p, e, ctx) {
+          var c = p.cache
+          if (!c || !(c.gamekid > 0)) return
+          c.gamekidKills = (c.gamekidKills || 0) + 1
+          if (c.gamekidKills >= 2) { c.gamekidKills = 0; IS.healRed(p, 1) }
+        }
+      },
       unlock: null
     },
 
@@ -51,6 +173,15 @@
       dlc: "rebirth",
       transform: "conjoined",
       familiars: ["robo-baby"],
+      hooks: {
+        // fires a thin laser in the direction Isaac shoots
+        onUpdate: function (p, dt, ctx) {
+          babyFire(p, dt, ctx, 'robo-baby', 'roboT', 0.5, function (pl, f, a, c) {
+            c.spawnLaser({ x: f.x, y: f.y - 8, angle: a, len: 420, width: 6, life: 0.12, tick: 0.5, dmg: 3.5 })
+            c.sfx('laser-fire')
+          })
+        }
+      },
       unlock: null
     },
 
@@ -65,7 +196,7 @@
       pools: ["treasure", "greed-treasure", "ultra-secret", "baby-shop"],
       tags: ["defensive", "hearts"],
       dlc: "rebirth",
-      hooks: { onRoomClear: function (p, room, ctx) { var c=p.cache||(p.cache={}); c["little-c-h-a-dRooms"]=(c["little-c-h-a-dRooms"]||0)+1; if(c["little-c-h-a-dRooms"]>=2 && ctx && typeof ctx.spawnPickup==='function'){c["little-c-h-a-dRooms"]=0;ctx.spawnPickup("heart",p.x,p.y,{})} } },
+      hooks: { onRoomClear: function (p, room, ctx) { if (everyRooms(p, 'chad', 3)) drop(ctx, p, 'heart', { variant: 'half' }) } },
       unlock: null
     },
 
@@ -83,7 +214,12 @@
       transform: "bookworm",
       charge: 4,
       chargeType: "normal",
-      hooks: { onUse: function (p, ctx) { if (!ctx || typeof ctx.spawnPickup !== 'function') return { fail: true }; ctx.spawnPickup(ctx.pick(['coin','key','bomb','heart']), p.x, p.y, {}) } },
+      hooks: {
+        onUse: function (p, ctx) {
+          if (!ctx || !ctx.room) return { fail: true }
+          drop(ctx, p, ctx.pick(['coin', 'coin', 'coin', 'heart', 'heart', 'bomb', 'key', 'card', 'pill', 'battery']))
+        }
+      },
       unlock: null
     },
 
@@ -98,7 +234,17 @@
       pools: ["treasure", "angel", "greed-treasure"],
       tags: ["defensive", "hearts"],
       dlc: "rebirth",
-      hooks: { onRoomClear: function (p, room, ctx) { var c=p.cache||(p.cache={}); c["the-relicRooms"]=(c["the-relicRooms"]||0)+1; if(c["the-relicRooms"]>=7 && ctx && typeof ctx.spawnPickup==='function'){c["the-relicRooms"]=0;ctx.spawnPickup("soul",p.x,p.y,{})} } },
+      hooks: {
+        // every 7th or 8th room
+        onRoomClear: function (p, room, ctx) {
+          var c = cacheOf(p)
+          c.relic = (c.relic || 0) + 1
+          if (c.relic < (c.relicNeed || 7)) return
+          c.relic = 0
+          c.relicNeed = 7 + ctx.int(2)
+          drop(ctx, p, 'soul')
+        }
+      },
       unlock: null
     },
 
@@ -113,7 +259,6 @@
       pools: ["treasure", "greed-treasure", "baby-shop"],
       tags: ["familiar", "baby", "offensive", "tears"],
       dlc: "rebirth",
-      tearFlags: ["slow"],
       familiars: ["little-gish"],
       unlock: null
     },
@@ -130,7 +275,6 @@
       tags: ["familiar", "baby", "offensive", "tears"],
       dlc: "rebirth",
       transform: "conjoined",
-      tearFlags: ["homing"],
       familiars: ["little-steven"],
       unlock: null
     },
@@ -146,7 +290,7 @@
       pools: ["treasure", "angel", "greed-treasure", "greed-boss"],
       tags: ["offensive", "tears", "defensive", "hearts"],
       dlc: "rebirth",
-      stats: {"tears":0.2,"damage":0.3,"speed":0.3,"range":35.2},
+      stats: {"tears":0.2,"damage":0.3,"speed":0.3,"range":120},
       grant: {"maxHearts":2,"heal":2},
       transform: "seraphim",
       unlock: null
@@ -166,7 +310,12 @@
       transform: "mom",
       charge: 4,
       chargeType: "normal",
-      hooks: { onUse: function (p, ctx) { if (!ctx || typeof ctx.spawnPickup !== 'function') return { fail: true }; ctx.spawnPickup('pill', p.x, p.y, {}) } },
+      hooks: {
+        onUse: function (p, ctx) {
+          if (!ctx || !ctx.room) return { fail: true }
+          drop(ctx, p, 'pill')
+        }
+      },
       unlock: null
     },
 
@@ -181,7 +330,11 @@
       pools: ["treasure", "greed-treasure"],
       tags: ["offensive", "tears"],
       dlc: "rebirth",
-      hooks: { onTearFire: function (p, tear, ctx) { if(ctx && ctx.roll(0.25,0.05,1)){ for(var i=0;i<["poison"].length;i++) tear.flags.add(["poison"][i]) } } },
+      hooks: {
+        onTearFire: function (p, tear, ctx) {
+          if (ctx && ctx.roll(0.25, 0.0625, 1)) { tear.flags.add('poison'); tear.tint = '#8ec63f' }
+        }
+      },
       unlock: null
     },
 
@@ -196,6 +349,19 @@
       pools: ["treasure", "greed-treasure"],
       tags: ["offensive", "tears"],
       dlc: "rebirth",
+      // Tears split into two half-damage tears at +-90 degrees when they hit an enemy.,
+      hooks: {
+        onTearHit: function (p, tear, enemy, ctx) {
+          if (!tear || tear.split || !ctx) return
+          var sp = Math.sqrt(tear.vx * tear.vx + tear.vy * tear.vy) || 1
+          var a = Math.atan2(tear.vy, tear.vx)
+          for (var i = 0; i < 2; i++) {
+            var q = a + (i ? Math.PI / 2 : -Math.PI / 2)
+            var c = ctx.spawnTear({ x: tear.x, y: tear.y, vx: Math.cos(q) * sp * 0.8, vy: Math.sin(q) * sp * 0.8, dmg: tear.dmg * 0.5, r: (tear.r || 8) * 0.7, life: 0.45, flags: new Set(tear.flags) })
+            if (c) c.split = true
+          }
+        }
+      },
       unlock: null
     },
 
@@ -210,7 +376,7 @@
       pools: ["treasure", "greed-shop", "crane-game", "ultra-secret"],
       tags: ["utility", "charge"],
       dlc: "rebirth",
-      charge: 4,
+      charge: 6,
       chargeType: "normal",
       hooks: { onUse: function (p, ctx) { if (!ctx || typeof ctx.rerollPedestals !== 'function') return { fail: true }; ctx.rerollPedestals() } },
       unlock: null
@@ -228,6 +394,7 @@
       tags: ["offensive", "bombs"],
       dlc: "rebirth",
       grant: {"bombs":5},
+      mult: {"bombDamage":1.85},
       unlock: null
     },
 
@@ -244,7 +411,21 @@
       dlc: "rebirth",
       charge: 4,
       chargeType: "normal",
-      hooks: { onUse: function (p, ctx) { if (!p.status) p.status={}; p.status.invincible=6 } },
+      hooks: {
+        // for the room Isaac flies and his body runs around biting enemies on its own
+        onUse: function (p, ctx) {
+          cacheOf(p).shears = true
+          IS.recalcStats(p)
+          if (ctx && ctx.room && !findFamiliar(p, 'pinking-body')) ctx.spawnFamiliar('pinking-body')
+        },
+        onStats: function (p, s) { if (p.cache && p.cache.shears) p.flags.add('flying') },
+        onRoomEnter: function (p) {
+          if (!p.cache || !p.cache.shears) return
+          p.cache.shears = false
+          IS.removeFamiliar(p, 'pinking-body')
+          IS.recalcStats(p)
+        }
+      },
       unlock: null
     },
 
@@ -259,6 +440,12 @@
       pools: ["treasure", "angel", "greed-treasure"],
       tags: ["offensive", "defensive", "hearts"],
       dlc: "rebirth",
+      hooks: {
+        onPlayerDamage: function (p, n, src) {
+          if (src === "sacrifice" || (src && (src.self || src.kind === "sacrifice"))) return n
+          return n > 1 ? 1 : n
+        }
+      },
       unlock: null
     },
 
@@ -273,6 +460,13 @@
       pools: ["treasure", "devil", "greed-devil", "ultra-secret"],
       tags: ["offensive", "coins"],
       dlc: "rebirth",
+      hooks: {
+        onStats: function (p, s) { s.damage += 0.04 * (p.coins || 0) },
+        onUpdate: function (p) {
+          if (!p.cache) return
+          if (p.cache.mp !== p.coins) { p.cache.mp = p.coins; IS.recalcStats(p) }
+        }
+      },
       unlock: null
     },
 
@@ -287,8 +481,13 @@
       pools: ["treasure", "moms-chest", "greed-treasure", "ultra-secret", "old-chest"],
       tags: ["offensive", "tears"],
       dlc: "rebirth",
-      stats: {"range":15.2},
+      stats: {"range":120},
       transform: "mom",
+      hooks: {
+        onTearFire: function (p, tear, ctx) {
+          if (ctx && ctx.roll(0.2, 0.015, 0.5)) { tear.flags.add('petrify'); tear.tint = '#9a9a9a' }
+        }
+      },
       unlock: null
     },
 
@@ -303,10 +502,21 @@
       pools: ["treasure", "beggar", "greed-treasure"],
       tags: ["offensive", "utility", "charge"],
       dlc: "rebirth",
-      tearFlags: ["poison"],
       charge: 4,
       chargeType: "normal",
-      hooks: { onUse: function (p, ctx) { return { fail: true } } },
+      hooks: {
+        onUse: function (p, ctx) {
+          if (!ctx || !ctx.room) return { fail: true }
+          ctx.sfx('fart')
+          IS.spawnPuddle({ x: p.x, y: p.y, r: 130, dmg: 0, life: 3, status: [['poison', 3]], colour: '#8ec63f' }, ctx)
+          ctx.livingEnemies().forEach(function (e) {
+            if (IS.dist(p.x, p.y, e.x, e.y) > 260) return
+            IS.damageEnemy(e, 5, { silent: true }, ctx)
+            IS.applyStatus(e, 'poison', 3, ctx)
+            IS.knockback(e, p.x, p.y, e.boss ? 0 : 420)
+          })
+        }
+      },
       unlock: null
     },
 
@@ -322,6 +532,7 @@
       tags: ["offensive"],
       dlc: "rebirth",
       transform: "conjoined",
+      familiars: ["guardian-angel"],
       unlock: null
     },
 
@@ -368,6 +579,7 @@
       tags: ["offensive", "tears"],
       dlc: "rebirth",
       tearFlags: ["spectral"],
+      stats: {"tears":0.5},
       unlock: null
     },
 
@@ -382,6 +594,15 @@
       pools: ["shop", "battery-bum", "greed-shop", "crane-game"],
       tags: ["utility"],
       dlc: "rebirth",
+      hooks: {
+        onInit: function (p) {
+          if (!p.cache) p.cache = {}; if (p.cache["9-volt:init"]) return; p.cache["9-volt:init"] = true; for (var i = 0; i < 2; i++) { var a = p.active && p.active[i]; if (a) a.charge = a.maxCharge }
+        },
+        onRoomClear: function (p, room, ctx) {
+          if (!ctx || !p.active) return
+          for (var i = 0; i < 2; i++) if (p.active[i]) ctx.addCharge(1, i)
+        }
+      },
       unlock: null
     },
 
@@ -396,7 +617,11 @@
       pools: ["treasure", "greed-treasure", "greed-devil", "baby-shop"],
       tags: ["familiar", "baby", "offensive"],
       dlc: "rebirth",
-      familiars: ["dead-bird"],
+      hooks: {
+        // a bird per hit, until Isaac leaves the room
+        onPlayerHurt: function (p, n, src, ctx) { if (ctx && ctx.room) ctx.spawnFamiliar('dead-bird-bird') },
+        onRoomEnter: function (p) { while (IS.removeFamiliar(p, 'dead-bird-bird')) { /* clear */ } }
+      },
       unlock: null
     },
 
@@ -428,7 +653,7 @@
       tags: ["defensive", "hearts"],
       dlc: "rebirth",
       stats: {"speed":0.3},
-      grant: {"maxHearts":2,"heal":2},
+      grant: {"maxHearts":2,"heal":8},
       unlock: null
     },
 
@@ -443,7 +668,7 @@
       pools: ["treasure", "secret", "greed-treasure", "greed-boss", "greed-secret"],
       tags: ["offensive", "tears"],
       dlc: "rebirth",
-      stats: {"tears":1.7,"damage":0.4,"speed":0.3},
+      stats: {"tears":1.7,"damage":-0.4,"speed":0.3},
       mult: {"damage":0.9},
       transform: "fun-guy",
       unlock: null
@@ -460,7 +685,7 @@
       pools: ["treasure", "secret", "greed-secret"],
       tags: ["offensive", "defensive", "hearts"],
       dlc: "rebirth",
-      stats: {"damage":1,"speed":-0.2,"range":35.2},
+      stats: {"damage":1,"speed":-0.2,"range":120},
       grant: {"maxHearts":2,"heal":2},
       transform: "fun-guy",
       unlock: null
@@ -477,7 +702,14 @@
       pools: ["devil", "demon-beggar", "greed-devil", "ultra-secret"],
       tags: ["offensive", "defensive", "hearts"],
       dlc: "rebirth",
-      stats: {"damage":1.5,"speed":0.3},
+      hooks: {
+        onStats: function (p, s) { if (p.hearts && p.hearts.red <= 1) { s.damage += 1.5; s.speed += 0.3 } },
+        onUpdate: function (p) {
+          var c = cacheOf(p)
+          var low = p.hearts.red <= 1
+          if (c.whore !== low) { c.whore = low; IS.recalcStats(p) }
+        }
+      },
       unlock: null
     },
 
@@ -495,7 +727,18 @@
       transform: "bookworm",
       charge: 4,
       chargeType: "normal",
-      hooks: { onUse: function (p, ctx) { if (!ctx || typeof ctx.spawnFamiliar !== 'function') return { fail: true }; ctx.spawnFamiliar('monster-manual', {life:10}) } },
+      hooks: {
+        // a random baby for the rest of the floor
+        onUse: function (p, ctx) {
+          if (!ctx || !ctx.room) return { fail: true }
+          var ids = []
+          IS.items.forEach(function (d) { if (d.kind === 'familiar' && d.familiars && d.familiars.length) ids.push(d.familiars[0]) })
+          var f = ctx.spawnFamiliar(ctx.pick(ids))
+          if (!f) return { fail: true }
+          f.floorOnly = true
+        },
+        onNewFloor: function (p) { p.familiars = (p.familiars || []).filter(function (f) { return !f.floorOnly }) }
+      },
       unlock: null
     },
 
@@ -510,9 +753,26 @@
       pools: ["treasure", "angel", "greed-treasure"],
       tags: ["utility", "charge"],
       dlc: "rebirth",
-      charge: 4,
+      charge: 2,
       chargeType: "normal",
-      hooks: { onUse: function (p, ctx) { return { fail: true } } },
+      hooks: {
+        // a random effect out of a fixed list of actives
+        onUse: function (p, ctx) {
+          if (!ctx || !ctx.room) return { fail: true }
+          var pool = []
+          ;['the-d6', 'the-bean', 'the-gamekid', 'the-candle', 'razor-blade', 'crack-the-sky', 'spider-butt', 'dads-key', 'the-book-of-sin', 'monster-manual', 'guppys-head', 'crystal-ball', 'd20', 'iv-bag'].forEach(function (id) {
+            var d = IS.itemsById[id]
+            if (d && d.hooks && d.hooks.onUse) pool.push(d)
+          })
+          while (pool.length) {
+            var i = ctx.int(pool.length)
+            var d = pool.splice(i, 1)[0]
+            var r = d.hooks.onUse(p, ctx) || {}
+            if (!r.fail) return {}
+          }
+          return { fail: true }
+        }
+      },
       unlock: null
     },
 
@@ -528,7 +788,22 @@
       tags: ["bombs"],
       dlc: "rebirth",
       grant: {"bombs":5},
-      tearFlags: ["homing"],
+      hooks: {
+        // Isaac's bombs crawl towards the nearest enemy
+        onUpdate: function (p, dt, ctx) {
+          if (!ctx || !ctx.room) return
+          var bombs = ctx.room.bombs || []
+          for (var i = 0; i < bombs.length; i++) {
+            var b = bombs[i]
+            if (b.dead || b.friendly === false) continue
+            var e = ctx.nearestEnemy(b.x, b.y)
+            if (!e || IS.dist(b.x, b.y, e.x, e.y) > 520) continue
+            var n = IS.norm(e.x - b.x, e.y - b.y)
+            b.vx = (b.vx || 0) + n.x * 600 * dt
+            b.vy = (b.vy || 0) + n.y * 600 * dt
+          }
+        }
+      },
       unlock: null
     },
 
@@ -543,9 +818,26 @@
       pools: ["devil", "demon-beggar"],
       tags: ["offensive", "defensive", "hearts", "utility", "charge"],
       dlc: "rebirth",
-      charge: 4,
+      charge: 2,
       chargeType: "normal",
-      hooks: { onUse: function (p, ctx) { return { fail: true } } },
+      hooks: {
+        // 1 heart the first time in a room, half a heart after that
+        onUse: function (p, ctx) {
+          var c = cacheOf(p)
+          selfHurt(p, c.razorRoom ? 1 : 2, ctx, 'Razor Blade')
+          c.razorRoom = true
+          c.razorUps = (c.razorUps || 0) + 1
+          IS.recalcStats(p)
+        },
+        onStats: function (p, s) { s.damage += 1.2 * ((p.cache && p.cache.razorUps) || 0) },
+        onRoomEnter: function (p) {
+          var c = p.cache
+          if (!c || !(c.razorUps || c.razorRoom)) return
+          c.razorUps = 0
+          c.razorRoom = false
+          IS.recalcStats(p)
+        }
+      },
       unlock: null
     },
 
@@ -562,7 +854,13 @@
       dlc: "rebirth",
       charge: 4,
       chargeType: "normal",
-      hooks: { onUse: function (p, ctx) { if (!ctx || typeof ctx.teleport !== 'function') return { fail: true }; ctx.teleport('random') } },
+      hooks: {
+        // same depth, brand new layout
+        onUse: function (p, ctx) {
+          if (!ctx || !ctx.room || !ctx.floor || !ctx.floor.id) return { fail: true }
+          return ctx.teleport(ctx.floor.id) ? {} : { fail: true }
+        }
+      },
       unlock: null
     },
 
@@ -577,6 +875,7 @@
       pools: ["treasure", "key-master", "greed-treasure", "baby-shop"],
       tags: ["offensive"],
       dlc: "rebirth",
+      familiars: ["forever-alone"],
       unlock: null
     },
 
@@ -609,7 +908,12 @@
       dlc: "rebirth",
       charge: 4,
       chargeType: "normal",
-      hooks: { onUse: function (p, ctx) { return { fail: true } } },
+      hooks: {
+        onStats: function (p, s) { if (s.speed < 1.5) s.speed = 1.5 },
+        onUse: function (p) { startDash(p, 0.45) },
+        onUpdate: function (p, dt, ctx) { updateDash(p, dt, ctx) }
+      },
+      flags: ["flying"],
       unlock: null
     },
 
@@ -624,7 +928,7 @@
       pools: ["treasure", "greed-treasure"],
       tags: ["bombs"],
       dlc: "rebirth",
-      hooks: { onRoomClear: function (p, room, ctx) { var c=p.cache||(p.cache={}); c["bomb-bagRooms"]=(c["bomb-bagRooms"]||0)+1; if(c["bomb-bagRooms"]>=2 && ctx && typeof ctx.spawnPickup==='function'){c["bomb-bagRooms"]=0;ctx.spawnPickup("coin",p.x,p.y,{})} } },
+      hooks: { onRoomClear: function (p, room, ctx) { if (everyRooms(p, 'bombBag', 3)) drop(ctx, p, 'bomb') } },
       unlock: null
     },
 
@@ -639,6 +943,7 @@
       pools: ["greed-treasure", "greed-boss", "greed-devil"],
       tags: ["offensive", "tears"],
       dlc: "rebirth",
+      tearFlags: ["lump"],
       unlock: null
     },
 
@@ -656,7 +961,14 @@
       transform: "guppy",
       charge: 4,
       chargeType: "normal",
-      hooks: { onUse: function (p, ctx) { if (!ctx || typeof ctx.addSoul !== 'function') return { fail: true }; ctx.addSoul(2) } },
+      hooks: {
+        // one heart container becomes 3 soul hearts
+        onUse: function (p) {
+          if (!p.hearts || p.hearts.maxRed < 2) return { fail: true }
+          IS.addMaxHearts(p, -2)
+          IS.addSoulHearts(p, 6)
+        }
+      },
       unlock: null
     },
 
@@ -672,6 +984,26 @@
       tags: ["utility"],
       dlc: "rebirth",
       transform: "guppy",
+      // APPROXIMATE: the clear reward spawns right after onRoomClear, so the 22% "no reward" case
+      // removes pickups that appear in the next frame instead of preventing them.,
+      hooks: {
+        onRoomClear: function (p, room, ctx) {
+          if (!ctx || !ctx.room) return
+          if (!p.cache) p.cache = {}
+          if (ctx.chance(0.33)) ctx.spawnPickup("chest", ctx.room.pxW / 2, ctx.room.pxH / 2)
+          if (ctx.chance(0.22)) p.cache.tailSnap = (ctx.room.pickups || []).slice()
+        },
+        onUpdate: function (p, dt, ctx) {
+          if (!p.cache || !p.cache.tailSnap || !ctx || !ctx.room) return
+          var snap = p.cache.tailSnap
+          p.cache.tailSnap = null
+          var list = ctx.room.pickups || []
+          for (var i = 0; i < list.length; i++) {
+            var u = list[i]
+            if (snap.indexOf(u) < 0 && !u.shop && !u.price && u.kind !== "item" && !u.dead) u.dead = true
+          }
+        }
+      },
       unlock: null
     },
 
@@ -688,7 +1020,14 @@
       dlc: "rebirth",
       charge: 4,
       chargeType: "normal",
-      hooks: { onUse: function (p, ctx) { if (!ctx || typeof ctx.spawnPickup !== 'function') return { fail: true }; ctx.spawnPickup('coin', p.x, p.y, {}) } },
+      hooks: {
+        onUse: function (p, ctx) {
+          if (!ctx || !ctx.room) return { fail: true }
+          selfHurt(p, 1, ctx, 'IV Bag')
+          var n = 1 + ctx.int(2)
+          for (var i = 0; i < n; i++) drop(ctx, p, 'coin')
+        }
+      },
       unlock: null
     },
 
@@ -705,7 +1044,14 @@
       dlc: "rebirth",
       charge: 4,
       chargeType: "normal",
-      hooks: { onUse: function (p, ctx) { if (!ctx || typeof ctx.spawnFamiliar !== 'function') return { fail: true }; ctx.spawnFamiliar('best-friend', {life:10}) } },
+      hooks: {
+        onUse: function (p, ctx) {
+          if (!ctx || !ctx.room) return { fail: true }
+          while (IS.removeFamiliar(p, 'best-friend')) { /* one decoy at a time */ }
+          if (!ctx.spawnFamiliar('best-friend')) return { fail: true }
+        },
+        onRoomEnter: function (p) { while (IS.removeFamiliar(p, 'best-friend')) { /* clear */ } }
+      },
       unlock: null
     },
 
@@ -721,9 +1067,26 @@
       tags: ["bombs", "utility", "charge"],
       dlc: "rebirth",
       grant: {"bombs":5},
-      charge: 4,
+      charge: 2,
       chargeType: "normal",
-      hooks: { onUse: function (p, ctx) { return { fail: true } } },
+      hooks: {
+        // bombs sit where they fall until the item is used
+        onUpdate: function (p, dt, ctx) {
+          if (!ctx || !ctx.room) return
+          var bombs = ctx.room.bombs || []
+          for (var i = 0; i < bombs.length; i++) {
+            var b = bombs[i]
+            if (b.dead || b.friendly === false || b.detonated) continue
+            b.remote = true
+            b.fuse = 99
+          }
+        },
+        onUse: function (p, ctx) {
+          if (!ctx || !ctx.room) return { fail: true }
+          var bombs = ctx.room.bombs || []
+          for (var i = 0; i < bombs.length; i++) if (bombs[i].remote && !bombs[i].dead) { bombs[i].detonated = true; bombs[i].fuse = 0 }
+        }
+      },
       unlock: null
     },
 
@@ -755,6 +1118,12 @@
       tags: ["utility"],
       dlc: "rebirth",
       transform: "mom",
+      hooks: {
+        onInit: function (p, ctx) {
+          if (!ctx || !ctx.room) return
+          if (!p.cache) p.cache = {}; if (p.cache["moms-purse:init"]) return; p.cache["moms-purse:init"] = true; ctx.spawnPickup("trinket", p.x + 50, p.y, { id: ctx.rollTrinket() })
+        }
+      },
       unlock: null
     },
 
@@ -771,7 +1140,12 @@
       dlc: "rebirth",
       grant: {"bombs":5},
       transform: "bob",
-      tearFlags: ["poison"],
+      hooks: {
+        onBombExplode: function (p, bomb, ctx) {
+          if (!ctx || !ctx.room || !bomb || bomb.friendly === false) return
+          IS.spawnPuddle({ x: bomb.x, y: bomb.y, r: 110, dmg: 0, life: 4, status: [['poison', 3]], colour: '#8ec63f' }, ctx)
+        }
+      },
       unlock: null
     },
 
@@ -786,6 +1160,12 @@
       pools: ["boss"],
       tags: ["coins"],
       dlc: "rebirth",
+      hooks: {
+        onInit: function (p, ctx) {
+          if (!ctx || !ctx.room) return
+          if (!p.cache) p.cache = {}; if (p.cache["pageant-boy:init"]) return; p.cache["pageant-boy:init"] = true; for (var i = 0; i < 7; i++) { var a = i * Math.PI * 2 / 7; ctx.spawnPickup("coin", p.x + Math.cos(a) * 70, p.y + Math.sin(a) * 70) }
+        }
+      },
       unlock: null
     },
 
@@ -800,6 +1180,16 @@
       pools: ["treasure", "angel", "greed-treasure"],
       tags: ["offensive", "defensive", "hearts"],
       dlc: "rebirth",
+      hooks: {
+        onPlayerHurt: function (p, n, src, ctx) {
+          if (!p.cache || p.cache.scapular) return
+          var h = p.hearts
+          if (h.red + h.soul + h.black + (h.bone || 0) !== 1) return
+          p.cache.scapular = true
+          IS.addSoulHearts(p, 2)
+        },
+        onRoomEnter: function (p) { if (p.cache) p.cache.scapular = false }
+      },
       unlock: null
     },
 
@@ -830,6 +1220,7 @@
       pools: ["treasure", "beggar", "baby-shop"],
       tags: ["coins"],
       dlc: "rebirth",
+      familiars: ["bum-friend"],
       unlock: null
     },
 
@@ -847,7 +1238,13 @@
       transform: "guppy",
       charge: 4,
       chargeType: "normal",
-      hooks: { onUse: function (p, ctx) { if (!ctx || typeof ctx.spawnFamiliar !== 'function') return { fail: true }; ctx.spawnFamiliar('guppys-head', {life:10}) } },
+      hooks: {
+        onUse: function (p, ctx) {
+          if (!ctx || !ctx.room) return { fail: true }
+          var n = 2 + ctx.int(3)
+          for (var i = 0; i < n; i++) ctx.spawnFamiliar('blue-fly')
+        }
+      },
       unlock: null
     },
 
@@ -864,7 +1261,12 @@
       dlc: "rebirth",
       charge: 4,
       chargeType: "normal",
-      hooks: { onUse: function (p, ctx) { return { fail: true } } },
+      hooks: {
+        onUse: function (p, ctx) {
+          p.hearts.eternal = (p.hearts.eternal || 0) + 1
+          if (ctx && ctx.sfx) ctx.sfx('heart-pickup')
+        }
+      },
       unlock: null
     },
 
@@ -881,7 +1283,28 @@
       dlc: "rebirth",
       charge: 4,
       chargeType: "normal",
-      hooks: { onUse: function (p, ctx) { return { fail: true } } },
+      hooks: {
+        onUse: function (p, ctx) {
+          if (!ctx || !ctx.room) return { fail: true }
+          var h = p.head || { x: 1, y: 0 }
+          var cx = p.x + h.x * 70
+          var cy = p.y + h.y * 70
+          ctx.sfx('knife-throw')
+          ctx.livingEnemies().forEach(function (e) {
+            if (IS.dist(cx, cy, e.x, e.y) < 150 + e.r) {
+              IS.damageEnemy(e, p.stats.damage * 3, { silent: true }, ctx)
+              IS.knockback(e, p.x, p.y, e.boss ? 0 : 380)
+            }
+          })
+          ctx.gridObjects().slice().forEach(function (g) {
+            if (g && g.destructible && !g.bombOnly && !g.broken && IS.dist(cx, cy, g.x, g.y) < 150) ctx.destroyGrid(g)
+          })
+        },
+        // entering a new floor fully recharges the axe
+        onNewFloor: function (p) {
+          for (var i = 0; i < 2; i++) { var a = p.active && p.active[i]; if (a && a.id === 'notched-axe') a.charge = a.maxCharge }
+        }
+      },
       unlock: null
     },
 
@@ -896,6 +1319,13 @@
       pools: ["treasure", "greed-treasure"],
       tags: ["offensive"],
       dlc: "rebirth",
+      hooks: {
+        onPlayerHurt: function (p, n, src, ctx) {
+          if (!ctx || !ctx.room) return
+          var k = 2 + ctx.int(5)
+          for (var i = 0; i < k; i++) ctx.spawnFamiliar("blue-fly")
+        }
+      },
       unlock: null
     },
 
@@ -910,8 +1340,8 @@
       pools: ["treasure", "greed-treasure"],
       tags: ["offensive", "tears"],
       dlc: "rebirth",
-      stats: {"damage":40,"range":-52},
-      mult: {"tears":0.33},
+      stats: {"damage":40},
+      mult: {"tears":0.33,"range":0.8,"shotSpeed":0.8},
       transform: "bob",
       tearFlags: ["poison"],
       unlock: null
@@ -928,6 +1358,13 @@
       pools: ["treasure", "greed-treasure"],
       tags: ["offensive"],
       dlc: "rebirth",
+      hooks: {
+        onTearFire: function (p, tear, ctx) {
+          if (!ctx || !ctx.roll(0.1, 0.1, 1)) return
+          tear.dmg *= 3.2
+          tear.tint = "#f4eed8"
+        }
+      },
       unlock: null
     },
 
@@ -942,6 +1379,12 @@
       pools: ["treasure", "greed-treasure"],
       tags: ["offensive", "tears"],
       dlc: "rebirth",
+      hooks: {
+        onTearHit: function (p, tear, enemy, ctx) {
+          if (!ctx || !ctx.room || p.familiars.length > 40) return
+          if (ctx.chance(1 / 6)) ctx.spawnFamiliar("blue-fly")
+        }
+      },
       unlock: null
     },
 
@@ -973,6 +1416,7 @@
       dlc: "rebirth",
       mult: {"tears":0.42},
       transform: "spider",
+      stats: {"multishot":3},
       unlock: null
     },
 
@@ -987,6 +1431,10 @@
       pools: ["treasure", "greed-treasure"],
       tags: ["offensive"],
       dlc: "rebirth",
+      // Engine flips p.eye each shot; negative is treated as the left eye.,
+      hooks: {
+        onTearFire: function (p, tear) { if (p.eye < 0) tear.dmg += 2 }
+      },
       unlock: null
     },
 
@@ -1002,6 +1450,7 @@
       tags: ["familiar", "baby", "offensive"],
       dlc: "rebirth",
       familiars: ["the-peeper"],
+      hooks: { onTearFire: function (p, tear) { if (p.eye < 0) tear.dmg *= 1.35 } },
       unlock: null
     },
 
@@ -1016,6 +1465,9 @@
       pools: ["shop", "angel", "greed-shop"],
       tags: ["offensive"],
       dlc: "rebirth",
+      hooks: {
+        onPlayerHurt: function (p, n, src, ctx) { if (ctx) ctx.addCharge(1) }
+      },
       unlock: null
     },
 
@@ -1030,6 +1482,16 @@
       pools: ["treasure", "devil", "greed-treasure", "greed-devil", "ultra-secret"],
       tags: ["offensive"],
       dlc: "rebirth",
+      hooks: {
+        onPlayerHurt: function (p) {
+          if (!p.cache) return
+          if ((p.cache.bl || 0) >= 6) return
+          p.cache.bl = (p.cache.bl || 0) + 1
+          IS.recalcStats(p)
+        },
+        onStats: function (p, s) { s.damage += 0.5 * ((p.cache && p.cache.bl) || 0) },
+        onNewFloor: function (p) { if (p.cache && p.cache.bl) { p.cache.bl = 0; IS.recalcStats(p) } }
+      },
       unlock: null
     },
 
@@ -1046,7 +1508,17 @@
       dlc: "rebirth",
       charge: 4,
       chargeType: "normal",
-      hooks: { onUse: function (p, ctx) { if (!ctx || typeof ctx.addSoul !== 'function') return { fail: true }; ctx.addSoul(2) } },
+      hooks: {
+        onUse: function (p, ctx) {
+          if (!ctx || !ctx.room) return { fail: true }
+          drop(ctx, p, ctx.pick(['soul', 'card', 'rune']))
+          var rooms = (ctx.floor && ctx.floor.rooms) || []
+          for (var i = 0; i < rooms.length; i++) {
+            var r = rooms[i]
+            if (r && r.type !== 'super-secret' && r.type !== 'ultra-secret') r.mapKnown = true
+          }
+        }
+      },
       unlock: null
     },
 
@@ -1063,6 +1535,7 @@
       dlc: "rebirth",
       transform: "leviathan",
       tearFlags: ["spectral"],
+      flags: ["flying"],
       unlock: null
     },
 
@@ -1079,7 +1552,19 @@
       dlc: "rebirth",
       charge: 4,
       chargeType: "normal",
-      hooks: { onUse: function (p, ctx) { if (!ctx || typeof ctx.spawnFamiliar !== 'function') return { fail: true }; ctx.spawnFamiliar('crack-the-sky', {life:10}) } },
+      hooks: {
+        // 5 beams of light land on enemies, 8x damage + 160 over 0.8 s
+        onUse: function (p, ctx) {
+          if (!ctx || !ctx.room) return { fail: true }
+          var enemies = ctx.livingEnemies()
+          var tick = (8 * p.stats.damage + 160) / 2
+          for (var i = 0; i < 5; i++) {
+            var t = enemies.length ? ctx.pick(enemies) : ctx.freeFloorPos()
+            IS.spawnPuddle({ x: t.x, y: t.y, r: 70, dmg: tick, life: 0.8, colour: '#fff3b0' }, ctx)
+          }
+          ctx.sfx('holy-shield')
+        }
+      },
       unlock: null
     },
 
@@ -1094,6 +1579,18 @@
       pools: ["treasure", "greed-treasure"],
       tags: ["utility"],
       dlc: "rebirth",
+      hooks: {
+        onPlayerDeath: function (p, ctx) {
+          if (!p.cache) p.cache = {}
+          var used = p.cache.ankhUsed || 0
+          if (used >= Math.max(1, IS.itemCount(p, "ankh"))) return undefined
+          p.cache.ankhUsed = used + 1
+          var h = p.hearts
+          h.maxRed = 0; h.red = 0; h.black = 0; h.bone = 0; h.rotten = 0; h.gold = 0; h.eternal = 0
+          h.soul = 6
+          return { revive: true }
+        }
+      },
       unlock: null
     },
 
@@ -1109,6 +1606,13 @@
       tags: ["offensive", "defensive", "hearts"],
       dlc: "rebirth",
       transform: "seraphim",
+      hooks: {
+        onPlayerHurt: function (p, n, src, ctx) {
+          if (!ctx || !ctx.roll(0.2, 0.03, 1)) return
+          if (!p.status) p.status = {}
+          p.status.invincible = 3
+        }
+      },
       unlock: null
     },
 
@@ -1124,7 +1628,6 @@
       tags: ["familiar", "baby", "offensive", "tears"],
       dlc: "rebirth",
       transform: "conjoined",
-      tearFlags: ["spectral"],
       familiars: ["ghost-baby"],
       unlock: null
     },
@@ -1140,10 +1643,15 @@
       pools: ["shop"],
       tags: ["offensive", "tears", "utility", "charge"],
       dlc: "rebirth",
-      tearFlags: ["burn"],
       charge: 4,
       chargeType: "normal",
-      hooks: { onUse: function (p, ctx) { if (!ctx || typeof ctx.spawnFamiliar !== 'function') return { fail: true }; ctx.spawnFamiliar('the-candle', {life:10}) } },
+      hooks: {
+        onUse: function (p, ctx) {
+          if (!ctx || !ctx.room) return { fail: true }
+          var h = p.head || { x: 1, y: 0 }
+          IS.spawnPuddle({ x: p.x + h.x * 160, y: p.y + h.y * 160, r: 40, dmg: Math.max(2, p.stats.damage), life: 2, status: [['burn', 2]], colour: '#6ab0ff' }, ctx)
+        }
+      },
       unlock: null
     },
 
@@ -1173,9 +1681,20 @@
       pools: ["treasure", "greed-shop", "crane-game", "ultra-secret"],
       tags: ["utility", "charge"],
       dlc: "rebirth",
-      charge: 4,
+      charge: 6,
       chargeType: "normal",
-      hooks: { onUse: function (p, ctx) { return { fail: true } } },
+      hooks: {
+        // every loose pickup turns into a different random one
+        onUse: function (p, ctx) {
+          if (!ctx || !ctx.room) return { fail: true }
+          var kinds = ['coin', 'key', 'bomb', 'heart', 'soul', 'black', 'card', 'pill', 'rune', 'battery']
+          var old = ctx.pickups().filter(function (u) { return !u.dead && !u.taken && !u.price && !u.shop && kinds.indexOf(u.kind) >= 0 })
+          old.forEach(function (u) {
+            u.dead = true
+            ctx.spawnPickup(ctx.pick(['coin', 'coin', 'heart', 'heart', 'bomb', 'key', 'card', 'pill', 'battery']), u.x, u.y, { toss: true })
+          })
+        }
+      },
       unlock: null
     },
 
@@ -1192,6 +1711,15 @@
       dlc: "rebirth",
       transform: "conjoined",
       familiars: ["harlequin-baby"],
+      hooks: {
+        // two tears in a V
+        onUpdate: function (p, dt, ctx) {
+          babyFire(p, dt, ctx, 'harlequin-baby', 'harlequinT', 0.75, function (pl, f, a, c) {
+            babyTear(c, f, a - 0.2, 4)
+            babyTear(c, f, a + 0.2, 4)
+          })
+        }
+      },
       unlock: null
     },
 
@@ -1222,7 +1750,6 @@
       dlc: "rebirth",
       stats: {"damage":4},
       mult: {"tears":0.42,"damage":2},
-      tearFlags: ["piercing"],
       unlock: null
     },
 
@@ -1239,6 +1766,22 @@
       dlc: "rebirth",
       transform: "spider",
       familiars: ["daddy-longlegs"],
+      hooks: {
+        // stomps the nearest enemy every 4 seconds
+        onUpdate: function (p, dt, ctx) {
+          if (!ctx || !ctx.room) return
+          var c = cacheOf(p)
+          c.dll = (c.dll == null ? 4 : c.dll) - dt
+          if (c.dll > 0) return
+          var e = ctx.nearestEnemy(p.x, p.y)
+          if (!e || IS.dist(p.x, p.y, e.x, e.y) > 420) { c.dll = 0.4; return }
+          c.dll = 4
+          IS.damageEnemy(e, 40, { silent: true }, ctx)
+          ctx.sfx('stomp')
+          var f = findFamiliar(p, 'daddy-longlegs')
+          if (f) { f.x = e.x; f.y = e.y }
+        }
+      },
       unlock: null
     },
 
@@ -1254,10 +1797,18 @@
       tags: ["offensive", "utility", "charge"],
       dlc: "rebirth",
       transform: "spider",
-      tearFlags: ["slow"],
       charge: 4,
       chargeType: "normal",
-      hooks: { onUse: function (p, ctx) { if (!ctx || typeof ctx.livingEnemies !== 'function') return { fail: true }; var es=ctx.livingEnemies(); for(var i=0;i<es.length;i++) IS.damageEnemy(es[i], 10 + ((p.stats&&p.stats.damage)||3.5)*2, {src:p}, ctx) } },
+      hooks: {
+        onUse: function (p, ctx) {
+          if (!ctx || !ctx.room) return { fail: true }
+          ctx.livingEnemies().slice().forEach(function (e) {
+            IS.applyStatus(e, 'slow', 4, ctx)
+            IS.damageEnemy(e, 10, { silent: true }, ctx)
+            if (e.dead || e.hp <= 0) ctx.spawnFamiliar('blue-spider')
+          })
+        }
+      },
       unlock: null
     },
 
@@ -1272,6 +1823,7 @@
       pools: ["treasure", "devil", "greed-treasure", "greed-devil", "baby-shop"],
       tags: ["offensive"],
       dlc: "rebirth",
+      familiars: ["sacrificial-dagger"],
       unlock: null
     },
 
@@ -1287,6 +1839,21 @@
       tags: ["defensive", "hearts"],
       dlc: "rebirth",
       transform: "seraphim",
+      hooks: {
+        onUpdate: function (p, dt, ctx) {
+          if (!ctx || !ctx.room || !p.cache) return
+          p.cache.mitreT = (p.cache.mitreT || 0) + dt
+          if (p.cache.mitreT < 0.2) return
+          p.cache.mitreT = 0
+          var list = ctx.pickups()
+          for (var i = 0; i < list.length; i++) {
+            var u = list[i]
+            if (u.kind !== "heart" || u.mitre || u.dead || u.taken || u.shop || u.price) continue
+            u.mitre = true
+            if (ctx.chance(0.33)) { u.kind = "soul"; u.variant = "soul"; u.amount = 2; u.heart = true }
+          }
+        }
+      },
       unlock: null
     },
 
@@ -1303,6 +1870,16 @@
       dlc: "rebirth",
       transform: "conjoined",
       familiars: ["rainbow-baby"],
+      hooks: {
+        // random damage and a random tear effect on every shot
+        onUpdate: function (p, dt, ctx) {
+          babyFire(p, dt, ctx, 'rainbow-baby', 'rainbowT', 0.7, function (pl, f, a, c) {
+            var flags = new Set()
+            flags.add(c.pick(['poison', 'slow', 'burn', 'charm', 'fear', 'confusion', 'petrify', 'homing', 'bouncing', 'freeze']))
+            babyTear(c, f, a, c.range(3, 5), flags)
+          })
+        }
+      },
       unlock: null
     },
 
@@ -1350,9 +1927,17 @@
       pools: ["shop", "beggar", "ultra-secret"],
       tags: ["coins", "utility", "charge"],
       dlc: "rebirth",
-      charge: 4,
-      chargeType: "normal",
-      hooks: { onUse: function (p, ctx) { if (!ctx || typeof ctx.spawnFamiliar !== 'function') return { fail: true }; ctx.spawnFamiliar('portable-slot', {life:10}) } },
+      charge: 0,
+      hooks: {
+        // APPROXIMATE: payout odds are a guess at the slot machine's
+        onUse: function (p, ctx) {
+          if (!ctx || !ctx.room || !(p.coins >= 1)) return { fail: true }
+          IS.addCoins(p, -1)
+          ctx.sfx('coin')
+          if (ctx.chance(0.55)) return {}
+          drop(ctx, p, ctx.pick(['coin', 'coin', 'heart', 'bomb', 'key', 'card', 'pill', 'battery']))
+        }
+      },
       unlock: null
     },
 
@@ -1367,6 +1952,20 @@
       pools: ["treasure", "angel", "greed-angel"],
       tags: ["offensive"],
       dlc: "rebirth",
+      // APPROXIMATE: Isaac's potion is a thrown arc; here every 2.5s one shot becomes a 7 damage
+      // tear that leaves a freezing puddle where it lands or hits.,
+      hooks: {
+        onTearFire: function (p, tear, ctx) {
+          if (!ctx || !ctx.run || !p.cache) return
+          if (ctx.run.time < (p.cache.hwNext || 0)) return
+          p.cache.hwNext = ctx.run.time + 2.5
+          tear.flags.add("holywater")
+          tear.tint = "#9fd0ff"
+          tear.dmg = 7
+        },
+        onTearHit: function (p, tear, enemy, ctx) { puddle(tear, ctx) },
+        onTearDeath: function (p, tear, ctx) { puddle(tear, ctx) }
+      },
       unlock: null
     },
 
@@ -1381,6 +1980,12 @@
       pools: ["golden-chest"],
       tags: ["defensive", "hearts"],
       dlc: "rebirth",
+      flags: ["flying"],
+      hooks: {
+        onInit: function (p) {
+          if (!p.cache) p.cache = {}; if (p.cache["fate:init"]) return; p.cache["fate:init"] = true; p.hearts.eternal = (p.hearts.eternal || 0) + 1
+        }
+      },
       unlock: null
     },
 
@@ -1395,7 +2000,26 @@
       pools: ["treasure", "beggar"],
       tags: ["offensive"],
       dlc: "rebirth",
-      tearFlags: ["poison"],
+      hooks: {
+        // three farts: poison clouds that also shove enemies and wipe nearby shots
+        onPlayerHurt: function (p, n, src, ctx) {
+          var c = cacheOf(p)
+          c.beanFarts = 3
+          c.beanT = 0
+        },
+        onUpdate: function (p, dt, ctx) {
+          var c = p.cache
+          if (!c || !(c.beanFarts > 0) || !ctx || !ctx.room) return
+          c.beanT -= dt
+          if (c.beanT > 0) return
+          c.beanT = 0.45
+          c.beanFarts--
+          ctx.sfx('fart')
+          IS.spawnPuddle({ x: p.x, y: p.y, r: 120, dmg: 0, life: 5, status: [['poison', 3]], colour: '#8ec63f' }, ctx)
+          ;(ctx.room.shots || []).forEach(function (s) { if (!s.friendly && !s.dead && IS.dist(p.x, p.y, s.x, s.y) < 150) s.dead = true })
+          ctx.livingEnemies().forEach(function (e) { if (!e.boss && IS.dist(p.x, p.y, e.x, e.y) < 150) IS.knockback(e, p.x, p.y, 300) })
+        }
+      },
       unlock: null
     },
 
@@ -1412,7 +2036,17 @@
       dlc: "rebirth",
       charge: 4,
       chargeType: "normal",
-      hooks: { onUse: function (p, ctx) { return { fail: true } } },
+      hooks: {
+        onStats: function (p, s) { if (s.speed < 1.5) s.speed = 1.5 },
+        onUse: function (p) { startDash(p, 0.45) },
+        // beams of light in its wake
+        onUpdate: function (p, dt, ctx) {
+          updateDash(p, dt, ctx, function (pl, c) {
+            IS.spawnPuddle({ x: pl.x, y: pl.y, r: 34, dmg: 3, life: 0.8, colour: '#fff3b0' }, c)
+          })
+        }
+      },
+      flags: ["flying"],
       unlock: null
     },
 
@@ -1431,6 +2065,7 @@
       mult: {"damage":2.3},
       transform: "seraphim",
       tearFlags: ["homing"],
+      grant: {"maxHearts":2,"heal":99},
       unlock: null
     },
 
@@ -1462,21 +2097,37 @@
       dlc: "rebirth",
       grant: {"maxHearts":2,"heal":2},
       transform: "seraphim",
+      flags: ["flying"],
       unlock: null
     }
   ])
 
   IS.defineFamiliars([
-    { id: "robo-baby", name: "Robo-Baby", sprite: "robo-baby", behaviour: 'follower', params: { r: 16, speed: 300, flying: true, dmg: 3.5, fireDelay: 0.75, range: 520, hp: 0, blockShots: false, life: 0 } },
+
+    { id: "guardian-angel", name: "Guardian Angel", behaviour: 'orbital', params: { r: 14, speed: 300, flying: true, orbitR: 80, orbitSpeed: 2.2, dmg: 3.5, cooldown: 0.35, hp: 0, blockShots: true, life: 0 } },
+    { id: "forever-alone", name: "Forever Alone", behaviour: 'orbital', params: { r: 12, speed: 300, flying: true, orbitR: 130, orbitSpeed: 2, dmg: 3, cooldown: 0.35, hp: 0, blockShots: false, life: 0 } },
+    { id: "sacrificial-dagger", name: "Sacrificial Dagger", behaviour: 'orbital', params: { r: 14, speed: 300, flying: true, orbitR: 70, orbitSpeed: 2.6, dmg: 4, cooldown: 0.35, hp: 0, blockShots: true, life: 0 } },
+    { id: "bum-friend", name: "Bum Friend", behaviour: 'collector', params: { r: 16, speed: 220, flying: false, collects: ["coin"], every: 3.5, reward: 'random', hp: 0, blockShots: false, life: 0 } },
+    // the beams come from the item's onUpdate hook, so the body only follows
+    { id: "robo-baby", name: "Robo-Baby", sprite: "robo-baby", behaviour: 'follower', params: { r: 16, speed: 300, flying: true, hp: 0, blockShots: false, life: 0 } },
     { id: "little-gish", name: "Little Gish", sprite: "little-gish", behaviour: 'follower', params: { r: 16, speed: 300, flying: true, dmg: 3.5, fireDelay: 0.75, range: 520, hp: 0, blockShots: false, life: 0, tearFlags: ["slow"] } },
     { id: "little-steven", name: "Little Steven", sprite: "little-steven", behaviour: 'follower', params: { r: 16, speed: 300, flying: true, dmg: 3.5, fireDelay: 0.75, range: 520, hp: 0, blockShots: false, life: 0, tearFlags: ["homing"] } },
-    { id: "demon-baby", name: "Demon Baby", sprite: "demon-baby", behaviour: 'follower', params: { r: 16, speed: 300, flying: true, dmg: 3, fireDelay: 0.75, range: 520, hp: 0, blockShots: false, life: 0 } },
-    { id: "dead-bird", name: "Dead Bird", sprite: "dead-bird", behaviour: 'follower', params: { r: 16, speed: 300, flying: true, dmg: 4.3, fireDelay: 0.75, range: 520, hp: 0, blockShots: false, life: 0 } },
-    { id: "the-peeper", name: "The Peeper", sprite: "the-peeper", behaviour: 'follower', params: { r: 16, speed: 300, flying: true, dmg: 17.1, fireDelay: 0.75, range: 520, hp: 0, blockShots: false, life: 0 } },
+    // shoots at enemies that come within range of its orbit
+    { id: "demon-baby", name: "Demon Baby", sprite: "demon-baby", behaviour: 'orbitShooter', params: { r: 16, speed: 300, flying: true, orbitR: 70, orbitSpeed: 1.6, dmg: 3, fireDelay: 0.75, range: 260, hp: 0, blockShots: false, life: 0 } },
+    // the bird Dead Bird spawns when Isaac is hurt: 1.5 damage every 0.35 s, about 4.3 per second
+    { id: "dead-bird-bird", name: "Dead Bird", sprite: "dead-bird", behaviour: 'chaser', params: { r: 14, speed: 280, flying: true, dmg: 1.5, cooldown: 0.35, range: 900, hp: 0, blockShots: false, life: 0 } },
+    // Isaac's body while Pinking Shears is active: about 23.5 contact damage per second
+    { id: "pinking-body", name: "Isaac's Body", behaviour: 'chaser', params: { r: 16, speed: 260, flying: true, dmg: 8, cooldown: 0.34, range: 900, hp: 0, blockShots: false, life: 0 } },
+    // Best Friend's decoy: stands still, blows up when its 5 seconds run out
+    { id: "best-friend", name: "Best Friend", behaviour: 'wanderer', params: { r: 18, speed: 0, invulnerable: true, decoy: true, life: 5, explode: { dmg: 100, r: 130 } } },
+    { id: "the-peeper", name: "The Peeper", sprite: "the-peeper", behaviour: 'wanderer', params: { r: 16, speed: 90, flying: true, dmg: 6, cooldown: 0.35, hp: 0, blockShots: false, life: 0 } },
     { id: "ghost-baby", name: "Ghost Baby", sprite: "ghost-baby", behaviour: 'follower', params: { r: 16, speed: 300, flying: true, dmg: 3.5, fireDelay: 0.75, range: 520, hp: 0, blockShots: false, life: 0, tearFlags: ["spectral"] } },
-    { id: "harlequin-baby", name: "Harlequin Baby", sprite: "harlequin-baby", behaviour: 'follower', params: { r: 16, speed: 300, flying: true, dmg: 4, fireDelay: 0.75, range: 520, hp: 0, blockShots: false, life: 0 } },
-    { id: "daddy-longlegs", name: "Daddy Longlegs", sprite: "daddy-longlegs", behaviour: 'follower', params: { r: 16, speed: 300, flying: true, dmg: 40, fireDelay: 0.75, range: 520, hp: 0, blockShots: false, life: 0 } },
-    { id: "rainbow-baby", name: "Rainbow Baby", sprite: "rainbow-baby", behaviour: 'follower', params: { r: 16, speed: 300, flying: true, dmg: 3, fireDelay: 0.75, range: 520, hp: 0, blockShots: false, life: 0 } }
+    // its V of tears comes from the item's onUpdate hook
+    { id: "harlequin-baby", name: "Harlequin Baby", sprite: "harlequin-baby", behaviour: 'follower', params: { r: 16, speed: 300, flying: true, hp: 0, blockShots: false, life: 0 } },
+    // the stomp comes from the item's onUpdate hook
+    { id: "daddy-longlegs", name: "Daddy Longlegs", sprite: "daddy-longlegs", behaviour: 'follower', params: { r: 16, speed: 300, flying: true, hp: 0, blockShots: false, life: 0 } },
+    // its random tears come from the item's onUpdate hook
+    { id: "rainbow-baby", name: "Rainbow Baby", sprite: "rainbow-baby", behaviour: 'follower', params: { r: 16, speed: 300, flying: true, hp: 0, blockShots: false, life: 0 } }
   ])
 
 })(window.IS)

@@ -36,17 +36,25 @@
         "js/engine/pool.js",
         "js/engine/floor.js",
         "js/engine/interact.js",
+        "js/engine/portals.js",
+        "js/engine/machines.js",
         "js/engine/progress.js",
-        "js/engine/ctx.js"
+        "js/engine/ctx.js",
+        "js/engine/characters.js"
       ]
     },
     {
       "id": "P2",
       "title": "Render + UI + boot",
       "files": [
+        "js/render/art-kit.js",
         "js/render/sprites-core.js",
+        "js/render/sprites-machines.js",
         "js/render/sprites-enemies.js",
+        "js/render/sprites-enemies-2.js",
         "js/render/sprites-bosses.js",
+        "js/render/sprites-bosses-2.js",
+        "js/render/doors.js",
         "js/render/sprites-items.js",
         "js/render/backdrop.js",
         "js/render/render.js",
@@ -94,6 +102,8 @@
         "js/data/bosses-3.js",
         "js/data/bosses-4.js",
         "js/data/floors.js",
+        "js/data/tuning-enemies.js",
+        "js/data/tuning-bosses.js",
         "js/data/rooms-basement.js",
         "js/data/rooms-caves.js",
         "js/data/rooms-depths.js",
@@ -112,6 +122,8 @@
         "tools/cdp.mjs",
         "tools/validate-content.mjs",
         "tools/smoke.mjs",
+        "tools/enemy-ai.mjs",
+        "tools/systems-check.mjs",
         "tools/balance.mjs",
         "tools/card-shot.js"
       ]

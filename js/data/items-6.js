@@ -703,7 +703,7 @@
       dlc: 'afterbirth+',
       pools: ['devil', 'greed-devil', 'ultra-secret'],
       tags: ['tears', 'range', 'offensive', 'devil'],
-      stats: { range: 15.2 },
+      stats: { range: 120 },
       tearFlags: ['piercing'],
       hooks: {
         onTearHit: function (p, tear) {
@@ -796,6 +796,7 @@
       dlc: 'afterbirth+',
       pools: ['treasure', 'greed-treasure', 'crane-game'],
       tags: ['tears', 'utility'],
+      // APPROXIMATE: input.shoot() already blends held arrow keys into 8 directions; there is no analog/mouse aim
       stats: { tears: 0.35 },
       hooks: {
         // APPROXIMATED: 360-degree aiming is an input-layer feature and there is
@@ -1739,6 +1740,7 @@
       dlc: 'afterbirth+',
       pools: ['treasure', 'battery-bum', 'greed-treasure', 'crane-game'],
       tags: ['tears', 'offensive'],
+      // the engine reads the 'chain' tear flag (tears.js chainArc)
       tearFlags: ['chain']
     },
 
@@ -1877,6 +1879,7 @@
       dlc: 'afterbirth+',
       pools: ['devil', 'angel'],
       tags: ['devil', 'angel', 'utility'],
+      // APPROXIMATE: floor/room generation never reads run.flags.duality, so only the chance stats apply
       stats: { devilChance: 0.06, angelChance: 0.06 },
       hooks: {
         // APPROXIMATED: pairing the two doors is floor-generation work. The item
@@ -1918,6 +1921,7 @@
       dlc: 'afterbirth+',
       pools: ['angel', 'greed-angel'],
       tags: ['angel', 'utility'],
+      // APPROXIMATE: floor/room generation never reads run.flags.forceAngel, so only angelChance applies
       stats: { angelChance: 1 },
       hooks: {
         onInit: function (p, ctx) {
@@ -2046,7 +2050,7 @@
           if (!tear || !tear.littleHorn || !enemy || enemy.dead) return
           tear.littleHorn = false
           quake(ctx, 6, 0.25)
-          noise(ctx, 'fistSlam' === 'x' ? 'beep' : 'rock-break')
+          noise(ctx, 'rock-break')
           if (enemy.boss) hurt(enemy, 36, ctx)
           else slay(enemy, ctx)
         }
@@ -2930,6 +2934,8 @@
       dlc: 'afterbirth+',
       pools: ['treasure', 'greed-treasure'],
       tags: ['tears', 'range', 'offensive'],
+      // the engine reads the 'pop' tear flag: eyeballs bounce off walls and rocks and live long
+      // APPROXIMATE: tears do not bounce off each other
       tearFlags: ['pop']
     },
 
@@ -3014,12 +3020,10 @@
       mult: { tears: 0.264, damage: 1.5 },
       tearFlags: ['splitting'],
       hooks: {
-        // the arc: tears are given height and made to fall, which is the tear
-        // shape js/engine/tears.js already understands
+        // the arc: tears.js lobs a tear in a parabola when tear.lob is set
         onTearFire: function (p, tear) {
           if (!tear) return
-          tear.falls = true
-          tear.height = (typeof tear.height === 'number' ? tear.height : 0) + 26
+          tear.lob = true
           if (typeof tear.r === 'number') tear.r *= 1.35
         }
       }
@@ -3110,7 +3114,8 @@
           cache(p).schoolbag = true
           if (Array.isArray(p.active) && p.active.length < 2) p.active.push(null)
         },
-        onRemove: function (p) { cache(p).schoolbag = false }
+        onRemove: function (p) { cache(p).schoolbag = false },
+        // the swap key (Z) is handled by js/engine/player.js (IS.swapActives)
       }
     },
 
@@ -3376,10 +3381,10 @@
           c.hallowedAura = inside
           recalc(p)
         },
-        onStats: function (p, s) {
+        onStats: function (p, s, mult) {
           if (!cache(p).hallowedAura || !s) return
-          if (typeof s.tears === 'number') s.tears *= 2.5
-          if (typeof s.damage === 'number') s.damage *= 1.2
+          mult.tears *= 2.5
+          mult.damage *= 1.2
         },
         onTearFire: function (p, tear) {
           if (cache(p).hallowedAura) addFlag(tear, 'homing')

@@ -6,7 +6,7 @@
   RNG.prototype.range = function (a, b) { return a + this.next() * (b - a) }
   RNG.prototype.pick = function (a) { return a && a.length ? a[this.int(a.length)] : undefined }
   RNG.prototype.pickWeighted = function (a, w) { if (!a || !a.length) return undefined; let sum = w.reduce((n, x) => n + Math.max(0, x || 0), 0); if (!sum) return this.pick(a); let r = this.next() * sum; for (let i = 0; i < a.length; i++) { r -= Math.max(0, w[i] || 0); if (r <= 0) return a[i] } return a[a.length - 1] }
-  RNG.prototype.shuffle = function (a) { const out = (a || []).slice(); for (let i = out.length - 1; i; i--) { const j = this.int(i + 1); [out[i], out[j]] = [out[j], out[i]] } return out }
+  RNG.prototype.shuffle = function (a) { const out = (a || []).slice(); for (let i = out.length - 1; i > 0; i--) { const j = this.int(i + 1); [out[i], out[j]] = [out[j], out[i]] } return out }
   RNG.prototype.chance = function (p) { return this.next() < Math.max(0, Math.min(1, p || 0)) }
   RNG.prototype.fork = function () { return new RNG((this.next() * 4294967296) >>> 0) }
   RNG.prototype.state = function () { return this._state >>> 0 }

@@ -1,7 +1,7 @@
 ;(function (IS) {
   'use strict'
   var types = ['start','treasure','shop','boss','secret','super-secret','ultra-secret','curse','sacrifice','arcade','library','devil','angel','challenge','boss-rush','dice','planetarium','vault','bedroom','dirty-bedroom','black-market','miniboss','error','crawlspace','boss-double','mineshaft','chest-room','ascent-mirror']
-  var shapeMap={boss:'2x2','boss-rush':'2x2',challenge:'2x1','boss-double':'2x1',shop:'2x1','black-market':'2x1',mineshaft:'1x2'}
+  var shapeMap={boss:'2x2','boss-rush':'2x2',challenge:'2x1','boss-double':'2x1','black-market':'2x1',mineshaft:'1x2'}
   var dims={'1x1':[13,7],'2x1':[26,7],'1x2':[13,14],'2x2':[26,14]}
   function put(g,x,y,ch){if(y>=0&&y<g.length&&x>=0&&x<g[0].length)g[y][x]=ch}
   function layout(type,shape,v){

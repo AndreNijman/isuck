@@ -51,8 +51,18 @@ current Chromium-based browsers.
 ```bash
 node tools/validate-content.mjs
 node tools/smoke.mjs
+node tools/item-check.mjs
+node tools/systems-check.mjs
+node tools/char-check.mjs
+node tools/enemy-ai.mjs
+node tools/playtest.mjs --seeds 1,2,3
 node tools/balance.mjs --runs 200
 ```
+
+`item-check`, `systems-check`, `char-check` and `enemy-ai` exercise item,
+system, character and enemy behaviour directly. `playtest` puts a bot in a real
+browser and fails on any room or boss it can't clear in time or that hits too
+hard; `--floor`, `--boss` and `--char` pick what it plays.
 
 The validator audits registry coverage, schemas, cross-references, room shapes,
 script wiring, and deterministic random-number usage. The smoke test boots the

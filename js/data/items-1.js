@@ -138,6 +138,21 @@
     }
   }
 
+  // Marks rooms of the current floor as known on the minimap (HUD draws any
+  // room with visited || mapKnown). `kind`: 'icons' = special rooms only
+  // (Compass), 'layout' = every non-secret room (Treasure Map), 'secret' =
+  // secret and super-secret rooms (Spelunker Hat).
+  function revealRooms (ctx, floor, kind) {
+    var f = floor || (ctx && ctx.run && ctx.run.floor)
+    if (!f || !Array.isArray(f.rooms)) return
+    for (var i = 0; i < f.rooms.length; i++) {
+      var r = f.rooms[i]
+      if (!r) continue
+      var secret = r.type === 'secret' || r.type === 'super-secret'
+      if (kind === 'secret' ? secret : kind === 'icons' ? (!secret && r.type !== 'normal' && r.type !== 'start') : !secret) r.mapKnown = true
+    }
+  }
+
   // Fires `fn` once every `interval` seconds, keyed on a cache slot.
   function everyTick (p, dt, key, interval, fn) {
     var c = cacheOf(p)
@@ -478,7 +493,7 @@
       // The reference stats block omits the damage and luck lines the
       // description prints; the description is the specification, so both are
       // declared here. range/shotSpeed already contain the printed multipliers.
-      stats: { damage: 1.5, range: 256, shotSpeed: 0.6, luck: -1 },
+      stats: { damage: 1.5, range: 120, shotSpeed: 0.6, luck: -1 },
       tearFlags: ['boomerang']
     },
 
@@ -493,7 +508,7 @@
       dlc: 'rebirth',
       pools: ['treasure', 'greed-treasure'],
       tags: ['tears', 'range', 'stat-down'],
-      stats: { tears: 1.75, range: -82 }
+      stats: { tears: 1.75, range: -120 }
     },
 
     {
@@ -619,7 +634,7 @@
       pools: ['treasure', 'greed-treasure', 'greed-boss', 'ultra-secret'],
       tags: ['damage', 'speed', 'range', 'hearts', 'mushroom'],
       transform: 'fun-guy',
-      stats: { damage: 0.3, range: 80, speed: 0.3 },
+      stats: { damage: 0.3, range: 200, speed: 0.3 },
       mult: { damage: 1.5 },
       grant: { maxHearts: 2, heal: 24 },
       hooks: {
@@ -676,7 +691,7 @@
       pools: ['treasure', 'boss', 'demon-beggar', 'greed-boss'],
       tags: ['speed', 'range', 'syringe'],
       transform: 'spun',
-      stats: { range: 80, speed: 0.3 }
+      stats: { range: 200, speed: 0.3 }
     },
 
     {
@@ -775,9 +790,13 @@
       dlc: 'rebirth',
       pools: ['shop', 'beggar', 'crane-game'],
       tags: ['utility'],
-      // 'seeMinimap' is the icon-level reveal; Treasure Map takes
-      // 'fullMinimap', which is the layout-level one.
-      flags: ['seeMinimap']
+      // Nothing in the engine reads 'seeMinimap', so the hooks mark the rooms.
+      flags: ['seeMinimap'],
+      hooks: {
+        onInit: function (p, ctx) { revealRooms(ctx, null, 'icons') },
+        onNewFloor: function (p, floor, ctx) { revealRooms(ctx, floor, 'icons') },
+        onRoomEnter: function (p, room, ctx) { revealRooms(ctx, null, 'icons') }
+      }
     },
 
     {
@@ -890,7 +909,7 @@
       pools: ['boss', 'golden-chest', 'moms-chest', 'greed-boss', 'old-chest'],
       tags: ['range', 'fly'],
       transform: 'mom',
-      stats: { range: 80 },
+      stats: { range: 200 },
       hooks: {
         onInit: function (p, ctx) {
           var c = cacheOf(p)
@@ -916,7 +935,7 @@
       pools: ['boss', 'moms-chest', 'greed-boss', 'ultra-secret', 'old-chest'],
       tags: ['range', 'offensive'],
       transform: 'mom',
-      stats: { range: 80 },
+      stats: { range: 200 },
       hooks: {
         // 12 damage twice a second = the stated 24/s.
         onUpdate: function (p, dt, ctx) {
@@ -940,7 +959,7 @@
       pools: ['boss', 'moms-chest', 'greed-boss', 'ultra-secret', 'old-chest'],
       tags: ['range', 'hearts'],
       transform: 'mom',
-      stats: { range: 110 },
+      stats: { range: 300 },
       hooks: {
         onInit: function (p, ctx) {
           var c = cacheOf(p)
@@ -1570,7 +1589,12 @@
       dlc: 'rebirth',
       pools: ['shop', 'beggar'],
       tags: ['utility'],
-      flags: ['fullMinimap']
+      flags: ['fullMinimap'],
+      hooks: {
+        onInit: function (p, ctx) { revealRooms(ctx, null, 'layout') },
+        onNewFloor: function (p, floor, ctx) { revealRooms(ctx, floor, 'layout') },
+        onRoomEnter: function (p, room, ctx) { revealRooms(ctx, null, 'layout') }
+      }
     },
 
     {
@@ -1769,11 +1793,8 @@
       dlc: 'rebirth',
       pools: ['shop', 'battery-bum', 'greed-shop', 'crane-game'],
       tags: ['battery', 'charge', 'utility'],
-      // Engine-owned, not a no-op: ARCHITECTURE.md §4 gives every active slot a
-      // `batteryCharge` field alongside `charge`/`maxCharge`, and IS.addCharge
-      // is the single funnel that fills it. Overcharge therefore belongs to
-      // js/engine/player.js keyed on this id; a hook here could only duplicate
-      // it and would fight the engine's own clamping.
+      // Engine-handled: IS.addCharge in js/engine/player.js overcharges active
+      // slots when this id is held, so no hook is needed here.
       hooks: {}
     },
 
@@ -1942,7 +1963,7 @@
       pools: ['treasure', 'greed-boss'],
       tags: ['speed', 'range', 'mushroom'],
       transform: 'fun-guy',
-      stats: { range: 120, speed: 0.3 },
+      stats: { range: 200, speed: 0.3 },
       hooks: {
         // Size down is a smaller hitbox — the part of it that matters.
         onInit: function (p) {
@@ -2507,6 +2528,9 @@
       tags: ['utility', 'defensive'],
       flags: ['seeSecretRooms', 'seeMinimap'],
       hooks: {
+        onInit: function (p, ctx) { revealRooms(ctx, null, 'secret') },
+        onNewFloor: function (p, floor, ctx) { revealRooms(ctx, floor, 'secret') },
+        onRoomEnter: function (p, room, ctx) { revealRooms(ctx, null, 'secret') },
         // APPROXIMATED: nothing in the damage source is guaranteed to say "this
         // fell from the ceiling", so the immunity keys off whichever marker the
         // projectile carries — a height/falls field or an explicit kind.

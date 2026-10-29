@@ -101,6 +101,13 @@ function checkCollectible (d, label) {
   if (d.kind === 'active' && d.charge == null) warn(w, 'active item has no charge')
   if (d.unlock && IS.achievementsById && !IS.achievementsById[d.unlock]) err(w, `unlock "${d.unlock}" is not an achievement`)
   if (!d.name) err(w, 'no name')
+  // one displayed range unit is 80 (6.5 tiles of base range is 520): the info text and stats.range must agree
+  const rng = d.stats && d.stats.range
+  const shown = /([↑↓])\s*([+-]?\d+(?:\.\d+)?)\s*Range(?!\s*multiplier)/i.exec(d.info || '')
+  if (rng != null && shown) {
+    let n = parseFloat(shown[2]); if (shown[1] === '↓' && n > 0) n = -n
+    if (Math.abs(rng - n * 80) > 1) err(w, `stats.range ${rng} does not match "${shown[0]}" (expected ${n * 80})`)
+  }
 }
 
 for (const d of IS.items || []) checkCollectible(d, 'item')
@@ -172,6 +179,109 @@ for (const d of IS.rooms || []) {
   for (const f of d.floors || []) {
     if (f !== '*' && IS.floors.length && !IS.floorsById[f]) warn(w, `floors entry "${f}" is not a floor id`)
   }
+}
+
+// Default (combat) rooms must play like Isaac rooms: doors stay usable, every
+// cell is reachable from every door, enemies do not start on top of a door.
+// Grid characters a ground walker cannot cross (spikes count: nobody should have
+// to take damage just to reach a door or an enemy).
+const ROOM_SOLID = new Set('#xXMBPGRCOFfTKLVHSs'.split(''))
+const DEFAULT_ENEMY_CAP = { '1x1': 7, '2x1': 9, '1x2': 9, '2x2': 12 }
+const layoutKeys = new Map()
+for (const d of IS.rooms || []) {
+  if (d.type !== 'default') continue
+  const shape = IS.SHAPES[d.shape]
+  if (!shape || shape.missing || !Array.isArray(d.layout) || d.layout.length !== shape.h) continue
+  if (d.layout.some(r => typeof r !== 'string' || r.length !== shape.w)) continue
+  const w = `room ${d.id}`
+  const { w: W, h: H } = shape
+  const legend = d.legend || {}
+  const enemyAt = (r, c) => legend[d.layout[r][c]]
+  const cellsX = Math.round(W / 13)
+  const cellsY = Math.round(H / 7)
+  const doors = []
+  for (let i = 0; i < cellsX; i++) { doors.push({ r: 0, c: i * 13 + 6, vert: true }); doors.push({ r: H - 1, c: i * 13 + 6, vert: true }) }
+  for (let i = 0; i < cellsY; i++) { doors.push({ r: i * 7 + 3, c: 0, vert: false }); doors.push({ r: i * 7 + 3, c: W - 1, vert: false }) }
+  let enemies = 0
+  let bad = false
+  for (let r = 0; r < H && !bad; r++) {
+    for (let c = 0; c < W; c++) {
+      const ch = d.layout[r][c]
+      if (enemyAt(r, c)) enemies++
+      for (const door of doors) {
+        const clear = door.vert ? (Math.abs(c - door.c) <= 1 && Math.abs(r - door.r) <= 2) : (Math.abs(r - door.r) <= 1 && Math.abs(c - door.c) <= 2)
+        if (clear && ROOM_SOLID.has(ch)) { err(w, `"${ch}" at row ${r} col ${c} blocks the door at row ${door.r} col ${door.c}`); bad = true; break }
+        if (enemyAt(r, c) && Math.abs(r - door.r) + Math.abs(c - door.c) <= 2) { err(w, `enemy "${ch}" at row ${r} col ${c} starts within 2 cells of the door at row ${door.r} col ${door.c}`); bad = true; break }
+      }
+      if (bad) break
+    }
+  }
+  if (bad) continue
+  if (enemies < 2) err(w, `only ${enemies} enemies; a default room needs at least 2`)
+  if (enemies > (DEFAULT_ENEMY_CAP[d.shape] || 12)) err(w, `${enemies} enemies is too many for a ${d.shape} room`)
+  const walk = (r, c) => !ROOM_SOLID.has(d.layout[r][c])
+  const flood = (sr, sc, seen) => {
+    const q = [[sr, sc]]
+    seen.add(sr * 1000 + sc)
+    for (let k = 0; k < q.length; k++) {
+      const [r, c] = q[k]
+      for (const [dr, dc] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        const R = r + dr
+        const C = c + dc
+        if (R < 0 || C < 0 || R >= H || C >= W || !walk(R, C) || seen.has(R * 1000 + C)) continue
+        seen.add(R * 1000 + C)
+        q.push([R, C])
+      }
+    }
+    return q
+  }
+  const reach = new Set()
+  flood(doors[0].r, doors[0].c, reach)
+  for (const door of doors) {
+    if (!reach.has(door.r * 1000 + door.c)) { err(w, `door at row ${door.r} col ${door.c} cannot reach the door at row ${doors[0].r} col ${doors[0].c}`); bad = true; break }
+  }
+  if (bad) continue
+  const all = new Set(reach)
+  let reported = 0
+  for (let r = 0; r < H; r++) {
+    for (let c = 0; c < W; c++) {
+      if (!walk(r, c) || all.has(r * 1000 + c)) continue
+      const pocket = flood(r, c, all)
+      const ground = pocket.find(([pr, pc]) => { const id = enemyAt(pr, pc); return id && !(IS.enemiesById[id] && IS.enemiesById[id].flying) })
+      const flyer = pocket.some(([pr, pc]) => enemyAt(pr, pc))
+      if (ground) { if (reported++ < 3) err(w, `ground enemy at row ${ground[0]} col ${ground[1]} is in a pocket no door can reach`) }
+      else if (!flyer) { if (reported++ < 3) err(w, `walkable pocket at row ${r} col ${c} is sealed off and holds no flyer`) }
+    }
+  }
+  // theme: enemies should come from the pool of every floor the room is used on
+  for (const f of d.floors || []) {
+    const fd = IS.floorsById && IS.floorsById[f]
+    if (!fd || !fd.enemyPool) continue
+    for (const id of Object.values(legend)) if (!fd.enemyPool.includes(String(id))) err(w, `"${id}" is not in the enemyPool of floor ${f}`)
+  }
+  layoutKeys.set(d.layout.join('|') + JSON.stringify(legend), d.id)
+}
+// every real floor needs enough hand-made rooms of each size to avoid repeats
+{
+  const need = { '1x1': 12, '2x1': 1, '1x2': 1, '2x2': 1 }
+  for (const f of IS.floors || []) {
+    if (/^greed-/.test(f.id)) continue
+    const have = {}
+    for (const d of IS.rooms || []) if (d.type === 'default' && (d.floors || []).includes(f.id)) have[d.shape] = (have[d.shape] || 0) + 1
+    for (const [shape, min] of Object.entries(need)) if ((have[shape] || 0) < min) err(`floor ${f.id}`, `only ${have[shape] || 0} default ${shape} rooms, needs ${min}`)
+  }
+  // every enemy in a floor's pool must actually show up: at least two default rooms of that floor use it
+  for (const f of IS.floors || []) {
+    if (/^greed-/.test(f.id)) continue
+    const uses = {}
+    for (const d of IS.rooms || []) {
+      if (d.type !== 'default' || !(d.floors || []).includes(f.id)) continue
+      for (const id of new Set(Object.values(d.legend || {}))) uses[id] = (uses[id] || 0) + 1
+    }
+    for (const id of f.enemyPool || []) if ((uses[id] || 0) < 2) err(`floor ${f.id}`, `pool enemy "${id}" appears in only ${uses[id] || 0} default rooms, needs 2`)
+  }
+  const defaults = (IS.rooms || []).filter(d => d.type === 'default')
+  if (layoutKeys.size < defaults.length) err('rooms', `${defaults.length - layoutKeys.size} default rooms are exact duplicates of another`)
 }
 
 for (const d of IS.floors || []) {
@@ -309,6 +419,21 @@ if (IS.sprites) {
     for (const t of [{ frame: 0, time: 0, dir: 'down' }, { frame: 3, time: 1.5, dir: 'up', hurt: 1, hp01: 0.4, variant: 1, flip: true, charge: 0.5 }]) {
       try { fn(g, 48, t) } catch (e) { err(`sprite ${name}`, `threw: ${e.message}`); break }
     }
+  }
+}
+
+// no non-placeholder item may be dead: it needs stats, mult, tearFlags, familiars, grant, flags or hooks
+// (or be handled by name inside js/engine/*.js, e.g. the-ludovico-technique). item-235 is intentionally inert.
+{
+  const DEAD_OK = new Set(['item-43', 'item-61', 'item-235', 'item-648', 'item-662', 'item-666', 'item-718'])
+  const engineSrc = fs.readdirSync(path.join(ROOT, 'js/engine')).filter(f => f.endsWith('.js'))
+    .map(f => fs.readFileSync(path.join(ROOT, 'js/engine', f), 'utf8')).join('\n')
+  for (const d of IS.items) {
+    if (DEAD_OK.has(d.id)) continue
+    const live = !!(d.stats || d.mult || d.grant || (d.flags && d.flags.length) ||
+      (d.tearFlags && d.tearFlags.length) || (d.familiars && d.familiars.length) ||
+      (d.hooks && Object.keys(d.hooks).length))
+    if (!live && !engineSrc.includes(`'${d.id}'`)) err(`item ${d.id}`, 'has no effect (no stats/mult/tearFlags/familiars/grant/flags/hooks)')
   }
 }
 

@@ -127,15 +127,26 @@ try {
   ok(graphInfo.startDoors > 0, 'the starting room has an exit', JSON.stringify(graphInfo))
   ok(graphInfo.reached === graphInfo.total && graphInfo.reciprocal && !graphInfo.dangling,
     'the generated floor is connected by reciprocal doors', JSON.stringify(graphInfo))
-  const cameraFits = await page.evaluate(`
-    const run = IS.state.run
-    return run.floor.rooms.every(room => {
-      IS.updateCamera(room, run.player, 1/60)
-      return (room.pxW + IS.WALL * 2) * IS.camera.zoom <= IS.VIEW_W + 0.01 &&
-        (room.pxH + IS.WALL * 2) * IS.camera.zoom <= IS.VIEW_H + 0.01
+  // Big rooms scroll like Isaac's: the camera keeps a readable zoom and follows
+  // the player, so the check is that wherever the player stands in any room, at
+  // any door, the player is on screen.
+  const cameraFollows = await page.evaluate(`
+    const run = IS.state.run, saved = { x: run.player.x, y: run.player.y }
+    const VW = IS.VIEW_W, VH = IS.VIEW_H
+    const ok = run.floor.rooms.every(room => {
+      const spots = room.doors.map(d => ({ x: d.x, y: d.y })).concat([{ x: 0, y: 0 }, { x: room.pxW, y: room.pxH }, { x: room.pxW / 2, y: room.pxH / 2 }])
+      return spots.every(s => {
+        run.player.x = s.x; run.player.y = s.y
+        IS.camera.roomIndex = -99
+        IS.updateCamera(room, run.player, 1/60)
+        const p = IS.worldToScreen(s.x, s.y)
+        return IS.camera.zoom >= 0.8 && p.x >= -1 && p.y >= -1 && p.x <= VW + 1 && p.y <= VH + 1
+      })
     })
+    run.player.x = saved.x; run.player.y = saved.y; IS.camera.roomIndex = -99
+    return ok
   `)
-  ok(cameraFits, 'every generated room fits inside the game viewport')
+  ok(cameraFollows, 'the camera keeps the player and every door on screen in every room')
 
   // ------------------------------------------------------- 3. input and combat
   const before = await page.evaluate('JSON.stringify({x: IS.state.run.player.x, y: IS.state.run.player.y})')
