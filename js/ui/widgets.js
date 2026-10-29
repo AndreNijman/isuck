@@ -27,7 +27,8 @@
     if (!g) return; o=o||{}; var size=o.size||22
     g.save(); g.font=(o.weight||'normal')+' '+size+'px "Courier New", monospace'; g.textAlign=o.align||'left'; g.textBaseline=o.baseline||'middle'
     g.fillStyle=o.colour||C.bone
-    if(o.shadow!==false){g.shadowColor=o.shadowColour||C.dark;g.shadowBlur=o.shadowBlur||0;g.shadowOffsetX=2;g.shadowOffsetY=2}
+    var col=String(o.colour||C.bone),dk=/^#[0-9a-f]{6}$/i.test(col)&&(parseInt(col.slice(1,3),16)*.3+parseInt(col.slice(3,5),16)*.59+parseInt(col.slice(5,7),16)*.11)<110
+    if(o.shadow!==false&&!(dk&&o.shadow===undefined)){g.shadowColor=o.shadowColour||C.dark;g.shadowBlur=o.shadowBlur||0;g.shadowOffsetX=2;g.shadowOffsetY=2}
     var s=String(str==null?'':str); if(o.maxWidth) g.fillText(s,x,y,o.maxWidth); else g.fillText(s,x,y)
     g.restore()
   }
