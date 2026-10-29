@@ -818,6 +818,7 @@
     }
 
     ctx.banner = function (title, subtitle) {
+      if (typeof IS.pushStreak === 'function') IS.pushStreak(run, title, subtitle)
       if (IS.hud && typeof IS.hud.pickupBanner === 'function') IS.hud.pickupBanner(title, subtitle)
     }
 

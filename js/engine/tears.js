@@ -84,7 +84,7 @@
       if(p.boomerang&&!p.turned&&p.life<p.life0*.55){p.turned=true;const n=IS.norm(player.x-p.x,player.y-p.y),sp=IS.len(p.vx,p.vy);p.vx=n.x*sp;p.vy=n.y*sp;p.hitSet=null}
       if(p.friendly&&p.flags.has('continuum')&&!IS.inBounds(room,p.x,p.y,p.r)){p.x=(p.x+room.pxW)%room.pxW;p.y=(p.y+room.pxH)%room.pxH}
       p.life-=dt
-      if(p.life0&&p.z!=null){const k=p.life/p.life0;p.z=p.lob?TEAR_Z+Math.sin((1-k)*Math.PI)*90:k<.22?(p.friendly?TEAR_Z:14)*(k/.22):(p.friendly?TEAR_Z:14)}
+      if(p.life0&&p.z!=null){const k=Math.max(0,p.life/p.life0),Z=p.friendly?TEAR_Z:14;p.z=p.lob?TEAR_Z*k+Math.sin((1-k)*Math.PI)*90:k<.22?Z*(1-(1-k/.22)**2):Z} // the last fifth of the range is an accelerating drop that ends at z=0
       if(p.friendly){for(const e of IS.roomEnemies(room)){if(e.hidden||e.spawnT>0&&!e.boss)continue;if(IS.entityHit(p,e)){if(p.hitSet&&p.hitSet.has(e))continue;IS.damageEnemy(e,p.dmg,{src:p,flags:p.flags},ctx);IS.onTearImpact(p,e,ctx);splash(p,ctx,'#a8d4f0');if(!p.flags?.has('piercing')){p.dead=true;break}(p.hitSet||(p.hitSet=new Set())).add(e)}}}
       else if(IS.entityHit(p,player)){if(IS.damagePlayer(player,p.dmg,p,ctx))IS.knockback(player,p.x-p.vx,p.y-p.vy,380);p.dead=true;splash(p,ctx,'#c74a3a')}
       if(!p.dead&&p.bounce>0&&!IS.inBounds(room,p.x,p.y,p.r)){p.bounce--;if(p.x<p.r||p.x>room.pxW-p.r)p.vx=-p.vx;if(p.y<p.r||p.y>room.pxH-p.r)p.vy=-p.vy;IS.clampToRoom(room,p)}

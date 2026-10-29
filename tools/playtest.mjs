@@ -153,6 +153,8 @@ IS.input.move = function () { return window.__mv || { x: 0, y: 0 } }
 IS.input.shoot = function () { return window.__sh || { x: 0, y: 0 } }
 window.__play = function (seconds) {
   var steps = Math.round(seconds / IS.DT), run = IS.state.run
+  // the bot steps through the boss versus card and the door slide the way a player waits them out
+  IS.state.transition = null; if (run.bossIntro) IS.finishBossIntro(run, IS.state.ctx)
   for (var i = 0; i < steps; i++) {
     if (IS.state.screen !== 'game' || !run.room) break
     window.__bot(); IS.step(IS.DT)

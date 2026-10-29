@@ -58,7 +58,7 @@
     case'soul':IS.addSoulHearts(p,x.amount||2);return true
     case'black':IS.addBlackHearts(p,x.amount||2);return true
     case'battery':return takeBattery(p,x)
-    case'item':{const ok=IS.giveItem(p,x.id,{ctx});if(ok){const d=IS.itemsById[x.id];if(d&&ctx.banner)ctx.banner(d.name||x.id,d.desc||d.description||d.quote||'')}return ok}
+    case'item':{const ok=IS.giveItem(p,x.id,{ctx});if(ok){const d=IS.itemsById[x.id];IS.holdPose(p,x.id);if(d&&ctx.banner)ctx.banner(d.name||x.id,d.desc||d.description||d.quote||'')}return ok}
     case'trinket':return takeTrinket(p,x,ctx)
     case'card':case'rune':return IS.givePocket(p,x.kind,x.id||ctx.rollCard())
     case'pill':return IS.givePocket(p,'pill',x.id||ctx.rollPill())
@@ -123,7 +123,7 @@
     return IS.openChest(room,x,ctx,p)}
 
   // ---- doors, trapdoors, deals --------------------------------------------
-  IS.tryDoor=(p,d,ctx)=>{if(d.hidden)return false;if(!d.open){const room=ctx.room||ctx.run&&ctx.run.room;if(room&&!room.cleared)return false;if(d.locked&&!p.goldenKey){if(!p.keys)return false;p.keys--}d.locked=false;d.open=true;IS.fireHook(p,'onDoorOpen',[d],ctx)}if(d.target!=null)IS.enterRoom(ctx.run,d.target,IS.DIR_OPPOSITE[d.dir],ctx);return true}
+  IS.tryDoor=(p,d,ctx)=>{if(d.hidden)return false;if(!d.open){const room=ctx.room||ctx.run&&ctx.run.room;if(room&&!room.cleared)return false;if(d.locked&&!p.goldenKey){if(!p.keys)return false;p.keys--}d.locked=false;d.open=true;IS.fireHook(p,'onDoorOpen',[d],ctx)}if(d.target!=null){const from=ctx.run.roomIndex;IS.enterRoom(ctx.run,d.target,IS.DIR_OPPOSITE[d.dir],ctx);if(ctx.run.roomIndex!==from)IS.beginTransition(d.dir,from,ctx.run.roomIndex)}return true}
   IS.buy=(room,e,ctx)=>{if(e.sold)return false;const c=IS.priceOf(ctx.player,e);if(c&&!c.ok)return false;if(c)IS.pay(ctx.player,c);e.sold=true;if(e.itemId)IS.giveItem(ctx.player,e.itemId,{ctx});else IS.tryTakePickup(ctx.player,e,ctx);IS.fireHook(ctx.player,'onPurchase',[e],ctx);return true}
   IS.donate=(room,m,n,ctx)=>{n=Math.min(n||1,ctx.player.coins);ctx.player.coins-=n;m.coins=(m.coins||0)+n;IS.progress.record('donation',{amount:n},ctx.run);return n}
   IS.sacrifice=(room,ctx)=>IS.damagePlayer(ctx.player,2,{kind:'sacrifice'},ctx)

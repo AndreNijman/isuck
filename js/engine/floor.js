@@ -240,6 +240,7 @@
   IS.startFloor=(run,id,ctx)=>{run.floor=IS.generateFloor(run,id,{});run.curses=run.floor.curses;run.floor.damageStart=run.stats?.damageTaken||0;run.roomIndex=run.floor.startIndex;run.room=run.floor.rooms[run.roomIndex];run.room.visited=run.room.mapKnown=true;for(const d of run.room.doors){const n=d.target!=null&&run.floor.rooms[d.target];if(n&&!d.hidden)n.mapKnown=true}
     const p=run.player;if(p){p.x=run.room.pxW/2;p.y=run.room.pxH/2;p.vx=p.vy=0}
     IS.refreshCtx(ctx,run.room,0);IS.buildRoomContents(run.room,ctx);IS.fireHook(run.player,'onNewFloor',[run.floor],ctx);IS.applyMapFlags(run)
+    if(IS.clearStage)IS.clearStage(run);const fd=run.floor.def||{};if(ctx&&ctx.banner)ctx.banner(fd.name||run.floor.id||'',fd.sub||fd.subtitle||'')
     if(run.curses&&ctx&&ctx.banner)for(const k in IS.CURSE_NAMES)if(run.curses&k)ctx.banner(IS.CURSE_NAMES[k],'')
     IS.audio?.setFloorMusic(run.floor.def);return run.floor}
 })(typeof window !== 'undefined' ? (window.IS = window.IS || {}) : (globalThis.IS = globalThis.IS || {}))

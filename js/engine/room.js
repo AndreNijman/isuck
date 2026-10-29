@@ -2084,6 +2084,7 @@
 
     // An already-empty room (start, shop, treasure) counts as cleared on entry.
     IS.checkClear(room, ctx)
+    if (typeof IS.beginBossIntro === 'function') IS.beginBossIntro(run, room)
     return room
   }
 

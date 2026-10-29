@@ -7,6 +7,10 @@
 
   function input () { return IS.input || {} }
   function pressed (name) { var i=input(); return !!(i.pressed && i.pressed(name)) }
+  // menus answer to the arrow keys as well as WASD (arrows are the shoot keys in play)
+  var ARROW={up:'shootUp',down:'shootDown',left:'shootLeft',right:'shootRight'}
+  function nav (name) { return pressed(name) || (!!ARROW[name] && pressed(ARROW[name])) }
+  ui.nav = nav
   function pointer () { return input().mouse || { x:-1, y:-1, down:false } }
   function hit (r, p) { return p.x >= r.x && p.y >= r.y && p.x <= r.x+r.w && p.y <= r.y+r.h }
   function click () { var p=pointer(), v=p.down && !mouseWasDown; mouseWasDown=!!p.down; return v }
@@ -23,25 +27,47 @@
     if (!g) return; o=o||{}; var size=o.size||22
     g.save(); g.font=(o.weight||'normal')+' '+size+'px "Courier New", monospace'; g.textAlign=o.align||'left'; g.textBaseline=o.baseline||'middle'
     g.fillStyle=o.colour||C.bone
-    if(o.shadow!==false){g.shadowColor=o.shadowColour||C.dark;g.shadowBlur=o.shadowBlur||0;g.shadowOffsetX=2;g.shadowOffsetY=2}
+    var col=String(o.colour||C.bone),dk=/^#[0-9a-f]{6}$/i.test(col)&&(parseInt(col.slice(1,3),16)*.3+parseInt(col.slice(3,5),16)*.59+parseInt(col.slice(5,7),16)*.11)<110
+    if(o.shadow!==false&&!(dk&&o.shadow===undefined)){g.shadowColor=o.shadowColour||C.dark;g.shadowBlur=o.shadowBlur||0;g.shadowOffsetX=2;g.shadowOffsetY=2}
     var s=String(str==null?'':str); if(o.maxWidth) g.fillText(s,x,y,o.maxWidth); else g.fillText(s,x,y)
     g.restore()
   }
+  var HAND = 'Georgia, "Times New Roman", serif'
+  // paper pages: torn card with tape, shared look for every screen (IS.hudKit.paper does the drawing)
   ui.panel = function (g,x,y,w,h,o) {
-    if(!g)return;o=o||{};g.save();g.fillStyle=o.fill||C.paper;g.strokeStyle=o.border||C.ink;g.lineWidth=o.line||4
-    g.beginPath();g.moveTo(x+5,y);g.lineTo(x+w-7,y+2);g.lineTo(x+w,y+h-6);g.lineTo(x+3,y+h);g.closePath();g.fill();g.stroke()
-    g.globalAlpha=.13;g.strokeStyle=C.ink;for(var i=14;i<h;i+=19){g.beginPath();g.moveTo(x+8,y+i);g.lineTo(x+w-9,y+i+((i%3)-1)*2);g.stroke()}g.restore()
+    if(!g)return;o=o||{}
+    if(IS.hudKit){IS.hudKit.paper(g,x,y,w,h,{seed:o.seed||((x*7+y*13+w)|0),rot:o.rot==null?-.004:o.rot,fill:o.fill,line:o.line||3.5});if(o.tape!==false){g.save();g.fillStyle='rgba(205,185,135,.7)';g.translate(x+w*.12,y+3);g.rotate(-.45);g.fillRect(-20,-8,40,16);g.restore();g.save();g.fillStyle='rgba(205,185,135,.7)';g.translate(x+w*.88,y+3);g.rotate(.5);g.fillRect(-20,-8,40,16);g.restore()}return}
+    g.save();g.fillStyle=o.fill||C.paper;g.strokeStyle=C.ink;g.lineWidth=4;g.fillRect(x,y,w,h);g.strokeRect(x,y,w,h);g.restore()
   }
+  // dark table the pages lie on, cached per size
+  var tableCache=null,tableKey=''
+  ui.table = function (g,l) {
+    var k=l.w+'x'+l.h
+    if(typeof document!=='undefined'&&(!tableCache||tableKey!==k)){tableCache=document.createElement('canvas');tableCache.width=l.w;tableCache.height=l.h;tableKey=k;var t=tableCache.getContext('2d'),u=l.u
+      t.fillStyle='#1d1512';t.fillRect(0,0,l.w,l.h)
+      for(var i=0;i<14;i++){var y=i*l.h/14;t.fillStyle=i%2?'rgba(60,38,26,.35)':'rgba(10,6,4,.3)';t.fillRect(0,y,l.w,l.h/14);t.fillStyle='rgba(0,0,0,.5)';t.fillRect(0,y,l.w,2*u)}
+      for(i=0;i<70;i++){var x=((Math.sin(i*91.3)+1)/2)*l.w,yy=((Math.sin(i*37.7+2)+1)/2)*l.h;t.strokeStyle='rgba(15,9,6,.5)';t.lineWidth=1.5*u;t.beginPath();t.moveTo(x,yy);t.bezierCurveTo(x+40*u,yy-4*u,x+80*u,yy+5*u,x+150*u,yy);t.stroke()}
+      var gr=t.createRadialGradient(l.cx,l.cy,l.h*.25,l.cx,l.cy,l.w*.62);gr.addColorStop(0,'rgba(0,0,0,0)');gr.addColorStop(1,'rgba(0,0,0,.7)');t.fillStyle=gr;t.fillRect(0,0,l.w,l.h)}
+    if(tableCache)g.drawImage(tableCache,0,0);else{g.fillStyle='#1d1512';g.fillRect(0,0,l.w,l.h)}
+  }
+  // house lettering: fat serif capitals with a heavy ink outline
+  ui.title = function (g,str,x,y,size,o) {
+    o=o||{};if(IS.hudKit){IS.hudKit.text(g,str,x,y,size,{align:o.align||'left',colour:o.colour||C.blood,ink:o.ink||C.ink,rot:o.rot,outline:o.outline==null?Math.max(4,size*.16):o.outline,font:HAND,maxWidth:o.maxWidth});return}
+    ui.text(g,str,x,y,{size:size,weight:'bold',colour:o.colour||C.blood,align:o.align})
+  }
+  // marker highlight under the chosen entry, with a small inked pointer
+  function marker(g,r,seed,colour){g.save();g.fillStyle=colour;g.beginPath();var n=10,i,x,y;for(i=0;i<=n;i++){x=r.x+r.w*i/n;y=r.y+2+Math.sin(seed+i*1.7)*2;i?g.lineTo(x,y):g.moveTo(x,y)}for(i=n;i>=0;i--){x=r.x+r.w*i/n;y=r.y+r.h-2+Math.sin(seed*1.3+i*2.1)*2;g.lineTo(x,y)}g.closePath();g.fill();g.lineWidth=3;g.strokeStyle=C.ink;g.lineJoin='round';g.stroke();g.restore()}
   ui.menuItem = function (g,label,r,o) {
-    o=o||{};var hover=hit(r,ui.pointer||pointer()), active=!!o.selected||hover
-    g.save();if(active){g.fillStyle=o.disabled?'#6d6257':C.blood;g.fillRect(r.x,r.y,r.w,r.h);g.strokeStyle=C.ink;g.lineWidth=3;g.strokeRect(r.x+2,r.y+2,r.w-4,r.h-4)}
-    ui.text(g,(active?'› ':'  ')+label,r.x+16,r.y+r.h/2,{size:o.size||22,colour:o.disabled?C.ash:(active?C.bone:C.ink),weight:active?'bold':'normal',maxWidth:r.w-24})
+    o=o||{};var hover=hit(r,ui.pointer||pointer()), active=!!o.selected||hover, size=o.size||22
+    g.save();if(active)marker(g,r,r.x*.01+r.y*.02,o.disabled?'#6d6257':C.blood)
+    ui.text(g,label,r.x+(active?30:18),r.y+r.h/2,{size:size,colour:o.disabled?C.ash:(active?C.bone:(o.colour||C.ink)),weight:active?'bold':'normal',maxWidth:r.w-(active?44:30),shadow:false})
+    if(active){g.fillStyle=C.bone;g.strokeStyle=C.ink;g.lineWidth=2;var cx=r.x+14,cy=r.y+r.h/2;g.beginPath();g.moveTo(cx-6,cy-size*.3);g.lineTo(cx+6,cy);g.lineTo(cx-6,cy+size*.3);g.closePath();g.fill();g.stroke()}
     g.restore();return hover
   }
   ui.button = ui.menuItem
   ui.menu = function (state, items, opts) {
     opts=opts||{};state=state||{};items=items||[];if(state.cursor==null)state.cursor=0
-    var moved=0;if(pressed('up')||pressed('left'))moved=-1;if(pressed('down')||pressed('right'))moved=1
+    var moved=0;if(nav('up')||nav('left'))moved=-1;if(nav('down')||nav('right'))moved=1
     if(moved&&items.length){var start=state.cursor;do{state.cursor=(state.cursor+moved+items.length)%items.length}while(items[state.cursor]&&items[state.cursor].disabled&&state.cursor!==start);sound('menu-move')}
     if(opts.rects){for(var i=0;i<opts.rects.length;i++)if(hit(opts.rects[i],ui.pointer||pointer()))state.cursor=i}
     var choose=pressed('confirm')||(ui.clicked&&opts.rects&&opts.rects[state.cursor]&&hit(opts.rects[state.cursor],ui.pointer||pointer()))

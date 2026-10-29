@@ -1,526 +1,632 @@
 ;(function (IS) {
   'use strict'
-  /* Bespoke boss painters, part 2 (Depths, Womb, Sheol, Dark Room and beyond). */
+  /*
+   * Bespoke boss painters, part 2 (Caves, Depths, Womb, Sheol, Dark Room and
+   * beyond). Same house style as part 1: heavy outline, two-tone chunky
+   * shading lit from the top-left, grimy palettes, slit-pupil lamp-eyes. Shared
+   * helpers come from IS.bossArt (sprites-bosses.js).
+   */
   var A = IS.art, sh = A.sh, mix = A.mix, al = A.al, TAU = Math.PI * 2
-  var reg = A.register
+  var B = IS.bossArt, reg = B.reg, solid = B.solid, plate = B.plate, lamp = B.lamp, gear = B.gear, rivets = B.rivets, gloss = B.gloss
 
-  /* ---- Turds --------------------------------------------------------- */
-  function poop (g, x, y, k, c, o) {
-    var ch = A.ch, br = Math.sin(A.T * 3 + x)
+  /* ---- Turdlet, Turdlings: tar slugs ---------------------------------- */
+  function slug (g, x, y, k, c, ph) {
+    var w = Math.sin(A.T * 3 + ph) * 3, ch = A.ch
     g.save(); g.translate(x, y); g.scale(k, k)
-    A.ball(g, 0, 26, 40, 16, sh(c, -.1)); A.ball(g, 0, 8, 31, 15, c); A.ball(g, 0, -10 + br, 21, 12, sh(c, .06))
-    A.poly(g, [-10, -18 + br, 4, -34 + br + ch * -3, 12, -17 + br], sh(c, .1)); A.line(g, al(sh(c, .35), .6), 2, [-6, -20 + br, 1, -30 + br])
-    A.eye(g, -9, 6, 6.4, { sc: '#efe4cc', col: '#3a2418', lid: .2, lc: c, pu: 1.3 }); A.eye(g, 9, 6, 6.4, { sc: '#efe4cc', col: '#3a2418', lid: .2, lc: c, pu: 1.3 })
-    A.mouth(g, 0, 19, 12, 3 + ch * 9, { n: 4, tl: .5 })
-    if (o && o.worm) A.tent(g, 2, -30 + br, -1.57, 34, 8, '#d4a496', { amp: 6, hi: true })
-    if (o && o.hat) { A.rect(g, -12, -38 + br, 24, 8, '#3a3a52'); A.rect(g, -8, -52 + br, 16, 16, '#4a4a68') }
-    if (o && o.sick) A.flat(g, 22, 12, 5, 4, al('#8aa83a', .7))
+    A.ball(g, 28 + w * .4, 12, 17, 11, sh(c, -.12), { rot: -.2 })
+    A.ball(g, 0, 6, 36, 24, c)
+    A.flat(g, 0, 24, 32, 4, al(sh(c, .35), .6))
+    A.ball(g, 8, -2, 19, 13, sh(c, -.18), { lw: 2.4 })
+    A.line(g, c, 5, [-22, -6, -28, -24 + w]); A.line(g, c, 5, [-14, -10, -14, -28 - w])
+    lamp(g, -28, -27 + w, 5, '#d8e048', { lw: 2 }); lamp(g, -14, -31 - w, 5, '#d8e048', { lw: 2 })
+    A.line(g, '#120a08', 3, [-34, 10, -26, 14 + ch * 3, -20, 11])
+    for (var i = 0; i < 5; i++) A.flat(g, -6 + i * 9, -4 + (i % 2) * 14, 2.4, 2, al('#d8a030', .8))
+    gloss(g, -12, -4, 11, 4)
     g.restore()
   }
-  reg('turdlet', function (g) { poop(g, 0, 4, .85, '#7a5230', { hat: true }); A.flies(g, 3, 48, 4, 2.5, 0) })
-  reg('the-turdlings', function (g) { poop(g, -26, 12, .62, '#7a5230'); poop(g, 26, 12, .62, '#6a4628'); poop(g, 0, -10, .75, '#86603a'); A.flies(g, 5, 52, 4, 2, 0) })
+  reg('turdlet', function (g) { slug(g, 0, 4, 1, '#3e4a34', 0) })
+  reg('the-turdlings', function (g) { slug(g, -26, 18, .6, '#3e4a34', 0); slug(g, 24, 22, .6, '#4a3a44', 1.5); slug(g, 0, -12, .72, '#4a4a2a', 3) })
 
-  /* ---- Teratoma ------------------------------------------------------ */
+  /* ---- Teratoma: egg-jelly brood sac ---------------------------------- */
   reg('teratoma', function (g) {
-    var c = '#d89aa0', ch = A.ch
-    A.blob(g, 0, 2, 44, 40, c, { n: 12, wob: .1, seed: 14 })
-    A.veins(g, 0, 0, 40, '#8a3a4a', 7, 5)
-    for (var i = 0; i < 9; i++) A.line(g, '#2a1a16', 1.4, [-12 + i * 3, -38 + (i % 3), -16 + i * 3.6, -52 + (i % 4) * 2])
-    A.eye(g, -18, -12, 10, { col: '#5a8a4a', lid: .15, lc: c }); A.eye(g, 10, -18, 6, { col: '#4a4a8a', lc: c, lid: .3 }); A.eye(g, 22, 0, 8, { col: '#8a4a3a', lc: c, lid: .2, red: true })
-    A.mouth(g, -4, 14, 25, 8 + ch * 13, { n: 7, tl: .6, tc: '#e8dcc0' })
-    A.ball(g, -34, 20, 8, 5, '#e8e0cc', { rot: .5 }); A.ball(g, 28, 24, 6, 4, '#e8e0cc')
-    A.hand(g, 36, -28, 8, '#d8a898', .6, { curl: .5 })
+    var c = '#b8a0c8', ch = A.ch, i
+    A.blob(g, 0, 2, 45, 41, c, { n: 12, wob: .08, seed: 14 })
+    A.flat(g, 0, 4, 37, 33, al('#6a4a88', .3))
+    var em = [[-28, -12], [-22, 14], [-10, 28], [18, 24], [28, 6], [24, -20], [-4, -30], [-30, 20], [10, -32]]
+    em.forEach(function (e, j) {
+      var bx = e[0], by = e[1] + Math.sin(A.T * 2 + j) * 2
+      A.ball(g, bx, by, 5.4, 4.4, '#2a1a30', { lw: 1.6 }); A.line(g, '#2a1a30', 2.2, [bx + 4, by, bx + 10, by + 3 + Math.sin(A.T * 6 + j) * 2]); A.flat(g, bx - 1.5, by - 1, 1.3, 1.3, '#d8ff7a')
+    })
+    A.ball(g, 0, 2, 18, 16, '#4a2a5a')
+    lamp(g, 0, 2, 10 + ch * 2, '#d8ff7a')
+    for (i = 0; i < 3; i++) A.line(g, al('#ffffff', .4), 1.6, [-30 + i * 8, -28 + i * 3, -22 + i * 8, -34 + i * 2])
+    gloss(g, -22, -24, 12, 5)
   })
 
-  /* ---- The Bloat ----------------------------------------------------- */
+  /* ---- The Bloat: spiked puffer --------------------------------------- */
   reg('the-bloat', function (g) {
-    var c = '#b4c4d2', ch = A.ch, br = Math.sin(A.T * 2.6), k = 1 + br * .03 + ch * .08
-    A.ball(g, 0, 2, 42 * k, 40 / k, c)
-    A.veins(g, 0, 2, 40, '#6a7a9a', 8, 9)
-    A.flat(g, -20, -22, 12, 6, al('#ffffff', .4), -.5)
-    A.eye(g, -17, -6, 9, { sc: '#dfe6ec', col: '#1a1a2a', lid: .35, lc: c, pu: 2 }); A.eye(g, 17, -6, 9, { sc: '#dfe6ec', col: '#1a1a2a', lid: .35, lc: c, pu: 2 })
-    A.tears(g, -17, 4, 24, '#9ad0ea'); A.tears(g, 17, 4, 24, '#9ad0ea')
-    A.mouth(g, 0, 18, 14, 5 + ch * 12, { n: 0, col: '#4a2a3a', tn: '#d4707e' })
-    A.flat(g, 0, 4, 3, 4, '#8a9ab0')
+    var c = '#6a8aa8', ch = A.ch, br = Math.sin(A.T * 2.6), k = 1 + br * .03 + ch * .14, wag = Math.sin(A.T * 5) * .2
+    A.ball(g, -46 * k, 6, 8, 13, '#4a6a88', { rot: .4 + wag }); A.ball(g, 46 * k, 6, 8, 13, '#4a6a88', { rot: -.4 - wag })
+    A.spikes(g, 0, 2, 41 * k, 16, 8 + ch * 8, '#e8e0c8', .2)
+    A.ball(g, 0, 2, 42 * k, 40 * k, c)
+    A.ball(g, 0, 22 * k, 30 * k, 15 * k, '#cfd8cc', { ol: false })
+    A.warts(g, 0, -6, 30, 6, '#4a6a88', 3)
+    lamp(g, -20 * k, -8, 8, '#e8d040'); lamp(g, 20 * k, -8, 8, '#e8d040')
+    A.ball(g, 0, 14, 10, 8, '#c8786a'); A.flat(g, 0, 14, 4.4, 3 + ch * 4, '#240a10')
+    gloss(g, -20, -26, 12, 5)
   })
 
-  /* ---- The Husk ------------------------------------------------------ */
+  /* ---- The Husk: empty suit of armour --------------------------------- */
   reg('the-husk', function (g) {
-    var c = '#a89478', ch = A.ch, br = Math.sin(A.T * 2)
+    var ch = A.ch, br = Math.sin(A.T * 2), i
     g.save(); g.translate(0, br)
-    A.poly(g, [-22, 34, -14, 18, 14, 18, 22, 34, 10, 44, -10, 44], '#6a5a46')
-    A.line(g, '#cfc6b0', 3, [-18, 26, 18, 34]); A.line(g, '#cfc6b0', 3, [-18, 34, 18, 26])
-    A.ball(g, 0, -10, 28, 34, c)
-    A.line(g, al('#3a2a1e', .6), 1.6, [-14, -34, -10, -22]); A.line(g, al('#3a2a1e', .6), 1.6, [12, -34, 16, -20])
-    A.flat(g, -17, -10, 11, 13, '#0e0808', .3); A.flat(g, 17, -10, 11, 13, '#0e0808', -.3)
-    A.dot(g, -17, -9, 2.6, '#ffcf60', '#d89a30'); A.dot(g, 17, -9, 2.6, '#ffcf60', '#d89a30')
-    A.flat(g, 0, 6, 3, 5, '#2a1a14')
-    A.mouth(g, 0, 22 + ch * 4, 15, 9 + ch * 13, { n: 7, tl: .6, col: '#100606', tongue: false, teeth: '#d8ccb0' })
-    A.flat(g, -22, 14, 6, 9, al('#3a2a1e', .5)); A.flat(g, 22, 14, 6, 9, al('#3a2a1e', .5))
-    A.drip(g, -8, 32, 12, '#201410', 2.2)
+    A.ball(g, -34, 4, 14, 12, '#6a6a72'); A.ball(g, 34, 4, 14, 12, '#6a6a72')
+    for (var q = -1; q <= 1; q += 2) for (i = 0; i < 3; i++) A.poly(g, [q * (30 + i * 6) - 3, -4 + i * 4, q * (30 + i * 6) + 3, -4 + i * 4, q * (36 + i * 6), -14 + i * 3], '#4a4a52', { lw: 2 })
+    solid(g, [-24, 6, 24, 6, 28, 42, -28, 42], '#5a5a64')
+    A.line(g, '#2a2024', 4, [-26, 30, 26, 30]); rivets(g, [-18, 14, 18, 14, -18, 36, 18, 36], '#5a5a64')
+    A.warts(g, 0, 26, 20, 4, '#7a4a2a', 4)
+    for (i = 0; i < 4; i++) { var f = (A.T * .5 + i / 4) % 1; A.flat(g, -8 + i * 5 + Math.sin(A.T + i) * 4, -40 - f * 20, 3 + f * 4, 3 + f * 4, al('#8a8a92', (1 - f) * .5)) }
+    A.poly(g, [-4, -38, 4, -38, 18, -56, 8, -34], '#8a2a2a')
+    solid(g, [-24, -34, 0, -42, 24, -34, 28, 0, 20, 12, -20, 12, -28, 0], '#7a7a84')
+    A.line(g, '#4a4a52', 3, [0, -42, 0, -14])
+    A.poly(g, [-21, -14, 21, -14, 19, -2, -19, -2], '#0e0808')
+    lamp(g, -9, -8, 4.2, '#ffa040', { hz: true, sq: .9 }); lamp(g, 9, -8, 4.2, '#ffa040', { hz: true, sq: .9 })
+    for (i = -2; i <= 2; i++) A.line(g, '#2a2024', 2.4, [i * 6, 4, i * 6, 10 + ch * 3])
+    gloss(g, -16, -28, 8, 4)
     g.restore()
   })
 
-  /* ---- The Gate ------------------------------------------------------ */
+  /* ---- The Gate: portcullis arch -------------------------------------- */
   reg('the-gate', function (g) {
-    var ch = A.ch, c = '#7a6e66'
+    var ch = A.ch, c = '#7a6e66', i
     A.rect(g, -44, -40, 24, 84, c, 2); A.rect(g, 20, -40, 24, 84, c, 2)
     g.beginPath(); g.moveTo(-44, -10); g.quadraticCurveTo(-44, -54, 0, -54); g.quadraticCurveTo(44, -54, 44, -10); g.lineTo(20, -10); g.quadraticCurveTo(20, -30, 0, -30); g.quadraticCurveTo(-20, -30, -20, -10); g.closePath()
-    g.fillStyle = sh(c, .06); g.fill(); g.lineWidth = A.lw; g.strokeStyle = sh(c, -.65); g.stroke()
-    var gr = g.createRadialGradient(0, 0, 2, 0, 0, 34); gr.addColorStop(0, '#3a0a14'); gr.addColorStop(1, '#0a0406')
+    g.fillStyle = sh(c, .06); g.fill(); g.lineWidth = 3; g.strokeStyle = sh(c, -.65); g.stroke()
+    var gr = g.createRadialGradient(0, 0, 2, 0, 0, 34); gr.addColorStop(0, '#5a1a0a'); gr.addColorStop(1, '#0a0406')
     g.fillStyle = gr; g.fillRect(-20, -30, 40, 74)
-    A.glow(g, 0, -6, 30 + ch * 12, '#d8402a', .3 + ch * .4)
-    A.eye(g, 0, -6, 14 + ch * 3, { sc: '#e8d8b8', col: '#d84a2a', hot: '#ffd060', lid: Math.max(0, .5 - ch), lc: '#3a0a14', pu: 1.4 })
-    for (var i = -2; i <= 2; i++) A.poly(g, [i * 8 - 3, -30, i * 8 + 3, -30, i * 8, -22], '#e4d6b4')
-    for (i = -2; i <= 2; i++) A.poly(g, [i * 8 - 3, 44, i * 8 + 3, 44, i * 8, 36], '#e4d6b4')
-    A.line(g, '#6a3a3a', 2, [-44, -20, -30, -4]); A.veins(g, -32, 10, 20, '#9a3a44', 3, 4); A.veins(g, 32, 10, 20, '#9a3a44', 3, 7)
+    A.glow(g, 0, 0, 34 + ch * 12, '#ff7a2a', .35 + ch * .4)
+    var drop = 74 - ch * 36
+    for (i = -2; i <= 2; i++) { A.line(g, '#0e0a0a', 6.4, [i * 8, -30, i * 8, -30 + drop]); A.line(g, '#8a8a92', 3, [i * 8, -30, i * 8, -30 + drop]); A.poly(g, [i * 8 - 3, -30 + drop, i * 8 + 3, -30 + drop, i * 8, -22 + drop], '#8a8a92', { lw: 2 }) }
+    A.line(g, '#0e0a0a', 6, [-20, 0, 20, 0]); A.line(g, '#6a6a72', 3, [-20, 0, 20, 0])
+    lamp(g, 0, -42, 7, '#ff5a3a')
+    A.crack(g, -38, -4, 18, 1.2); A.warts(g, -32, 22, 10, 3, '#5a7a3a', 5); A.warts(g, 32, 24, 10, 3, '#5a7a3a', 9)
     A.rect(g, -48, 40, 96, 10, sh(c, -.2), 2)
   }, { R: 26 })
 
-  /* ---- The Cage ------------------------------------------------------ */
+  /* ---- The Cage: hanging wire birdcage -------------------------------- */
   reg('the-cage', function (g) {
-    var ch = A.ch, br = Math.sin(A.T * 3), c = '#c88a8a'
-    A.ball(g, 0, 10, 30 + br, 28 - br, c)
-    A.eye(g, -11, 4, 7, { col: '#5a3a3a', lid: .15, lc: c, red: true, pu: 1.5 }); A.eye(g, 11, 4, 7, { col: '#5a3a3a', lid: .15, lc: c, red: true, pu: 1.5 })
-    A.mouth(g, 0, 22, 15, 4 + ch * 12, { n: 6, tl: .5 })
-    var bar = '#4a4448'
-    g.lineCap = 'round'
-    for (var i = -4; i <= 4; i++) {
-      var x = i * 9, top = -44 + Math.abs(i) * 4
-      A.line(g, sh(bar, -.5), 6, [x, top, x * 1.12, 44]); A.line(g, bar, 3.4, [x, top, x * 1.12, 44]); A.line(g, al('#9a949a', .6), 1, [x - 1, top + 2, x * 1.12 - 1, 40])
-    }
-    A.ball(g, 0, -48, 12, 6, bar); A.ball(g, 0, 46, 44, 7, bar)
-    g.strokeStyle = bar; g.lineWidth = 3.4; g.beginPath(); g.ellipse(0, -4, 42, 10, 0, 0, TAU); g.stroke()
-    g.beginPath(); g.ellipse(0, 22, 46, 10, 0, 0, Math.PI); g.stroke()
+    var ch = A.ch, br = Math.sin(A.T * 3), bar = '#4a4448', i
+    A.glow(g, 0, 8, 46, '#ffd060', .45 + ch * .3)
+    A.ball(g, 0, 14, 20 + br, 18 - br, '#5a4a52')
+    A.poly(g, [-18, 8, -34, 2, -22, 18], '#3a2a34'); A.poly(g, [18, 8, 34, 2, 22, 18], '#3a2a34')
+    lamp(g, -8, 8, 4.6, '#ff7a4a', { lw: 2 }); lamp(g, 8, 8, 4.6, '#ff7a4a', { lw: 2 })
+    A.poly(g, [-3, 14, 3, 14, 0, 22 + ch * 6], '#d8a060', { lw: 2 })
+    for (i = -5; i <= 5; i++) { var pts = [i * 2.5, -44, i * 10, 0, i * 8, 44]; A.line(g, sh(bar, -.6), 6.2, pts); A.line(g, bar, 3.2, pts); A.line(g, al('#a8a4aa', .6), 1, [i * 2.5 - 1, -42, i * 10 - 1, -2]) }
+    for (i = 0; i < 2; i++) { var y = -18 + i * 38; g.beginPath(); g.ellipse(0, y, 44 - Math.abs(y) * .1, 9, 0, 0, TAU); g.lineWidth = 6.4; g.strokeStyle = sh(bar, -.6); g.stroke(); g.lineWidth = 3.2; g.strokeStyle = bar; g.stroke() }
+    A.ball(g, 0, 46, 44, 7, bar); A.ball(g, 0, -46, 11, 6, bar)
+    g.beginPath(); g.ellipse(0, -56, 7, 8, 0, 0, TAU); g.lineWidth = 5.4; g.strokeStyle = sh(bar, -.6); g.stroke(); g.lineWidth = 2.6; g.strokeStyle = '#8a8a92'; g.stroke()
   })
 
-  /* ---- Mega Maw ------------------------------------------------------ */
+  /* ---- Mega Maw: boiler furnace --------------------------------------- */
   reg('mega-maw', function (g) {
-    var c = '#9a3a34', ch = A.ch
-    A.horn(g, -28, -22, -2.3, 28, 14, '#d8c8a4', -.4); A.horn(g, 28, -22, -.84, 28, 14, '#d8c8a4', .4)
-    A.ball(g, 0, 2, 45, 42, c)
-    A.eye(g, -20, -22, 6, { col: '#e8c030', lid: .35, lc: c, sq: .8 }); A.eye(g, 20, -22, 6, { col: '#e8c030', lid: .35, lc: c, sq: .8 })
-    A.brow(g, -30, -33, -10, -26, '#2a0c0c', 4); A.brow(g, 30, -33, 10, -26, '#2a0c0c', 4)
-    A.flat(g, -4, -10, 2.4, 3.4, '#2a0c0c'); A.flat(g, 4, -10, 2.4, 3.4, '#2a0c0c')
-    A.mouth(g, 0, 14, 34, 18 + ch * 8, { n: 9, tl: .45, col: '#e86a20', tongue: false })
-    g.save(); g.beginPath(); g.ellipse(0, 14, 33, 17 + ch * 8, 0, 0, TAU); g.clip()
-    for (var i = 0; i < 6; i++) { var f = Math.sin(A.T * 9 + i * 1.7) * .5 + .5; A.flat(g, -22 + i * 9, 24, 6, 10 + f * (8 + ch * 14), i % 2 ? '#ffd040' : '#ff8a28') }
+    var c = '#7a4a3a', ch = A.ch, i
+    for (var q = -1; q <= 1; q += 2) {
+      plate(g, q * 28, -46, 14, 26, '#4a3a38', { r: 3 })
+      for (i = 0; i < 3; i++) { var f = (A.T * .5 + i / 3 + (q > 0 ? .3 : 0)) % 1; A.flat(g, q * 28 + Math.sin(A.T * 2 + i) * 4, -58 - f * 22, 4 + f * 6, 4 + f * 6, al('#8a8a92', (1 - f) * .6)) }
+    }
+    plate(g, 0, 4, 92, 82, c, { r: 16, bolts: true })
+    for (q = -1; q <= 1; q += 2) {
+      var gx = q * 26, gy = -22
+      A.ball(g, gx, gy, 12, 12, '#cfc8b0'); A.flat(g, gx, gy, 9, 9, '#2a2420')
+      for (i = 0; i < 5; i++) { var ta = -2.6 + i * .55; A.line(g, '#cfc8b0', 1.4, [gx + Math.cos(ta) * 7, gy + Math.sin(ta) * 7, gx + Math.cos(ta) * 9, gy + Math.sin(ta) * 9]) }
+      var na = -2.5 + ch * 2.4 + Math.sin(A.T * 6 + q) * .1
+      A.line(g, '#ff4a2a', 2.2, [gx, gy, gx + Math.cos(na) * 8, gy + Math.sin(na) * 8]); A.flat(g, gx, gy, 2, 2, '#cfc8b0')
+    }
+    var mh = 16 + ch * 8
+    A.ball(g, 0, 16, 36, mh + 4, '#1a0a08', { lw: 3.4 })
+    g.save(); g.beginPath(); g.ellipse(0, 16, 34, mh + 2, 0, 0, TAU); g.clip()
+    A.glow(g, 0, 22, 40, '#ff8a28', .7)
+    for (i = 0; i < 7; i++) { var fl = Math.sin(A.T * 9 + i * 1.7) * .5 + .5; A.flat(g, -27 + i * 9, 30, 6, 10 + fl * (8 + ch * 14), i % 2 ? '#ffd040' : '#ff8a28') }
+    for (i = 0; i < 7; i++) { A.poly(g, [-30 + i * 10 - 4, 16 - mh - 2, -30 + i * 10 + 4, 16 - mh - 2, -30 + i * 10, 16 - mh + 9], '#9a9aa2', { lw: 1.8 }); A.poly(g, [-30 + i * 10 - 4, 16 + mh + 2, -30 + i * 10 + 4, 16 + mh + 2, -30 + i * 10, 16 + mh - 9], '#9a9aa2', { lw: 1.8 }) }
     g.restore()
-    A.spikes(g, 0, 4, 44, 0, 0, '#000', 0)
+    A.line(g, '#4a3a38', 5, [-44, 44, 44, 44])
+    gloss(g, -30, -30, 14, 5)
   })
 
-  /* ---- The Wretched -------------------------------------------------- */
+  /* ---- The Wretched: plague doctor ------------------------------------ */
   reg('the-wretched', function (g) {
-    var c = '#cbb2a4', ch = A.ch, sw = Math.sin(A.T * 2.2) * 3
-    A.poly(g, [-26, -10, 26, -10, 34, 46, 0, 40, -34, 46], '#4a3a46')
-    A.line(g, sh('#4a3a46', -.4), 2, [-12, 6, -16, 40]); A.line(g, sh('#4a3a46', -.4), 2, [10, 6, 14, 42])
-    A.leg(g, -24, -4, -42, 18 + sw, -40, 40, 5, c); A.leg(g, 24, -4, 42, 18 - sw, 40, 40, 5, c)
-    for (var q = -1; q <= 1; q += 2) for (var i = -1; i <= 1; i++) A.line(g, '#2a1e22', 2, [q * 40 + i * 3, 40, q * 40 + i * 4, 48])
-    A.ball(g, sw * .4, -26, 24, 28, c, { rot: 0 })
-    A.line(g, '#2a1e22', 1.4, [-12, -48, -8, -40]); A.line(g, '#2a1e22', 1.4, [4, -50, 10, -42])
-    A.flat(g, -9 + sw * .4, -28, 6.5, 8.5, '#0e0808'); A.flat(g, 9 + sw * .4, -28, 6.5, 8.5, '#0e0808')
-    A.dot(g, -9 + sw * .4, -27, 2.2, '#e8d890', '#c8a850'); A.dot(g, 9 + sw * .4, -27, 2.2, '#e8d890', '#c8a850')
-    A.mouth(g, sw * .4, -10, 7 + ch * 3, 12 + ch * 6, { n: 4, tl: .4, col: '#100808', tongue: false })
-    A.tears(g, -9 + sw * .4, -20, 22, '#7a1a22'); A.tears(g, 9 + sw * .4, -20, 22, '#7a1a22')
+    var ch = A.ch, sw = Math.sin(A.T * 2.2) * 3
+    solid(g, [-20, -8, 20, -8, 36, 44, 0, 38, -36, 44], '#2c2a34')
+    A.line(g, al('#000', .5), 2.6, [-10, 6, -18, 40]); A.line(g, al('#000', .5), 2.6, [10, 6, 18, 40])
+    A.ball(g, 0, -8, 27, 9, '#3a3844')
+    A.ball(g, -32, 20, 7, 11, '#4a4450', { rot: .3 }); A.ball(g, 32, 20, 7, 11, '#4a4450', { rot: -.3 })
+    A.line(g, '#6a6a72', 2.2, [34, 28, 34 + sw * .3, 34]); A.glow(g, 34, 42, 24, '#ffb040', .6); A.ball(g, 34 + sw * .3, 42, 7, 8, '#e8a030', { lw: 2.4 })
+    A.ball(g, sw * .3, -28, 19, 19, '#9a8a70')
+    solid(g, [-7 + sw * .3, -24, 7 + sw * .3, -24, sw * .3, 6 + ch * 4], '#a89878')
+    A.line(g, '#4a3a2a', 2, [sw * .3, -22, sw * .3, 2])
+    A.ball(g, -9 + sw * .3, -30, 8.5, 8.5, '#3a2a18', { lw: 2.4 }); A.ball(g, 9 + sw * .3, -30, 8.5, 8.5, '#3a2a18', { lw: 2.4 })
+    lamp(g, -9 + sw * .3, -30, 5.4, '#c8e890', { lw: 1.6 }); lamp(g, 9 + sw * .3, -30, 5.4, '#c8e890', { lw: 1.6 })
+    A.ball(g, sw * .3, -42, 32, 8, '#1e1c24'); solid(g, [-14 + sw * .3, -42, -10 + sw * .3, -60, 10 + sw * .3, -60, 14 + sw * .3, -42], '#26242e')
+    A.line(g, '#8a2a30', 4, [-12 + sw * .3, -48, 12 + sw * .3, -48])
   })
 
-  /* ---- Peep ---------------------------------------------------------- */
+  /* ---- Peep: lantern angler ------------------------------------------- */
   reg('peep', function (g) {
-    var c = '#d4c488', ch = A.ch, br = Math.sin(A.T * 2.2), hang = A.hp < .5
-    A.blob(g, 0, 4, 44 + br, 40 - br, c, { n: 12, wob: .06, seed: 22 })
-    A.veins(g, 0, 4, 40, '#9a7a3a', 8, 12); A.warts(g, 0, 8, 36, 5, '#e2d4a0', 7)
-    var ex = hang ? 22 : 17, ey = hang ? -10 + Math.sin(A.T * 3) * 4 : -14
-    if (hang) { A.line(g, '#9a3a44', 3, [-14, -18, -22, ey]); A.line(g, '#9a3a44', 3, [14, -18, 22, ey]) }
-    A.eye(g, -ex, ey, 13, { sc: '#efe4cc', col: '#a89030', lid: hang ? 0 : .35, lc: sh(c, -.1), red: true, pu: 1.4 })
-    A.eye(g, ex, ey, 13, { sc: '#efe4cc', col: '#a89030', lid: hang ? 0 : .35, lc: sh(c, -.1), red: true, pu: 1.4 })
-    A.flat(g, -3, 4, 2, 3, '#6a4a2a'); A.flat(g, 3, 4, 2, 3, '#6a4a2a')
-    A.mouth(g, 0, 22, 17, 5 + ch * 14, { n: 6, tl: .5, col: '#3a1a1a' })
-    A.drip(g, -22, 30, 14, '#a89a50', 2.4)
+    var c = '#3a5a6a', ch = A.ch, br = Math.sin(A.T * 2.2), i
+    A.ball(g, -46, 8, 9, 14, '#2a4a5a', { rot: .4 }); A.ball(g, 46, 8, 9, 14, '#2a4a5a', { rot: -.4 })
+    for (i = -2; i <= 2; i++) A.poly(g, [i * 14 - 5, -32 + Math.abs(i) * 4, i * 14 + 5, -32 + Math.abs(i) * 4, i * 14, -44 + Math.abs(i) * 4], '#1e3a48', { lw: 2.4 })
+    A.blob(g, 0, 6, 44 + br, 38 - br, c, { n: 12, wob: .06, seed: 22 })
+    for (i = 0; i < 9; i++) A.line(g, al('#1a3040', .7), 2, [-30 + i * 7.5, -20 + (i % 3) * 14, -26 + i * 7.5, -16 + (i % 3) * 14])
+    A.line(g, '#1a1018', 4.4, [0, -30, 8, -52, 22, -56]); A.line(g, '#4a3a44', 2, [0, -30, 8, -52, 22, -56])
+    var fk = A.hp < .5 ? (Math.sin(A.T * 22) > 0 ? 1 : .3) : 1
+    A.glow(g, 22, -56, 24 + ch * 14, '#d8ff9a', (.6 + ch * .3) * fk); A.ball(g, 22, -56, 6.5, 6.5, '#e8ffb0', { lw: 2.4 })
+    lamp(g, -22, -14, 6.4, '#ffd050'); lamp(g, 22, -14, 6.4, '#ffd050')
+    A.mouth(g, 0, 18, 34, 12 + ch * 10, { n: 10, tl: .9, col: '#14080c', tongue: false })
+    gloss(g, -22, -24, 12, 5)
   })
 
-  /* ---- The Pile ------------------------------------------------------ */
+  /* ---- The Pile: scrap-metal heap ------------------------------------- */
   reg('the-pile', function (g) {
-    var ch = A.ch
-    var lumps = [[-26, 22, 20, 16, '#b86a74'], [24, 24, 22, 16, '#a85a66'], [0, 28, 26, 14, '#c0787e'], [-14, 4, 22, 18, '#c8848c'], [18, 6, 20, 17, '#b46a74'], [0, -14, 22, 18, '#d09098']]
-    lumps.forEach(function (l, i) { A.ball(g, l[0], l[1] + Math.sin(A.T * 2 + i) * 1.2, l[2], l[3], l[4]) })
-    A.line(g, '#e8dcc0', 4, [-34, 8, -44, -12]); A.line(g, '#e8dcc0', 4, [34, 2, 44, -18]); A.ball(g, -44, -14, 4, 4, '#e8dcc0'); A.ball(g, 44, -20, 4, 4, '#e8dcc0')
-    A.eye(g, -6, -18, 8, { col: '#6a3a3a', lid: .25, lc: '#d09098', red: true }); A.eye(g, 10, -10, 5.5, { col: '#3a4a6a', lid: .2, lc: '#c8848c' }); A.eye(g, -22, 8, 5, { col: '#6a4a2a', lid: .3, lc: '#c8848c' })
-    A.mouth(g, 8, 18, 14, 4 + ch * 11, { n: 5, tl: .5 })
-    A.veins(g, 0, 4, 40, '#7a2a3a', 6, 3)
-    A.drip(g, -30, 34, 10, '#8a2a34', 2.2)
+    var ch = A.ch, i
+    A.ball(g, 0, 26, 46, 20, '#4a4a50')
+    A.line(g, '#1a1a1e', 10, [-42, 32, -32, -6, -14, -22]); A.line(g, '#6a6a72', 6, [-42, 32, -32, -6, -14, -22])
+    solid(g, [14, -4, 44, 8, 40, 40, 10, 34], '#6a6a72'); rivets(g, [20, 4, 36, 12, 34, 32, 16, 28], '#6a6a72')
+    A.ball(g, -24, 20, 17, 21, '#7a4a34'); for (i = 0; i < 2; i++) A.line(g, '#2a2024', 4, [-40, 12 + i * 16, -24, 16 + i * 16, -8, 12 + i * 16])
+    gear(g, 24, 14, 16, 10, '#8a7a5a'); gear(g, -2, -10, 12, 8, '#7a6a4a')
+    A.ball(g, 4, -16, 24, 20, '#5a5a64', { lw: 3.4 })
+    lamp(g, 4, -16, 11 + ch * 2, '#ff9a3a')
+    for (i = 0; i < 5; i++) A.line(g, '#1a1a1e', 2.4, [30 + i * 2, -22 - i * 2 + (i % 2) * 3, 36 + i * 2, -26 - i * 2 - (i % 2) * 3])
+    A.line(g, '#8a8a92', 2, [-6, -34, -10, -52]); A.flat(g, -10, -52, 3, 3, '#ff5a3a')
+    if (ch > .1) for (i = 0; i < 4; i++) A.flat(g, 4 + (A.rnd(Math.floor(A.T * 14) + i) - .5) * 50, -16 + (A.rnd(Math.floor(A.T * 14) + i * 4) - .5) * 40, 2, 2, '#ffe060')
+    A.drip(g, -34, 40, 10, '#8a4a2a', 2.2)
   })
 
-  /* ---- Gish ---------------------------------------------------------- */
+  /* ---- Gish: ink cuttlefish ------------------------------------------- */
   reg('gish', function (g) {
-    var c = '#23202a', ch = A.ch, br = Math.sin(A.T * 3)
-    A.blob(g, 0, 8, 46, 34 + br * 2, c, { n: 14, wob: .09, seed: 31, sp: 2.8 })
-    A.ball(g, -26, 34, 12, 8, c, { ol: '#0a0810' }); A.ball(g, 26, 34, 14, 8, c, { ol: '#0a0810' })
-    A.flat(g, -18, -6, 16, 5, al('#7a7a9a', .35), -.4)
-    A.eye(g, -15, -6, 10, { sc: '#f4f0e6', col: '#1a1620', lid: .1, lc: c, ol: '#000' }); A.eye(g, 15, -6, 10, { sc: '#f4f0e6', col: '#1a1620', lid: .1, lc: c, ol: '#000' })
-    A.mouth(g, 0, 14, 25, 8 + ch * 12, { n: 8, tl: .5, col: '#08060c', tongue: false, teeth: '#f4f0e6' })
-    A.drip(g, -30, 24, 14, c, 3); A.drip(g, 30, 22, 12, c, 3); A.drip(g, 4, 38, 10, c, 2.4)
+    var c = '#1e2a38', ch = A.ch, br = Math.sin(A.T * 3), i
+    for (i = -3; i <= 3; i++) A.tent(g, i * 9, 26, Math.PI / 2 + i * .22, 26, 8, '#243242', { amp: 4, ph: i * 1.3, taper: .8, rage: 1 })
+    A.tent(g, -14, 22, Math.PI / 2 + .5, 40, 5, '#1a2430', { amp: 7, ph: 2, taper: .3 }); A.tent(g, 14, 22, Math.PI / 2 - .5, 40, 5, '#1a2430', { amp: 7, ph: 4, taper: .3 })
+    A.ball(g, -34, -4, 9, 26, '#2a3a4a', { rot: .12 }); A.ball(g, 34, -4, 9, 26, '#2a3a4a', { rot: -.12 })
+    A.ball(g, 0, -8, 30, 38 + br, c)
+    A.ball(g, 0, 18, 28, 17, '#243242')
+    for (i = 0; i < 9; i++) A.flat(g, -18 + (i % 3) * 18, -30 + Math.floor(i / 3) * 10, 2.4, 2.4, al('#6ab8d8', .7))
+    lamp(g, -18, 12, 8.4, '#f0e8c0', { hz: true }); lamp(g, 18, 12, 8.4, '#f0e8c0', { hz: true })
+    A.poly(g, [-5, 24, 5, 24, 0, 34 + ch * 4], '#d8a070', { lw: 2.4 })
+    A.drip(g, -30, 20, 14, '#0a0e14', 3); A.drip(g, 28, 22, 12, '#0a0e14', 2.6)
+    gloss(g, -14, -34, 8, 4)
   }, { R: 26 })
 
-  /* ---- Loki ---------------------------------------------------------- */
-  function loki (g, x, y, k, c) {
-    var ch = A.ch, br = Math.sin(A.T * 2.4 + x)
+  /* ---- Loki, Lokii: jester masks -------------------------------------- */
+  function jester (g, x, y, k, c1, c2) {
+    var ch = A.ch, br = Math.sin(A.T * 2.4 + x), i
     g.save(); g.translate(x, y); g.scale(k, k)
-    A.horn(g, -18, -24, -2.5, 36, 12, '#2a2030', -.55); A.horn(g, 18, -24, -.64, 36, 12, '#2a2030', .55)
-    A.ball(g, 0, br * .6, 30, 32, c)
-    A.poly(g, [-14, 22, 14, 22, 0, 52 + br], sh(c, -.25))
-    A.eye(g, -12, -6 + br * .6, 7, { sc: '#e8e0cc', col: '#e8c040', lid: .35, lc: c, sq: .7 }); A.eye(g, 12, -6 + br * .6, 7, { sc: '#e8e0cc', col: '#e8c040', lid: .35, lc: c, sq: .7 })
-    A.brow(g, -22, -18, -4, -10, '#1a1018', 3.6); A.brow(g, 22, -18, 4, -10, '#1a1018', 3.6)
-    A.mouth(g, 0, 14 + br * .6, 17, 5 + ch * 9, { n: 8, tl: .6, col: '#1a0a10', tongue: false })
-    A.line(g, '#1a1018', 2, [-14, 11, -22, 13]); A.line(g, '#1a1018', 2, [14, 11, 22, 13])
+    for (var q = -1; q <= 1; q += 2) { solid(g, [q * 30, -12, q * 26, -26, q * 46, -46, q * 14, -30, q * 6, -18], c1); A.ball(g, q * 46, -46 + br * .5, 5.4, 5.4, '#e0b838', { lw: 2.4 }) }
+    solid(g, [-12, -18, -6, -36, 0, -60, 6, -36, 12, -18], c2); A.ball(g, 0, -60 + br * .5, 5.4, 5.4, '#e0b838', { lw: 2.4 })
+    A.line(g, al(c1, .6), 2, [-8, -28, 8, -28]); A.line(g, al(c1, .6), 2, [-10, -22, 10, -22])
+    solid(g, [-28, 26, -22, 38, -15, 26, -8, 38, -1, 26, 6, 38, 13, 26, 20, 38, 27, 26], c2)
+    A.ball(g, 0, 6 + br * .5, 28, 27, '#e0d4c0')
+    A.poly(g, [-30, -14, 30, -14, 28, -8, -28, -8], c2, { lw: 2.4 })
+    for (q = -1; q <= 1; q += 2) { A.poly(g, [q * 14, -2, q * 8, -8, q * 2, -2, q * 8, 4], '#14080c', { lw: 2 }); A.flat(g, q * 8, -2, 1.8, 2.4, mix('#ffd040', '#fff', ch * .5)); A.poly(g, [q * 20, 8, q * 15, 4, q * 10, 8, q * 15, 12], c1, { lw: 1.6 }) }
+    A.mouth(g, 0, 17 + br * .4, 15, 2 + ch * 8, { n: 8, tl: .5, col: '#1a0a10', tongue: false })
     g.restore()
   }
-  reg('loki', function (g) { loki(g, 0, -6, 1.15, '#8a5a78') })
-  reg('lokii', function (g) { loki(g, -28, 4, .8, '#6a5a98'); loki(g, 28, 4, .8, '#986a68'); loki(g, 0, -10, 1, '#8a5a78') })
+  reg('loki', function (g) { jester(g, 0, 0, 1.12, '#8a2a40', '#2a2a5a') })
+  reg('lokii', function (g) { jester(g, -28, 8, .72, '#2a4a7a', '#d8a030'); jester(g, 28, 8, .72, '#2a6a4a', '#8a2a40'); jester(g, 0, -4, .9, '#8a2a40', '#2a2a5a') })
 
-  /* ---- The Stain ----------------------------------------------------- */
+  /* ---- The Stain: oil slick ------------------------------------------- */
   reg('the-stain', function (g) {
-    var c = '#8a7a4a', ch = A.ch
-    for (var i = -2; i <= 2; i++) A.tent(g, i * 16, 14, Math.PI / 2 + i * .22, 40, 12, sh(c, -.12), { amp: 7, ph: i * 1.4, taper: .85, rage: 1 })
-    A.blob(g, 0, -4, 42, 36, c, { n: 12, wob: .08, seed: 18 })
-    A.warts(g, 0, -4, 36, 7, '#a8985c', 3)
-    A.eye(g, -17, -18, 7.5, { col: '#c8d048', lid: .2, lc: c }); A.eye(g, 4, -22, 5.5, { col: '#c8d048', lid: .2, lc: c }); A.eye(g, 20, -12, 6.5, { col: '#c8d048', lid: .25, lc: c })
-    A.mouth(g, 0, 8, 28, 10 + ch * 14, { n: 8, tl: .55, col: '#2a2008' })
-    A.drip(g, -20, 20, 14, '#6a5a2a', 3)
+    var ch = A.ch, c = '#1e2a2e', i
+    g.save(); g.scale(1 + ch * .12, 1 - ch * .08)
+    A.tent(g, -40, 16, Math.PI, 16, 9, c, { amp: 3, taper: .6 }); A.tent(g, 40, 16, 0, 16, 9, c, { amp: 3, taper: .6, ph: 2 })
+    A.blob(g, 0, 12, 46, 28, c, { n: 14, wob: .14, seed: 18, sp: 2 })
+    A.flat(g, -12, 8, 22, 7, al('#a060e0', .38), -.3); A.flat(g, 12, 16, 20, 6, al('#40e0a0', .32), .2); A.flat(g, 0, 2, 16, 4, al('#e0c040', .28), .1)
+    for (i = 0; i < 4; i++) { var bx = -26 + i * 17, by = 14 + (i % 2) * 8 + Math.sin(A.T * 2 + i) * 1.5; A.ball(g, bx, by, 5, 5, '#6a8a8e', { lw: 2 }); A.flat(g, bx - 1.6, by - 1.6, 1.4, 1.4, '#fff') }
+    for (var q = -1; q <= 1; q += 2) {
+      var sx = q * 15, sw = Math.sin(A.T * 2.4 + q) * 3
+      A.line(g, '#0a1214', 7, [sx, 10, sx + sw, -12, sx - sw * .5, -28]); A.line(g, '#3a4a50', 3.4, [sx, 10, sx + sw, -12, sx - sw * .5, -28])
+      lamp(g, sx - sw * .5, -30, 6.4, '#a0ff60')
+    }
+    g.restore()
   })
 
-  /* ---- Mom (foot, hand, door-eye) ----------------------------------- */
-  function leg (g, y0, ch) {
-    var c = '#e4bba8'
-    g.beginPath(); g.moveTo(-17, -66); g.lineTo(17, -66); g.lineTo(21, y0); g.lineTo(-21, y0); g.closePath()
-    var gr = g.createLinearGradient(-20, 0, 20, 0); gr.addColorStop(0, sh(c, -.3)); gr.addColorStop(.4, sh(c, .1)); gr.addColorStop(1, sh(c, -.35))
-    g.fillStyle = gr; g.fill(); g.lineWidth = A.lw; g.strokeStyle = sh(c, -.7); g.stroke()
-    A.veins(g, 0, -20, 40, '#6a7ab8', 5, 41)
-    A.line(g, al('#5a6aa8', .7), 1.6, [-8, -60, -4, -40, -9, -22, -5, 0]); A.line(g, al('#5a6aa8', .6), 1.4, [9, -56, 5, -36, 10, -14])
-  }
-  function foot (g, ch) {
-    var c = '#e8c2ae', lift = ch * 10
-    g.save(); g.translate(0, -lift); g.scale(1 + ch * .06, 1 + ch * .06)
-    leg(g, 6, ch)
-    A.ball(g, 0, 22, 34, 24, c)
-    var toes = [[-27, 40, 7.5], [-14, 45, 7], [0, 47, 7], [14, 45, 7], [26, 41, 6]]
-    toes.forEach(function (tp, i) { A.ball(g, tp[0], tp[1], tp[2], tp[2] * .9, c, { lw: 1.6 }); A.flat(g, tp[0], tp[1] + 1.5, tp[2] * .55, tp[2] * .4, '#b8283a') })
-    A.flat(g, -8, 14, 12, 7, al('#fff', .25), -.4)
+  /* ---- Mom, Mom's foot / hand / eye: hydraulic stomper, claw, porthole */
+  function stomper (g, ch) {
+    var lift = ch * 12, i
+    g.save(); g.translate(0, -lift); g.scale(1 + ch * .05, 1 + ch * .05)
+    plate(g, 0, -34, 30, 66, '#8a7a74', { r: 4 })
+    for (i = 0; i < 4; i++) A.line(g, al('#000', .35), 2.4, [-14, -56 + i * 14, 14, -52 + i * 14])
+    plate(g, 0, -4, 42, 10, '#6a5a56', { r: 3 })
+    plate(g, 0, 22, 78, 32, '#7a6660', { r: 8, bolts: true })
+    g.save(); g.beginPath(); g.rect(-38, 28, 76, 8); g.clip()
+    for (i = -6; i < 7; i++) A.poly(g, [i * 12, 36, i * 12 + 7, 36, i * 12 + 15, 28, i * 12 + 8, 28], '#d8b030', { ol: false })
+    g.restore()
+    A.ball(g, -24, 42, 14, 7, '#a8343c'); A.ball(g, 0, 44, 15, 7, '#a8343c'); A.ball(g, 24, 42, 14, 7, '#a8343c')
+    A.drip(g, -30, 44, 10, '#7a2a30', 2.4); gloss(g, -22, 14, 14, 4, -.1)
     g.restore()
   }
-  reg('mom', function (g) { g.save(); g.translate(0, 10); foot(g, A.ch); g.restore() }, { R: 20 })
-  reg('mom-foot', function (g) { g.save(); g.translate(0, 10); foot(g, A.ch); g.restore() }, { noWounds: true })
+  reg('mom', function (g) { g.save(); g.translate(0, 14); stomper(g, A.ch); g.restore() }, { R: 20 })
+  reg('mom-foot', function (g) { g.save(); g.translate(0, 14); stomper(g, A.ch); g.restore() }, { noWounds: true })
   reg('mom-hand', function (g) {
-    var ch = A.ch, c = '#e8c2ae'
+    var ch = A.ch, c = '#b8a89a'
     g.save(); g.translate(0, 8); g.rotate(Math.sin(A.T * 3) * .05)
-    A.rect(g, -14, 12, 28, 40, c, 3); A.veins(g, 0, 36, 24, '#6a7ab8', 3, 9)
-    A.ball(g, 0, 6, 30, 26, c)
-    var ang = [-.55, -.22, .08, .38, .7]
-    for (var i = 0; i < 5; i++) { var a = -1.57 + ang[i] * (1 + ch * .3), len = 36 - Math.abs(i - 2) * 4 + (i === 4 ? -6 : 0); A.tent(g, Math.cos(a) * 16, Math.sin(a) * 12, a, len, 10, c, { amp: 2, taper: .3 }); A.flat(g, Math.cos(a) * (16 + len), Math.sin(a) * (12 + len), 3.6, 4.4, '#b8283a') }
+    plate(g, 0, 40, 26, 46, '#8a7a74', { r: 4 }); A.line(g, al('#000', .35), 2.4, [-12, 34, 12, 34]); A.line(g, al('#000', .35), 2.4, [-12, 46, 12, 46])
+    var an = [-2.45, -2.0, -1.14, -.69]
+    for (var i = 0; i < 4; i++) { var a = an[i] + (i < 2 ? -1 : 1) * ch * .35; A.horn(g, Math.cos(a) * 14, 12 + Math.sin(a) * 8, a, 42, 15, c, i < 2 ? -.22 : .22) }
+    A.horn(g, -18, 18, 2.9, 22, 11, c, .3)
+    A.ball(g, 0, 12, 27, 22, '#7a6660')
+    lamp(g, 0, 12, 8, '#ff7a4a'); rivets(g, [-18, 4, 18, 4, -16, 22, 16, 22], '#7a6660')
     g.restore()
   }, { noWounds: true })
   reg('mom-eye', function (g) {
     var ch = A.ch
-    A.rect(g, -36, -44, 72, 88, '#6a4a3a', 3)
-    A.rect(g, -28, -36, 56, 76, '#1a0e10', 2)
-    A.glow(g, 0, 0, 34, '#d8402a', .25 + ch * .3)
-    A.eye(g, 0, 0, 22, { sc: '#f1e8d6', col: '#3a7ab8', lid: Math.max(0, .3 - ch), lc: '#e8c2ae', red: true, pu: 1.3 })
-    A.line(g, '#2a1a16', 2, [-24, -26, -12, -30]); A.line(g, '#2a1a16', 2, [24, -26, 12, -30])
+    plate(g, 0, 0, 76, 88, '#6a4a3a', { r: 10, bolts: true })
+    A.ball(g, 0, 0, 31, 31, '#4a4a52', { lw: 3.4 })
+    A.flat(g, 0, 0, 24, 24, '#10080a')
+    A.glow(g, 0, 0, 36, '#4aa8e8', .3 + ch * .3)
+    lamp(g, 0, 0, 17, '#4aa8e8')
+    A.line(g, al('#8ab8d8', .5), 1.6, [-24, 0, 24, 0]); A.line(g, al('#8ab8d8', .5), 1.6, [0, -24, 0, 24])
+    for (var i = 0; i < 8; i++) { var a = i / 8 * TAU + .4; A.flat(g, Math.cos(a) * 28, Math.sin(a) * 28, 1.8, 1.8, '#8a8a92') }
   }, { noWounds: true })
 
-  /* ---- Mom's Heart, It Lives ---------------------------------------- */
-  function bigHeart (c, o) {
+  /* ---- Mom's Heart, It Lives: ruby cores ------------------------------ */
+  function core (c, o) {
     return function (g) {
       var ch = A.ch, ph = (A.T * (1.6 + ch * 2) + (o.ph || 0)) % 1
-      var beat = Math.exp(-ph * 9) * .09 + Math.exp(-Math.max(0, ph - .22) * 9) * .06 * (ph > .22 ? 1 : 0)
-      var k = 1 + beat + ch * .04
+      var beat = Math.exp(-ph * 9) * .09 + (ph > .22 ? Math.exp(-(ph - .22) * 9) * .06 : 0)
+      var k = 1 + beat + ch * .04, i
       g.save(); g.scale(k, k)
-      A.tent(g, -14, -34, -1.9, 28, 11, '#a8343c', { amp: 1.5, taper: .3, hi: true }); A.tent(g, 6, -36, -1.4, 30, 13, '#b83c44', { amp: 1.5, taper: .3, hi: true }); A.tent(g, 20, -30, -.9, 24, 9, '#8a2a36', { amp: 1.5, taper: .3 })
-      A.heart(g, 0, 6, 46, 78, c)
-      A.veins(g, 0, 6, 54, sh(c, -.45), 9, o.seed || 1)
-      A.flat(g, -18, -10, 10, 14, al('#fff', .22), -.5)
-      A.line(g, al(sh(c, -.55), .7), 3, [-10, -4, 0, 14, 12, 30])
-      A.warts(g, 0, 10, 40, 4, sh(c, .08), 6)
-      if (o.face) {
-        A.eye(g, -14, 4, 9, { sc: '#e8dcc8', col: '#d8a02a', lid: .4 - ch * .4, lc: c, red: true }); A.eye(g, 14, 4, 9, { sc: '#e8dcc8', col: '#d8a02a', lid: .4 - ch * .4, lc: c, red: true })
-        A.mouth(g, 0, 28, 16, 3 + ch * 10, { n: 6, tl: .6 })
-      }
+      A.tent(g, -16, 40, 2.3, 26, 9, '#3a2a30', { amp: 2, taper: .3 }); A.tent(g, 16, 40, .8, 26, 9, '#3a2a30', { amp: 2, taper: .3, ph: 1 }); A.tent(g, 0, 44, Math.PI / 2, 22, 11, '#4a343a', { amp: 2, taper: .3, ph: 2 })
+      A.glow(g, 0, 0, 58, o.glow || c, .4 + beat * 3 + ch * .2)
+      if (o.thorns) A.spikes(g, 0, 0, 38, 10, 12, '#3a2a34', .3)
+      solid(g, [0, -52, 32, -24, 32, 20, 0, 50, -32, 20, -32, -24], c)
+      A.poly(g, [0, -52, -32, -24, 0, -6], sh(c, .3), { lw: 1.8 }); A.poly(g, [0, -52, 32, -24, 0, -6], sh(c, .05), { lw: 1.8 })
+      A.poly(g, [-32, -24, -32, 20, 0, 50, 0, -6], sh(c, -.08), { lw: 1.8 }); A.poly(g, [32, -24, 32, 20, 0, 50, 0, -6], sh(c, -.4), { lw: 1.8 })
+      for (i = 0; i < 4; i++) { var a = i / 4 * TAU + .8; A.poly(g, [Math.cos(a) * 40 - 4, Math.sin(a) * 40 - 4, Math.cos(a) * 40 + 4, Math.sin(a) * 40 + 4, Math.cos(a) * 24, Math.sin(a) * 24], '#8a8a92', { lw: 2 }) }
+      if (o.eye) { lamp(g, 0, 0, 13, '#ffd060', { sq: 1.5 }); A.crack(g, -20, -30, 22, 1.8); A.crack(g, 20, 20, 20, 2.3) } else { A.flat(g, 0, 0, 9, 14, al('#ffb0b8', .35 + beat * 3)); gloss(g, -14, -16, 6, 12, -.2) }
       g.restore()
     }
   }
-  reg('moms-heart', bigHeart('#c23a46', { seed: 5 }))
-  reg('it-lives', bigHeart('#8a2a3e', { seed: 9, face: true, ph: .5 }))
+  reg('moms-heart', core('#c23a46', { glow: '#ff5a6a' }))
+  reg('it-lives', core('#6a2a8a', { ph: .5, eye: true, thorns: true, glow: '#a05ae8' }))
 
-  /* ---- The Fallen, Krampus ------------------------------------------ */
+  /* ---- The Fallen: carrion crow, Krampus: bog stag -------------------- */
   reg('the-fallen', function (g) {
-    var c = '#3a2630', ch = A.ch
-    A.wing(g, -8, -8, 48, -2.7, '#241a22', { dir: 1, flap: Math.sin(A.T * 3) * .1 })
-    A.wing(g, 8, -8, 48, -.44, '#241a22', { dir: 1, flap: -Math.sin(A.T * 3) * .1 })
-    A.poly(g, [-18, 0, 18, 0, 22, 40, -22, 40], '#2a1a24')
-    A.ball(g, 0, 0, 22, 24, c)
-    A.horn(g, -14, -18, -2.2, 22, 10, '#c8b8a0', -.4); A.horn(g, 14, -18, -.94, 22, 10, '#c8b8a0', .4)
-    A.glow(g, -9, -2, 14, '#ff4020', .4 + ch * .3); A.glow(g, 9, -2, 14, '#ff4020', .4 + ch * .3)
-    A.poly(g, [-16, -6, -4, -2, -16, 4], '#ff5a30', { ol: false }); A.poly(g, [16, -6, 4, -2, 16, 4], '#ff5a30', { ol: false })
-    A.mouth(g, 0, 12, 10, 2 + ch * 8, { n: 6, tl: .6, col: '#0e0608', tongue: false })
-    A.halo(g, 0, -34 + Math.sin(A.T * 2) * 2, 18, 5, '#8a7a3a')
+    var c = '#2a2030', ch = A.ch
+    A.wing(g, -8, -4, 52, -2.8, '#1e1626', { feather: true, dir: 1, flap: Math.sin(A.T * 3) * .1 })
+    A.wing(g, 8, -4, 52, -.34, '#1e1626', { feather: true, dir: 1, flap: -Math.sin(A.T * 3) * .1 })
+    solid(g, [-10, 24, 10, 24, 18, 48, 6, 54, 0, 50, -6, 54, -18, 48], '#241a2c')
+    A.ball(g, 0, 4, 22, 30, c)
+    A.line(g, '#6a5a80', 1.6, [-8, -6, -10, 20]); A.line(g, '#6a5a80', 1.6, [8, -6, 10, 20])
+    A.ball(g, 0, -18, 17, 16, c)
+    A.poly(g, [-8, -30, -2, -42, 2, -30], c); A.poly(g, [2, -30, 8, -40, 10, -28], sh(c, .08))
+    solid(g, [-7, -14, 7, -14, 0, 4 + ch * 5], '#8a6a3a')
+    lamp(g, -9, -22, 4.6, '#ff4020'); lamp(g, 9, -22, 4.6, '#ff4020')
+    A.line(g, '#cfc8d0', 2.4, [-10, 30, -12, 42]); A.line(g, '#cfc8d0', 2.4, [10, 30, 12, 42])
+    gloss(g, -8, -26, 5, 3)
   })
+  function antler (g, q, sp) {
+    var main = [q * 16, -24, q * (28 + sp), -42, q * (34 + sp), -60]
+    A.line(g, '#2a2014', 8, main); A.line(g, '#d8ccb0', 4.4, main)
+    var tines = [[q * 28, -42, q * (46 + sp), -44], [q * (33 + sp), -54, q * (48 + sp), -64], [q * 22, -34, q * 22, -52]]
+    tines.forEach(function (tn) { A.line(g, '#2a2014', 6, tn); A.line(g, '#d8ccb0', 3, tn) })
+  }
   reg('krampus', function (g) {
-    var c = '#6a4a34', ch = A.ch, br = Math.sin(A.T * 2.5)
-    A.horn(g, -22, -22, -2.6, 42, 14, '#d8ccb0', -.7); A.horn(g, 22, -22, -.54, 42, 14, '#d8ccb0', .7)
-    A.ball(g, 0, 2, 36, 38, c)
-    for (var i = 0; i < 14; i++) { var a = i / 14 * TAU; A.line(g, sh(c, -.3), 2.4, [Math.cos(a) * 34, Math.sin(a) * 36 + 2, Math.cos(a) * 41, Math.sin(a) * 43 + 2]) }
-    A.ball(g, 0, 14, 22, 20, '#7a5a40')
-    A.eye(g, -14, -8, 6.5, { sc: '#e6d6a0', col: '#c82a2a', lid: .3, lc: c, sq: .7 }); A.eye(g, 14, -8, 6.5, { sc: '#e6d6a0', col: '#c82a2a', lid: .3, lc: c, sq: .7 })
-    A.brow(g, -24, -19, -6, -13, '#2a1a10', 4); A.brow(g, 24, -19, 6, -13, '#2a1a10', 4)
-    A.flat(g, -4, 6, 2.2, 3, '#2a1a10'); A.flat(g, 4, 6, 2.2, 3, '#2a1a10')
-    A.mouth(g, 0, 18, 15, 5 + ch * 8, { n: 6, tl: .6, col: '#2a0a0a', tongue: false })
-    A.tent(g, 0, 20, Math.PI / 2, 26 + ch * 12, 8, '#d04a5a', { amp: 4, taper: .4 })
-    A.line(g, '#8a8a92', 3, [-30, 34, -12, 44, 12, 40, 30, 36])
+    var c = '#5a4434', ch = A.ch, sp = ch * 8
+    antler(g, -1, sp); antler(g, 1, sp)
+    A.ball(g, -28, -12, 10, 6, sh(c, -.1), { rot: -.4 }); A.ball(g, 28, -12, 10, 6, sh(c, -.1), { rot: .4 })
+    solid(g, [-22, -24, 22, -24, 26, 0, 14, 40, -14, 40, -26, 0], c)
+    for (var i = 0; i < 6; i++) A.line(g, al(sh(c, -.5), .7), 2, [-18 + i * 7, -22, -16 + i * 7, -10])
+    A.warts(g, 0, -14, 18, 4, '#6a8a3a', 2)
+    A.ball(g, 0, 30, 14, 11, '#3a2a22'); A.flat(g, 0, 38, 6, 4, '#120a0a')
+    A.poly(g, [-26, -8, -8, -2, -8, 2, -24, 0], sh(c, -.45)); A.poly(g, [26, -8, 8, -2, 8, 2, 24, 0], sh(c, -.45))
+    lamp(g, -13, 2, 6, '#ff4a2a'); lamp(g, 13, 2, 6, '#ff4a2a')
+    A.line(g, '#120a0a', 3, [-8, 24, -10, 18]); A.line(g, '#120a0a', 3, [8, 24, 10, 18])
+    gloss(g, -14, -18, 7, 4)
   })
 
-  /* ---- Sisters Vis --------------------------------------------------- */
-  reg('sisters-vis', function (g, t) {
-    var c = '#e4c4b8', ch = A.ch, br = Math.sin(A.T * 2.4)
-    g.save(); g.translate(0, br * 2)
-    A.tent(g, 0, 22, Math.PI / 2, 38, 18, '#8a2a3a', { amp: 4, taper: .7 })
-    A.poly(g, [-34, -26, -40, 14, -30, 38, -22, 6], '#2a1a22'); A.poly(g, [34, -26, 40, 14, 30, 38, 22, 6], '#2a1a22')
-    A.ball(g, 0, -4, 30, 34, c)
-    A.poly(g, [-28, -20, 0, -40, 28, -20, 10, -26, 0, -34, -10, -26], '#2a1a22')
-    A.flat(g, -11, -4, 8, 6, '#1a0e12'); A.flat(g, 11, -4, 8, 6, '#1a0e12')
-    A.dot(g, -11, -4, 2.2, ch > .1 ? '#ff6a5a' : '#e8b0b0', '#c83a4a'); A.dot(g, 11, -4, 2.2, ch > .1 ? '#ff6a5a' : '#e8b0b0', '#c83a4a')
-    A.tears(g, -11, 2, 24, '#8a1a2a'); A.tears(g, 11, 2, 24, '#8a1a2a')
-    A.mouth(g, 0, 18, 8, 2 + ch * 9, { n: 0, tongue: false, col: '#3a0a12' })
-    A.stitches(g, -20, 8, -8, 14, 3, '#5a2a34', 3)
+  /* ---- Sisters Vis: standing stone ------------------------------------ */
+  reg('sisters-vis', function (g) {
+    var c = '#8a8478', ch = A.ch, br = Math.sin(A.T * 2.4), i
+    var rocks = []
+    for (i = 0; i < 3; i++) { var a = A.T * 1.2 + i * 2.1; rocks.push([Math.cos(a) * 44, Math.sin(a) * 16 + 4, Math.sin(a) > 0]) }
+    rocks.forEach(function (r) { if (!r[2]) A.ball(g, r[0], r[1], 8, 7, '#6a645a', { lw: 2.4 }) })
+    g.save(); g.translate(0, br)
+    solid(g, [-26, -40, -8, -48, 12, -46, 28, -36, 32, -4, 30, 40, -30, 40, -32, -4], c)
+    A.flat(g, -18, -34, 10, 5, al('#6a8a3a', .8), .2); A.flat(g, 16, 36, 12, 4, al('#6a8a3a', .7)); A.warts(g, -20, -30, 8, 3, '#6a8a3a', 4)
+    A.poly(g, [-26, -16, 26, -16, 22, -10, -22, -10], sh(c, -.4))
+    lamp(g, -12, -4, 6.4, '#e8d880'); lamp(g, 12, -4, 6.4, '#e8d880')
+    solid(g, [-4, 0, 4, 0, 7, 14, -7, 14], sh(c, -.25), { lw: 2 })
+    var my = 26 + ch * 2; A.line(g, '#1a1612', 5, [-14, my - 2, 0, my + 2, 14, my - 2]); A.line(g, mix('#e8d880', '#fff', ch * .5), 1.8, [-14, my - 2, 0, my + 2, 14, my - 2])
+    for (i = 0; i < 3; i++) A.line(g, al('#e8d880', .7), 2, [-6 + i * 6, -34, -6 + i * 6, -26])
+    A.crack(g, 22, -6, 22, 1.9)
     g.restore()
+    rocks.forEach(function (r) { if (r[2]) A.ball(g, r[0], r[1] + br, 8, 7, '#6a645a', { lw: 2.4 }) })
   })
 
-  /* ---- Tuff Twins ---------------------------------------------------- */
+  /* ---- Tuff Twins: bramble balls (variant = parched twin) ------------- */
   reg('tuff-twins', function (g, t) {
-    var c = +t.variant === 1 ? '#8a98a4' : '#a89488', ch = A.ch
-    A.ball(g, -30, 24, 14, 12, c); A.ball(g, 30, 24, 14, 12, c)
-    A.ball(g, 0, 0, 40, 38, c)
-    A.crack(g, -26, -22, 18, 1.2, ''); A.crack(g, 24, 10, 16, 2.2, '')
-    A.eye(g, -15, -6, 7, { sc: '#e8e0cc', col: '#2a2a3a', lid: .4, lc: c, pu: .9 }); A.eye(g, 15, -6, 7, { sc: '#e8e0cc', col: '#2a2a3a', lid: .4, lc: c, pu: .9 })
-    A.poly(g, [-30, -18, -4, -10, -4, -16, -28, -26], sh(c, -.45)); A.poly(g, [30, -18, 4, -10, 4, -16, 28, -26], sh(c, -.45))
-    A.flat(g, -5, 6, 3, 4, sh(c, -.5)); A.flat(g, 5, 6, 3, 4, sh(c, -.5))
-    A.mouth(g, 0, 20, 18, 4 + ch * 11, { n: 8, tl: .8, col: '#1a0c0c' })
-    A.line(g, sh(c, -.6), 2.4, [-34, 18, -26, 28]); A.line(g, sh(c, -.6), 2.4, [34, 18, 26, 28])
-  })
-
-  /* ---- The Shell ----------------------------------------------------- */
-  reg('the-shell', function (g) {
-    var ch = A.ch, br = Math.sin(A.T * 2.4)
-    A.ball(g, -30, 14, 20, 17, '#d8a8a0'); A.ball(g, -34, 26, 12, 10, '#c89890')
-    A.tent(g, -38, 2, -2.3, 22, 4, '#d8a8a0', { amp: 2 }); A.tent(g, -28, -2, -1.5, 22, 4, '#d8a8a0', { amp: 2, ph: 1 })
-    A.eye(g, -44, -14 + br, 5, { col: '#4a2a2a', lc: '#d8a8a0', lid: .1 }); A.eye(g, -30, -20 + br, 5, { col: '#4a2a2a', lc: '#d8a8a0', lid: .1 })
-    A.mouth(g, -34, 22, 8, 2 + ch * 7, { n: 4, tl: .5 })
-    A.ball(g, 12, 0, 38, 36, '#c8a878')
-    for (var i = 1; i <= 4; i++) { g.strokeStyle = al('#5a3e22', .75); g.lineWidth = 2.4; g.beginPath(); g.ellipse(12 - i * 3, 0 + i, 38 - i * 8.5, 36 - i * 8, 0, 0, TAU); g.stroke() }
-    A.flat(g, 12, 0, 4, 4, '#5a3e22')
-    A.flat(g, 0, -22, 14, 5, al('#fff', .3), -.5)
-    A.spikes(g, 12, 0, 36, 7, 7, '#e2d4b0', .2 + ch * .3)
-  })
-
-  /* ---- The Matriarch ------------------------------------------------- */
-  reg('the-matriarch', function (g) {
-    var c = '#d4a8a0', ch = A.ch, br = Math.sin(A.T * 2)
-    for (var i = -3; i <= 3; i++) A.tent(g, i * 12, 22, Math.PI / 2 + i * .15, 30, 8, '#a8444e', { amp: 5, ph: i * 1.1, taper: .8 })
-    A.blob(g, 0, 0, 46, 42, c, { n: 12, wob: .05, seed: 27 })
-    for (i = 0; i < 12; i++) A.line(g, '#4a2a2a', 1.8, [-24 + i * 4.5, -38, -28 + i * 5, -50 + (i % 3) * 2])
-    var es = [[-24, -18, 6], [-6, -26, 5], [14, -22, 7], [26, -10, 5], [-30, -2, 4]]
-    es.forEach(function (e) { A.eye(g, e[0], e[1], e[2], { col: '#6a3a4a', lid: .2, lc: c, red: true }) })
-    A.mouth(g, 0, 16, 32, 13 + ch * 14, { n: 10, tl: .6, tongue: true })
-    A.veins(g, 0, 0, 44, '#8a2a3a', 6, 44)
-  })
-
-  /* ---- Chimera ------------------------------------------------------- */
-  reg('chimera', function (g) {
-    var ch = A.ch
-    A.ball(g, 0, 22, 34, 22, '#9a7a72')
-    A.tent(g, -22, 6, -2.2, 34, 14, '#8aa84e', { amp: 5, ph: 1 })
-    A.ball(g, -30, -26, 14, 13, '#8aa84e'); A.eye(g, -34, -29, 4.5, { col: '#c8a02a', lc: '#8aa84e' }); A.eye(g, -24, -29, 4.5, { col: '#c8a02a', lc: '#8aa84e' }); A.mouth(g, -29, -19, 7, 2 + ch * 5, { n: 3 })
-    A.tent(g, 22, 6, -.9, 34, 14, '#c8a49a', { amp: 5, ph: 2 })
-    A.ball(g, 32, -24, 14, 14, '#c8a49a'); A.eye(g, 28, -27, 4.5, { col: '#4a3a6a', lc: '#c8a49a', lid: .2 }); A.eye(g, 37, -27, 4.5, { col: '#4a3a6a', lc: '#c8a49a', lid: .2 }); A.mouth(g, 32, -16, 7, 2 + ch * 5, { n: 3 })
-    A.skull(g, 0, -20, 17, '#d8ceb2', { eyec: '#e85a3a' })
-    A.flies(g, 3, 48, 4, 2.2, -4)
-    A.warts(g, 0, 22, 28, 4, '#b89a90', 6)
-  })
-
-  /* ---- Rotgut -------------------------------------------------------- */
-  reg('rotgut', function (g) {
-    var c = '#9a8a5a', ch = A.ch
-    for (var i = 0; i < 4; i++) { var y = 36 - i * 20, w = 38 - i * 3, br = Math.sin(A.T * 2.6 + i) * 2; A.ball(g, 0, y, w, 12 + br, sh(c, i * .02)); A.line(g, al(sh(c, -.5), .5), 1.6, [-w + 6, y, w - 6, y]) }
-    A.ball(g, -22, -30, 18, 15, '#a89868')
-    A.ball(g, 6, -34, 22, 18, '#b8a672')
-    A.eye(g, -2, -40, 6, { col: '#7a3a2a', lc: '#b8a672', lid: .3, red: true }); A.eye(g, 14, -38, 5, { col: '#7a3a2a', lc: '#b8a672', lid: .3, red: true })
-    A.mouth(g, 8, -24, 15, 4 + ch * 12, { n: 6, tl: .6, col: '#2a1a0a' })
-    A.tent(g, 22, -30, -.3, 22, 6, '#c2a078', { amp: 4 })
-    A.veins(g, 0, 10, 40, '#5a4a2a', 5, 6)
-    A.drip(g, -28, 34, 10, '#4a5a22', 2.4)
-  })
-
-  /* ---- The Adversary ------------------------------------------------- */
-  reg('the-adversary', function (g) {
-    var ch = A.ch, br = Math.sin(A.T * 2)
-    A.wing(g, -8, -4, 50, -2.8, '#cfc2a0', { feather: true, dir: 1, flap: Math.sin(A.T * 3) * .1 })
-    A.wing(g, 8, -4, 50, -.34, '#cfc2a0', { feather: true, dir: 1, flap: -Math.sin(A.T * 3) * .1 })
-    A.poly(g, [-18, -2, 18, -2, 30, 46, 0, 40, -30, 46], '#1c1824')
-    A.line(g, '#3a2a4a', 2, [-8, 8, -12, 40]); A.line(g, '#3a2a4a', 2, [8, 8, 12, 40])
-    A.ball(g, 0, -20 + br, 20, 22, '#1a1620')
-    A.poly(g, [-18, -34 + br, -10, -24 + br, 10, -24 + br, 18, -34 + br, 8, -42 + br, -8, -42 + br], '#241c2c')
-    A.glow(g, -7, -20 + br, 10, '#ff5a2a', .6); A.glow(g, 7, -20 + br, 10, '#ff5a2a', .6)
-    A.flat(g, -7, -20 + br, 4, 3, '#ffc050'); A.flat(g, 7, -20 + br, 4, 3, '#ffc050')
-    for (var i = -4; i <= 4; i++) A.line(g, '#8a6a2a', 1.8, [i * 4.6, -42 + br - Math.abs(i) * -.5, i * 5.4, -48 + br - (i % 2) * 3])
-    A.mouth(g, 0, -8 + br, 7, 1 + ch * 6, { n: 0, col: '#ff6a2a', tongue: false })
-    A.halo(g, 0, -52 + br, 16, 4.5, '#6a5a3a')
-  })
-
-  /* ---- Brownie ------------------------------------------------------- */
-  reg('brownie', function (g) {
-    var c = '#7a5238', ch = A.ch
-    for (var i = 0; i < 30; i++) { var a = i / 30 * TAU, w = Math.sin(A.T * 3 + i) * 1.6; A.line(g, sh(c, -.25 + (i % 3) * .08), 3, [Math.cos(a) * 36, Math.sin(a) * 34, Math.cos(a) * (46 + w + (i % 4)), Math.sin(a) * (44 + w + (i % 4))]) }
-    A.ball(g, 0, 2, 40, 38, c)
-    for (i = 0; i < 9; i++) A.line(g, sh(c, .15), 2, [-26 + i * 6.5, -30 + (i % 3) * 6, -23 + i * 6.5, -22 + (i % 3) * 6])
-    A.eye(g, -15, -8, 10, { sc: '#efe4cc', col: '#2a1a10', lid: .1, lc: c, pu: 1.5 }); A.eye(g, 15, -8, 10, { sc: '#efe4cc', col: '#2a1a10', lid: .1, lc: c, pu: 1.5 })
-    A.flat(g, 0, 6, 4, 3, '#2a1a10')
-    A.mouth(g, 0, 18, 20, 7 + ch * 12, { n: 6, tl: .7, col: '#2a0c0c' })
-  })
-
-  /* ---- The Forsaken -------------------------------------------------- */
-  reg('the-forsaken', function (g) {
-    var ch = A.ch, br = Math.sin(A.T * 2.2) * 2
-    g.save(); g.translate(0, br)
-    for (var i = -3; i <= 3; i++) A.tent(g, i * 10, 14, Math.PI / 2 + i * .08, 32 + (i % 2) * 8, 11, i % 2 ? '#2a2c3a' : '#1e2030', { amp: 5, ph: i, taper: .9 })
-    A.poly(g, [-26, -20, 26, -20, 34, 24, -34, 24], '#242636')
-    A.ball(g, 0, -22, 24, 24, '#202230')
-    A.skull(g, 0, -22, 14, '#e8e4d4', { eyec: '#7affc8' })
-    A.glow(g, -5, -24, 12, '#5affc0', .3 + ch * .4); A.glow(g, 5, -24, 12, '#5affc0', .3 + ch * .4)
-    A.ball(g, -34, 16, 6, 10, '#e8e4d4', { rot: .4 }); A.ball(g, 34, 16, 6, 10, '#e8e4d4', { rot: -.4 })
-    A.line(g, '#8a8a96', 2, [34, 10, 34, 36]); A.ball(g, 34, 42, 8, 8, '#5affc0'); A.glow(g, 34, 42, 20, '#5affc0', .5)
-    g.restore()
-  })
-
-  /* ---- Big Horn ------------------------------------------------------ */
-  reg('big-horn', function (g) {
-    var c = '#b89a90', ch = A.ch
-    A.hand(g, -42, 28, 14, c, -.3); A.hand(g, 42, 28, 14, c, .3)
-    A.ball(g, 0, 8, 40, 36, c)
-    A.horn(g, 0, -20, -1.57, 46, 24, '#e8dcc0', .35)
-    A.line(g, al('#8a7a5a', .6), 2, [-6, -34, -4, -22]); A.line(g, al('#8a7a5a', .6), 2, [4, -40, 6, -26])
-    A.eye(g, -17, 0, 5.5, { col: '#2a1a14', lid: .3, lc: c, sc: '#e8d8c8' }); A.eye(g, 17, 0, 5.5, { col: '#2a1a14', lid: .3, lc: c, sc: '#e8d8c8' })
-    A.brow(g, -26, -9, -8, -4, sh(c, -.55), 3.6); A.brow(g, 26, -9, 8, -4, sh(c, -.55), 3.6)
-    A.flat(g, -6, 10, 4, 5, '#2a1014'); A.flat(g, 6, 10, 4, 5, '#2a1014')
-    A.mouth(g, 0, 24, 18, 5 + ch * 12, { n: 5, tl: .5, col: '#2a0c0c' })
-  })
-
-  /* ---- The Visage ---------------------------------------------------- */
-  reg('the-visage', function (g) {
-    var c = '#cdd6e0', ch = A.ch, br = Math.sin(A.T * 2) * 3
-    A.glow(g, 0, br, 56, '#8ab8ff', .22 + ch * .25)
-    g.save(); g.translate(0, br)
-    A.hand(g, -44, 20, 12, '#aab8c8', -.5); A.hand(g, 44, 20, 12, '#aab8c8', .5)
-    A.ball(g, 0, 0, 30, 42, c)
-    A.flat(g, -12, -8, 8, 13, '#0a0c14', .15); A.flat(g, 12, -8, 8, 13, '#0a0c14', -.15)
-    A.line(g, '#4a5a7a', 1.6, [-12, 4, -12, 34]); A.line(g, '#4a5a7a', 1.6, [12, 4, 12, 34])
-    A.dot(g, -12, -8, 2, '#a8d0ff', '#6a9aff'); A.dot(g, 12, -8, 2, '#a8d0ff', '#6a9aff')
-    A.flat(g, 0, 8, 2, 5, sh(c, -.4))
-    A.mouth(g, 0, 24, 7, 3 + ch * 12, { n: 0, tongue: false, col: '#06080e' })
-    A.line(g, '#4a5a7a', 1.4, [-22, -28, -10, -34]); A.line(g, '#4a5a7a', 1.4, [22, -28, 10, -34])
-    g.restore()
-  })
-
-  /* ---- Clutch -------------------------------------------------------- */
-  reg('clutch', function (g) {
-    var ch = A.ch, c = '#8a6a60'
-    for (var i = 0; i < 7; i++) {
-      var a = i / 7 * TAU + A.T * .5, r = 44 + Math.sin(A.T * 4 + i * 2) * 4 + ch * 6
-      A.tent(g, Math.cos(a) * 14, Math.sin(a) * 14, a, r - 14, 9, c, { amp: 2, ph: i, taper: .3 })
-      A.hand(g, Math.cos(a) * r, Math.sin(a) * r, 8, '#a88a7c', a + 1.57, { curl: .6 })
+    var dry = +t.variant === 1, c = dry ? '#8a6a34' : '#4a6a2a', ch = A.ch, k, i
+    A.ball(g, 0, 0, 30, 28, '#1a1208', { lw: 2 })
+    for (k = 0; k < 4; k++) {
+      var rx = 42 - k * 4, ry = 28 + k * 3, rot = k * .8 + Math.sin(A.T * .8 + k) * .08
+      g.save(); g.rotate(rot); g.beginPath(); g.ellipse(0, 0, rx, ry, 0, 0, TAU); g.lineWidth = 8; g.strokeStyle = '#120a06'; g.stroke(); g.lineWidth = 4.6; g.strokeStyle = sh(c, k * .06 - .08); g.stroke()
+      for (i = 0; i < 6; i++) { var a = i / 6 * TAU + k; var tx = Math.cos(a) * rx, ty = Math.sin(a) * ry; A.poly(g, [tx - Math.sin(a) * 3, ty + Math.cos(a) * 3, tx + Math.sin(a) * 3, ty - Math.cos(a) * 3, tx * 1.14, ty * 1.14], '#d8cca8', { lw: 1.6 }) }
+      g.restore()
     }
-    A.ball(g, 0, 0, 22, 22, '#5a3a3e')
-    A.eye(g, 0, 0, 13, { sc: '#e8d8c0', col: '#c8402a', lid: .1, lc: '#5a3a3e', red: true, pu: 1.3 })
+    A.ball(g, 0, 0, 22, 20, '#120a06', { lw: 2 })
+    lamp(g, -9, -2, 6, dry ? '#ffb040' : '#c8ff60'); lamp(g, 9, -2, 6, dry ? '#ffb040' : '#c8ff60')
+    A.line(g, '#d8cca8', 2.4, [-8, 10, -4, 13 + ch * 3, 0, 10, 4, 13 + ch * 3, 8, 10])
+  })
+
+  /* ---- The Shell: armoured tortoise ----------------------------------- */
+  reg('the-shell', function (g) {
+    var ch = A.ch, c = '#6a7a4a', i
+    for (var q = -1; q <= 1; q += 2) { A.ball(g, q * 38, -18, 10, 12, '#4a5a34', { rot: q * .4 }); A.ball(g, q * 38, 22, 10, 12, '#4a5a34', { rot: -q * .4 }) }
+    A.ball(g, 0, -42, 6, 8, '#4a5a34', { lw: 2 })
+    var hy = 38 + ch * 8
+    A.ball(g, 0, hy, 14, 15, '#8a9a58')
+    A.poly(g, [-6, hy + 4, 6, hy + 4, 0, hy + 14], '#d8c8a0', { lw: 2 })
+    lamp(g, -7, hy - 5, 3.8, '#ffd050', { lw: 1.8 }); lamp(g, 7, hy - 5, 3.8, '#ffd050', { lw: 1.8 })
+    A.spikes(g, 0, -2, 40, 10, 7, '#d8c8a0', .2 + ch * .2)
+    A.ball(g, 0, -2, 42, 38, c)
+    var hex = []; for (i = 0; i < 6; i++) hex.push(Math.cos(i / 6 * TAU) * 14, -2 + Math.sin(i / 6 * TAU) * 13)
+    A.poly(g, hex, sh(c, .1), { lw: 2.6, ol: sh(c, -.6) })
+    for (i = 0; i < 6; i++) A.line(g, sh(c, -.6), 2.6, [hex[i * 2], hex[i * 2 + 1], hex[i * 2] * 2.6, -2 + (hex[i * 2 + 1] + 2) * 2.6])
+    A.warts(g, 0, -2, 36, 5, '#8a9a58', 3)
+    A.crack(g, -24, -20, 18, 2.4)
+    gloss(g, -22, -24, 12, 5)
+  })
+
+  /* ---- The Matriarch: brood queen ------------------------------------- */
+  reg('the-matriarch', function (g) {
+    var ch = A.ch, br = Math.sin(A.T * 2), i
+    for (var q = -1; q <= 1; q += 2) for (i = 0; i < 3; i++) A.leg(g, q * 18, -8 + i * 14, q * (36 + i * 3), 0 + i * 14 + Math.sin(A.T * 4 + i + q) * 3, q * (46 - i * 2), 14 + i * 14, 5, '#6a4a2a')
+    A.blob(g, 0, 14, 40 + br, 38 + br, '#c8a870', { n: 12, wob: .05, seed: 27 })
+    for (i = 0; i < 3; i++) A.line(g, al('#4a2a14', .75), 3.4, [-34, 4 + i * 14, 0, 10 + i * 14, 34, 4 + i * 14])
+    var eg = [[-18, 6], [14, 0], [-4, 20], [22, 24], [-22, 30], [6, 36], [0, -2]]
+    eg.forEach(function (e, j) { var pu = 1 + Math.max(0, Math.sin(A.T * 3 + j * 2)) * .25 + ch * .2; A.ball(g, e[0], e[1] + 8, 6 * pu, 7 * pu, '#efe6c8', { lw: 2 }) })
+    A.ball(g, 0, -20, 22, 13, '#8a6a40')
+    A.ball(g, 0, -34, 17, 13, '#6a4a2a')
+    for (i = -2; i <= 2; i++) A.poly(g, [i * 6 - 3, -44, i * 6 + 3, -44, i * 6, -54 + Math.abs(i)], '#d8b848', { lw: 2 })
+    lamp(g, -8, -36, 4.6, '#ff8a3a'); lamp(g, 8, -36, 4.6, '#ff8a3a')
+    A.horn(g, -8, -26, 1.9 + ch * .3, 20, 8, '#d8c8a8', -.5); A.horn(g, 8, -26, 1.24 - ch * .3, 20, 8, '#d8c8a8', .5)
+    gloss(g, -22, -2, 11, 5)
+  })
+
+  /* ---- Chimera: scorpion-tailed manticore ----------------------------- */
+  reg('chimera', function (g) {
+    var ch = A.ch, i
+    A.wing(g, -16, 6, 38, -2.5, '#5a3a3a', { dir: 1, flap: Math.sin(A.T * 3) * .08 }); A.wing(g, 16, 6, 38, -.64, '#5a3a3a', { dir: 1, flap: -Math.sin(A.T * 3) * .08 })
+    var tp = [22, 30, 46, 24, 52, -2, 40, -32, 20 - ch * 6, -46 + ch * 8]
+    A.line(g, '#1a1208', 11, tp); A.line(g, '#8a6a3a', 6.4, tp)
+    for (i = 0; i < 4; i++) A.ball(g, tp[2 + i * 2], tp[3 + i * 2], 4.6, 4.6, '#a8803e', { lw: 2 })
+    A.poly(g, [tp[8] - 4, tp[9] - 3, tp[8] + 4, tp[9] - 3, tp[8] - 2 - ch * 3, tp[9] + 14], '#c84a2a', { lw: 2 })
+    A.ball(g, 0, 26, 28, 20, '#a8783e')
+    A.spikes(g, 0, -8, 32, 14, 12, '#7a3a18', 0)
+    A.ball(g, 0, -8, 34, 32, '#8a4a20')
+    A.ball(g, 0, -6, 24, 22, '#c89858')
+    A.ball(g, 0, 6, 12, 9, '#d8b078'); A.poly(g, [-4, 2, 4, 2, 0, 7], '#2a1208', { lw: 1.6 })
+    A.poly(g, [-22, -22, -14, -34, -8, -22], '#8a4a20'); A.poly(g, [22, -22, 14, -34, 8, -22], '#8a4a20')
+    lamp(g, -11, -10, 5.4, '#ffd040'); lamp(g, 11, -10, 5.4, '#ffd040')
+    A.mouth(g, 0, 14, 9, 2 + ch * 7, { n: 4, tl: .6, col: '#2a0a08', tongue: false })
+    gloss(g, -14, -20, 8, 4)
+  })
+
+  /* ---- Rotgut: brimming ooze vat -------------------------------------- */
+  reg('rotgut', function (g) {
+    var c = '#7a5a3a', ch = A.ch, br = Math.sin(A.T * 2.6), i
+    for (var q = -1; q <= 1; q += 2) A.ball(g, q * 24, 46, 10, 5, '#3a2a1a', { lw: 2 })
+    solid(g, [-30, -26, 30, -26, 38, 0, 32, 38, -32, 38, -38, 0], c)
+    for (i = -3; i <= 3; i++) A.line(g, al(sh(c, -.6), .8), 2.2, [i * 9, -26, i * 11, 38])
+    for (i = 0; i < 2; i++) { var y = -12 + i * 34; A.line(g, '#1a1a1e', 8, [-37, y, 0, y + 4, 37, y]); A.line(g, '#5a5a62', 4.4, [-37, y, 0, y + 4, 37, y]) }
+    A.ball(g, 0, -27, 30, 9, '#3a2a1a'); A.ball(g, 0, -29 + br * .5, 25, 6, '#8aa83a', { lw: 2.4 })
+    A.drip(g, -26, -22, 24, '#8aa83a', 4.4); A.drip(g, 14, -24, 18, '#8aa83a', 4); A.drip(g, 30, -18, 12, '#8aa83a', 3)
+    for (i = 0; i < 3; i++) { var f = (A.T * .6 + i / 3) % 1; A.ball(g, -10 + i * 10, -34 - f * 12, 3 + f * 3, 3 + f * 3, '#b8d86a', { lw: 1.4 }) }
+    lamp(g, -12, 6, 6.4, '#e8e060'); lamp(g, 12, 6, 6.4, '#e8e060')
+    A.mouth(g, 0, 24, 14, 3 + ch * 9, { n: 6, tl: .6, col: '#1a1a08', tongue: false })
+    gloss(g, -26, 0, 4, 18, -.1)
+  })
+
+  /* ---- The Adversary: black sun ---------------------------------------- */
+  reg('the-adversary', function (g) {
+    var ch = A.ch, i
+    A.glow(g, 0, 0, 62, '#ffd060', .4 + ch * .3)
+    for (i = 0; i < 24; i++) {
+      var a = i / 24 * TAU + A.T * .25, l = (i % 2 ? 50 : 42) + ch * 10 + Math.sin(A.T * 3 + i) * 2
+      A.poly(g, [Math.cos(a - .07) * 30, Math.sin(a - .07) * 30, Math.cos(a) * l, Math.sin(a) * l, Math.cos(a + .07) * 30, Math.sin(a + .07) * 30], '#e8b838', { lw: 1.8 })
+    }
+    A.ball(g, 0, 0, 33, 33, '#14101a', { lw: 3.4 })
+    g.beginPath(); g.arc(0, 0, 27, 0, TAU); g.lineWidth = 3; g.strokeStyle = '#d8a830'; g.stroke()
+    lamp(g, 0, 0, 15, '#ffd060', { sq: 1.3 })
+    gloss(g, -14, -18, 9, 4)
+  })
+
+  /* ---- Brownie: spined hedgehog --------------------------------------- */
+  reg('brownie', function (g) {
+    var ch = A.ch, c = '#7a5a3a', i
+    for (i = 0; i < 24; i++) {
+      var a = i / 24 * TAU, l = 48 + (i % 3) * 3 + ch * 8 + Math.sin(A.T * 3 + i) * 1.4
+      A.poly(g, [Math.cos(a - .1) * 34, 2 + Math.sin(a - .1) * 32, Math.cos(a) * l, 2 + Math.sin(a) * l * .96, Math.cos(a + .1) * 34, 2 + Math.sin(a + .1) * 32], i % 2 ? '#4a3220' : '#6a4a2c', { lw: 2.2 })
+    }
+    A.ball(g, 0, 2, 38, 36, c)
+    A.ball(g, -26, 0, 8, 8, '#c8a078', { lw: 2.2 }); A.ball(g, 26, 0, 8, 8, '#c8a078', { lw: 2.2 })
+    A.ball(g, 0, 14, 22, 20, '#c8a078')
+    A.ball(g, 0, 26, 10, 8, '#d8b890'); A.flat(g, 0, 29, 4, 3, '#1a0e0a')
+    lamp(g, -11, 6, 5, '#d8a030'); lamp(g, 11, 6, 5, '#d8a030')
+    A.poly(g, [-6, 33, -2, 33, -4, 39 + ch * 3], '#efe6d0', { lw: 1.6 }); A.poly(g, [6, 33, 2, 33, 4, 39 + ch * 3], '#efe6d0', { lw: 1.6 })
+    gloss(g, -18, -10, 10, 5)
+  })
+
+  /* ---- The Forsaken: brass deep-sea diver ----------------------------- */
+  reg('the-forsaken', function (g) {
+    var ch = A.ch, br = Math.sin(A.T * 2.2) * 2, i
+    g.save(); g.translate(0, br)
+    A.tent(g, -26, -26, 2.7, 34, 7, '#2a2a30', { amp: 6, ph: 1 }); A.tent(g, 26, -26, .45, 34, 7, '#2a2a30', { amp: 6, ph: 3 })
+    for (var q = -1; q <= 1; q += 2) A.ball(g, q * 16, 44, 12, 7, '#5a4a2a')
+    solid(g, [-26, -4, 26, -4, 34, 36, -34, 36], '#3a4a48')
+    for (i = 0; i < 3; i++) A.line(g, al('#000', .4), 2.4, [-30 + i * 2, 8 + i * 9, 30 - i * 2, 8 + i * 9])
+    plate(g, 0, 10, 30, 22, '#8a6a2a', { r: 4, bolts: true })
+    A.ball(g, -38, 14, 9, 16, '#3a4a48', { rot: .3 }); A.ball(g, 38, 14, 9, 16, '#3a4a48', { rot: -.3 })
+    A.ball(g, -40, 28, 7, 5, '#8a6a2a', { lw: 2 }); A.ball(g, 40, 28, 7, 5, '#8a6a2a', { lw: 2 })
+    A.ball(g, 0, -28, 27, 26, '#a8802a')
+    A.ball(g, 0, -26, 16, 16, '#3a2a14', { lw: 2.6 }); A.flat(g, 0, -26, 12, 12, '#06100e')
+    lamp(g, 0, -26, 8.6, '#5affc0', { sq: 1.15 })
+    for (i = 0; i < 8; i++) { var a = i / 8 * TAU; A.flat(g, Math.cos(a) * 14.4, -26 + Math.sin(a) * 14.4, 1.5, 1.5, '#3a2a14') }
+    A.ball(g, 0, -53, 5, 5, '#8a6a2a', { lw: 2 })
+    A.ball(g, -26, -28, 4, 7, '#8a6a2a', { lw: 2 }); A.ball(g, 26, -28, 4, 7, '#8a6a2a', { lw: 2 })
+    gloss(g, -14, -42, 8, 4)
+    g.restore()
+  })
+
+  /* ---- Big Horn: rhinoceros beetle ------------------------------------ */
+  reg('big-horn', function (g) {
+    var c = '#2a4a3a', ch = A.ch, q, i
+    for (q = -1; q <= 1; q += 2) for (i = 0; i < 3; i++) A.leg(g, q * 24, -2 + i * 14, q * (40 + i * 2), 4 + i * 14 + Math.sin(A.T * 5 + i + q) * 2, q * (48 - i * 2), 18 + i * 14, 5, '#1a2a22')
+    A.ball(g, 0, 14, 34, 36, c)
+    A.line(g, sh(c, -.6), 3, [0, -20, 0, 50])
+    A.flat(g, -16, 8, 6, 20, al('#8ad8b0', .3), -.15); A.flat(g, 16, 14, 4, 16, al('#8ad8b0', .2), .15)
+    A.ball(g, 0, -14, 26, 15, '#34503e')
+    A.ball(g, 0, -30 + ch * 4, 14, 11, '#2a4a3a')
+    A.horn(g, 0, -36 + ch * 4, -1.57, 34, 15, '#1e2a22', .12)
+    A.horn(g, 0, -56 + ch * 4, -2.3, 14, 7, '#1e2a22', -.3); A.horn(g, 0, -56 + ch * 4, -.84, 14, 7, '#1e2a22', .3)
+    lamp(g, -9, -29 + ch * 4, 4.4, '#ffa040'); lamp(g, 9, -29 + ch * 4, 4.4, '#ffa040')
+    gloss(g, -14, -4, 8, 4)
+  })
+
+  /* ---- The Visage: orrery of stone rings ------------------------------ */
+  reg('the-visage', function (g) {
+    var ch = A.ch, br = Math.sin(A.T * 2) * 3, i
+    A.glow(g, 0, br, 56, '#8ab8ff', .25 + ch * .25)
+    g.save(); g.translate(0, br)
+    A.ball(g, 0, 48, 14, 5, '#6a6a78', { lw: 2.4 })
+    for (i = 0; i < 3; i++) {
+      g.save(); g.rotate(i * 1.05 + A.T * (.3 + i * .12)); g.beginPath(); g.ellipse(0, 0, 44 - i * 4, 15 + i * 8, 0, 0, TAU)
+      g.lineWidth = 7.4; g.strokeStyle = '#1a1a26'; g.stroke(); g.lineWidth = 4; g.strokeStyle = i % 2 ? '#aab8c8' : '#d8b848'; g.stroke(); g.restore()
+    }
+    A.ball(g, 0, 0, 18, 18, '#2a3a58', { lw: 3.4 })
+    lamp(g, 0, 0, 12, '#9ad0ff')
+    var pc = ['#d8b848', '#8ad8b0', '#e87a5a']
+    for (i = 0; i < 3; i++) { var a = A.T * (1 + i * .4) + i * 2; A.ball(g, Math.cos(a) * 40, Math.sin(a) * (16 + i * 8), 5.4, 5.4, pc[i], { lw: 2 }) }
+    g.restore()
+  })
+
+  /* ---- Clutch: brittle star ------------------------------------------- */
+  reg('clutch', function (g) {
+    var ch = A.ch
+    for (var i = 0; i < 7; i++) {
+      var a = i / 7 * TAU + Math.sin(A.T + i) * .08, l = 38 + ch * 6 + Math.sin(A.T * 4 + i * 2) * 3
+      var tp = A.tent(g, Math.cos(a) * 10, Math.sin(a) * 10, a, l, 15, '#b8683a', { amp: 3, ph: i, taper: .75, hi: true })
+      A.poly(g, [tp.x + Math.cos(a + 1.57) * 3, tp.y + Math.sin(a + 1.57) * 3, tp.x + Math.cos(a - 1.57) * 3, tp.y + Math.sin(a - 1.57) * 3, tp.x + Math.cos(a) * 9, tp.y + Math.sin(a) * 9], '#d8c8a0', { lw: 2 })
+      for (var j = 1; j < 4; j++) A.flat(g, Math.cos(a) * (10 + j * 8), Math.sin(a) * (10 + j * 8), 1.8, 1.8, al('#3a1a10', .8))
+    }
+    A.ball(g, 0, 0, 23, 23, '#7a3a2a')
+    for (i = 0; i < 6; i++) { var b = i / 6 * TAU + .3; A.flat(g, Math.cos(b) * 18, Math.sin(b) * 18, 2, 2, '#d8c8a0') }
+    lamp(g, 0, 0, 13, '#f0e060')
   }, { R: 22 })
 
-  /* ---- Colostomia ---------------------------------------------------- */
+  /* ---- Colostomia: trilobite ------------------------------------------ */
   reg('colostomia', function (g) {
-    var c = '#d8909c', ch = A.ch, br = Math.sin(A.T * 2.4)
-    for (var i = 0; i < 3; i++) { A.ball(g, (i % 2 ? 8 : -8), -20 + i * 22, 36 - i * 2, 13 + br, sh(c, i * .02)); A.line(g, al('#8a3a4a', .5), 1.6, [-28, -20 + i * 22, 28, -20 + i * 22]) }
-    A.ball(g, 24, 30, 24, 20, '#9a7a4a'); A.rect(g, 12, 12, 24, 10, '#cfc6b0', 3)
-    A.flat(g, 18, 26, 8, 5, al('#fff', .25), -.5)
-    A.veins(g, 0, 0, 34, '#8a3a4a', 5, 15)
-    A.eye(g, -18, -26, 7, { col: '#5a3a3a', lc: c, lid: .25, red: true }); A.eye(g, 4, -30, 5, { col: '#5a3a3a', lc: c, lid: .25 })
-    A.mouth(g, -8, -6, 17, 5 + ch * 12, { n: 6, tl: .6 })
-    A.drip(g, 32, 44, 10, '#6a4a22', 2.6)
+    var c = '#9a7a9a', ch = A.ch, br = Math.sin(A.T * 2.4), i
+    for (var q = -1; q <= 1; q += 2) for (i = 0; i < 5; i++) A.line(g, '#3a2a3a', 3.4, [q * 26, -8 + i * 9, q * (38 + Math.sin(A.T * 5 + i) * 2), -4 + i * 9 + 4])
+    A.ball(g, 0, 40, 17, 11, sh(c, -.1))
+    for (i = 0; i < 4; i++) { A.ball(g, 0, -2 + i * 10 + br * .4, 30 - i * 3, 8, sh(c, i * .02 - .04)); A.line(g, al('#3a2a3a', .6), 1.8, [-24 + i * 3, -2 + i * 10, 24 - i * 3, -2 + i * 10]) }
+    A.flat(g, 0, 18, 8, 28, al('#fff', .16)); A.line(g, al('#3a2a3a', .7), 2, [-8, -2, -8, 38]); A.line(g, al('#3a2a3a', .7), 2, [8, -2, 8, 38])
+    A.ball(g, 0, -24, 30, 19, c)
+    A.poly(g, [-30, -20, -42, 2, -26, -8], sh(c, -.1)); A.poly(g, [30, -20, 42, 2, 26, -8], sh(c, -.1))
+    A.flat(g, 0, -28, 8, 12, sh(c, .18))
+    lamp(g, -18, -26, 6, '#e8d040', { sq: 1.3 }); lamp(g, 18, -26, 6, '#e8d040', { sq: 1.3 })
+    A.mouth(g, 0, -10, 6, 1.5 + ch * 5, { n: 0, tongue: false })
+    gloss(g, -16, -32, 9, 4)
   })
 
-  /* ---- Sheol / Womb / finale ---------------------------------------- */
+  /* ---- The Lamb: ember basalt golem ----------------------------------- */
   reg('the-lamb', function (g) {
-    var ch = A.ch, br = Math.sin(A.T * 2.6)
-    A.horn(g, -24, -14, -2.5, 34, 14, '#cfc2a4', -.7); A.horn(g, 24, -14, -.64, 34, 14, '#cfc2a4', .7)
-    var wool = [[-30, 6, 16], [-18, -12, 17], [0, -18, 18], [18, -12, 17], [30, 6, 16], [-22, 24, 16], [0, 28, 18], [22, 24, 16]]
-    wool.forEach(function (w, i) { A.ball(g, w[0], w[1] + Math.sin(A.T * 2 + i) * 1, w[2], w[2], '#ece4d6') })
-    A.ball(g, 0, 4, 24, 28, '#2a2228')
-    A.glow(g, -9, -2, 12, '#ff3a2a', .5 + ch * .4); A.glow(g, 9, -2, 12, '#ff3a2a', .5 + ch * .4)
-    A.flat(g, -9, -2, 5, 3.4, '#ff5a3a', -.3); A.flat(g, 9, -2, 5, 3.4, '#ff5a3a', .3)
-    A.mouth(g, 0, 14, 10, 3 + ch * 10, { n: 5, tl: .6, col: '#ff4a2a', tongue: false })
-    A.flat(g, -20, 20, 7, 12, al('#8a1a24', .65), .3); A.drip(g, -20, 26, 14, '#8a1a24', 2.4)
-    A.halo(g, 0, -42 + br, 20, 5, '#cfa84a')
+    var ch = A.ch, br = Math.sin(A.T * 2.6), i
+    A.glow(g, 0, 6, 58, '#ff5a1a', .3 + ch * .3)
+    for (i = -2; i <= 2; i++) { var f = Math.sin(A.T * 10 + i * 1.7) * 3; A.poly(g, [i * 9 - 6, -36, i * 9 + 6, -36, i * 9 + f, -52 - (2 - Math.abs(i)) * 5 - ch * 8], i % 2 ? '#ffd040' : '#ff8a28', { lw: 2 }) }
+    A.ball(g, -42, 14, 12, 17, '#4a4046', { rot: .2 }); A.ball(g, 42, 14, 12, 17, '#4a4046', { rot: -.2 })
+    solid(g, [-30, -14, -12, -26, 12, -26, 30, -14, 38, 20, 26, 44, -26, 44, -38, 20], '#3a3236')
+    var cr = [[-22, -8, -10, 12, -20, 34], [18, -12, 8, 6, 20, 30], [-4, 4, 4, 22, -2, 40]]
+    cr.forEach(function (p) { A.line(g, '#8a2a0a', 6, p); A.line(g, mix('#ff8a2a', '#ffe070', ch * .6), 3, p) })
+    solid(g, [-16, -30, -6, -42, 10, -40, 18, -28, 14, -14, -14, -14], '#4a4046')
+    lamp(g, -6, -27 + br * .3, 4.4, '#ff8a2a'); lamp(g, 8, -27 + br * .3, 4.4, '#ff8a2a')
+    gloss(g, -22, -16, 9, 4)
   })
-  reg('satan', function (g) { satan(g, 1, '#241418', '#e84a2a') })
-  reg('mega-satan', function (g) { satan(g, 1.12, '#171014', '#ff2a1a', true) })
-  function satan (g, k, c, ec, hands) {
-    var ch = A.ch, br = Math.sin(A.T * 2)
+
+  /* ---- Satan, Mega Satan: abyss wyrm ---------------------------------- */
+  function wyrm (g, k, c, ec, mega) {
+    var ch = A.ch, br = Math.sin(A.T * 2), i
     g.save(); g.scale(k, k)
-    A.wing(g, -14, -6, 52, -2.7, '#3a2028', { dir: 1, flap: Math.sin(A.T * 2.4) * .1 }); A.wing(g, 14, -6, 52, -.44, '#3a2028', { dir: 1, flap: -Math.sin(A.T * 2.4) * .1 })
-    A.glow(g, 0, 6, 54, '#a81a18', .3 + ch * .25)
-    A.ball(g, 0, 34, 28, 18, c)
-    if (hands) { A.hand(g, -42, 30, 14, '#2a1a20', -.3); A.hand(g, 42, 30, 14, '#2a1a20', .3) }
-    A.horn(g, -18, -26, -2.3, 40, 14, '#d8c8a4', -.55); A.horn(g, 18, -26, -.84, 40, 14, '#d8c8a4', .55)
-    A.ball(g, 0, 0 + br, 30, 34, sh(c, .08))
-    A.ball(g, 0, 22 + br, 12, 14, sh(c, .02))
-    A.glow(g, -12, -8 + br, 13, ec, .6); A.glow(g, 12, -8 + br, 13, ec, .6)
-    A.poly(g, [-22, -14 + br, -4, -4 + br, -20, 0 + br], ec, { ol: false }); A.poly(g, [22, -14 + br, 4, -4 + br, 20, 0 + br], ec, { ol: false })
-    A.flat(g, -4, 14 + br, 1.8, 3, '#0a0408'); A.flat(g, 4, 14 + br, 1.8, 3, '#0a0408')
-    A.mouth(g, 0, 24 + br, 12, 3 + ch * 12, { n: 7, tl: .6, col: '#3a0a0c', tongue: false })
-    A.line(g, '#0a0408', 2, [-12, 18 + br, 0, 22 + br, 12, 18 + br])
-    A.poly(g, [-5, 36 + br, 5, 36 + br, 0, 52 + br], c)
+    A.glow(g, 0, 6, 56, '#a81a18', .3 + ch * .25)
+    for (i = -5; i <= 5; i++) { var fa = -1.57 + i * .27, fl = 58 - Math.abs(i) * 2.4; solid(g, [Math.cos(fa - .12) * 30, -6 + Math.sin(fa - .12) * 30, Math.cos(fa) * fl, -6 + Math.sin(fa) * fl, Math.cos(fa + .12) * 30, -6 + Math.sin(fa + .12) * 30], mega ? '#b88a2a' : '#5a1a1a', { lw: 2.4 }) }
+    A.ball(g, 0, 36, 26, 16, c)
+    if (mega) { A.hand(g, -46, 30, 14, '#2a1a20', -.3); A.hand(g, 46, 30, 14, '#2a1a20', .3) }
+    A.poly(g, [-30, -10, -48, -22, -34, 4], sh(c, -.1)); A.poly(g, [30, -10, 48, -22, 34, 4], sh(c, -.1))
+    solid(g, [-30, -18 + br, 0, -30 + br, 30, -18 + br, 34, 6 + br, 18, 30 + br, -18, 30 + br, -34, 6 + br], sh(c, .06))
+    A.poly(g, [-28, -18 + br, -8, -8 + br, -8, -2 + br, -26, -8 + br], '#1a0a0c'); A.poly(g, [28, -18 + br, 8, -8 + br, 8, -2 + br, 26, -8 + br], '#1a0a0c')
+    lamp(g, -15, -5 + br, 6.8, ec); lamp(g, 15, -5 + br, 6.8, ec)
+    A.flat(g, -4, 8 + br, 1.8, 3, '#0a0408'); A.flat(g, 4, 8 + br, 1.8, 3, '#0a0408')
+    A.glow(g, 0, 20 + br, 18 + ch * 14, '#ff7a2a', .5)
+    A.mouth(g, 0, 20 + br, 16, 4 + ch * 11, { n: 8, tl: .7, col: '#8a1a0a', tongue: false })
+    if (mega) A.crown(g, 0, -34 + br, 18, 14, '#e0b83c')
     g.restore()
   }
+  reg('satan', function (g) { wyrm(g, 1, '#3a1a1e', '#e84a2a') })
+  reg('mega-satan', function (g) { wyrm(g, 1.12, '#241418', '#ff2a1a', true) })
+
+  /* ---- Boss Isaac: porcelain doll, Blue Baby: tin automaton ----------- */
+  function windkey (g, x, y, c) {
+    A.line(g, '#2a2a30', 6, [x - 12, y, x, y]); A.line(g, '#8a8a92', 3, [x - 12, y, x, y])
+    var s = Math.cos(A.T * 2) * 1
+    A.ball(g, x + 4, y - 6 * s, 6, 4, c, { lw: 2 }); A.ball(g, x + 4, y + 6 * s, 6, 4, c, { lw: 2 })
+  }
   reg('boss-isaac', function (g) {
-    var c = '#ead4c2', ch = A.ch, br = Math.sin(A.T * 3)
-    A.glow(g, 0, 0, 60, '#cfe6ff', .22)
-    A.wing(g, -10, 0, 46, -2.75, '#f2f0f4', { feather: true, dir: 1, flap: Math.sin(A.T * 4) * .12 }); A.wing(g, 10, 0, 46, -.39, '#f2f0f4', { feather: true, dir: 1, flap: -Math.sin(A.T * 4) * .12 })
-    A.ball(g, 0, 30, 19, 18, sh(c, -.08)); A.ball(g, -12, 44, 7, 6, c); A.ball(g, 12, 44, 7, 6, c)
-    A.ball(g, -26, 20, 7, 10, c, { rot: .5 }); A.ball(g, 26, 20, 7, 10, c, { rot: -.5 })
-    A.ball(g, 0, -6 + br, 36, 32, c)
-    A.blush(g, -22, 2 + br, 7); A.blush(g, 22, 2 + br, 7)
-    A.eye(g, -12, -8 + br, 8, { sc: '#e8e8f0', col: '#3a5a8a', lid: .4, lc: c, pu: 1.4 }); A.eye(g, 12, -8 + br, 8, { sc: '#e8e8f0', col: '#3a5a8a', lid: .4, lc: c, pu: 1.4 })
-    A.tears(g, -12, 0 + br, 22); A.tears(g, 12, 0 + br, 22)
-    A.mouth(g, 0, 16 + br, 8, 3 + ch * 9, { n: 0, col: '#4a1a22', tn: '#d4707e' })
-    A.halo(g, 0, -42 + br, 20, 5, '#f3d86a')
+    var c = '#eadcc8', ch = A.ch, br = Math.sin(A.T * 3)
+    A.glow(g, 0, 0, 60, '#cfe6ff', .2)
+    windkey(g, 38, 6, '#d8b848')
+    solid(g, [-16, 12, 16, 12, 32, 48, -32, 48], '#b8a8d0')
+    for (var i = -3; i <= 3; i++) A.poly(g, [i * 9 - 5, 44, i * 9 + 5, 44, i * 9, 52], '#d8c8e8', { lw: 2 })
+    A.ball(g, -26, 24, 7, 11, c, { rot: .5 }); A.ball(g, 26, 24, 7, 11, c, { rot: -.5 })
+    A.ball(g, -34, -6, 9, 12, '#3a2a22', { rot: .3 }); A.ball(g, 34, -6, 9, 12, '#3a2a22', { rot: -.3 })
+    A.ball(g, 0, -8 + br, 34, 31, c)
+    A.ball(g, 0, -34 + br, 31, 12, '#8a7aa0')
+    for (i = -3; i <= 3; i++) A.ball(g, i * 9, -37 + br, 5, 4, '#a898c0', { lw: 1.6 })
+    A.blush(g, -20, 2 + br, 7); A.blush(g, 20, 2 + br, 7)
+    A.eye(g, -12, -9 + br, 8, { sc: '#f4eee4', col: '#3a5a8a', lid: 0, pu: 1.4 }); A.eye(g, 12, -9 + br, 8, { sc: '#f4eee4', col: '#3a5a8a', lid: 0, pu: 1.4 })
+    A.crack(g, -4, -34 + br, 30, 1.7); A.crack(g, 18, -14 + br, 14, .6)
+    A.mouth(g, 0, 14 + br, 5 + ch * 3, 2 + ch * 7, { n: 0, tongue: false, col: '#a02a3a' })
+    gloss(g, -18, -22 + br, 9, 4)
   })
   reg('boss-blue-baby', function (g) {
-    var c = '#7e94a8', ch = A.ch, br = Math.sin(A.T * 3)
-    A.ball(g, 0, 30, 20, 18, sh(c, -.1)); A.ball(g, -12, 44, 7, 6, c); A.ball(g, 12, 44, 7, 6, c)
-    A.ball(g, -26, 20, 7, 10, c, { rot: .5 }); A.ball(g, 26, 20, 7, 10, c, { rot: -.5 })
-    A.ball(g, 0, -6 + br, 36, 32, c)
-    A.line(g, '#3a3a4a', 3, [-6, -38 + br, 0, -44 + br, 8, -38 + br])
-    A.flat(g, -12, -8 + br, 10, 9, al('#1a1a28', .8)); A.flat(g, 12, -8 + br, 10, 9, al('#1a1a28', .8))
-    A.eye(g, -12, -8 + br, 6.5, { sc: '#d8dce4', col: '#2a2a3a', lid: .15, lc: c, pu: 1.8 }); A.eye(g, 12, -8 + br, 6.5, { sc: '#d8dce4', col: '#2a2a3a', lid: .15, lc: c, pu: 1.8 })
-    A.tears(g, -12, 0 + br, 24, '#8a1a2a'); A.tears(g, 12, 0 + br, 24, '#8a1a2a')
-    A.mouth(g, 0, 17 + br, 9, 3 + ch * 10, { n: 0, col: '#2a1a28', tn: '#a45a6a' })
-    A.veins(g, 0, 0, 34, '#4a5a78', 5, 8)
-    A.flat(g, 26, 36, 8, 5, al('#5a3a22', .8))
+    var c = '#5a8a9a', ch = A.ch, br = Math.sin(A.T * 3), i
+    windkey(g, -38, 4, '#c8c8d0')
+    for (var q = -1; q <= 1; q += 2) { A.line(g, '#8a8a92', 3.4, [q * 12, 36, q * 14, 40, q * 10, 44, q * 14, 48]); A.ball(g, q * 12, 50, 9, 4, '#6a6a72', { lw: 2 }) }
+    plate(g, 0, 28, 40, 24, '#4a7a8a', { r: 6, bolts: true })
+    A.ball(g, -36, 20, 8, 12, '#8a8a92', { rot: .3 }); A.ball(g, 36, 20, 8, 12, '#8a8a92', { rot: -.3 })
+    plate(g, 0, -8 + br, 72, 58, c, { r: 12, bolts: true })
+    plate(g, 0, -8 + br, 58, 44, '#1a2a30', { r: 7, lw: 2.4 })
+    lamp(g, -15, -14 + br, 10, '#ffd050'); lamp(g, 15, -14 + br, 10, '#ffd050')
+    for (i = 0; i < 6; i++) { A.line(g, '#0a1214', 3.6, [-15 + i * 6, 6 + br, -15 + i * 6, 14 + br]); A.line(g, mix('#8ab0b8', '#ff5a3a', ch), 1.8, [-15 + i * 6, 6 + br, -15 + i * 6, 14 + br]) }
+    A.line(g, '#8a8a92', 3, [0, -38 + br, 0, -52 + br]); A.ball(g, 0, -54 + br, 5, 5, Math.sin(A.T * 6) > 0 ? '#ff5a4a' : '#8a2a2a', { lw: 2 })
+    A.flat(g, 24, 4 + br, 6, 12, al('#2a3a30', .5), .3)
+    gloss(g, -26, -28 + br, 12, 4)
   })
+
+  /* ---- Hush: thunderhead ---------------------------------------------- */
   reg('hush', function (g) {
-    var c = '#4a4a8a', ch = A.ch
-    for (var i = -2; i <= 2; i++) A.tent(g, i * 14, 18, Math.PI / 2 + i * .25, 40, 10, sh(c, -.2), { amp: 8, ph: i * 1.5, taper: .8, rage: 1 })
-    A.blob(g, 0, -2, 46, 42, c, { n: 14, wob: .06, seed: 40 })
-    A.veins(g, 0, -2, 44, '#2a2a5a', 8, 40)
-    var es = [[-20, -14, 10], [8, -18, 12], [28, -2, 7], [-26, 8, 6]]
-    es.forEach(function (e, i) { A.eye(g, e[0], e[1], e[2], { sc: '#e8e8f4', col: '#1a1a3a', hot: '#ff4a6a', lid: 0, pu: 1.5 + ch }) })
-    A.mouth(g, 2, 20, 26, 9 + ch * 13, { n: 9, tl: .55, col: '#0e0a24', tongue: false })
-    A.drip(g, -30, 28, 12, '#2a2a5a', 2.6)
+    var c = '#5a6078', ch = A.ch, i
+    for (i = 0; i < 6; i++) { var f = (A.T * 1.4 + i / 6) % 1; A.line(g, al('#9ac8ff', .6), 1.8, [-36 + i * 14, 20 + f * 30, -38 + i * 14, 28 + f * 30]) }
+    if (Math.sin(A.T * 12) > -.2 + ch * -.6) { A.glow(g, 0, 40, 34, '#fff070', .35); A.poly(g, [-4, 24, 8, 24, 2, 38, 12, 38, -8, 60, -2, 44, -10, 44], '#fff070', { lw: 2 }) }
+    var back = [[-30, 10, 18], [-10, 16, 20], [14, 14, 20], [32, 8, 16]]
+    back.forEach(function (b, j) { A.ball(g, b[0], b[1] + Math.sin(A.T * 2 + j) * 1.4, b[2], b[2] * .8, '#3e4458') })
+    var top = [[-30, -8, 20], [-14, -24, 22], [12, -26, 24], [30, -8, 20], [0, -6, 28]]
+    top.forEach(function (b, j) { A.ball(g, b[0], b[1] + Math.sin(A.T * 2 + j * 1.3) * 1.4, b[2], b[2] * .88, c) })
+    lamp(g, -14, -4, 7.4, '#ffe860', { hz: true }); lamp(g, 14, -4, 7.4, '#ffe860', { hz: true })
+    A.line(g, '#1a1c28', 3.4, [-10, 14 + ch * 2, 0, 10 + ch * 3, 10, 14 + ch * 2])
+    gloss(g, -22, -26, 12, 5)
   })
+
+  /* ---- Delirium: glitch (kept: already an original design) ------------ */
   reg('delirium', function (g, t) {
     var f = Math.floor(A.T * 12), ch = A.ch
     var cols = ['#e83a5a', '#3ae8d8', '#e8d83a']
@@ -537,89 +643,109 @@
     for (i = 0; i < 4; i++) A.flat(g, (A.rnd(f + i * 4) - .5) * 100, (A.rnd(f + i * 6) - .5) * 100, 8 + A.rnd(i + f) * 16, 2, al(cols[i % 3], .55))
     A.mouth(g, 0, 20, 14 + A.rnd(f) * 12, 3 + ch * 12, { n: 8, tl: .6, col: '#000', tongue: false })
   }, { R: 26 })
+
+  /* ---- Mother: great moth --------------------------------------------- */
   reg('mother', function (g) {
-    var c = '#e8c8bc', ch = A.ch, br = Math.sin(A.T * 1.8) * 2
+    var ch = A.ch, br = Math.sin(A.T * 1.8) * 2, fl = 1 + Math.sin(A.T * 5) * .04, i
     A.glow(g, 0, 0, 62, '#ff9aa0', .25)
-    A.poly(g, [-40, -30, -52, 20, -38, 52, -24, 10], '#3a1e26'); A.poly(g, [40, -30, 52, 20, 38, 52, 24, 10], '#3a1e26')
-    A.ball(g, 0, br, 38, 46, c)
-    A.poly(g, [-36, -22, -26, -48, -12, -34, 0, -54, 12, -34, 26, -48, 36, -22, 0, -36], '#3a1e26')
-    A.flat(g, -15, -4 + br, 11, 9, '#1a0a10'); A.flat(g, 15, -4 + br, 11, 9, '#1a0a10')
-    A.eye(g, -15, -4 + br, 8, { sc: '#f4ece4', col: '#c83a4a', hot: '#ff8a5a', lid: 0, pu: 1.4 }); A.eye(g, 15, -4 + br, 8, { sc: '#f4ece4', col: '#c83a4a', hot: '#ff8a5a', lid: 0, pu: 1.4 })
-    A.tears(g, -15, 5 + br, 30, '#a01a2a'); A.tears(g, 15, 5 + br, 30, '#a01a2a')
-    A.blush(g, -26, 12 + br, 8, '#d04a5a'); A.blush(g, 26, 12 + br, 8, '#d04a5a')
-    A.mouth(g, 0, 26 + br, 13, 6 + ch * 14, { n: 6, tl: .5, col: '#4a0e1a', tn: '#d4707e' })
-    A.spikes(g, 0, -34, 18, 0, 0, '#000')
+    for (var q = -1; q <= 1; q += 2) {
+      g.save(); g.scale(q * fl, 1)
+      A.ball(g, 32, 20, 22, 17, '#8a5a8a', { rot: .5 }); A.ball(g, 32, -14, 31, 22, '#a87aa8', { rot: -.5 })
+      for (i = 0; i < 3; i++) A.flat(g, 38, -20, 11 - i * 3.4, 9 - i * 2.8, ['#e8c0d0', '#3a1a3a', '#ffd070'][i], -.5)
+      A.line(g, al('#4a2a4a', .6), 2, [14, -14, 40, -30]); A.line(g, al('#4a2a4a', .6), 2, [14, -8, 44, -6])
+      A.line(g, '#3a2a3a', 2.4, [q * 0 + 4, -36, 14, -52]); A.line(g, '#3a2a3a', 1.6, [10, -46, 18, -44]); A.line(g, '#3a2a3a', 1.6, [12, -50, 20, -49])
+      g.restore()
+    }
+    A.ball(g, 0, 6 + br, 14, 30, '#d8c8b0')
+    for (i = 0; i < 5; i++) A.line(g, al('#6a5a4a', .7), 2.4, [-12, -8 + i * 9 + br, 0, -5 + i * 9 + br, 12, -8 + i * 9 + br])
+    A.ball(g, 0, -26 + br, 13, 12, '#cdbca0')
+    lamp(g, -6, -27 + br, 4.8, '#ff6a8a', { lw: 2 }); lamp(g, 6, -27 + br, 4.8, '#ff6a8a', { lw: 2 })
+    A.poly(g, [-3, -18 + br, 3, -18 + br, 0, -10 + br + ch * 4], '#6a4a4a', { lw: 1.6 })
   })
+
+  /* ---- The Beast: ember hellhound ------------------------------------- */
   reg('the-beast', function (g) {
-    var c = '#1c1418', ch = A.ch, br = Math.sin(A.T * 2.2)
+    var c = '#2a1c1c', ch = A.ch, i
     A.glow(g, 0, 0, 62, '#a81a18', .3 + ch * .3)
-    A.horn(g, -22, -28, -2.2, 38, 14, '#3a2a2e', -.5); A.horn(g, 22, -28, -.94, 38, 14, '#3a2a2e', .5)
-    A.poly(g, [-26, -24, 0, -34, 26, -24, 34, 14, 14, 46, -14, 46, -34, 14], c)
-    A.poly(g, [-14, -2, 14, -2, 10, 30, -10, 30], '#2c2024')
-    for (var i = -3; i <= 3; i++) A.poly(g, [i * 9 - 3, -34, i * 9 + 3, -34, i * 9, -44 - Math.abs(i) * -1], '#3a2a2e')
-    A.flat(g, -14, -10, 8, 4.4, '#ff4a1a', -.4); A.flat(g, 14, -10, 8, 4.4, '#ff4a1a', .4); A.glow(g, -14, -10, 14, '#ff4a1a', .5 + ch * .4); A.glow(g, 14, -10, 14, '#ff4a1a', .5 + ch * .4)
-    A.flat(g, -4, 4, 2, 3, '#08040a'); A.flat(g, 4, 4, 2, 3, '#08040a')
-    A.mouth(g, 0, 28, 16, 7 + ch * 12, { n: 8, tl: .7, col: '#6a1a0c', tongue: false })
-    for (i = 0; i < 4; i++) A.flat(g, -9 + i * 6, 34 + br, 3, 5 + Math.sin(A.T * 10 + i) * 3 + ch * 6, i % 2 ? '#ffd040' : '#ff7a28')
+    for (i = 0; i < 11; i++) { var a = -3.0 + i * .28, l = 54 + Math.sin(A.T * 8 + i) * 3 + ch * 6; A.poly(g, [Math.cos(a - .12) * 36, -4 + Math.sin(a - .12) * 36, Math.cos(a) * l, -4 + Math.sin(a) * l, Math.cos(a + .12) * 36, -4 + Math.sin(a + .12) * 36], i % 2 ? '#ff8a28' : '#d82a18', { lw: 2.2 }) }
+    solid(g, [-30, -24, -22, -44, -10, -26, 10, -26, 22, -44, 30, -24, 34, 6, 20, 40, -20, 40, -34, 6], c)
+    A.poly(g, [-26, -28, -22, -40, -14, -28], '#5a2a2a', { lw: 2 }); A.poly(g, [26, -28, 22, -40, 14, -28], '#5a2a2a', { lw: 2 })
+    solid(g, [-16, 6, 16, 6, 12, 34, -12, 34], '#1e1414')
+    A.ball(g, 0, 10, 8, 5, '#0a0606', { lw: 2 })
+    lamp(g, -17, -8, 6.4, '#ff5a1a'); lamp(g, 17, -8, 6.4, '#ff5a1a')
+    A.crack(g, 22, -20, 20, 1.9)
+    A.mouth(g, 0, 31, 13, 3 + ch * 11, { n: 8, tl: .8, col: '#8a2a0a', tongue: false })
+    gloss(g, -16, -20, 8, 4)
   })
+
+  /* ---- Dogma: refracting prism ---------------------------------------- */
   reg('dogma', function (g) {
-    var ch = A.ch, f = Math.floor(A.T * 20)
+    var ch = A.ch, f = Math.floor(A.T * 20), i
     A.glow(g, 0, 0, 64, '#fff6c8', .3 + ch * .3)
-    A.wing(g, -14, -4, 52, -2.75, '#f6f2e8', { feather: true, dir: 1, flap: Math.sin(A.T * 4) * .1 }); A.wing(g, 14, -4, 52, -.39, '#f6f2e8', { feather: true, dir: 1, flap: -Math.sin(A.T * 4) * .1 })
-    A.rect(g, -16, 20, 32, 26, '#c8b8d8', 4); A.ball(g, -22, 30, 6, 10, '#e8d8c8', { rot: .4 }); A.ball(g, 22, 30, 6, 10, '#e8d8c8', { rot: -.4 })
-    A.rect(g, -32, -34, 64, 50, '#d8d0c0', 6)
-    A.rect(g, -26, -28, 52, 38, '#101418', 3)
-    g.save(); g.beginPath(); g.rect(-26, -28, 52, 38); g.clip()
-    for (var i = 0; i < 38; i++) { var v = A.rnd(f * 7 + i * 3); g.fillStyle = v > .5 ? al('#e8e8f0', .15 + v * .5) : al('#7a7a88', .2 + v * .4); g.fillRect(-26 + (A.rnd(f + i) * 52), -28 + (A.rnd(f * 3 + i * 2) * 38), 10 + v * 16, 2) }
-    A.eye(g, -10, -14, 6, { sc: '#e8e8f4', col: '#3a6ad8', hot: '#ffe060', lid: 0 }); A.eye(g, 10, -14, 6, { sc: '#e8e8f4', col: '#3a6ad8', hot: '#ffe060', lid: 0 })
-    A.line(g, '#e8e8f0', 2, [-12, 2, 12, 2 + ch * 2])
-    g.restore()
-    A.line(g, '#8a8478', 3, [-8, -34, -16, -50]); A.line(g, '#8a8478', 3, [8, -34, 16, -50])
-    A.halo(g, 0, -50, 20, 5, '#fff0a0')
+    var rb = ['#ff5a7a', '#5affc8', '#6a8aff']
+    for (i = 0; i < 3; i++) { var off = (3 + ch * 7) * (i - 1); g.save(); g.translate(off, 0); g.globalAlpha = .3; A.poly(g, [0, -56, 22, -30, 22, 24, 0, 50, -22, 24, -22, -30], rb[i], { ol: false }); g.restore() }
+    solid(g, [0, -56, 24, -30, 24, 24, 0, 52, -24, 24, -24, -30], '#d8e8f0')
+    A.poly(g, [0, -56, -24, -30, 0, -8], '#ffffff', { lw: 1.8, ol: '#7a8aa0' }); A.poly(g, [0, -56, 24, -30, 0, -8], '#b8d0e0', { lw: 1.8, ol: '#7a8aa0' })
+    A.poly(g, [-24, -30, -24, 24, 0, 52, 0, -8], '#a8c0d8', { lw: 1.8, ol: '#7a8aa0' }); A.poly(g, [24, -30, 24, 24, 0, 52, 0, -8], '#7a98b8', { lw: 1.8, ol: '#7a8aa0' })
+    for (i = 0; i < 6; i++) { var a = i / 6 * TAU + A.rnd(f) * .3, c2 = rb[i % 3]; A.line(g, al(c2, .7), 2.4, [Math.cos(a) * 10, -4 + Math.sin(a) * 10, Math.cos(a) * 58, -4 + Math.sin(a) * 58]) }
+    lamp(g, 0, -4, 11, '#ffe890')
+    for (i = 0; i < 3; i++) { var sa = A.T * (1.2 + i * .3) + i * 2.1; A.poly(g, [Math.cos(sa) * 46 - 3, Math.sin(sa) * 24 - 4, Math.cos(sa) * 46 + 3, Math.sin(sa) * 24 - 4, Math.cos(sa) * 46, Math.sin(sa) * 24 + 5], '#d8e8f0', { lw: 2 }) }
   })
-  function greed (c, ac, o) {
+
+  /* ---- Ultra Greed, Ultra Greedier: vault piggy banks ----------------- */
+  function bank (c, ac, o) {
     return function (g) {
-      var ch = A.ch, br = Math.sin(A.T * 2.4)
+      var ch = A.ch, br = Math.sin(A.T * 2.4), i
       A.glow(g, 0, 0, 62, ac, .28 + ch * .25)
-      A.ball(g, -34, 18, 11, 16, c, { rot: .3 }); A.ball(g, 34, 18, 11, 16, c, { rot: -.3 })
-      A.ball(g, 0, 22, 32, 28, sh(c, -.08))
-      for (var i = -2; i <= 2; i++) A.ball(g, i * 11, 36, 7, 5, sh(c, .1), { lw: 1.4 })
-      A.ball(g, 0, -10 + br, 34, 32, c)
-      if (o.spikes) A.spikes(g, 0, -10 + br, 33, 9, 8, ac, -1.57 - .6)
-      A.crown(g, 0, -36 + br, 20, 16, ac)
-      A.rect(g, -8, -32 + br, 16, 3.4, sh(c, -.6), 1)
-      A.eye(g, -14, -12 + br, 9, { sc: '#f6e8a8', col: ac, lid: .15, lc: c, pu: .6 }); A.eye(g, 14, -12 + br, 9, { sc: '#f6e8a8', col: ac, lid: .15, lc: c, pu: .6 })
-      A.line(g, sh(c, -.6), 2, [-14, -16 + br, -14, -8 + br]); A.line(g, sh(c, -.6), 2, [14, -16 + br, 14, -8 + br])
-      A.brow(g, -24, -24 + br, -6, -19 + br, sh(c, -.6), 3.4); A.brow(g, 24, -24 + br, 6, -19 + br, sh(c, -.6), 3.4)
-      A.mouth(g, 0, 10 + br, 20, 6 + ch * 12, { n: 8, tl: .6, col: '#3a1a08', tongue: false, teeth: '#fff0a0' })
-      A.flat(g, -22, -2 + br, 7, 4, al('#fff', .4), -.5)
+      for (i = 0; i < 3; i++) { var a = A.T * 1.3 + i * 2.1; A.ball(g, Math.cos(a) * 46, Math.sin(a) * 14 - 6, 6, 3.6, '#fff070', { lw: 2 }) }
+      A.ball(g, -22, 44, 10, 6, sh(c, -.3), { lw: 2.4 }); A.ball(g, 22, 44, 10, 6, sh(c, -.3), { lw: 2.4 })
+      if (o.spikes) A.spikes(g, 0, 6 + br, 43, 11, 9, ac, -1.57 - .9)
+      A.poly(g, [-34, -22, -20, -42, -10, -24], sh(c, -.1)); A.poly(g, [34, -22, 20, -42, 10, -24], sh(c, -.1))
+      A.ball(g, 0, 6 + br, 44, 38, c)
+      A.line(g, '#120c04', 7, [-14, -29 + br, 14, -29 + br]); A.ball(g, 6, -32 + br, 8, 4, '#fff070', { lw: 2 })
+      A.ball(g, 0, 18, 17, 12, sh(c, .12)); A.flat(g, -6, 18, 2.6, 4, '#2a1a08'); A.flat(g, 6, 18, 2.6, 4, '#2a1a08')
+      lamp(g, -17, -6 + br, 6.4, ac); lamp(g, 17, -6 + br, 6.4, ac)
+      A.crack(g, 22, -12, 24, 1.6); A.stitches(g, -38, 8, -24, 24, 4, '#2a1a08', 3)
+      A.mouth(g, 0, 32, 12, 1.5 + ch * 6, { n: 6, tl: .5, col: '#2a1a08', tongue: false, teeth: '#fff0a0' })
+      gloss(g, -24, -14 + br, 12, 5)
     }
   }
-  reg('ultra-greed', greed('#d8ac36', '#fff070', {}))
-  reg('ultra-greedier', greed('#e0a070', '#ff8ac8', { spikes: true }))
+  reg('ultra-greed', bank('#d8ac36', '#ff3a2a', {}))
+  reg('ultra-greedier', bank('#d8808a', '#7a2aff', { spikes: true }))
+
+  /* ---- The Heretic: burning wicker effigy ----------------------------- */
   reg('the-heretic', function (g) {
-    var ch = A.ch, br = Math.sin(A.T * 2.2) * 2
+    var ch = A.ch, br = Math.sin(A.T * 2.2) * 2, w = '#8a6a3a', i
     g.save(); g.translate(0, br)
-    for (var i = -3; i <= 3; i++) A.tent(g, i * 10, 8, Math.PI / 2 + i * .1, 38 + (i % 2) * 6, 11, '#1c1424', { amp: 5, ph: i, taper: .9 })
-    A.poly(g, [-24, -16, 24, -16, 32, 24, -32, 24], '#241a2e')
-    A.horn(g, -12, -34, -2.3, 28, 10, '#d8ccb0', -.5); A.horn(g, 12, -34, -.84, 28, 10, '#d8ccb0', .5)
-    A.ball(g, 0, -24, 22, 24, '#150e1c')
-    A.glow(g, 0, -24, 22 + ch * 10, '#fff2c0', .35 + ch * .3)
-    A.line(g, '#fff2c0', 3.4, [0, -40, 0, -10]); A.line(g, '#fff2c0', 3.4, [-10, -28, 10, -28])
-    A.dot(g, -12, -24, 3, '#d82a3a'); A.dot(g, 12, -24, 3, '#d82a3a')
-    A.tears(g, -12, -20, 22, '#a01a2a'); A.tears(g, 12, -20, 22, '#a01a2a')
-    A.halo(g, 0, -52, 18, 4.5, '#7a6a3a')
+    A.glow(g, 0, -20, 54, '#ff7a2a', .35 + ch * .3)
+    for (var q = -1; q <= 1; q += 2) { A.line(g, '#2a1a0c', 11, [q * 8, 26, q * 12, 52]); A.line(g, w, 6.4, [q * 8, 26, q * 12, 52]); A.line(g, '#2a1a0c', 11, [q * 18, -4, q * 46, -16]); A.line(g, w, 6.4, [q * 18, -4, q * 46, -16]) }
+    solid(g, [-18, -6, 18, -6, 22, 30, -22, 30], w)
+    g.save(); g.beginPath(); g.moveTo(-18, -6); g.lineTo(18, -6); g.lineTo(22, 30); g.lineTo(-22, 30); g.closePath(); g.clip()
+    for (i = -6; i < 7; i++) { A.line(g, al('#2a1a0c', .7), 1.8, [i * 7 - 14, -6, i * 7 + 14, 30]); A.line(g, al('#2a1a0c', .7), 1.8, [i * 7 + 14, -6, i * 7 - 14, 30]) }
+    g.restore()
+    A.ball(g, 0, -26, 19, 20, w)
+    g.save(); g.beginPath(); g.ellipse(0, -26, 18, 19, 0, 0, TAU); g.clip()
+    for (i = -4; i < 5; i++) { A.line(g, al('#2a1a0c', .7), 1.8, [i * 7 - 14, -46, i * 7 + 14, -6]); A.line(g, al('#2a1a0c', .7), 1.8, [i * 7 + 14, -46, i * 7 - 14, -6]) }
+    g.restore()
+    lamp(g, -7, -27, 4.8, '#ff9a2a'); lamp(g, 7, -27, 4.8, '#ff9a2a')
+    A.line(g, '#d8c890', 2.4, [-20, 4, 20, 8]); A.line(g, '#d8c890', 2.4, [-18, -8, 18, -8])
+    for (i = -2; i <= 2; i++) { var fl = Math.sin(A.T * 11 + i * 1.9) * 3; A.poly(g, [i * 7 - 6, -40, i * 7 + 6, -40, i * 7 + fl, -58 - (3 - Math.abs(i)) * 3 - ch * 6], i % 2 ? '#ffd040' : '#ff7a28', { lw: 2 }) }
+    for (q = -1; q <= 1; q += 2) A.poly(g, [q * 40 - 4, -14, q * 40 + 4, -14, q * 40 + Math.sin(A.T * 9 + q) * 2, -30 - ch * 4], '#ff8a28', { lw: 2 })
     g.restore()
   })
+
+  /* ---- Horny Boys: twin pincer crabs ---------------------------------- */
   reg('horny-boys', function (g, t) {
-    var c = +t.variant === 1 ? '#7a8a9a' : '#9a6a54', ch = A.ch
-    A.horn(g, -22, -22, -2.6, 40, 14, '#d8ccb0', -.8); A.horn(g, 22, -22, -.54, 40, 14, '#d8ccb0', .8)
-    A.ball(g, -30, 6, 8, 12, c, { rot: .8 }); A.ball(g, 30, 6, 8, 12, c, { rot: -.8 })
-    A.ball(g, 0, 4, 32, 36, c)
-    A.poly(g, [-10, 22, 10, 22, 0, 46], sh(c, -.2))
-    A.eye(g, -14, -8, 7.5, { sc: '#e8dca8', col: '#1a1010', lid: .25, lc: c, sq: .8 }); A.eye(g, 14, -8, 7.5, { sc: '#e8dca8', col: '#1a1010', lid: .25, lc: c, sq: .8 })
-    A.flat(g, -14, -8, 1.8, 6, '#0a0606'); A.flat(g, 14, -8, 1.8, 6, '#0a0606')
-    A.flat(g, -4, 8, 2, 3, '#2a1410'); A.flat(g, 4, 8, 2, 3, '#2a1410')
-    A.mouth(g, 0, 18, 13, 4 + ch * 10, { n: 6, tl: .6, col: '#2a0c0c' })
+    var c = +t.variant === 1 ? '#6a7a9a' : '#9a5a44', ch = A.ch, q, i
+    for (q = -1; q <= 1; q += 2) for (i = 0; i < 3; i++) A.leg(g, q * 22, 18 + i * 8, q * (38 + i * 3), 26 + i * 8 + Math.sin(A.T * 5 + i + q) * 2, q * (44 + i * 2), 40 + i * 6, 5, sh(c, -.3))
+    for (q = -1; q <= 1; q += 2) {
+      A.leg(g, q * 22, 6, q * 42, -6, q * 40, -28, 9, c)
+      A.horn(g, q * 40, -28, q < 0 ? -1.2 - ch * .3 : -1.94 + ch * .3, 26, 12, '#d8a888', q < 0 ? .3 : -.3); A.horn(g, q * 40, -28, q < 0 ? -2.2 + ch * .3 : -.94 - ch * .3, 22, 10, '#c89878', q < 0 ? -.3 : .3)
+    }
+    A.ball(g, 0, 14, 36, 28, c)
+    A.line(g, sh(c, -.55), 3, [0, -12, 0, 40]); for (i = -2; i <= 2; i++) A.poly(g, [i * 10 - 4, -10 + Math.abs(i) * 2, i * 10 + 4, -10 + Math.abs(i) * 2, i * 10, -20 + Math.abs(i) * 2], sh(c, -.25), { lw: 2 })
+    for (q = -1; q <= 1; q += 2) { A.line(g, sh(c, -.6), 6, [q * 10, -4, q * 14, -22]); A.line(g, c, 3.4, [q * 10, -4, q * 14, -22]); lamp(g, q * 14, -26, 5.4, '#ffe060') }
+    A.poly(g, [-6, 28, 6, 28, 0, 38], '#2a1410')
+    gloss(g, -18, 4, 10, 4)
   })
 })(typeof window !== 'undefined' ? (window.IS = window.IS || {}) : (globalThis.IS = globalThis.IS || {}))
