@@ -1516,12 +1516,13 @@
       dlc: "rebirth",
       hooks: {
         onPlayerDeath: function (p, ctx) {
-          var c = p.cache
-          var have = IS.itemCount(p, 'lazarus-rags') || 1
-          if ((c.ragsUsed || 0) >= have) return undefined
-          c.ragsUsed = (c.ragsUsed || 0) + 1
+          // revive as Lazarus Risen: the rags are spent and Anemic is gained
+          IS.removeItem(p, 'lazarus-rags', ctx)
           var h = p.hearts
           h.maxRed = 2; h.red = 2; h.soul = 0; h.black = 0; h.eternal = 0; h.bone = 0; h.rotten = 0; h.gold = 0
+          p.risen = true
+          if (IS.itemsById.anemic) IS.giveItem(p, 'anemic', { ctx: ctx, noAnim: true })
+          if (ctx && ctx.banner) ctx.banner('LAZARUS RISEN', 'Anemic')
           return { revive: true }
         }
       },

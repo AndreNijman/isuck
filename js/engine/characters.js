@@ -188,6 +188,17 @@
     return out
   }
 
+  // Character death hooks (Forgotten -> The Soul, Tainted Lazarus flip) run before item revives.
+  var origKill = IS.killPlayer
+  IS.killPlayer = function (p, ctx) {
+    var fns = HK[p.charId] && HK[p.charId].onPlayerDeath || []
+    for (var i = 0; i < fns.length; i++) {
+      var v; try { v = fns[i](p, ctx) } catch (e) { console.warn('char onPlayerDeath ' + p.charId, e) }
+      if (v && v.revive) { p.dead = false; p.invulnUntil = Math.max(p.invulnUntil || 0, nowOf(ctx) + 2); return false }
+    }
+    return origKill(p, ctx)
+  }
+
   var origWeapon = IS.updateWeapon
   IS.updateWeapon = function (p, d, dt, ctx) {
     var w = WEAPON[p.charId]
@@ -376,7 +387,7 @@
   POST['tainted-keeper'] = function (p, s) { s.multishot = Math.max(s.multishot || 0, 3) }
   ;['keeper', 'tainted-keeper'].forEach(function (id) {
     PICK[id] = function (p, x, ctx) { if (x.kind === 'heart' || x.kind === 'soul' || x.kind === 'black') return false }
-    addHook(id, 'onPickup', function (p, kind, amount) { if (kind === 'coin') addRed(p, amount || 1) })
+    // coin healing itself lives in interact.js (keeperHearts flag)
   })
   addHook('tainted-keeper', 'onEnemyKill', function (p, e, ctx) { if (!e.boss && ctx.chance(0.6)) ctx.spawnPickup('coin', e.x, e.y) })
 
