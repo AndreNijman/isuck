@@ -44,9 +44,11 @@
       "id": "P2",
       "title": "Render + UI + boot",
       "files": [
+        "js/render/art-kit.js",
         "js/render/sprites-core.js",
         "js/render/sprites-enemies.js",
         "js/render/sprites-bosses.js",
+        "js/render/sprites-bosses-2.js",
         "js/render/sprites-items.js",
         "js/render/backdrop.js",
         "js/render/render.js",

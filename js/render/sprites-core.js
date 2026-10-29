@@ -29,24 +29,97 @@
     line(g, '#241719', s * .08, [-s * .2, -s * .2, s * .2, s * .2]); line(g, '#241719', s * .08, [s * .2, -s * .2, -s * .2, s * .2])
   })
 
+  /*
+   * Isaac-style player: a big round head on a tiny body, tear-streaked eyes, a head
+   * that turns toward the firing (or walking) direction, a bob walk cycle and a
+   * crying mouth while shooting. The live player is read from IS.state.run so the
+   * sprite can see aim and movement without any render.js plumbing.
+   */
   function child (g, s, t, def) {
-    var n = ((def && def.name) || '').toLowerCase(); var tainted = !!(def && def.tainted)
-    var skin = bodyColour(t, /azazel/.test(n) ? '#681f24' : /lost/.test(n) ? '#d9e0df' : /keeper/.test(n) ? '#b69652' : /blue|\?\?\?/.test(n) ? '#71858b' : '#c9957f')
-    if (tainted) skin = IS.mix ? IS.mix(skin, '#342d39', .45) : '#765e68'
-    var bob = (t.frame & 1) ? s * .025 : 0; var side = t.dir === 1 ? -s * .04 : t.dir === 3 ? s * .04 : 0
-    g.fillStyle = IS.shade ? IS.shade(skin, -.3) : '#563b38'; oval(g, 0, s * .2 + bob, s * .19, s * .25)
-    line(g, IS.shade ? IS.shade(skin, -.35) : '#553b38', s * .075, [-s * .1, s * .32, -s * .15, s * .5 + bob]); line(g, g.strokeStyle, s * .075, [s * .1, s * .32, s * .15, s * .5 - bob])
-    g.fillStyle = skin; oval(g, side, -s * .13 + bob, s * .38, s * .34)
-    if (/magdalene|eve|lazarus|eden|lilith/.test(n)) { g.fillStyle = /eve|lilith/.test(n) ? '#211b20' : '#633b29'; g.beginPath(); g.arc(side, -s * .17, s * .38, Math.PI, Math.PI * 2); g.lineTo(side + s * .34, 0); g.lineTo(side - s * .34, 0); g.fill() }
-    g.fillStyle = '#211b20'; var ey = -s * .14; oval(g, side - s * .13, ey, s * .035, s * .055); oval(g, side + s * .13, ey, s * .035, s * .055)
-    if (/cain/.test(n)) { g.fillRect(side + s * .05, ey - s * .05, s * .18, s * .1); line(g, '#211b20', s * .025, [side, ey - s * .08, side + s * .25, ey + s * .07]) }
-    if (/lilith/.test(n)) { g.fillStyle = '#1d171b'; g.fillRect(side - s * .26, ey - s * .06, s * .52, s * .13) }
-    if (/forgotten/.test(n)) { g.fillStyle = '#e2d8bd'; oval(g, side, -s * .13, s * .35, s * .31); line(g, '#e2d8bd', s * .07, [s * .2, s * .2, s * .48, -s * .2]) }
-    if (/azazel/.test(n)) { g.fillStyle = '#21171b'; g.beginPath(); g.moveTo(-s * .24, -s * .38); g.lineTo(-s * .08, -s * .62); g.lineTo(-s * .02, -s * .34); g.fill(); g.beginPath(); g.moveTo(s * .24, -s * .38); g.lineTo(s * .08, -s * .62); g.lineTo(s * .02, -s * .34); g.fill() }
-    g.fillStyle = IS.alpha ? IS.alpha('#78b9cf', .75) : '#78b9cf'; oval(g, side - s * .13, ey + s * .1, s * .025, s * .11)
-    if (tainted) { g.fillStyle = '#d8c14c'; oval(g, side, s * .02, s * .045, s * .045) }
+    var A = IS.art, sh = A.sh, n = (def.name || '').toLowerCase(), tainted = !!def.tainted
+    A.begin(t)
+    var p = IS.state && IS.state.run && IS.state.run.player
+    if (p && p.charId !== def.id) p = null
+    var T = A.T, hx = 0, hy = 1, moving = false, shooting = false
+    if (p) {
+      var hd = p.head, mv = Math.abs(p.vx || 0) + Math.abs(p.vy || 0)
+      moving = mv > 20
+      if (hd && (hd.x || hd.y)) {
+        hx = hd.x; hy = hd.y
+        shooting = (p.nextShot || 0) > ((p.stats && p.stats.fireDelay) || .4) * .45
+      } else if (moving) { var m = Math.hypot(p.vx, p.vy); hx = p.vx / m; hy = p.vy / m }
+    }
+    var up = hy < -.5 && Math.abs(hx) < .8
+    var custom = A.tint(t, null)
+    var skin = t.hurt ? '#fff4ec' : (custom || '#efc8b0'), hair = null, shirt = '#d8d4cc', eyeCol = '#3a4a6a'
+    if (!custom && !t.hurt) {
+      if (/magdalene/.test(n)) { hair = '#6a3a2a'; shirt = '#d8a0b0' } else if (/cain/.test(n)) { hair = '#4a3020'; shirt = '#7a5a3a' }
+      else if (/judas/.test(n)) { hair = '#1c1418'; shirt = '#2a2024'; skin = '#e2b8a2' } else if (/\?\?\?|blue/.test(n)) { skin = '#7e96aa'; shirt = '#4a5a78'; eyeCol = '#1a1a2a' }
+      else if (/eve/.test(n)) { hair = '#1c1418'; shirt = '#2a2024' } else if (/samson/.test(n)) { hair = '#3a2418'; shirt = '#c8a070' }
+      else if (/azazel/.test(n)) { skin = '#6a2228'; shirt = '#1a1014'; eyeCol = '#e8a030' } else if (/lazarus/.test(n)) { hair = '#7a5a3a'; shirt = '#b8b4a0' }
+      else if (/eden/.test(n)) { hair = '#a84ad8'; shirt = '#4ab8d8' } else if (/lost/.test(n)) { skin = '#e4eceb'; shirt = '#c8d4d2' }
+      else if (/lilith/.test(n)) { hair = '#2a1a22'; shirt = '#5a3a5a' } else if (/keeper/.test(n)) { skin = '#c8a860'; shirt = '#a88840' }
+      else if (/apollyon/.test(n)) { skin = '#6a587a'; shirt = '#2a2030' } else if (/forgotten/.test(n)) { skin = '#e6dcc0'; shirt = '#e6dcc0' }
+      else if (/bethany/.test(n)) { hair = '#c8683a'; shirt = '#f0e8e0' } else if (/jacob|esau/.test(n)) { hair = '#b87a3a'; shirt = '#7a8aa8' }
+    }
+    if (tainted && !t.hurt) { skin = A.mix(skin, '#4a3f52', .45); shirt = A.mix(shirt, '#2a2430', .5) }
+    var bob = moving ? Math.abs(Math.sin(T * 13)) * 3 : Math.sin(T * 2.4) * .8
+    var lean = moving ? Math.sin(T * 13) * 2 : 0
+    var tx = hx * 7, ty = hy * 4              /* head shifts toward facing */
+    g.save()
+    if (/lost/.test(n)) g.globalAlpha = .82
+    var st = moving ? Math.sin(T * 13) * 5 : 0
+    A.leg(g, -7, 30, -8 - st * .3, 38, -9 + st, 46, 6, sh(skin, -.12)); A.leg(g, 7, 30, 8 + st * .3, 38, 9 - st, 46, 6, sh(skin, -.12))
+    A.flat(g, -9 + st, 47, 6, 3, '#2a2024'); A.flat(g, 9 - st, 47, 6, 3, '#2a2024')
+    if (/azazel/.test(n)) { A.wing(g, -8, 14, 24, -2.6, '#1a1014', { dir: 1, flap: Math.sin(T * 5) * .15 }); A.wing(g, 8, 14, 24, -.54, '#1a1014', { dir: 1, flap: -Math.sin(T * 5) * .15 }) }
+    A.ball(g, lean, 24 - bob * .4, 16, 17, shirt)
+    A.line(g, sh(skin, -.1), 6, [-14 + lean, 22 - bob * .4, -22 + lean, 30 - bob * .4 + (shooting ? -6 : 0)]); A.line(g, sh(skin, -.1), 6, [14 + lean, 22 - bob * .4, 22 + lean, 30 - bob * .4 + (shooting ? -6 : 0)])
+    if (/judas/.test(n)) A.poly(g, [-18, 12, 18, 12, 22, 44, -22, 44], '#8a1a24')
+    if (/forgotten/.test(n)) { for (var r = 0; r < 3; r++) A.line(g, '#8a7a60', 1.6, [-9 + lean, 18 + r * 5 - bob * .4, 9 + lean, 18 + r * 5 - bob * .4]) }
+    var hyc = -14 - bob + (shooting ? -1.5 : 0)
+    var longHair = hair && /magdalene|eve|lilith|bethany/.test(n)
+    if (longHair) A.poly(g, [-34 + tx, hyc - 6, -38 + tx, hyc + 30, 38 + tx, hyc + 30, 34 + tx, hyc - 6], hair)
+    if (/jacob|esau/.test(n)) A.ball(g, 36, hyc + 6, 20, 19, sh(skin, -.05))
+    if (/forgotten/.test(n)) A.skull(g, tx, hyc - 2 + ty, 34, skin, { eyec: '#7ad8c8' })
+    else {
+      A.ball(g, tx, hyc, 37, 34, skin)
+      if (/apollyon/.test(n)) { A.horn(g, -18 + tx, hyc - 26, -2.2, 18, 8, '#3a2a48', -.4); A.horn(g, 18 + tx, hyc - 26, -.94, 18, 8, '#3a2a48', .4) }
+      if (/azazel/.test(n)) { A.horn(g, -20 + tx, hyc - 26, -2.2, 16, 8, '#2a1014', -.4); A.horn(g, 20 + tx, hyc - 26, -.94, 16, 8, '#2a1014', .4) }
+      if (hair) {
+        g.save(); g.beginPath(); g.ellipse(tx, hyc, 37, 34, 0, 0, Math.PI * 2); g.clip(); g.fillStyle = hair
+        g.beginPath(); g.ellipse(tx, hyc - (longHair ? 22 : 24), longHair ? 42 : 40, longHair ? 20 : 18, 0, 0, Math.PI * 2); g.fill()
+        if (longHair) { g.fillRect(tx - 38, hyc - 22, 12, 40); g.fillRect(tx + 26, hyc - 22, 12, 40) }
+        if (up) { g.beginPath(); g.ellipse(tx, hyc, 37, 34, 0, 0, Math.PI * 2); g.fill() }
+        g.restore()
+      }
+      if (!up) {
+        var ex = 12, ey = hyc + 4 + ty * .4, big = shooting ? 7.2 : 8.2
+        var squint = shooting ? .35 : (Math.sin(T * .9) > .985 ? .8 : 0)
+        ;[-1, 1].forEach(function (q) {
+          var x = tx + q * ex + hx * 3
+          A.eye(g, x, ey, big, { sc: tainted ? '#d8d0e0' : '#f4efe6', col: eyeCol, lx: hx * .5, ly: hy * .4, lid: squint, lc: skin, react: false, pu: 1.5 })
+          var tl = shooting ? 22 : 14
+          g.fillStyle = A.al('#8cc8e8', .9); g.beginPath(); g.moveTo(x - 2.4, ey + big * .8); g.lineTo(x + 2.4, ey + big * .8); g.lineTo(x + 3.4, ey + big * .8 + tl); g.lineTo(x - 3.4, ey + big * .8 + tl); g.fill()
+          A.flat(g, x, ey + big * .8 + tl + 1, 3.4, 2.6, '#bfe4f4')
+        })
+        A.mouth(g, tx + hx * 3, hyc + 20 + ty * .3, shooting ? 7 : 5, shooting ? 6 : 1.2, { n: 0, tongue: shooting, col: '#4a1a22', tn: '#d4707e' })
+        A.blush(g, tx - 26, hyc + 14, 6, '#d86a7a'); A.blush(g, tx + 26, hyc + 14, 6, '#d86a7a')
+        if (/cain/.test(n)) { A.ball(g, tx + 12, ey, 9, 8, '#1a1418', { lw: 1.4 }); A.line(g, '#1a1418', 2, [tx - 30, hyc - 12, tx + 14, ey - 3]) }
+        if (/lilith/.test(n)) A.rect(g, tx - 26, ey - 5, 52, 10, '#1a1418', 2)
+        if (/eve/.test(n)) A.poly(g, [tx - 8, hyc - 34, tx, hyc - 28, tx + 8, hyc - 34, tx, hyc - 38], '#a01a2a')
+        if (/samson/.test(n)) A.line(g, '#3a2418', 5, [tx - 14, hyc + 27, tx, hyc + 33, tx + 14, hyc + 27])
+        if (/lazarus/.test(n)) A.line(g, '#cfc8b0', 3, [tx - 30, hyc - 8, tx + 30, hyc - 14])
+        if (/magdalene/.test(n)) A.heart(g, tx + 24, hyc - 26, 5, 8, '#c82a3a')
+        if (/keeper/.test(n)) { A.rect(g, tx - 28, hyc - 36, 56, 22, '#8a6a30', 3); A.flat(g, tx, hyc - 25, 4, 4, '#201810') }
+        if (/bethany/.test(n)) A.halo(g, tx, hyc - 42, 14, 4, '#f8e8a0')
+        if (/lost/.test(n)) A.halo(g, tx, hyc - 42, 14, 4, '#f8f4d0')
+        if (/blue|\?\?\?/.test(n)) A.veins(g, tx, hyc, 34, '#4a5a78', 4, 3)
+      }
+    }
+    if (tainted) { A.stitches(g, tx - 22, hyc - 18, tx + 22, hyc - 24, 6, '#2a2030', 3); A.flat(g, tx + 18, hyc + 12, 4, 4, '#d8c14c') }
+    g.restore()
   }
-  ;(IS.characters || []).forEach(function (d) { var draw=function (g,s,t) { child(g,s,t,d) }; if (!IS.sprite(d.id)) IS.defineSprite(d.id,draw); if (!IS.sprite('player:'+d.id)) IS.defineSprite('player:'+d.id,draw) })
+  ;(IS.characters || []).forEach(function (d) { var draw = function (g, s, t) { g.save(); g.scale(s / 100, s / 100); g.translate(0, 4); child(g, s, t, d); g.restore() }; if (!IS.sprite(d.id)) IS.defineSprite(d.id, draw); if (!IS.sprite('player:' + d.id)) IS.defineSprite('player:' + d.id, draw); IS.spriteAnimated(d.id); IS.spriteAnimated('player:' + d.id) })
 
   function pickup (kind) { return function (g, s, t) {
     var k = kind.toLowerCase(), base = bodyColour(t, /gold/.test(k) ? '#d8ad39' : /soul/.test(k) ? '#75b9d0' : /black/.test(k) ? '#25222b' : '#9d2f35')
