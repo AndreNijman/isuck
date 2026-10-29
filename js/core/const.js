@@ -256,7 +256,7 @@
     'trapdoor', 'secret-found', 'charge-up', 'charge-ready', 'menu-move',
     'menu-select', 'menu-back', 'curse-sting', 'holy-shield', 'laser-fire',
     'brimstone-fire', 'knife-throw', 'familiar-spawn', 'transform', 'fart',
-    'web-shot', 'beep'
+    'web-shot', 'beep', 'enemy-shoot', 'charge', 'stomp'
   ]
 
   IS.SCREEN_LIST = [
