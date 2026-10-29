@@ -17,8 +17,10 @@
 
   // params come from the def, or from e.po when a BEH entry overrides them per id
   const P=(e,k,d)=>{const v=e.po&&e.po[k]!=null?e.po[k]:e.def.params&&e.def.params[k];return v==null?d:v}
-  const toPlayer=(e,c)=>IS.norm(c.player.x-e.x,c.player.y-e.y)
-  const distPlayer=(e,c)=>IS.dist(e.x,e.y,c.player.x,c.player.y)
+  // enemies go for the nearest decoy familiar (Best Friend, Punching Bag) before the player
+  IS.enemyTarget=(e,c)=>{let best=c.player,bd=best?IS.dist(e.x,e.y,best.x,best.y):1e9;if(e.boss&&!e.def?.params?.seeksDecoy)return best;for(const f of c.player?.familiars||[])if(f.def?.params?.decoy&&!f.dead){const d=IS.dist(e.x,e.y,f.x,f.y);if(d<bd+260){bd=d;best=f}}return best}
+  const toPlayer=(e,c)=>{const t=IS.enemyTarget(e,c);return IS.norm(t.x-e.x,t.y-e.y)}
+  const distPlayer=(e,c)=>{const t=IS.enemyTarget(e,c);return IS.dist(e.x,e.y,t.x,t.y)}
   const steer=(e,tx,ty,s,accel,dt)=>{e.vx=IS.approach(e.vx,tx*s,accel*dt);e.vy=IS.approach(e.vy,ty*s,accel*dt)}
   const stop=(e,dt)=>steer(e,0,0,0,e.speed*6,dt)
   // Line of sight across the grid: rocks block a charger's view, pits do not.

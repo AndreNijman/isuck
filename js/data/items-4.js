@@ -528,7 +528,14 @@
       transform: "bookworm",
       charge: 4,
       chargeType: "normal",
-      hooks: { onUse: function (p, ctx) { if (!ctx || typeof ctx.addBlack !== 'function') return { fail: true }; ctx.addBlack(2) } },
+      hooks: {
+        onUse: function (p, ctx) {
+          if (!ctx || typeof ctx.addBlack !== 'function') return { fail: true }
+          ctx.addBlack(2)
+          // used in an uncleared boss room: the boss reward becomes a devil deal (room.js rollReward)
+          if (ctx.run && ctx.run.flags && ctx.room && ctx.room.type === 'boss' && !ctx.room.cleared) ctx.run.flags.satanicBible = true
+        }
+      },
       unlock: null
     },
 
@@ -923,7 +930,7 @@
       pools: ["treasure", "greed-treasure"],
       tags: ["offensive", "tears", "defensive", "hearts", "coins", "bombs", "keys"],
       dlc: "rebirth",
-      stats: {"tears":0.5,"damage":0.5,"speed":0.1,"range":30},
+      stats: {"tears":0.5,"damage":0.5,"speed":0.1,"range":60},
       grant: {"maxHearts":2,"heal":2,"coins":1,"bombs":1,"keys":1},
       unlock: null
     },
@@ -1601,7 +1608,7 @@
       pools: ["treasure", "greed-treasure", "rotten-beggar"],
       tags: ["offensive", "tears"],
       dlc: "rebirth",
-      stats: {"shotSpeed":-0.4,"range":-80},
+      stats: {"shotSpeed":-0.4,"range":-120},
       tearFlags: ["spectral", "piercing"],
       unlock: null
     },
@@ -1679,7 +1686,7 @@
       pools: ["boss", "greed-boss"],
       tags: ["offensive", "defensive", "hearts"],
       dlc: "rebirth",
-      stats: {"shotSpeed":0.16,"range":80},
+      stats: {"shotSpeed":0.16,"range":200},
       grant: {"black":2},
       unlock: null
     },
@@ -1787,7 +1794,7 @@
       pools: ["boss", "demon-beggar", "greed-boss"],
       tags: ["offensive"],
       dlc: "rebirth",
-      stats: {"damage":1,"range":80},
+      stats: {"damage":1,"range":200},
       transform: "spun",
       unlock: null
     },
@@ -2058,7 +2065,7 @@
       pools: ["boss", "golden-chest", "moms-chest", "greed-boss", "old-chest"],
       tags: ["defensive", "hearts"],
       dlc: "afterbirth",
-      stats: {"luck":1,"range":35.2},
+      stats: {"luck":1,"range":200},
       grant: {"soul":2},
       transform: "mom",
       unlock: null
@@ -2364,7 +2371,7 @@
   IS.defineFamiliars([
     { id: "lil-haunt", name: "Lil Haunt", sprite: "lil-haunt", behaviour: 'chaser', params: { r: 16, speed: 260, flying: true, dmg: 2, cooldown: 0.5, range: 700, status: 'fear', statusSecs: 1.5 } },
     // APPROXIMATE: enemies do not retarget onto him, but he trails Isaac and soaks up enemy shots
-    { id: "punching-bag", name: "Punching Bag", sprite: "punching-bag", behaviour: 'follower', params: { r: 18, speed: 300, flying: true, blockShots: true } },
+    { id: "punching-bag", name: "Punching Bag", sprite: "punching-bag", behaviour: 'follower', params: { r: 18, speed: 300, flying: true, blockShots: true, decoy: true } },
     { id: "gemini", name: "Gemini", sprite: "gemini", behaviour: 'chaser', params: { r: 16, speed: 280, flying: true, dmg: 3, cooldown: 0.5, range: 360 } },
     { id: "cains-other-eye", name: "Cain's Other Eye", sprite: "cains-other-eye", behaviour: 'follower', params: { r: 16, speed: 300, flying: true } },
     { id: "s-only-friend", name: "???'s Only Friend", sprite: "s-only-friend", behaviour: 'wanderer', params: { r: 14, speed: 0, flying: true, dmg: 3, cooldown: 0.2 } },

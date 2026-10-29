@@ -1870,7 +1870,7 @@
       pools: ["devil","greed-devil","ultra-secret"],
       tags: ["damage","offensive"],
       dlc: "antibirth",
-      stats: {"damage":1,"range":80,"shotSpeed":-0.16},
+      stats: {"damage":1,"range":160,"shotSpeed":-0.16},
       transform: "leviathan",
       hooks: referenceHooks("↑ +1 Damage · ↑ +2 Range · ↓ -0.16 Shot speed · Isaac's tears can be controlled in mid-air", false, "eye-of-the-occult")
     },

@@ -238,6 +238,8 @@
     for (i = 0; i < actors.length; i++) actor(g, actors[i], run)
     projectiles(g, room)
     if (run.player) weaponOverlay(g, run.player)
+    var mk = run.player && run.player.cache && run.player.cache.marked
+    if (mk && run.player.cache.markedRoom === room) { var mt = ((IS.state && IS.state.time) || 0) * 2; g.save(); g.translate(mk.x, mk.y); g.rotate(mt); g.strokeStyle = 'rgba(214,60,52,.85)'; g.lineWidth = 3; g.beginPath(); g.arc(0, 0, 18, 0, Math.PI * 2); g.moveTo(-26, 0); g.lineTo(-10, 0); g.moveTo(26, 0); g.lineTo(10, 0); g.moveTo(0, -26); g.lineTo(0, -10); g.moveTo(0, 26); g.lineTo(0, 10); g.stroke(); g.restore() }
     if (IS.fx && IS.fx.draw) IS.fx.draw(g, 'over')
     IS.drawDoors(g, room)
     g.restore()

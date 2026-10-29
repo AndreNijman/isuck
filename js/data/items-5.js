@@ -3089,7 +3089,7 @@
       pools: ["treasure","greed-treasure"],
       tags: ["offensive"],
       dlc: "afterbirth+",
-      stats: {"range":15.2},
+      stats: {"range":120},
       hooks: referenceHooks("↑ +1.5 Range · Tears shatter into 1-3 bone shards upon hitting anything", false, "compound-fracture")
     },
 
@@ -3118,7 +3118,7 @@
       pools: ["boss","golden-chest","beggar","greed-boss","old-chest"],
       tags: [],
       dlc: "afterbirth+",
-      stats: {"range":15.2},
+      stats: {"range":200},
       hooks: referenceHooks("↑ +2.5 Range · Spawns a Lucky Penny", false, "dads-lost-coin")
     },
 
@@ -3201,8 +3201,8 @@
     continuum: { stats: { range: 96 } },
     marked: { stats: { tears: 0.72, range: 96 } },
     binky: { mult: { tearSize: 0.9 } },
-    'dads-lost-coin': { stats: { range: 80 } },
-    'compound-fracture': { stats: { range: 48 } },
+    'dads-lost-coin': { stats: { range: 200 } },
+    'compound-fracture': { stats: { range: 120 } },
     'jar-of-flies': { charge: 0 },
     'farting-baby': { familiars: ['farting-baby'] },
     'gb-bug': { familiars: ['gb-bug'] },

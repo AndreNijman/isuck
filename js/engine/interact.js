@@ -10,13 +10,13 @@
   IS.addGoldHearts=(p,n)=>(p.hearts.gold+=n||2)
   IS.addRottenHearts=(p,n)=>(p.hearts.rotten=Math.min(p.hearts.maxRed,(p.hearts.rotten||0)+(n||2)))
   // a broken heart takes the place of a red container and stays broken
-  IS.addBrokenHearts=(p,n)=>{n=n||1;p.hearts.broken+=n;IS.addMaxHearts(p,-Math.min(p.hearts.maxRed,n*2));return p.hearts.broken}
+  IS.addBrokenHearts=(p,n,ctx)=>{n=n||1;p.hearts.broken=Math.min(12,(p.hearts.broken||0)+n);IS.addMaxHearts(p,0);if(p.hearts.broken>=12&&!p.dead&&ctx)IS.killPlayer(p,ctx);return p.hearts.broken}
   // eternal hearts become a heart container on the next floor
   IS.floorStartHearts=p=>{if(p.hearts.eternal>0){p.hearts.eternal=0;IS.addMaxHearts(p,2,true)}}
   // damage eats eternal, gold, soul, black, then red (rotten red hatches a blue fly) and bone
   IS.absorbDamage=(p,left,ctx)=>{for(const k of ['eternal','gold','soul','black','red','bone']){const d=Math.min(p.hearts[k]||0,left);if(!d)continue;p.hearts[k]-=d;left-=d;if(k==='red'&&p.hearts.rotten>0){p.hearts.rotten=Math.max(0,Math.min(p.hearts.rotten,p.hearts.red));try{ctx?.spawnFamiliar&&ctx.spawnFamiliar('blue-fly')}catch(e){}}if(!left)break}return left}
   // item grants: containers, heart types, consumables
-  IS.applyGrant=(p,g,ctx)=>{IS.addMaxHearts(p,g.maxHearts||0,!!g.heal);IS.healRed(p,g.heal||0);IS.addSoulHearts(p,g.soul||0);IS.addBlackHearts(p,g.black||0);IS.addBoneHearts(p,g.bone||0);if(g.eternal)IS.addEternalHeart(p,g.eternal);if(g.gold)IS.addGoldHearts(p,g.gold);if(g.rotten)IS.addRottenHearts(p,g.rotten);if(g.broken)IS.addBrokenHearts(p,g.broken);IS.addCoins(p,g.coins||0);IS.addBombs(p,g.bombs||0);IS.addKeys(p,g.keys||0);if(g.goldenBomb)p.goldenBomb=true;if(g.goldenKey)p.goldenKey=true}
+  IS.applyGrant=(p,g,ctx)=>{IS.addMaxHearts(p,g.maxHearts||0,!!g.heal);IS.healRed(p,g.heal||0);IS.addSoulHearts(p,g.soul||0);IS.addBlackHearts(p,g.black||0);IS.addBoneHearts(p,g.bone||0);if(g.eternal)IS.addEternalHeart(p,g.eternal);if(g.gold)IS.addGoldHearts(p,g.gold);if(g.rotten)IS.addRottenHearts(p,g.rotten);if(g.broken)IS.addBrokenHearts(p,g.broken,ctx);IS.addCoins(p,g.coins||0);IS.addBombs(p,g.bombs||0);IS.addKeys(p,g.keys||0);if(g.goldenBomb)p.goldenBomb=true;if(g.goldenKey)p.goldenKey=true}
 
   // ---- prices -------------------------------------------------------------
   // null means free. Otherwise {type:'coin'|'heart'|'soul', amount, ok}. Heart prices are
@@ -64,8 +64,10 @@
     case'pill':return IS.givePocket(p,'pill',x.id||ctx.rollPill())
     default:return false}}
 
+  const BAG_KINDS=new Set(['coin','key','bomb','heart','soul','black','card','pill','rune','battery'])
   IS.tryTakePickup=(p,x,ctx)=>{if(x.dead||x.taken||x.removed)return false
     if(x.kind==='chest'||x.kind==='sack')return IS.touchChest(p,x,ctx)
+    if(!(x.price>0)&&BAG_KINDS.has(x.kind)&&p.active.some(a=>a&&IS.itemsById[a.id]?.consumesPickups)){const bag=p.cache.bag||(p.cache.bag=[]);if(bag.length<8){bag.push(x.kind);x.dead=x.taken=true;ctx.sfx&&ctx.sfx('item-pickup');return true}}
     const cost=IS.priceOf(p,x);if(cost&&!cost.ok)return false
     if(!collect(p,x,ctx))return false
     if(cost){IS.pay(p,cost);if(x.priceType==='heart'){ctx.run.devilDealsTaken=(ctx.run.devilDealsTaken||0)+1;ctx.sfx&&ctx.sfx('devil-deal')}else ctx.sfx&&ctx.sfx('shop-buy');IS.fireHook(p,'onPurchase',[x],ctx)}
@@ -128,7 +130,7 @@
   IS.spawnTrapdoor=(room,x,y,o)=>{room.trapdoor=Object.assign({x:x??room.pxW/2,y:y??room.pxH/2,open:true},o);return room.trapdoor}
   IS.spawnCrawlspace=(room,x,y)=>{room.crawlspace={x:x??room.pxW/2,y:y??room.pxH/2};return room.crawlspace}
   IS.useTrapdoor=(run,ctx)=>{const n=IS.nextFloorIds(run);return n.normal?IS.startFloor(run,n.normal,ctx):null}
-  IS.spawnDevilDeal=(room,run,ctx)=>{for(let i=0;i<2;i++)IS.spawnPedestal(room,IS.rollItem(run,'devil'),room.pxW/2+(i*2-1)*80,room.pxH/2,room.type==='devil'?{deal:'devil'}:{price:2,priceType:'heart',soulPrice:6,deal:'devil'});return room.pickups}
+  IS.spawnDevilDeal=(room,run,ctx)=>{for(let i=0;i<2;i++)IS.spawnPedestal(room,(ctx&&ctx.rollItem?ctx.rollItem('devil'):IS.rollItem(run,'devil')),room.pxW/2+(i*2-1)*80,room.pxH/2,room.type==='devil'?{deal:'devil'}:{price:2,priceType:'heart',soulPrice:6,deal:'devil'});return room.pickups}
   IS.spawnAngelDeal=(room,run)=>IS.spawnPedestal(room,IS.rollItem(run,'angel'),room.pxW/2,room.pxH/2,{deal:'angel'})
   IS.rerollPedestals=(room,run,ctx)=>{for(const p of room.pickups)if(p.kind==='item'&&!p.dead)p.id=IS.rollItem(run,p.pool||'treasure');ctx?.sfx('reroll');return room.pickups}
   IS.updateInteractions=(room,dt,ctx)=>{const p=ctx.player;if(!p||p.dead)return

@@ -1858,7 +1858,7 @@
     if (p && typeof IS.fireHook === 'function') IS.fireHook(p, 'onRoomClear', [room], ctx)
 
     // Only a fight charges an active item.
-    if (p && room.hadEnemies && typeof IS.addCharge === 'function' && Array.isArray(p.active)) {
+    if (p && room.hadEnemies && !(p.flags && p.flags.has && p.flags.has('noRoomCharge')) && typeof IS.addCharge === 'function' && Array.isArray(p.active)) {
       for (var s = 0; s < p.active.length; s++) {
         var slot = p.active[s]
         if (!slot || !slot.id) continue
@@ -1889,7 +1889,11 @@
       case 'boss':
       case 'boss-double': {
         var itemId = ctx && typeof ctx.rollItem === 'function' ? ctx.rollItem('boss') : null
-        if (itemId) IS.spawnPedestal(room, itemId, cx, cy - 50, { pool: 'boss', announce: true })
+        if (run && run.flags && run.flags.satanicBible && room.type === 'boss' && typeof IS.spawnDevilDeal === 'function') {
+          // Satanic Bible used before the fight: the reward is a devil deal instead of the boss item
+          run.flags.satanicBible = false
+          IS.spawnDevilDeal(room, run, ctx)
+        } else if (itemId) IS.spawnPedestal(room, itemId, cx, cy - 50, { pool: 'boss', announce: true })
 
         // The room the harness builds standalone has index -1 and is not on the
         // floor: no trapdoor, no floor progress from it.

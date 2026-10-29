@@ -26,10 +26,9 @@ export default h => {
       for (let i = 0; i < 40; i++) IS.fireHook(w.p, 'onEnemyDamage', [e, 20], w.ctx)
       h.gt(w.p.active[0].charge, 0, 'damage charges')
       const c = w.p.active[0].charge
-      IS.fireHook(w.p, 'onRoomClear', [w.room], w.ctx)
-      w.p.active[0].charge += 1
-      h.tick(w, 1 / 60)
-      h.eq(w.p.active[0].charge, c, 'room clear charge undone')
+      h.ok(w.p.flags.has('noRoomCharge'), 'noRoomCharge flag')
+      h.enemy(w); h.clearRoom(w)
+      h.eq(w.p.active[0].charge, c, 'clearing the room charges nothing')
     },
     'fruity-plum': () => {
       const w = h.fresh(); h.give(w, 'fruity-plum')
@@ -227,7 +226,8 @@ export default h => {
     'bag-of-crafting': () => {
       const w = h.fresh(); h.IS.initPools(w.run); h.give(w, 'bag-of-crafting')
       h.ok(!use(w), 'needs 8 pickups')
-      for (let i = 0; i < 8; i++) IS.fireHook(w.p, 'onPickup', ['coin', 1], w.ctx)
+      for (let i = 0; i < 8; i++) { IS.spawnPickup(w.room, 'coin', w.p.x, w.p.y, { rng: w.room.rng, run: w.run }); IS.updateInteractions(w.room, 1 / 60, w.ctx) }
+      h.eq(w.p.cache.bag.length, 8, 'the bag took the coins')
       h.ok(use(w))
       h.eq(w.room.pickups.filter(u => u.kind === 'item').length, 1)
     },

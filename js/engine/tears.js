@@ -67,7 +67,7 @@
   function splitTear(t,ctx){const a=Math.atan2(t.vy,t.vx);for(let i=0;i<4;i++){const q=a+Math.PI/4+i*Math.PI/2,s=IS.len(t.vx,t.vy)*.8;const c=IS.spawnTear({x:t.x,y:t.y,vx:Math.cos(q)*s,vy:Math.sin(q)*s,dmg:t.dmg*.5,r:t.r*.6,life:.35,flags:new Set([...t.flags].filter(f=>f!=='splitting'))},ctx);c.split=true}}
   const splash=(p,ctx,col)=>{if(IS.fx){IS.fx.particles({x:p.x,y:p.y-(p.z||0)*.5,n:5,colour:col,speed:120,life:.22,size:3.5,drag:4});IS.fx.ring(p.x,p.y-(p.z||0)*.5,{colour:col,r0:3,r1:p.r*2.2,life:.16,width:2})}}
   // Tears chip poop, fire and TNT; rocks only stop them.
-  function hitGrid(p,room,ctx){if(p.flags.has('spectral'))return false;const T=IS.TILE,col=Math.floor(p.x/T),row=Math.floor(p.y/T);if(!IS.solidAt(room,p.x,p.y,{ignorePits:true}))return false;const g=IS.gridAt(room,col,row);if(g&&p.friendly&&g.destructible&&!g.bombOnly&&!g.rockFamily&&g.hp>0){g.hp-=1;g.hurtT=.1;if(g.hp<=0)IS.destroyGrid(room,g,ctx)}return true}
+  function hitGrid(p,room,ctx){if(p.flags.has('spectral'))return false;const T=IS.TILE,col=Math.floor(p.x/T),row=Math.floor(p.y/T);if(!IS.solidAt(room,p.x,p.y,{ignorePits:true}))return false;const g=IS.gridAt(room,col,row);if(g&&p.friendly&&g.destructible&&!g.bombOnly&&(!g.rockFamily||p.flags.has('rock'))&&g.hp>0){g.hp-=g.rockFamily?g.hp:1;g.hurtT=.1;if(g.hp<=0)IS.destroyGrid(room,g,ctx)}return true}
   const segDist=(l,x,y)=>{const dx=Math.cos(l.angle),dy=Math.sin(l.angle),t=IS.clamp((x-l.x)*dx+(y-l.y)*dy,0,l.len);return IS.dist(x,y,l.x+dx*t,l.y+dy*t)}
   IS.updateProjectiles=(room,dt,ctx)=>{const player=ctx.player
     for(const key of ['tears','shots','knives'])for(const p of room[key]||[]){if(p.dead)continue
