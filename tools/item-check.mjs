@@ -34,6 +34,8 @@ export function fresh (opts = {}) {
     time: 100, floorTime: 0, itemsTaken: [], bossesKilled: [], log: [], devilDealsTaken: 0, donation: 0
   }
   const p = IS.makePlayer(run.charId, run)
+  // checks start empty-handed: Isaac's D6 would drop as a pedestal when a test hands him an active
+  if (!opts.keepKit) { p.active = [null, null]; p.pocket = [] }
   run.player = p
   const ctx = IS.headlessCtx(run)
   const room = newRoom(run, ctx, opts.roomType || 'default')
