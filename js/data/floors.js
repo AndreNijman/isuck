@@ -35,7 +35,7 @@
     return { wall:p[0], wallDark:p[1], floor:p[2], floorAlt:p[3], accent:p[4], creep:p[5], backdrop:p[6] }
   }
   var pools = {
-    base: ['gaper','frowning-gaper','clotty','horf','hopper','attackfly','fly','charger','boom-fly','mulligan'],
+    base: ['gaper','frowning-gaper','pooter','clotty','horf','hopper','attackfly','fly','charger','boom-fly','mulligan'],
     rain: ['blurb','drowned-charger','drowned-boom-fly','gutted-fatty','grackle','mole','dinga','drowned-hive'],
     cave: ['hive','maggot','black-globin','vis','bony','swarmer','boil','rock-spider','wall-creep','nest'],
     mine: ['fissure','poly','ash-pile','cinder','molten-baby','coal-boy','stonehead','dust'],

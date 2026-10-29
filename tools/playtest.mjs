@@ -63,14 +63,14 @@ window.__bot = function () {
     var n = es[0], best = 1e9
     es.forEach(function (e) { var d = Math.hypot(e.x - p.x, e.y - p.y); if (d < best) { best = d; n = e } })
     var dx = n.x - p.x, dy = n.y - p.y
-    // a rock in the line of fire: walk (breadth-first over the grid) to the
-    // nearest cell that shares a row or column with the target and sees it
     var T = IS.TILE, clear = function (ax, ay, bx, by) {
       for (var k = 1; k < 16; k++) if (IS.solidAt(room, ax + (bx - ax) * k / 16, ay + (by - ay) * k / 16, { ignorePits: true })) return false
       return true
     }
-    var pathing = !clear(p.x, p.y, n.x, n.y)
-    if (pathing) {
+    // walk (breadth-first over the grid) to the nearest cell that shares a row
+    // or column with the target and sees it: used when a rock is in the line of
+    // fire, or when a pit or rock stands between the bot and the line it wants
+    var route = function () {
       var start = Math.floor(p.y / T) * room.w + Math.floor(p.x / T), prev = {}, q = [start], goal = -1
       prev[start] = start
       var tc = Math.floor(n.x / T), tr = Math.floor(n.y / T)
@@ -84,14 +84,15 @@ window.__bot = function () {
           prev[id] = c; q.push(id)
         })
       }
-      if (goal >= 0) {
-        var step = goal
-        while (prev[step] !== start && prev[step] !== step) step = prev[step]
-        var gx = (step % room.w) * T + T / 2, gy = ((step / room.w) | 0) * T + T / 2
-        var gd = Math.hypot(gx - p.x, gy - p.y) || 1
-        mv.x += (gx - p.x) / gd * 3; mv.y += (gy - p.y) / gd * 3
-      }
+      if (goal < 0) return false
+      var step = goal
+      while (prev[step] !== start && prev[step] !== step) step = prev[step]
+      var gx = (step % room.w) * T + T / 2, gy = ((step / room.w) | 0) * T + T / 2
+      var gd = Math.hypot(gx - p.x, gy - p.y) || 1
+      mv.x = (gx - p.x) / gd * 3; mv.y = (gy - p.y) / gd * 3
+      return true
     }
+    var pathing = !clear(p.x, p.y, n.x, n.y) && route()
     if (Math.abs(dx) > Math.abs(dy)) {
       sh.x = Math.sign(dx)
       if (!pathing) {
@@ -104,6 +105,10 @@ window.__bot = function () {
         if (Math.abs(dx) > 10) mv.x = Math.sign(dx)
         if (Math.abs(dy) < 170) mv.y = -Math.sign(dy); else if (Math.abs(dy) > 340) mv.y = Math.sign(dy)
       }
+    }
+    if (!pathing && (mv.x || mv.y)) {
+      var ml = Math.hypot(mv.x, mv.y)
+      if (IS.solidAt(room, p.x + mv.x / ml * T * .7, p.y + mv.y / ml * T * .7)) pathing = route()
     }
     es.forEach(function (e) {
       var d = Math.hypot(e.x - p.x, e.y - p.y)
