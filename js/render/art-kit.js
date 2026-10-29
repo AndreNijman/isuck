@@ -314,10 +314,7 @@
       }
       g.save(); g.scale(k, k); fn(g, t, A); if (!opt.noWounds) A.wounds(g, opt.R); g.restore()
     }
-    /* A boss may share an id with a playable character (isaac, blue-baby): the
-       player sprite is small (~r*2.25), the boss large (r*3, >= 100), so in a run
-       the size picks which one to draw. */
-    IS.sprites[name] = prior ? function (g, s, t) { return (IS.state && IS.state.run && s >= 96 ? painter : prior)(g, s, t) } : painter
+    IS.sprites[name] = painter
     IS.spriteAnimated(name)
   }
   /* The default palette helper: ignore the engine's placeholder white tint. */

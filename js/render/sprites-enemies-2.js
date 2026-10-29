@@ -64,9 +64,20 @@
   } }
   def(Object.keys(BLOBS), blob)
 
+  // The Keeper enemy: a hopping, hanged head with stitched eyes and a coin in its grin.
+  def(['keeper-enemy'], function () { return function (g, s, t) {
+    var hop = Math.abs(Math.sin(t.time * 5)) * s * .08, c = C(t, '#a88a6a'), d = C(t, '#6e5640')
+    O(g, 0, s * .36, s * .22, s * .05, 'rgba(0,0,0,.25)')
+    L(g, '#8a6a3a', s * .03, [0, -s * .5 - hop, 0, -s * .3 - hop])
+    O(g, 0, -s * .02 - hop, s * .34, s * .32, d); O(g, 0, -s * .05 - hop, s * .32, s * .3, c)
+    for (var i = -1; i <= 1; i += 2) { O(g, i * s * .13, -s * .1 - hop, s * .08, s * .07, '#1a1214'); L(g, '#d8c8a8', s * .015, [i * s * .2, -s * .14 - hop, i * s * .06, -s * .06 - hop]); L(g, '#d8c8a8', s * .015, [i * s * .2, -s * .06 - hop, i * s * .06, -s * .14 - hop]) }
+    O(g, 0, s * .12 - hop, s * .16, s * .06 + (t.charge || 0) * s * .05, '#2a1214'); O(g, 0, s * .13 - hop, s * .05, s * .045, C(t, '#e2b84a'))
+    for (i = -3; i <= 3; i++) L(g, '#d8c8a8', s * .012, [i * s * .045, s * .07 - hop, i * s * .045, s * .17 - hop])
+  } })
+
   // --- flesh, sacks and guts ------------------------------------------------
   var FLESH = {
-    'fat-sack': { k: 'sack', c: '#8a847c', fat: true }, 'sack-of-sacks': { k: 'sack', c: '#9a7448', kids: true },
+    'sack-enemy': { k: 'sack', c: '#a8814f' }, 'fat-sack': { k: 'sack', c: '#8a847c', fat: true }, 'sack-of-sacks': { k: 'sack', c: '#9a7448', kids: true },
     'chubber': { k: 'grub', c: '#b9a48a' }, 'gut': { k: 'gut', c: '#c4757c' }, 
     'walking-boil': { k: 'boil', c: '#c9988a', legs: true }, 'blue-boil': { k: 'boil', c: '#7b95a8' },
     'blue-fatty': { k: 'fat', c: '#8ea6b4' }, 'blue-conjoined-fatty': { k: 'fat', c: '#8ea6b4', two: true },

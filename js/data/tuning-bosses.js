@@ -126,6 +126,8 @@
           ph.attacks = list; ph.weights = list.map(function () { return 1 })
         })
       }
+      // the bosses that share a name with a playable character draw as themselves
+      if (b.id === 'isaac' || b.id === 'blue-baby') b.sprite = 'boss-' + b.id
       if (FLYERS.test(b.id)) b.flying = true
       if (HP[b.id]) b.hp = HP[b.id]
       if (COOLDOWN[b.id] && b.phases && b.phases.length === 2) { b.phases[0].cooldown = COOLDOWN[b.id][0]; b.phases[1].cooldown = COOLDOWN[b.id][1] }

@@ -130,6 +130,8 @@
       if (FLIES.indexOf(e.id) > -1) e.flying = true
       if (GROUND.indexOf(e.id) > -1) e.flying = false
       if (t && t[3] && t[3].r) e.r = t[3].r
+      // Sack and Keeper share their names with a pickup and a character
+      if (e.id === 'sack' || e.id === 'keeper') e.sprite = e.id + '-enemy'
       // keep bodies readable: nothing smaller than a tear-and-a-half
       e.r = Math.max(e.r || 18, e.flying ? 15 : 18)
     })

@@ -485,7 +485,7 @@
     A.poly(g, [-5, 36 + br, 5, 36 + br, 0, 52 + br], c)
     g.restore()
   }
-  reg('isaac', function (g) {
+  reg('boss-isaac', function (g) {
     var c = '#ead4c2', ch = A.ch, br = Math.sin(A.T * 3)
     A.glow(g, 0, 0, 60, '#cfe6ff', .22)
     A.wing(g, -10, 0, 46, -2.75, '#f2f0f4', { feather: true, dir: 1, flap: Math.sin(A.T * 4) * .12 }); A.wing(g, 10, 0, 46, -.39, '#f2f0f4', { feather: true, dir: 1, flap: -Math.sin(A.T * 4) * .12 })
@@ -498,7 +498,7 @@
     A.mouth(g, 0, 16 + br, 8, 3 + ch * 9, { n: 0, col: '#4a1a22', tn: '#d4707e' })
     A.halo(g, 0, -42 + br, 20, 5, '#f3d86a')
   })
-  reg('blue-baby', function (g) {
+  reg('boss-blue-baby', function (g) {
     var c = '#7e94a8', ch = A.ch, br = Math.sin(A.T * 3)
     A.ball(g, 0, 30, 20, 18, sh(c, -.1)); A.ball(g, -12, 44, 7, 6, c); A.ball(g, 12, 44, 7, 6, c)
     A.ball(g, -26, 20, 7, 10, c, { rot: .5 }); A.ball(g, 26, 20, 7, 10, c, { rot: -.5 })
