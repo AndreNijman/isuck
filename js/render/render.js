@@ -87,11 +87,34 @@
     var list = room.markers || [], t = (IS.state && IS.state.time) || 0
     for (var i = 0; i < list.length; i++) {
       var m = list[i], k = Math.min(1, m.t / m.dur)
+      if (m.hole) {
+        // a hole in the floor: dark pit with a lip (a boss digging in or out)
+        var hr = m.r * (m.hole === 'dive' ? Math.max(.25, 1 - Math.max(0, k - .7) * 3) : .85)
+        g.fillStyle = 'rgba(6,3,2,.9)'; g.beginPath(); g.ellipse(m.x, m.y + m.r * .25, hr, hr * .55, 0, 0, Math.PI * 2); g.fill()
+        g.strokeStyle = 'rgba(92,66,48,.9)'; g.lineWidth = 4; g.stroke()
+        if (m.hole === 'dive') continue
+      }
       g.fillStyle = 'rgba(160,20,20,' + (.12 + k * .22).toFixed(3) + ')'
       g.beginPath(); g.arc(m.x, m.y, m.r, 0, Math.PI * 2); g.fill()
       g.strokeStyle = 'rgba(230,70,60,' + (.5 + Math.sin(t * 20) * .2).toFixed(3) + ')'; g.lineWidth = 3
       g.beginPath(); g.arc(m.x, m.y, m.r * (1 - k) + 4, 0, Math.PI * 2); g.stroke()
       g.beginPath(); g.arc(m.x, m.y, m.r, 0, Math.PI * 2); g.stroke()
+    }
+  }
+
+  // Gemini, Steven, Blighted Ovum: the umbilical cord between the twins while it holds
+  function tethers (g, room) {
+    var list = room.enemies || []
+    for (var i = 0; i < list.length; i++) {
+      var a = list[i], m = a && a.mate
+      if (!a || a.role !== 'contusion' || !m || a.dead || m.dead || a.hidden || (a.ai && a.ai.cut)) continue
+      var dx = m.x - a.x, dy = m.y - a.y, d = Math.sqrt(dx * dx + dy * dy), sag = Math.max(0, 340 - d) * .35 + 14
+      var mx = (a.x + m.x) / 2, my = (a.y + m.y) / 2 + sag
+      g.lineCap = 'round'
+      g.strokeStyle = 'rgba(60,20,22,.9)'; g.lineWidth = 9
+      g.beginPath(); g.moveTo(a.x, a.y); g.quadraticCurveTo(mx, my, m.x, m.y); g.stroke()
+      g.strokeStyle = '#b5555c'; g.lineWidth = 5
+      g.beginPath(); g.moveTo(a.x, a.y); g.quadraticCurveTo(mx, my, m.x, m.y); g.stroke()
     }
   }
 
@@ -159,6 +182,7 @@
     actors.sort(function (a, b) { return a.y - b.y })
     for (i = 0; i < actors.length; i++) if (!actors[i].hidden) shadow(g, actors[i])
     IS.drawGridObjects(g, room, run.floor)
+    tethers(g, room)
     for (i = 0; i < actors.length; i++) actor(g, actors[i], run)
     projectiles(g, room)
     if (run.player) weaponOverlay(g, run.player)
