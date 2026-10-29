@@ -39,7 +39,7 @@ export default h => {
       w.p.active[1] = { id: 'd6', charge: 0, maxCharge: 6, batteryCharge: 0 }
       const op = IS.input.pressed
       IS.input.pressed = a => a === 'pocketSwap'
-      try { h.tick(w, 0.02) } finally { IS.input.pressed = op }
+      try { IS.updatePlayer(w.p, IS.DT, w.ctx) } finally { IS.input.pressed = op }
       h.eq(w.p.active[0].id, 'd6', 'slot 0 swapped')
       h.eq(w.p.active[1].id, 'the-poop', 'slot 1 swapped')
     }
