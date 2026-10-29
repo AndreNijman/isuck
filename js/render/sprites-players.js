@@ -201,6 +201,7 @@
   }
 
   /* ---------------------------------------------------------------- figure */
+  var FEET = 43, BODY_S = .7, HEAD_S = 1.4
   function figure (g, spec, c0) {
     var c = Object.assign({}, c0); c.g = g; c.spec = spec; c.p = c0.tint ? Object.assign({}, spec.pal, { skin: c0.tint }) : spec.pal
     if (spec.group) {
@@ -215,9 +216,16 @@
     if (spec.alpha) g.globalAlpha *= spec.alpha
     c.blink = ((c.T + 1.5 + (spec.seed || 0)) % 3.7) < .13
     if (spec.pre) spec.pre(c)
+    // in-game figures use big-head proportions: the body squashes toward the feet and the head
+    // grows about the neck, so the overall height stays the same. Portraits keep the drawn shape.
+    var chibi = !c.portrait, neck = (spec.body && spec.body.top != null) ? spec.body.top : -12
+    var neckTo = FEET - (FEET - neck) * BODY_S
+    if (chibi) { g.save(); g.translate(0, FEET); g.scale(1, BODY_S); g.translate(0, -FEET) }
     drawBody(c)
+    if (chibi) { g.restore(); g.save(); g.translate(0, neckTo); g.scale(HEAD_S, HEAD_S); g.translate(0, -neck) }
     drawHead(c)
     if (c.hold) drawBody(c, true)
+    if (chibi) g.restore()
     if (spec.post) spec.post(c)
   }
 
