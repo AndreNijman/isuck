@@ -37,6 +37,7 @@
         "js/engine/floor.js",
         "js/engine/interact.js",
         "js/engine/portals.js",
+        "js/engine/stage.js",
         "js/engine/machines.js",
         "js/engine/progress.js",
         "js/engine/ctx.js",
