@@ -8,7 +8,9 @@
 // The bot is a poor player, so it is not allowed to die: every hit still lands
 // (knockback, invulnerability frames) but the hearts are given back and counted.
 // The count is how hard each room hit a player who stands and trades; a normal
-// Basement room that lands more than HIT_LIMIT half-hearts is a tuning failure.
+// room that lands more than its hit cap is a tuning failure. Caps and time
+// limits grow with the number of enemies in the room. Do not weaken enemies to
+// get this bot through a room: if the bot is the problem, fix the bot.
 //
 // The simulation is stepped by hand (IS.step) so a run takes seconds, not
 // minutes, and is the same every time for a given seed.
@@ -28,9 +30,10 @@ const arg = (name, dflt) => {
 const SEEDS = String(arg('seeds', '1,2,3')).split(',').map(Number)
 const CHAR = arg('char', 'isaac')
 const SHOTS = process.argv.includes('--shots')
-const ROOM_LIMIT = 45 // seconds of game time to clear an ordinary room
+const roomLimit = n => 20 + 8 * n // seconds of game time to clear a room of n enemies
 const BOSS_LIMIT = 90
-const HIT_LIMIT = 8
+const hitCap = n => 6 + 2 * n // half-hearts
+const BOSS_HIT_CAP = 24
 
 const fails = []
 const ok = (cond, msg) => { if (!cond) fails.push(msg); return !!cond }
@@ -150,7 +153,7 @@ try {
       const start = JSON.parse(await page.evaluate(state))
       if (!start.alive.length) continue
       fights++
-      const limit = r.type === 'boss' ? BOSS_LIMIT : ROOM_LIMIT
+      const limit = r.type === 'boss' ? BOSS_LIMIT : roomLimit(start.alive.length)
       let s = start
       for (let t = 0; t < limit; t += 5) {
         await page.evaluate(`window.__play(5); return 1`)
@@ -163,7 +166,8 @@ try {
       if (!ok(s.screen === 'game', `${tag}: left the game screen (${s.screen})`)) break
       const cleared = ok(s.cleared, `${tag}: not cleared after ${s.time}s — still alive: ${s.alive.join('; ')}`)
       if (cleared) roomsCleared++
-      const fair = r.type === 'boss' || ok(s.hits <= HIT_LIMIT, `${tag}: ${s.hits} half-hearts of hits from ${start.alive.map(a => a.split(' ')[0]).join(', ')}`)
+      const cap = r.type === 'boss' ? BOSS_HIT_CAP : hitCap(start.alive.length)
+      const fair = ok(s.hits <= cap, `${tag}: ${s.hits} half-hearts of hits from ${start.alive.map(a => a.split(' ')[0]).join(', ')}`)
       console.log(`  ${cleared && fair ? 'ok ' : 'FAIL'} ${tag.padEnd(28)} ${String(s.time).padStart(5)}s  hits ${String(s.hits).padStart(2)}  ${start.alive.map(a => a.split(' ')[0]).join(', ')}`)
     }
     console.log(`seed ${seed}: ${roomsCleared}/${fights} fights won, ${hits} half-hearts of hits taken`)
