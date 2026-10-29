@@ -119,6 +119,7 @@
         "tools/validate-content.mjs",
         "tools/smoke.mjs",
         "tools/enemy-ai.mjs",
+        "tools/systems-check.mjs",
         "tools/balance.mjs",
         "tools/card-shot.js"
       ]
