@@ -34,6 +34,22 @@
 
   function room (ctx) { return (ctx && ctx.room) || null }
 
+  function revealSecrets (ctx, floor) {
+    var f = floor || (ctx && ctx.run && ctx.run.floor)
+    if (!f || !Array.isArray(f.rooms)) return
+    for (var i = 0; i < f.rooms.length; i++) {
+      var r = f.rooms[i]
+      if (r && (r.type === 'secret' || r.type === 'super-secret')) r.mapKnown = true
+    }
+  }
+
+  function clearCurses (ctx, floor) {
+    var f = floor || (ctx && ctx.run && ctx.run.floor)
+    if (f) f.curses = 0
+    if (ctx && ctx.run) ctx.run.curses = 0
+    if (ctx && ctx.room) ctx.room.dark = false
+  }
+
   function fn (o, k) { return !!(o && typeof o[k] === 'function') }
 
   function living (ctx) {
@@ -833,7 +849,17 @@
       pools: ['treasure', 'greed-treasure'],
       tags: ['defensive', 'utility'],
       dlc: 'rebirth',
-      flags: ['gnawedLeaf']
+      flags: ['gnawedLeaf'],
+      // Nothing in the engine reads 'gnawedLeaf', so stillness is tracked here.
+      hooks: {
+        onUpdate: function (p, dt) {
+          var c = cache(p)
+          if (!p || !p.status) return
+          if (Math.abs(p.vx || 0) + Math.abs(p.vy || 0) > 8) { c.leafStill = 0; return }
+          c.leafStill = (c.leafStill || 0) + (dt || 0)
+          if (c.leafStill >= 1) p.status.invincible = Math.max(p.status.invincible || 0, 0.15)
+        }
+      }
     },
 
     {
@@ -1679,7 +1705,13 @@
       pools: ['shop', 'beggar', 'greed-shop'],
       tags: ['utility'],
       dlc: 'rebirth',
-      flags: ['seeSecretRooms']
+      flags: ['seeSecretRooms'],
+      // Nothing in the engine reads 'seeSecretRooms'; mark the secret rooms here.
+      hooks: {
+        onInit: function (p, ctx) { revealSecrets(ctx, null) },
+        onNewFloor: function (p, floor, ctx) { revealSecrets(ctx, floor) },
+        onRoomEnter: function (p, r, ctx) { revealSecrets(ctx, null) }
+      }
     },
 
     {
@@ -2020,6 +2052,11 @@
       stats: { devilChance: 0.15, angelChance: 0.15 },
       grant: { black: 2 },
       hooks: {
+        // onCurseEval is never fired; curses are rolled into floor.curses at
+        // generation, so they are cleared when the floor starts.
+        onInit: function (p, ctx) { clearCurses(ctx, null) },
+        onNewFloor: function (p, floor, ctx) { clearCurses(ctx, floor) },
+        onRoomEnter: function (p, r, ctx) { clearCurses(ctx, null) },
         onCurseEval: function (p, curses, ctx) {
           return 0
         }

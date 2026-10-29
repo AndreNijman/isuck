@@ -405,6 +405,21 @@ if (IS.sprites) {
   }
 }
 
+// no non-placeholder item may be dead: it needs stats, mult, tearFlags, familiars, grant, flags or hooks
+// (or be handled by name inside js/engine/*.js, e.g. the-ludovico-technique). item-235 is intentionally inert.
+{
+  const DEAD_OK = new Set(['item-43', 'item-61', 'item-235', 'item-648', 'item-662', 'item-666', 'item-718'])
+  const engineSrc = fs.readdirSync(path.join(ROOT, 'js/engine')).filter(f => f.endsWith('.js'))
+    .map(f => fs.readFileSync(path.join(ROOT, 'js/engine', f), 'utf8')).join('\n')
+  for (const d of IS.items) {
+    if (DEAD_OK.has(d.id)) continue
+    const live = !!(d.stats || d.mult || d.grant || (d.flags && d.flags.length) ||
+      (d.tearFlags && d.tearFlags.length) || (d.familiars && d.familiars.length) ||
+      (d.hooks && Object.keys(d.hooks).length))
+    if (!live && !engineSrc.includes(`'${d.id}'`)) err(`item ${d.id}`, 'has no effect (no stats/mult/tearFlags/familiars/grant/flags/hooks)')
+  }
+}
+
 // ------------------------------------------------------------- 6. accounting
 function implemented (d) {
   return !!(d.stats || d.mult || d.grant || (d.flags && d.flags.length) ||

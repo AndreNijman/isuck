@@ -4,6 +4,12 @@
   // Generated from docs/reference/slices/items-2.json. Declarative effects are
   // preferred; hooks use only ARCHITECTURE §5.2 names and seeded ctx RNG.
 
+  function puddle(tear, ctx) {
+    if (!tear || !tear.flags || !tear.flags.has("holywater") || tear.hwDone || !ctx) return
+    tear.hwDone = true
+    IS.spawnPuddle({ x: tear.x, y: tear.y, r: 70, dmg: 3, life: 4, status: [["freeze", 1.5]], colour: "#7fb8e8" }, ctx)
+  }
+
   IS.defineItems([
     {
       id: "the-gamekid",
@@ -196,6 +202,19 @@
       pools: ["treasure", "greed-treasure"],
       tags: ["offensive", "tears"],
       dlc: "rebirth",
+      // Tears split into two half-damage tears at +-90 degrees when they hit an enemy.
+      hooks: {
+        onTearHit: function (p, tear, enemy, ctx) {
+          if (!tear || tear.split || !ctx) return
+          var sp = Math.sqrt(tear.vx * tear.vx + tear.vy * tear.vy) || 1
+          var a = Math.atan2(tear.vy, tear.vx)
+          for (var i = 0; i < 2; i++) {
+            var q = a + (i ? Math.PI / 2 : -Math.PI / 2)
+            var c = ctx.spawnTear({ x: tear.x, y: tear.y, vx: Math.cos(q) * sp * 0.8, vy: Math.sin(q) * sp * 0.8, dmg: tear.dmg * 0.5, r: (tear.r || 8) * 0.7, life: 0.45, flags: new Set(tear.flags) })
+            if (c) c.split = true
+          }
+        }
+      },
       unlock: null
     },
 
@@ -259,6 +278,12 @@
       pools: ["treasure", "angel", "greed-treasure"],
       tags: ["offensive", "defensive", "hearts"],
       dlc: "rebirth",
+      hooks: {
+        onPlayerDamage: function (p, n, src) {
+          if (src === "sacrifice" || (src && (src.self || src.kind === "sacrifice"))) return n
+          return n > 1 ? 1 : n
+        }
+      },
       unlock: null
     },
 
@@ -273,6 +298,13 @@
       pools: ["treasure", "devil", "greed-devil", "ultra-secret"],
       tags: ["offensive", "coins"],
       dlc: "rebirth",
+      hooks: {
+        onStats: function (p, s) { s.damage += 0.04 * (p.coins || 0) },
+        onUpdate: function (p) {
+          if (!p.cache) return
+          if (p.cache.mp !== p.coins) { p.cache.mp = p.coins; IS.recalcStats(p) }
+        }
+      },
       unlock: null
     },
 
@@ -322,6 +354,7 @@
       tags: ["offensive"],
       dlc: "rebirth",
       transform: "conjoined",
+      familiars: ["guardian-angel"],
       unlock: null
     },
 
@@ -382,6 +415,15 @@
       pools: ["shop", "battery-bum", "greed-shop", "crane-game"],
       tags: ["utility"],
       dlc: "rebirth",
+      hooks: {
+        onInit: function (p) {
+          if (!p.cache) p.cache = {}; if (p.cache["9-volt:init"]) return; p.cache["9-volt:init"] = true; for (var i = 0; i < 2; i++) { var a = p.active && p.active[i]; if (a) a.charge = a.maxCharge }
+        },
+        onRoomClear: function (p, room, ctx) {
+          if (!ctx || !p.active) return
+          for (var i = 0; i < 2; i++) if (p.active[i]) ctx.addCharge(1, i)
+        }
+      },
       unlock: null
     },
 
@@ -577,6 +619,7 @@
       pools: ["treasure", "key-master", "greed-treasure", "baby-shop"],
       tags: ["offensive"],
       dlc: "rebirth",
+      familiars: ["forever-alone"],
       unlock: null
     },
 
@@ -639,6 +682,7 @@
       pools: ["greed-treasure", "greed-boss", "greed-devil"],
       tags: ["offensive", "tears"],
       dlc: "rebirth",
+      tearFlags: ["lump"],
       unlock: null
     },
 
@@ -672,6 +716,26 @@
       tags: ["utility"],
       dlc: "rebirth",
       transform: "guppy",
+      // APPROXIMATE: the clear reward spawns right after onRoomClear, so the 22% "no reward" case
+      // removes pickups that appear in the next frame instead of preventing them.
+      hooks: {
+        onRoomClear: function (p, room, ctx) {
+          if (!ctx || !ctx.room) return
+          if (!p.cache) p.cache = {}
+          if (ctx.chance(0.33)) ctx.spawnPickup("chest", ctx.room.pxW / 2, ctx.room.pxH / 2)
+          if (ctx.chance(0.22)) p.cache.tailSnap = (ctx.room.pickups || []).slice()
+        },
+        onUpdate: function (p, dt, ctx) {
+          if (!p.cache || !p.cache.tailSnap || !ctx || !ctx.room) return
+          var snap = p.cache.tailSnap
+          p.cache.tailSnap = null
+          var list = ctx.room.pickups || []
+          for (var i = 0; i < list.length; i++) {
+            var u = list[i]
+            if (snap.indexOf(u) < 0 && !u.shop && !u.price && u.kind !== "item" && !u.dead) u.dead = true
+          }
+        }
+      },
       unlock: null
     },
 
@@ -755,6 +819,12 @@
       tags: ["utility"],
       dlc: "rebirth",
       transform: "mom",
+      hooks: {
+        onInit: function (p, ctx) {
+          if (!ctx || !ctx.room) return
+          if (!p.cache) p.cache = {}; if (p.cache["moms-purse:init"]) return; p.cache["moms-purse:init"] = true; ctx.spawnPickup("trinket", p.x + 50, p.y, { id: ctx.rollTrinket() })
+        }
+      },
       unlock: null
     },
 
@@ -786,6 +856,12 @@
       pools: ["boss"],
       tags: ["coins"],
       dlc: "rebirth",
+      hooks: {
+        onInit: function (p, ctx) {
+          if (!ctx || !ctx.room) return
+          if (!p.cache) p.cache = {}; if (p.cache["pageant-boy:init"]) return; p.cache["pageant-boy:init"] = true; for (var i = 0; i < 7; i++) { var a = i * Math.PI * 2 / 7; ctx.spawnPickup("coin", p.x + Math.cos(a) * 70, p.y + Math.sin(a) * 70) }
+        }
+      },
       unlock: null
     },
 
@@ -800,6 +876,16 @@
       pools: ["treasure", "angel", "greed-treasure"],
       tags: ["offensive", "defensive", "hearts"],
       dlc: "rebirth",
+      hooks: {
+        onPlayerHurt: function (p, n, src, ctx) {
+          if (!p.cache || p.cache.scapular) return
+          var h = p.hearts
+          if (h.red + h.soul + h.black + (h.bone || 0) !== 1) return
+          p.cache.scapular = true
+          IS.addSoulHearts(p, 2)
+        },
+        onRoomEnter: function (p) { if (p.cache) p.cache.scapular = false }
+      },
       unlock: null
     },
 
@@ -830,6 +916,7 @@
       pools: ["treasure", "beggar", "baby-shop"],
       tags: ["coins"],
       dlc: "rebirth",
+      familiars: ["bum-friend"],
       unlock: null
     },
 
@@ -896,6 +983,13 @@
       pools: ["treasure", "greed-treasure"],
       tags: ["offensive"],
       dlc: "rebirth",
+      hooks: {
+        onPlayerHurt: function (p, n, src, ctx) {
+          if (!ctx || !ctx.room) return
+          var k = 2 + ctx.int(5)
+          for (var i = 0; i < k; i++) ctx.spawnFamiliar("blue-fly")
+        }
+      },
       unlock: null
     },
 
@@ -928,6 +1022,13 @@
       pools: ["treasure", "greed-treasure"],
       tags: ["offensive"],
       dlc: "rebirth",
+      hooks: {
+        onTearFire: function (p, tear, ctx) {
+          if (!ctx || !ctx.roll(0.1, 0.1, 1)) return
+          tear.dmg *= 3.2
+          tear.tint = "#f4eed8"
+        }
+      },
       unlock: null
     },
 
@@ -942,6 +1043,12 @@
       pools: ["treasure", "greed-treasure"],
       tags: ["offensive", "tears"],
       dlc: "rebirth",
+      hooks: {
+        onTearHit: function (p, tear, enemy, ctx) {
+          if (!ctx || !ctx.room || p.familiars.length > 40) return
+          if (ctx.chance(1 / 6)) ctx.spawnFamiliar("blue-fly")
+        }
+      },
       unlock: null
     },
 
@@ -987,6 +1094,10 @@
       pools: ["treasure", "greed-treasure"],
       tags: ["offensive"],
       dlc: "rebirth",
+      // Engine flips p.eye each shot; negative is treated as the left eye.
+      hooks: {
+        onTearFire: function (p, tear) { if (p.eye < 0) tear.dmg += 2 }
+      },
       unlock: null
     },
 
@@ -1016,6 +1127,9 @@
       pools: ["shop", "angel", "greed-shop"],
       tags: ["offensive"],
       dlc: "rebirth",
+      hooks: {
+        onPlayerHurt: function (p, n, src, ctx) { if (ctx) ctx.addCharge(1) }
+      },
       unlock: null
     },
 
@@ -1030,6 +1144,16 @@
       pools: ["treasure", "devil", "greed-treasure", "greed-devil", "ultra-secret"],
       tags: ["offensive"],
       dlc: "rebirth",
+      hooks: {
+        onPlayerHurt: function (p) {
+          if (!p.cache) return
+          if ((p.cache.bl || 0) >= 6) return
+          p.cache.bl = (p.cache.bl || 0) + 1
+          IS.recalcStats(p)
+        },
+        onStats: function (p, s) { s.damage += 0.5 * ((p.cache && p.cache.bl) || 0) },
+        onNewFloor: function (p) { if (p.cache && p.cache.bl) { p.cache.bl = 0; IS.recalcStats(p) } }
+      },
       unlock: null
     },
 
@@ -1094,6 +1218,18 @@
       pools: ["treasure", "greed-treasure"],
       tags: ["utility"],
       dlc: "rebirth",
+      hooks: {
+        onPlayerDeath: function (p, ctx) {
+          if (!p.cache) p.cache = {}
+          var used = p.cache.ankhUsed || 0
+          if (used >= Math.max(1, IS.itemCount(p, "ankh"))) return undefined
+          p.cache.ankhUsed = used + 1
+          var h = p.hearts
+          h.maxRed = 0; h.red = 0; h.black = 0; h.bone = 0; h.rotten = 0; h.gold = 0; h.eternal = 0
+          h.soul = 6
+          return { revive: true }
+        }
+      },
       unlock: null
     },
 
@@ -1109,6 +1245,13 @@
       tags: ["offensive", "defensive", "hearts"],
       dlc: "rebirth",
       transform: "seraphim",
+      hooks: {
+        onPlayerHurt: function (p, n, src, ctx) {
+          if (!ctx || !ctx.roll(0.2, 0.03, 1)) return
+          if (!p.status) p.status = {}
+          p.status.invincible = 3
+        }
+      },
       unlock: null
     },
 
@@ -1272,6 +1415,7 @@
       pools: ["treasure", "devil", "greed-treasure", "greed-devil", "baby-shop"],
       tags: ["offensive"],
       dlc: "rebirth",
+      familiars: ["sacrificial-dagger"],
       unlock: null
     },
 
@@ -1287,6 +1431,21 @@
       tags: ["defensive", "hearts"],
       dlc: "rebirth",
       transform: "seraphim",
+      hooks: {
+        onUpdate: function (p, dt, ctx) {
+          if (!ctx || !ctx.room || !p.cache) return
+          p.cache.mitreT = (p.cache.mitreT || 0) + dt
+          if (p.cache.mitreT < 0.2) return
+          p.cache.mitreT = 0
+          var list = ctx.pickups()
+          for (var i = 0; i < list.length; i++) {
+            var u = list[i]
+            if (u.kind !== "heart" || u.mitre || u.dead || u.taken || u.shop || u.price) continue
+            u.mitre = true
+            if (ctx.chance(0.33)) { u.kind = "soul"; u.variant = "soul"; u.amount = 2; u.heart = true }
+          }
+        }
+      },
       unlock: null
     },
 
@@ -1367,6 +1526,20 @@
       pools: ["treasure", "angel", "greed-angel"],
       tags: ["offensive"],
       dlc: "rebirth",
+      // APPROXIMATE: Isaac's potion is a thrown arc; here every 2.5s one shot becomes a 7 damage
+      // tear that leaves a freezing puddle where it lands or hits.
+      hooks: {
+        onTearFire: function (p, tear, ctx) {
+          if (!ctx || !ctx.run || !p.cache) return
+          if (ctx.run.time < (p.cache.hwNext || 0)) return
+          p.cache.hwNext = ctx.run.time + 2.5
+          tear.flags.add("holywater")
+          tear.tint = "#9fd0ff"
+          tear.dmg = 7
+        },
+        onTearHit: function (p, tear, enemy, ctx) { puddle(tear, ctx) },
+        onTearDeath: function (p, tear, ctx) { puddle(tear, ctx) }
+      },
       unlock: null
     },
 
@@ -1381,6 +1554,12 @@
       pools: ["golden-chest"],
       tags: ["defensive", "hearts"],
       dlc: "rebirth",
+      flags: ["flying"],
+      hooks: {
+        onInit: function (p) {
+          if (!p.cache) p.cache = {}; if (p.cache["fate:init"]) return; p.cache["fate:init"] = true; p.hearts.eternal = (p.hearts.eternal || 0) + 1
+        }
+      },
       unlock: null
     },
 
@@ -1467,6 +1646,11 @@
   ])
 
   IS.defineFamiliars([
+
+    { id: "guardian-angel", name: "Guardian Angel", behaviour: 'orbital', params: { r: 14, speed: 300, flying: true, orbitR: 80, orbitSpeed: 2.2, dmg: 3.5, cooldown: 0.35, hp: 0, blockShots: true, life: 0 } },
+    { id: "forever-alone", name: "Forever Alone", behaviour: 'orbital', params: { r: 12, speed: 300, flying: true, orbitR: 130, orbitSpeed: 2, dmg: 3, cooldown: 0.35, hp: 0, blockShots: false, life: 0 } },
+    { id: "sacrificial-dagger", name: "Sacrificial Dagger", behaviour: 'orbital', params: { r: 14, speed: 300, flying: true, orbitR: 70, orbitSpeed: 2.6, dmg: 4, cooldown: 0.35, hp: 0, blockShots: true, life: 0 } },
+    { id: "bum-friend", name: "Bum Friend", behaviour: 'collector', params: { r: 16, speed: 220, flying: false, collects: ["coin"], every: 3.5, reward: 'random', hp: 0, blockShots: false, life: 0 } },
     { id: "robo-baby", name: "Robo-Baby", sprite: "robo-baby", behaviour: 'follower', params: { r: 16, speed: 300, flying: true, dmg: 3.5, fireDelay: 0.75, range: 520, hp: 0, blockShots: false, life: 0 } },
     { id: "little-gish", name: "Little Gish", sprite: "little-gish", behaviour: 'follower', params: { r: 16, speed: 300, flying: true, dmg: 3.5, fireDelay: 0.75, range: 520, hp: 0, blockShots: false, life: 0, tearFlags: ["slow"] } },
     { id: "little-steven", name: "Little Steven", sprite: "little-steven", behaviour: 'follower', params: { r: 16, speed: 300, flying: true, dmg: 3.5, fireDelay: 0.75, range: 520, hp: 0, blockShots: false, life: 0, tearFlags: ["homing"] } },
