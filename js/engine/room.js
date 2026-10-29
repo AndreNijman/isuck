@@ -671,6 +671,8 @@
           if (d.dir === opp) return d
         }
       }
+      // walked in from a side this room has no door on: still arrive at a door, never mid-room
+      for (i = 0; i < room.doors.length; i++) if (room.doors[i] && !room.doors[i].hidden) return room.doors[i]
     }
     return null
   }
