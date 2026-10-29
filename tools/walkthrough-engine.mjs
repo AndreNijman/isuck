@@ -28,7 +28,8 @@ const poll = async (expr, ms, every = 40) => { const out = []; const t0 = Date.n
 
 try {
   await page.goto('file://' + path.join(ROOT, 'index.html')); await page.wait(1000)
-  await page.press('enter'); await page.wait(400); await page.press('enter'); await page.wait(400); await page.press('enter'); await page.wait(900)
+  // title -> save slot -> main menu -> character carousel -> run
+  for (const w of [500, 500, 600, 1200]) { await page.press('enter'); await page.wait(w) }
   // the menus were driven with real keys; pin the seed so the floor layout is the same every run
   await ev(`IS.startRun({ charId: IS.state.run.charId, seed: ${SEED} }); return 1`); await page.wait(500)
   check(await ev('return IS.state.screen') === 'game', 'run started through the menus with real keys')
