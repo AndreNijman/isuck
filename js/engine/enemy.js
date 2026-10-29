@@ -89,8 +89,25 @@
   const burst=(e,c,kind,n)=>{for(let i=0;i<n;i++){const m=c.spawnEnemy(IS.enemiesById[kind]?kind:'fly',e.x+Math.cos(i*6.283/n)*12,e.y+Math.sin(i*6.283/n)*12);if(m){m.spawnT=.35;IS.knockback(m,e.x,e.y,260)}}}
   const turnTo=(a,n,k)=>{a.fx+=(n.x-a.fx)*k;a.fy+=(n.y-a.fy)*k;const l=Math.hypot(a.fx,a.fy)||1;a.fx/=l;a.fy/=l}
   // Knights wear their armour on the front: facing is tracked, rendered as e.variant
-  // (0 side, 1 toward camera, 3 away) and read by the damage guard below.
-  function knight(e,dt,c,m){const a=e.ai;if(a.fx==null){a.fx=0;a.fy=1}turnTo(a,toPlayer(e,c),Math.min(1,dt*P(e,'turn',2)));steer(e,a.fx,a.fy,e.speed*(m||1),e.speed*4,dt);e.variant=Math.abs(a.fx)>Math.abs(a.fy)?0:a.fy>0?1:3}
+  // (0 side, 1 toward camera, 3 away) and read by the damage guard below. As in
+  // Isaac they plod in straight cardinal lines, turn at walls and now and then
+  // toward you, and charge only when you stand in line ahead of them; flanking
+  // them is how you get at the soft back.
+  const CARD=[[1,0],[-1,0],[0,1],[0,-1]]
+  function knight(e,dt,c,m){const a=e.ai,k=m||1
+    if(a.fx==null){const d=c.pick(CARD);a.fx=d[0];a.fy=d[1];a.t=c.range(.8,1.6)}
+    e.variant=a.fx?0:a.fy>0?1:3
+    if(a.rest>0){a.rest-=dt;stop(e,dt);return}
+    if(a.ch>0){a.ch-=dt;steer(e,a.fx,a.fy,e.speed*k*2.8,e.speed*12,dt);if(e.bumped||a.ch<=0){a.ch=0;a.rest=.5;IS.fx&&e.bumped&&IS.fx.shake(2,.12)}return}
+    const px=c.player.x-e.x,py=c.player.y-e.y,ahead=px*a.fx+py*a.fy,side=Math.abs(px*a.fy-py*a.fx)
+    if(ahead>0&&ahead<420&&side<28){a.ch=1.1;c.sfx&&c.sfx('charge');return}
+    a.t-=dt
+    if(e.bumped||a.t<=0){
+      const toward=Math.abs(px)>Math.abs(py)?[Math.sign(px),0]:[0,Math.sign(py)]
+      const opts=CARD.filter(d=>!(e.bumped&&d[0]===a.fx&&d[1]===a.fy))
+      const d=c.range(0,1)<.5&&!(e.bumped&&toward[0]===a.fx&&toward[1]===a.fy)?toward:c.pick(opts)
+      a.fx=d[0];a.fy=d[1];a.t=c.range(1.2,2.6)}
+    steer(e,a.fx,a.fy,e.speed*k*.7,e.speed*6,dt)}
   // Gooey enemies collapse instead of dying and stand back up unless hit while down.
   function globin(e,dt,c){const a=e.ai;if(a.goo>0){a.goo-=dt;stop(e,dt);e.harmless=true;e.variant=1;if(a.goo<=0){a.goo=0;e.hp=e.maxHp*.6;e.harmless=false;e.variant=0;IS.fx&&IS.fx.poof(e.x,e.y,'#3b3027')}return}e.variant=0;chase(e,dt,c,1)}
   // Wall hugger: slides round the room's edge, firing as it passes.

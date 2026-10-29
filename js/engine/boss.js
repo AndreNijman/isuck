@@ -25,7 +25,7 @@
   const ring=(b,c,n,o)=>{const off=(o&&o.off)||0;for(let i=0;i<n;i++)fire(b,c,Object.assign({},o,{angle:off+i*Math.PI*2/n}))}
   const marker=(c,x,y,r,dur)=>{const R=room(c);(R.markers||(R.markers=[])).push({x,y,r,t:0,dur});return{x,y,r}}
   const slam=(c,x,y,r,shake)=>{const p=c.player;if(p&&!p.dead&&IS.dist(x,y,p.x,p.y)<r+p.r*.6&&IS.damagePlayer(p,1,{name:'a slam'},c))IS.knockback(p,x,y,600);if(IS.fx){IS.fx.ring(x,y,{colour:'#e8d6b8',r0:r*.3,r1:r*1.3,life:.3,width:6,layer:'under'});IS.fx.particles({x,y,n:10,colour:'#8a7461',speed:200,life:.4,size:5,drag:3});IS.fx.shake(shake||6,.25)}c.sfx&&c.sfx('stomp')}
-  const minionIds=c=>{const pool=((c.run.floor&&c.run.floor.def&&c.run.floor.def.enemyPool)||[]).filter(id=>IS.enemiesById[id]);const flies=pool.filter(id=>/fly|pooter/.test(id));return flies.length?flies:pool.length?pool:['attackfly']}
+  const minionIds=c=>{const pool=((c.run.floor&&c.run.floor.def&&c.run.floor.def.enemyPool)||[]).filter(id=>IS.enemiesById[id]);const flies=pool.filter(id=>/fly|pooter/.test(id));return flies.length?flies:['attackfly','pooter','fly'].filter(id=>IS.enemiesById[id])}
   const minions=(b,c)=>room(c).enemies.filter(e=>!e.dead&&e.spawnedBy===b).length
   const summon=(b,c,n,where,id)=>{const ids=id&&IS.enemiesById[id]?[id]:minionIds(c);for(let i=0;i<n;i++){if(minions(b,c)>=5)return;const p=where?where():{x:b.x+c.range(-40,40),y:b.y+c.range(-40,40)};const m=c.spawnEnemy(c.pick(ids),p.x,p.y);if(m){m.spawnedBy=b;m.spawnT=.45;IS.fx&&IS.fx.poof(p.x,p.y,'#7d6a5a')}}}
   const laser=(b,c,s,o)=>{const l=c.spawnLaser(Object.assign({x:b.x,y:b.y,len:1600,width:26,life:9,dmg:1,friendly:false},o));(s.lasers||(s.lasers=[])).push(l);return l}
@@ -165,7 +165,9 @@
   }
   Object.keys(SEGS).forEach(id=>{BESPOKE[id]=worm})
   {const kd=IS.killEnemy,dd=IS.damageEnemy
-    IS.killEnemy=(e,c)=>{const r=kd(e,c);if(r&&e.boss){const B=BESPOKE[e.def.id];if(B&&B.die)B.die(e,c)}return r}
+    IS.killEnemy=(e,c)=>{const r=kd(e,c);if(r&&e.boss){const B=BESPOKE[e.def.id];if(B&&B.die)B.die(e,c)
+      // as in Isaac, the last boss falling takes everything else in the room with it
+      const R=c&&(c.room||c.run&&c.run.room);if(R&&!R.enemies.some(x=>x.boss&&!x.dead&&!x.segOf))R.enemies.forEach(x=>{if(!x.dead&&!x.friendly){x.dead=true;IS.fx&&IS.fx.poof(x.x,x.y,'#7d6a5a')}})}return r}
     IS.damageEnemy=(e,n,o,c)=>{if(e&&e.segOf){const h=e.segOf;if(h.dead)return false;const t=c&&c.run?c.run.time:0;if(o&&o.silent&&h.ai.sT===t&&h.ai.sN===n)return false;h.ai.sT=t;h.ai.sN=n;const r=dd(h,n,o,c);h.segs.forEach(s=>{s.hurtT=.1});return r}
       return dd(e,n,o,c)}}
 
@@ -183,6 +185,14 @@
       screamPush:(b,dt,s,c)=>{if(!tele(b,s,.5))return false;if(once(s,'f')){orbiters(b,c).forEach(m=>release(m,b));IS.fx&&(IS.fx.ring(b.x,b.y,{colour:'#d8cdb0',r0:b.r,r1:340,life:.4,width:8}),IS.fx.shake(5,.3));c.sfx&&c.sfx('boss-roar')}return s.t>.9}
     }
   }
+
+  // ---- The Husk: the Caves Duke; the same fly ring, plus burped Pooters and a blood spit ----
+  BESPOKE['the-husk']=Object.assign({},BESPOKE['the-duke-of-flies'],{
+    atk:Object.assign({},BESPOKE['the-duke-of-flies'].atk,{
+      spreadShot:(b,dt,s,c)=>{if(!tele(b,s,.5))return false;if(once(s,'f'))fire(b,c,{count:3,spread:.28,speed:260,r:11});return s.t>.8},
+      spawnMinions:(b,dt,s,c)=>{if(!tele(b,s,.5))return false;if(once(s,'f'))summon(b,c,1,null,'pooter');return s.t>.8}
+    })
+  })
 
   // ---- Gemini: Contusion hounds you, Suture hangs back on a leash and shoots ----
   const suture=b=>b.role==='suture'
@@ -221,6 +231,21 @@
     }
   }
   BESPOKE['pin']={atk:{teleportSlam:popUp(10,.6)}}
+  // ---- Loki: blinks across the room and answers with a + or an x of shots ----
+  const crossShots=(b,c)=>{const x=c.range(0,1)<.5;ring(b,c,x?8:4,{speed:240,r:11,off:x?0:Math.PI/4*(c.range(0,1)<.5?0:1)})}
+  BESPOKE['loki']={
+    move:weave(.35,.3),
+    atk:{
+      teleportSlam:(b,dt,s,c)=>{b.vx=b.vy=0
+        if(once(s,'v')){IS.fx&&IS.fx.poof(b.x,b.y,'#6a3b52');b.hidden=b.invuln=b.harmless=true;s.undo=()=>{b.hidden=b.invuln=b.harmless=false}}
+        if(s.t<.55)return false
+        if(once(s,'m')){const R=room(c);let p=null;for(let i=0;i<12&&!p;i++){const q=place(c,c.range(b.r,R.pxW-b.r),c.range(b.r,R.pxH-b.r),b.r);if(IS.dist(q.x,q.y,c.player.x,c.player.y)>200)p=q}p=p||place(c,R.pxW-c.player.x,R.pxH-c.player.y,b.r);b.x=p.x;b.y=p.y;s.undo();IS.fx&&IS.fx.poof(b.x,b.y,'#6a3b52')}
+        if(s.t>=.85&&once(s,'f'))crossShots(b,c)
+        return s.t>1.2},
+      ringShot:(b,dt,s,c)=>{if(!tele(b,s,.45))return false;if(once(s,'f'))crossShots(b,c);return s.t>.8},
+      spawnMinions:(b,dt,s,c)=>{if(!tele(b,s,.5))return false;if(once(s,'f'))summon(b,c,2,null,'attackfly');return s.t>.8}
+    }
+  }
 
   // ---- Baby Plum: ricocheting dash, spinning spray, runs when nearly beaten ----
   BESPOKE['baby-plum']={

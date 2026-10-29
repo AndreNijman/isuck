@@ -13,6 +13,8 @@
       'monstro': [['hop', 'spreadShot'], ['hop', 'stompLine', 'spreadShot']],
       'larry-jr': [['chargeDash', 'creepPuddle'], ['chargeDash', 'creepPuddle', 'chargeDash']],
       'the-duke-of-flies': [['summonSwarm', 'screamPush'], ['summonSwarm', 'screamPush', 'spawnMinions']],
+      'the-husk': [['summonSwarm', 'screamPush', 'spreadShot'], ['summonSwarm', 'screamPush', 'spreadShot', 'spawnMinions']],
+      'loki': [['teleportSlam', 'ringShot', 'spawnMinions'], ['teleportSlam', 'ringShot', 'teleportSlam', 'spawnMinions']],
       'gemini': [['chaseFast', 'aimedShot'], ['chaseFast', 'aimedShot', 'spawnMinions']],
       'steven': [['chaseFast', 'spreadShot'], ['chaseFast', 'burstShot', 'spreadShot']],
       'dingle': [['chargeDash', 'spawnMinions'], ['chargeDash', 'chargeDash', 'spawnMinions']],
@@ -37,10 +39,10 @@
       'mom': [['stompLine', 'stompLine', 'fistSlam'], ['stompLine', 'fistSlam', 'spawnMinions']]
     }
     // Repentance hit points where they are known; everything else keeps its data value.
-    var HP = { 'monstro': 250, 'the-duke-of-flies': 110, 'larry-jr': 200, 'gemini': 180, 'dingle': 250, 'mom': 500 }
+    var HP = { 'monstro': 250, 'the-duke-of-flies': 110, 'larry-jr': 200, 'gemini': 180, 'dingle': 250, 'the-husk': 350, 'mom': 500 }
     // attack pacing, seconds between attacks (phase one, phase two)
-    var COOLDOWN = { 'mom': [[.7, 1.1], [.5, .9]], 'monstro': [[.9, 1.5], [.7, 1.2]], 'the-duke-of-flies': [[1.2, 1.8], [1, 1.5]] }
-    var FLYERS = /duke-of-flies|haunt|famine|the-hollow|peep|frail|the-bloat|mega-maw/
+    var COOLDOWN = { 'mom': [[.7, 1.1], [.5, .9]], 'monstro': [[.9, 1.5], [.7, 1.2]], 'the-duke-of-flies': [[1.2, 1.8], [1, 1.5]], 'the-husk': [[1.1, 1.7], [.9, 1.4]] }
+    var FLYERS = /duke-of-flies|the-husk|haunt|famine|the-hollow|peep|frail|the-bloat|mega-maw/
     ;(IS.bosses || []).forEach(function (b) {
       var a = BOSSES[b.id]
       if (a && b.phases && b.phases.length >= 2) {

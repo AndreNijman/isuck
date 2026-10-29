@@ -2,7 +2,11 @@
   'use strict'
   function oval(g,x,y,rx,ry){g.beginPath();g.ellipse(x,y,rx,ry,0,0,Math.PI*2);g.fill()}
   function line(g,c,w,p){g.strokeStyle=c;g.lineWidth=w;g.lineCap='round';g.beginPath();g.moveTo(p[0],p[1]);for(var i=2;i<p.length;i+=2)g.lineTo(p[i],p[i+1]);g.stroke()}
-  function col(t,d,f){return t.hurt?'#f7f0e3':(t.tint||d.tint||f||'#875950')}
+  // '#fff' is the entity default (no tint), not a request for a white boss
+  var BOSS_TINT={'monstro':'#c98f86','monstro-ii':'#b27468','the-duke-of-flies':'#8a7a62','gemini':'#d2a08e','steven':'#d9ad97','dingle':'#7a5332','dangle':'#6e4a30','the-haunt':'#e3ddd3','little-horn':'#4a3438','baby-plum':'#e2a6c6','famine':'#6f6a52','gurdy-jr':'#d18f87','gurdy':'#c4776f','fistula':'#a8574f','blighted-ovum':'#cfc2a8','widow':'#3a3236','pin':'#bfae9a','peep':'#d6b264','loki':'#9a2f2f','mom':'#c48d72','moms-heart':'#a42c34','it-lives':'#92303a','mega-fatty':'#c99a7a','the-cage':'#8f8a72'}
+  var FLESH=['#875950','#a46a5c','#93705a','#7c5a4c','#b07c68']
+  // '#fff' is the entity default (no tint), not a request for a white boss
+  function col(t,d,f){var k=t.tint&&!/^#f{3}(f{3})?$/i.test(t.tint)?t.tint:null;return t.hurt?'#f7f0e3':(k||d.tint||f||BOSS_TINT[d.id]||FLESH[IS.hashString(d.id)%FLESH.length])}
   function scars(g,s,t){if((t.hp01==null?1:t.hp01)<.7)line(g,'#431d22',s*.035,[-s*.3,-s*.25,-s*.08,-s*.04,-s*.2,s*.25]);if((t.hp01==null?1:t.hp01)<.35){g.fillStyle='#70232b';oval(g,s*.24,s*.3,s*.07,s*.15)}}
   function mouth(g,s,t,d){var c=col(t,d);g.fillStyle=c;oval(g,0,0,s*.5,s*.46);var o=.13+.2*(t.charge||0);g.fillStyle='#241417';oval(g,0,s*.08,s*.34,s*o);g.fillStyle='#e0ccb0';for(var i=-3;i<=3;i++){g.beginPath();g.moveTo(i*s*.09,s*(.02-o));g.lineTo(i*s*.09+s*.04,s*.05);g.lineTo(i*s*.09-s*.04,s*.05);g.fill()}g.fillStyle=t.charge?'#f0b342':'#20191b';oval(g,-s*.18,-s*.15,s*.06,s*.08);oval(g,s*.18,-s*.15,s*.06,s*.08);scars(g,s,t)}
   function worm(g,s,t,d){var c=col(t,d);for(var i=5;i>=0;i--){g.fillStyle=IS.shade(c,-i*.055);oval(g,(i-2.5)*s*.16,Math.sin(i+(t.frame||0))*.1*s,s*.2,s*.22)}g.fillStyle=t.charge?'#edb442':'#21191b';oval(g,-s*.42,-s*.08,s*.07,s*.08);scars(g,s,t)}
@@ -12,5 +16,11 @@
   function angel(g,s,t,d){var c=col(t,d,'#d8d1b8');g.fillStyle=IS.alpha(c,.75);for(var q=-1;q<=1;q+=2){g.beginPath();g.moveTo(q*s*.18,0);g.quadraticCurveTo(q*s*.7,-s*.5,q*s*.45,s*.3);g.closePath();g.fill()}g.fillStyle=c;oval(g,0,0,s*.3,s*.4);g.strokeStyle=t.charge?'#fff2a1':'#c7a94b';g.lineWidth=s*.05;g.beginPath();g.ellipse(0,-s*.48,s*.25,s*.08,0,0,Math.PI*2);g.stroke();scars(g,s,t)}
   function abstract(g,s,t,d){var n=(d.name||'').toLowerCase();if(/dogma/.test(n)){g.fillStyle='#d7d0bd';g.fillRect(-s*.38,-s*.32,s*.76,s*.64);g.fillStyle=t.charge?'#f1d04f':'#252225';g.fillRect(-s*.27,-s*.2,s*.54,s*.31);line(g,'#777069',s*.04,[-s*.2,s*.4,-s*.3,s*.55]);line(g,'#777069',s*.04,[s*.2,s*.4,s*.3,s*.55])}else{g.fillStyle=col(t,d,'#b9b2a5');oval(g,0,s*.1,s*.52,s*.38);g.fillStyle=t.charge?'#eec342':'#252126';oval(g,0,-s*.05,s*.1,s*.12)}scars(g,s,t)}
   function pick(d){var n=(d.name||d.id).toLowerCase();if(/larry|hollow|pin|frail|scourge|wormwood|chub|carrion|turdlet/.test(n))return worm;if(/widow|long legs|triachnid|reap creep/.test(n))return spider;if(/heart|it lives/.test(n))return heart;if(/satan|fallen|krampus|mega satan|beast|horn/.test(n))return horned;if(/lamb|angel|seraph|uriel|gabriel/.test(n))return angel;if(/hush|delirium|dogma|gideon|visage|mother|mom/.test(n))return abstract;return mouth}
-  ;(IS.bosses||[]).forEach(function(d){var fn=pick(d),name=d.sprite||d.id;if(!IS.sprite(name))IS.defineSprite(name,function(g,s,t){fn(g,s,t,d)});IS.spriteAnimated(name)})
+  // Segmented worms (boss.js makes the body out of separate 'worm-segment' enemies):
+  // the boss itself is only the head, and each segment is one ringed bead.
+  var SEGMENTED=/^(larry-jr|chub|the-hollow|carrion-queen|wormwood)$/
+  var WORM_TINT={'larry-jr':'#7e9144','chub':'#cfa57d','the-hollow':'#9a3f3f','carrion-queen':'#7e6a50','wormwood':'#7a5a3a'}
+  function wormHead(g,s,t,d){var c=col(t,d,WORM_TINT[d.id]);g.fillStyle=IS.shade(c,-.25);oval(g,s*.06,s*.08,s*.4,s*.36);g.fillStyle=c;oval(g,0,0,s*.4,s*.36);g.fillStyle='rgba(255,255,255,.18)';oval(g,-s*.12,-s*.14,s*.14,s*.08);var o=.08+.14*(t.charge||0);g.fillStyle='#241417';oval(g,0,s*.14,s*.2,s*o);g.fillStyle=t.charge?'#edb442':'#21191b';oval(g,-s*.15,-s*.08,s*.06,s*.08);oval(g,s*.15,-s*.08,s*.06,s*.08);scars(g,s,t)}
+  IS.defineSprite('worm-segment',function(g,s,t){var c=t.hurt?'#f7f0e3':(t.tint||'#7e9144');g.fillStyle=IS.shade(c,-.3);oval(g,s*.05,s*.07,s*.42,s*.4);g.fillStyle=c;oval(g,0,0,s*.42,s*.4);g.strokeStyle=IS.shade(c,-.35);g.lineWidth=s*.05;g.beginPath();g.ellipse(0,0,s*.26,s*.36,0,-1.2,1.2);g.stroke();g.fillStyle='rgba(255,255,255,.15)';oval(g,-s*.14,-s*.15,s*.12,s*.07)})
+  ;(IS.bosses||[]).forEach(function(d){var fn=SEGMENTED.test(d.id)?wormHead:pick(d),name=d.sprite||d.id;if(!IS.sprite(name))IS.defineSprite(name,function(g,s,t){fn(g,s,t,d)});IS.spriteAnimated(name)})
 })(typeof window !== 'undefined' ? (window.IS = window.IS || {}) : (globalThis.IS = globalThis.IS || {}))

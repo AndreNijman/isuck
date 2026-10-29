@@ -12,6 +12,10 @@
 // limits grow with the number of enemies in the room. Do not weaken enemies to
 // get this bot through a room: if the bot is the problem, fix the bot.
 //
+// Past the Basement the bot carries the stat ups a player would have found by
+// then (KIT, two per chapter), so later floors are judged against a realistic
+// character rather than a fresh Isaac.
+//
 // The simulation is stepped by hand (IS.step) so a run takes seconds, not
 // minutes, and is the same every time for a given seed.
 //
@@ -36,8 +40,12 @@ const BOSS = arg('boss', null) // swap the boss room's boss for this id
 const SHOTS = process.argv.includes('--shots')
 const roomLimit = n => 20 + 8 * n // seconds of game time to clear a room of n enemies
 const BOSS_LIMIT = 90
-const hitCap = n => 6 + 2 * n // half-hearts
+const hitCap = n => 6 + 2 * n // hits taken
 const BOSS_HIT_CAP = 24
+
+// stat ups gathered by the start of each chapter: [damage up, tears up] per chapter
+const KIT = [[], ['pentagram', 'the-sad-onion'], ['growth-hormones', 'wire-coat-hanger'], ['steven', 'torn-photo']]
+const kitFor = depth => KIT.slice(0, Math.ceil(depth / 2)).flat()
 
 const fails = []
 const ok = (cond, msg) => { if (!cond) fails.push(msg); return !!cond }
@@ -48,7 +56,8 @@ const BOT = `
 window.__bot = function () {
   var run = IS.state.run, p = run.player, room = run.room
   var mv = { x: 0, y: 0 }, sh = { x: 0, y: 0 }
-  var es = room.enemies.filter(function (e) { return !e.dead && !e.harmless && !(e.def && e.def.harmless) })
+  // everything that keeps the room shut, including a downed globin's goo
+  var es = IS.roomEnemies(room)
   var cx = room.pxW / 2, cy = room.pxH / 2
   if (es.length) {
     var n = es[0], best = 1e9
@@ -116,7 +125,8 @@ window.__hits = 0
 if (!IS.__realDamage) IS.__realDamage = IS.damagePlayer
 IS.damagePlayer = function (p, n, src, ctx) {
   var before = JSON.stringify(p.hearts), hit = IS.__realDamage(p, n, src, ctx)
-  if (hit) { window.__hits += n || 1; p.hearts = JSON.parse(before); p.dead = false }
+  // hits, not half-hearts: later chapters deal a full heart a hit
+  if (hit) { window.__hits += 1; p.hearts = JSON.parse(before); p.dead = false }
   return hit
 }
 IS.input.move = function () { return window.__mv || { x: 0, y: 0 } }
@@ -147,7 +157,9 @@ try {
   await page.goto('file://' + path.join(ROOT, 'index.html'))
   await page.wait(800)
   for (const seed of SEEDS) {
-    await page.evaluate(`IS.state.manual = true; IS.state.run = null; IS.startRun({ charId: ${JSON.stringify(CHAR)}, seed: ${seed} }); ${FLOOR ? `IS.startFloor(IS.state.run, ${JSON.stringify(FLOOR)}, IS.state.ctx);` : ''} ${BOT}; return 1`)
+    const depth = await page.evaluate(`IS.state.manual = true; IS.state.run = null; IS.startRun({ charId: ${JSON.stringify(CHAR)}, seed: ${seed} }); ${FLOOR ? `IS.startFloor(IS.state.run, ${JSON.stringify(FLOOR)}, IS.state.ctx);` : ''} ${BOT}; return IS.state.run.floor.depth || 1`)
+    const kit = kitFor(depth)
+    if (kit.length) await page.evaluate(`var p = IS.state.run.player; ${JSON.stringify(kit)}.forEach(function (id) { IS.giveItem(p, id, {}) }); IS.recalcStats(p); return 1`)
     const rooms = JSON.parse(await page.evaluate(`return JSON.stringify(IS.state.run.floor.rooms.map(function (r, i) {
       return r && (r.type === 'default' || r.type === 'boss') ? { i: i, type: r.type } : null
     }).filter(Boolean).sort(function (a, b) { return (a.type === 'boss') - (b.type === 'boss') }))`))
@@ -171,10 +183,10 @@ try {
       const cleared = ok(s.cleared, `${tag}: not cleared after ${s.time}s — still alive: ${s.alive.join('; ')}`)
       if (cleared) roomsCleared++
       const cap = r.type === 'boss' ? BOSS_HIT_CAP : hitCap(start.alive.length)
-      const fair = ok(s.hits <= cap, `${tag}: ${s.hits} half-hearts of hits from ${start.alive.map(a => a.split(' ')[0]).join(', ')}`)
+      const fair = ok(s.hits <= cap, `${tag}: ${s.hits} hits from ${start.alive.map(a => a.split(' ')[0]).join(', ')}`)
       console.log(`  ${cleared && fair ? 'ok ' : 'FAIL'} ${tag.padEnd(28)} ${String(s.time).padStart(5)}s  hits ${String(s.hits).padStart(2)}  ${start.alive.map(a => a.split(' ')[0]).join(', ')}`)
     }
-    console.log(`seed ${seed}: ${roomsCleared}/${fights} fights won, ${hits} half-hearts of hits taken`)
+    console.log(`seed ${seed}: ${roomsCleared}/${fights} fights won, ${hits} hits taken`)
   }
   const errors = page.console.errors.filter(e => !/favicon/.test(e))
   ok(!errors.length, 'console errors: ' + errors.slice(0, 5).join(' | '))
