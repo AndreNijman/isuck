@@ -120,6 +120,38 @@
   const weave=(k,amp)=>(b,dt,c)=>{const n=IS.norm(c.player.x-b.x,c.player.y-b.y);b.ai.w=(b.ai.w||0)+dt*2.2;const w=Math.sin(b.ai.w)*amp,sp=b.speed*k;b.vx=IS.approach(b.vx,(n.x-n.y*w)*sp,b.speed*3*dt);b.vy=IS.approach(b.vy,(n.y+n.x*w)*sp,b.speed*3*dt)}
   const dust=(b,r)=>{if(IS.fx)IS.fx.ring(b.x,b.y+b.r*.5,{colour:'#c9b9a0',r0:r*.5,r1:r*1.5,life:.25,width:4,layer:'under'})}
 
+  // ---- shared pieces for the rest of the roster ----
+  // spit: wind up, then n tears in a fan.  call: wind up, then summon n of one enemy.
+  const spit=(n,sp,o,wind)=>(b,dt,s,c)=>{b.vx*=.8;b.vy*=.8;const w=wind||.5;if(!tele(b,s,w))return false;if(once(s,'f'))fire(b,c,Object.assign({count:n,spread:sp},o));return s.t>w+.3}
+  const call=(id,n,where,wind)=>(b,dt,s,c)=>{b.vx*=.8;b.vy*=.8;const w=wind||.5;if(!tele(b,s,w))return false;if(once(s,'f')){summon(b,c,n,where,id);c.sfx&&c.sfx('boss-roar')}return s.t>w+.3}
+  // volley: fn(b,c,i,s) runs n times, `gap` seconds apart, after the windup
+  const volley=(n,gap,fn,wind)=>(b,dt,s,c)=>{const w=wind||.45;if(!tele(b,s,w))return false;for(let i=0;i<n;i++)if(at(s,dt,w+i*gap))fn(b,c,i,s);return s.t>w+n*gap+.2}
+  const plus=(b,c,o)=>ring(b,c,4,Object.assign({off:c.range(0,1)<.5?0:Math.PI/4},o))
+  // n short hops toward you; land(b,c,i) runs on each landing
+  const hopper=(n,maxD,T,land,hgt)=>(b,dt,s,c)=>{const R=room(c),i=Math.floor(s.t/T)
+    if(!s.undo)s.undo=()=>{b.harmless=false;b.z=0}
+    if(i>=n)return true
+    const lt=s.t-i*T
+    if(s.i!==i){s.i=i;const q=IS.norm(c.player.x-b.x,c.player.y-b.y),d=Math.min(maxD,IS.dist(b.x,b.y,c.player.x,c.player.y));s.sx=b.x;s.sy=b.y;s.tx=IS.clamp(b.x+q.x*d,b.r,R.pxW-b.r);s.ty=IS.clamp(b.y+q.y*d,b.r,R.pxH-b.r)}
+    b.vx=b.vy=0
+    if(lt<.2){b.ai.telegraph=lt/.2*.5;b.z=0;b.harmless=false;return false}
+    b.ai.telegraph=0;const k=Math.min(1,(lt-.2)/(T-.3));b.x=IS.lerp(s.sx,s.tx,k);b.y=IS.lerp(s.sy,s.ty,k);b.z=Math.sin(k*Math.PI)*(hgt||60);b.harmless=k<1
+    if(k>=1&&s.l!==i){s.l=i;b.z=0;dust(b,b.r);IS.fx&&IS.fx.shake(3,.15);c.sfx&&c.sfx('stomp');land&&land(b,c,i)}
+    return false}
+  // vanish, reappear across the room, then after(b,c)
+  const blink=after=>(b,dt,s,c)=>{b.vx=b.vy=0
+    if(once(s,'v')){IS.fx&&IS.fx.poof(b.x,b.y,'#6a3b52');b.hidden=b.invuln=b.harmless=true;s.undo=()=>{b.hidden=b.invuln=b.harmless=false}}
+    if(s.t<.55)return false
+    if(once(s,'m')){const R=room(c);let p=null;for(let i=0;i<12&&!p;i++){const q=place(c,c.range(b.r,R.pxW-b.r),c.range(b.r,R.pxH-b.r),b.r);if(IS.dist(q.x,q.y,c.player.x,c.player.y)>200)p=q}p=p||place(c,R.pxW-c.player.x,R.pxH-c.player.y,b.r);b.x=p.x;b.y=p.y;s.undo();IS.fx&&IS.fx.poof(b.x,b.y,'#6a3b52')}
+    if(s.t>=.85&&once(s,'f'))after(b,c)
+    return s.t>1.2}
+  // a boss that comes apart into smaller ones when it dies
+  const kids=(b,c,id,n,hpk,rk,extra)=>{const R=room(c);for(let i=0;i<n;i++){const a=i*Math.PI*2/n+c.range(0,1),hp=Math.max(10,Math.round(b.maxHp*hpk)),k=IS.spawnBoss(R,id,IS.clamp(b.x+Math.cos(a)*b.r*.7,40,R.pxW-40),IS.clamp(b.y+Math.sin(a)*b.r*.7,40,R.pxH-40),Object.assign({r:Math.max(16,Math.round(b.r*rk)),hp,maxHp:hp},extra));if(k){k.ai.setup=true;k.spawnT=.35;IS.knockback(k,b.x,b.y,500)}}}
+  // two bodies sharing a fight (each keeps half the health); the survivor speeds up
+  const pair=(roles,dx,more)=>({
+    setup:(b,c)=>{if(b.role)return;const R=room(c);b.role=roles[0];const p=IS.spawnBoss(R,b.def.id,IS.clamp(b.x+dx,60,R.pxW-60),b.y,{role:roles[1],variant:1});if(p){R.boss=b;b.mate=p;p.mate=b;p.ai.setup=true;b.hp=b.maxHp=p.hp=p.maxHp=Math.round(b.maxHp/2);p.spawnT=b.spawnT}},
+    tick:(b,dt,c)=>{if(b.mate&&b.mate.dead&&!b.ai.rg){b.ai.rg=1;b.baseSpeed=(b.baseSpeed||b.speed)*1.35;b.speed*=1.35}more&&more(b,dt,c)}})
+
   // ---- Monstro: small hops, a big leap that lands on you, spat blood tears ----
   const monstro={
     move:still,
@@ -152,7 +184,7 @@
   // ---- Worms (Larry Jr., Chub, The Hollow...): a head and a chain of bodies ----
   // Every body is a real, hittable enemy; damage to any of them lands on the head,
   // so the whole worm shares one health bar, and walking into any part hurts.
-  const SEGS={'larry-jr':[8,'#7e9144'],'chub':[3,'#cfa57d'],'the-hollow':[6,'#9a3f3f'],'carrion-queen':[3,'#7e6a50'],'wormwood':[5,'#7a5a3a']}
+  const SEGS={'larry-jr':[8,'#7e9144'],'chub':[3,'#cfa57d'],'the-hollow':[6,'#9a3f3f'],'carrion-queen':[3,'#7e6a50'],'c-h-a-d':[3,'#b0705a']}
   const segDef={id:'worm-segment',archetype:'idle',hp:1,dmg:1,speed:0,sprite:'worm-segment',name:'Worm'}
   function makeSegs(b,c){const [n,tint]=SEGS[b.def.id],R=room(c);b.segs=[];let px=b.x
     for(let i=0;i<n;i++){const r=Math.max(b.r*.45,b.r*(.86-.06*i));px-=(b.r+r)*.8;const e=IS.makeEntity(Object.assign({},segDef,{r}),px,b.y,{});e.room=R;e.segOf=b;e.variant=i;e.tint=tint;e.spawnT=0;e.dmg=b.dmg;e.flying=b.flying;R.enemies.push(e);b.segs.push(e)}}
@@ -160,7 +192,7 @@
   const worm={
     setup:makeSegs,
     move:weave(.9,.6),
-    tick:(b,dt,c)=>{if(!b.segs)return;followSegs(b);if(b.def.id==='larry-jr'||b.def.id==='chub'){b.ai.cr=(b.ai.cr||0)-dt;if(b.ai.cr<=0&&!b.hidden){b.ai.cr=.45;const t=b.segs[b.segs.length-1];c.spawnCreep(t.x,t.y,24,{life:3,dmg:1})}}},
+    tick:(b,dt,c)=>{if(!b.segs)return;followSegs(b);if(b.def.id==='larry-jr'||b.def.id==='chub'||b.def.id==='c-h-a-d'){b.ai.cr=(b.ai.cr||0)-dt;if(b.ai.cr<=0&&!b.hidden){b.ai.cr=.45;const t=b.segs[b.segs.length-1];c.spawnCreep(t.x,t.y,24,{life:3,dmg:1})}}},
     die:(b)=>{(b.segs||[]).forEach(s=>{s.dead=true;IS.fx&&IS.fx.poof(s.x,s.y,'#8a7a50')})}
   }
   Object.keys(SEGS).forEach(id=>{BESPOKE[id]=worm})
@@ -194,10 +226,11 @@
     })
   })
 
-  // ---- Gemini: Contusion hounds you, Suture hangs back on a leash and shoots ----
+  // ---- Gemini (and Steven, Blighted Ovum): Contusion hounds you, Suture hangs back on a leash and shoots;
+  // the umbilical (drawn in render.js) snaps once either is below half health ----
   const suture=b=>b.role==='suture'
   BESPOKE['gemini']={
-    setup:(b,c)=>{if(b.role)return;const R=room(c);b.role='contusion';const p=IS.spawnBoss(R,'gemini',IS.clamp(b.x+150,60,R.pxW-60),b.y,{role:'suture',variant:1});if(p){R.boss=b;b.mate=p;p.mate=b;p.ai.setup=true;b.hp=b.maxHp=p.hp=p.maxHp=Math.round(b.maxHp/2);p.spawnT=b.spawnT}},
+    setup:(b,c)=>{if(b.role)return;const R=room(c);b.role='contusion';const p=IS.spawnBoss(R,b.def.id,IS.clamp(b.x+150,60,R.pxW-60),b.y,{role:'suture',variant:1});if(p){R.boss=b;b.mate=p;p.mate=b;p.ai.setup=true;b.hp=b.maxHp=p.hp=p.maxHp=Math.round(b.maxHp/2);p.spawnT=b.spawnT}},
     move:(b,dt,c)=>{if(!suture(b))return weave(1.1,.5)(b,dt,c);const d=IS.dist(b.x,b.y,c.player.x,c.player.y),n=IS.norm(c.player.x-b.x,c.player.y-b.y),k=d<250?-.9:d>420?.6:0;b.vx=IS.approach(b.vx,n.x*b.speed*k,b.speed*3*dt);b.vy=IS.approach(b.vy,n.y*b.speed*k,b.speed*3*dt)},
     tick:(b,dt,c)=>{const m=b.mate;if(!m||m.dead||b.ai.cut)return;if(b.hp/b.maxHp<.5||m.hp/m.maxHp<.5){b.ai.cut=m.ai.cut=true;IS.fx&&IS.fx.shake(4,.3);return}if(suture(b)){const d=IS.dist(b.x,b.y,m.x,m.y);if(d>320){const n=IS.norm(m.x-b.x,m.y-b.y);b.x+=n.x*(d-320);b.y+=n.y*(d-320)}}},
     atk:{
@@ -205,6 +238,8 @@
       aimedShot:(b,dt,s,c)=>(suture(b)?attacks.spreadShot:(s.md||(s.md=multiDash(1,540))))(b,dt,s,c)
     }
   }
+
+  BESPOKE['steven']=BESPOKE['blighted-ovum']=BESPOKE['gemini']
 
   // ---- Dingle: three charges in a row, then a three-tear spread; calls Dips ----
   const dingleDash=multiDash(3,450,(b,c)=>fire(b,c,{count:3,spread:.3,speed:300,r:11}))
@@ -217,11 +252,11 @@
   }
 
   // ---- floor pop-ups: dive, a hole opens under you, he bursts out of it ----
-  const popUp=(ringN,hold)=>(b,dt,s,c)=>{
-    if(once(s,'v')){IS.fx&&IS.fx.poof(b.x,b.y,'#5a4a3f');b.hidden=b.invuln=b.harmless=true;s.m=mk(c,c.player.x,c.player.y,b.r*1.2,1.35);s.undo=()=>{b.hidden=false;b.invuln=false;b.harmless=false;b.z=0}}
+  const popUp=(ringN,hold,after)=>(b,dt,s,c)=>{
+    if(once(s,'v')){IS.fx&&IS.fx.poof(b.x,b.y,'#5a4a3f');b.hidden=b.invuln=b.harmless=true;s.m=mk(c,c.player.x,c.player.y,b.r*1.2,1.35);s.m.hole=true;mk(c,b.x,b.y,b.r*1.1,.9).hole='dive';s.undo=()=>{b.hidden=false;b.invuln=false;b.harmless=false;b.z=0}}
     b.vx=b.vy=0
     if(s.t<.8){follow(s.m,c,dt,b.r);return false}
-    if(s.t>=1.3&&once(s,'l')){b.x=s.m.x;b.y=s.m.y;s.undo();slam(c,b.x,b.y,b.r*1.3,7);ring(b,c,ringN,{speed:225,off:c.range(0,1)})}
+    if(s.t>=1.3&&once(s,'l')){b.x=s.m.x;b.y=s.m.y;s.undo();slam(c,b.x,b.y,b.r*1.3,7);ring(b,c,ringN,{speed:225,off:c.range(0,1)});mk(c,b.x,b.y,b.r*1.1,1.8).hole='dive';after&&after(b,c,s)}
     return s.t>1.3+hold}
   // ---- Little Horn: troll bombs, a hole in the floor, a dash ----
   BESPOKE['little-horn']={
@@ -230,18 +265,13 @@
       bombDrop:(b,dt,s,c)=>{if(!tele(b,s,.45))return false;if(once(s,'f')){for(let i=0;i<3;i++){const a=c.range(0,6.28),d=c.range(60,170),p=place(c,c.player.x+Math.cos(a)*d,c.player.y+Math.sin(a)*d,30);mk(c,p.x,p.y,100,1.1);c.spawnBomb(p.x,p.y,{friendly:false,fuse:1.1})}}return s.t>.8}
     }
   }
-  BESPOKE['pin']={atk:{teleportSlam:popUp(10,.6)}}
+  BESPOKE['pin']={move:still,atk:{teleportSlam:popUp(10,.6),spreadShot:spit(5,.25,{speed:280})}}
   // ---- Loki: blinks across the room and answers with a + or an x of shots ----
   const crossShots=(b,c)=>{const x=c.range(0,1)<.5;ring(b,c,x?8:4,{speed:240,r:11,off:x?0:Math.PI/4*(c.range(0,1)<.5?0:1)})}
   BESPOKE['loki']={
     move:weave(.35,.3),
     atk:{
-      teleportSlam:(b,dt,s,c)=>{b.vx=b.vy=0
-        if(once(s,'v')){IS.fx&&IS.fx.poof(b.x,b.y,'#6a3b52');b.hidden=b.invuln=b.harmless=true;s.undo=()=>{b.hidden=b.invuln=b.harmless=false}}
-        if(s.t<.55)return false
-        if(once(s,'m')){const R=room(c);let p=null;for(let i=0;i<12&&!p;i++){const q=place(c,c.range(b.r,R.pxW-b.r),c.range(b.r,R.pxH-b.r),b.r);if(IS.dist(q.x,q.y,c.player.x,c.player.y)>200)p=q}p=p||place(c,R.pxW-c.player.x,R.pxH-c.player.y,b.r);b.x=p.x;b.y=p.y;s.undo();IS.fx&&IS.fx.poof(b.x,b.y,'#6a3b52')}
-        if(s.t>=.85&&once(s,'f'))crossShots(b,c)
-        return s.t>1.2},
+      teleportSlam:blink(crossShots),
       ringShot:(b,dt,s,c)=>{if(!tele(b,s,.45))return false;if(once(s,'f'))crossShots(b,c);return s.t>.8},
       spawnMinions:(b,dt,s,c)=>{if(!tele(b,s,.5))return false;if(once(s,'f'))summon(b,c,2,null,'attackfly');return s.t>.8}
     }
@@ -253,12 +283,54 @@
     atk:{dashRingCombo:bounceDash(3,520,(b,c)=>ring(b,c,8,{speed:230}))}
   }
 
-  // ---- stationary / drifting bosses ----
-  BESPOKE['gurdy']={setup:(b,c)=>{b.y=b.r+10},move:still}
-  BESPOKE['gurdy-jr']={move:weave(.35,.3)}
-  BESPOKE['the-haunt']={move:weave(.7,.8)}
-  BESPOKE['peep']={move:wanderMove(.5)}
-  BESPOKE['fistula']={move:weave(.5,.5)}
+  BESPOKE['big-horn']=BESPOKE['little-horn']
+
+  // ---- Chapter one and two: the rest of the roster ----
+  const S=(move,atk,more)=>Object.assign({move,atk:atk||{}},more)
+  // Famine: charges, shotgun spread, calls his locusts
+  BESPOKE['famine']=S(weave(.8,.4),{chargeDash:multiDash(2,520),spreadShot:spit(3,.3,{speed:290,r:10}),summonSwarm:call('locust-of-famine',2)})
+  // Gurdy Jr.: crawls, then ricochets off the walls; hatches Pooters
+  BESPOKE['gurdy-jr']=S(weave(.35,.3),{chargeDash:bounceDash(2,520,(b,c)=>ring(b,c,6,{speed:220})),spawnMinions:call('pooter',2),spreadShot:spit(3,.25,{speed:280})})
+  // Fistula: a bouncing sack of gore that bursts into two smaller Fistulas, twice over
+  BESPOKE['fistula']=S(wanderMove(.8),{ringShot:timedRing(10,.5),chargeDash:spit(3,.3,{speed:300}),splitBody:spit(5,.25)},{die:(b,c)=>{const g=b.gen||0;if(g<2)kids(b,c,b.def.id,2,.4,.72,{gen:g+1})}})
+  // Widow: hops about, her landings spill creep; spiderlings crawl out
+  BESPOKE['widow']=S(wanderMove(.45),{hop:hopper(2,200,.8,(b,c)=>{c.spawnCreep(b.x,b.y,55,{life:6,dmg:1});ring(b,c,6,{speed:200,off:c.range(0,1)})},70),creepPuddle:attacks.creepPuddle,spawnMinions:call('maggot',3)})
+  // Pin and the worms that dig like him: pop up under you and spit
+  BESPOKE['frail']=S(still,{teleportSlam:popUp(8,.8),spreadShot:spit(5,.25,{speed:280})})
+  BESPOKE['wormwood']=S(still,{teleportSlam:popUp(6,.6),spreadShot:spit(3,.3,{speed:280}),ringShot:timedRing(8)})
+  BESPOKE['the-stain']=S(still,{teleportSlam:popUp(8,.7),spawnMinions:call('dip',3),spreadShot:spit(5,.25,{speed:280})})
+  // Rag Man: blinks about, rings of tears, Raglings from his rags
+  BESPOKE['rag-man']=S(weave(.4,.4),{teleportSlam:blink((b,c)=>ring(b,c,8,{speed:240,r:11,off:c.range(0,1)})),spawnMinions:call('ragling',2),ringShot:timedRing(10)})
+  BESPOKE['rag-mega']=S(weave(.4,.4),{teleportSlam:blink((b,c)=>ring(b,c,8,{speed:250,r:11,off:c.range(0,1)})),spawnMinions:call('ragling',2),brimstoneBeam:attacks.brimstoneBeam})
+  // Turdlings burst into Turdlets
+  BESPOKE['the-turdlings']=S(wanderMove(.5),{hop:hopper(2,180,.8,(b,c)=>c.spawnCreep(b.x,b.y,44,{life:5,dmg:1})),spreadShot:spit(3,.3),spawnMinions:(b,dt,s,c)=>{if(minions(b,c)>=4)return true;return call('dip',2)(b,dt,s,c)}},{die:(b,c)=>kids(b,c,'turdlet',3,.2,.7)})
+  BESPOKE['turdlet']=S(wanderMove(.6),{hop:hopper(2,160,.7),spreadShot:spit(3,.3),creepPuddle:attacks.creepPuddle})
+  // Teratoma, The Bloat, The Wretched, The Pile: slow, bloated, spit and spawn
+  BESPOKE['teratoma']=S(weave(.3,.3),{spreadShot:spit(5,.22,{speed:260,r:11}),spawnMinions:call('tumor',2),ringShot:timedRing(10)})
+  BESPOKE['the-bloat']=S(wanderMove(.4),{spreadShot:spit(5,.22),ringShot:timedRing(8),spawnMinions:call('boom-fly',2)})
+  BESPOKE['the-wretched']=S(wanderMove(.35),{spreadShot:spit(3,.3),ringShot:timedRing(8),spawnMinions:call('leech',2)})
+  BESPOKE['the-pile']=S(weave(.25,.3),{spawnMinions:call('dip',3),spreadShot:spit(5,.25),ringShot:timedRing(10)})
+  // Chub and his kin: a straight, fast charge that leaves creep behind
+  const wormAtk=(id,atk)=>{BESPOKE[id]=Object.assign({},worm,{atk})}
+  wormAtk('chub',{chargeDash:multiDash(1,640),creepPuddle:attacks.creepPuddle})
+  wormAtk('c-h-a-d',{chargeDash:multiDash(2,580),spreadShot:spit(3,.3,{speed:280}),creepPuddle:attacks.creepPuddle})
+  wormAtk('carrion-queen',{chargeDash:multiDash(1,600),summonSwarm:call('attackfly',3),ringShot:timedRing(10)})
+  wormAtk('the-hollow',{spreadShot:spit(3,.3,{speed:280}),chargeDash:multiDash(1,560),ringShot:timedRing(10)})
+  // Peep: drifts about, spits, pops an eye that comes for you
+  BESPOKE['peep']=S(wanderMove(.5),{spreadShot:spit(3,.28),spawnMinions:call('bloodshot-eye',2)})
+  // The Haunt: drifts, spits homing tears, lets one Lil' Haunt out at a time
+  BESPOKE['the-haunt']=S(weave(.7,.8),{homingShots:attacks.homingShots,spawnMinions:(b,dt,s,c)=>{if(minions(b,c)>=2)return true;return call('lil-haunt',1)(b,dt,s,c)}})
+  // Gurdy and Mama Gurdy sit at the top: rings, Chargers, hands
+  BESPOKE['gurdy']={setup:(b,c)=>{b.y=b.r+10},move:still,atk:{spawnMinions:call('charger',2),ringShot:timedRing(12)}}
+  BESPOKE['mama-gurdy']={setup:(b,c)=>{b.y=b.r+10},move:still,atk:{spawnMinions:call('charger',2),ringShot:timedRing(14)}}
+  BESPOKE['gish']=S(wanderMove(.5),{hop:hopper(2,220,.8,(b,c)=>{c.spawnCreep(b.x,b.y,50,{life:6,dmg:1});plus(b,c,{speed:240})},60),spreadShot:(b,dt,s,c)=>{b.vx*=.8;b.vy*=.8;if(!tele(b,s,.5))return false;if(once(s,'f')){plus(b,c,{speed:250});plus(b,c,{speed:200,off:Math.PI/4})}return s.t>.8},creepPuddle:attacks.creepPuddle})
+  BESPOKE['lokii']=BESPOKE['loki']
+  BESPOKE['the-gate']=S(still,{spinShot:attacks.spinShot,spawnMinions:call('maw',2),ringShot:timedRing(12)})
+  BESPOKE['the-cage']=S(weave(.4,.4),{chargeDash:bounceDash(3,540,(b,c)=>ring(b,c,8,{speed:230})),spreadShot:spit(3,.3),ringShot:timedRing(10)})
+  BESPOKE['mega-maw']=S(wanderMove(.35),{spreadShot:spit(3,.3),spawnMinions:call('attackfly',3)})
+  BESPOKE['reap-creep']=S(weave(.4,.5),{spreadShot:spit(4,.3),spawnMinions:call('deaths-head',2),ringShot:timedRing(8)})
+  BESPOKE['dangle']=S(weave(.5,.4),{chargeDash:bounceDash(2,500,(b,c)=>ring(b,c,8,{speed:230})),rainbowSpray:attacks.barrage,spawnMinions:call('boom-fly',2)})
+  BESPOKE['the-matriarch']=S(weave(.3,.3),{hop:hopper(2,200,.8,(b,c)=>{c.spawnCreep(b.x,b.y,60,{life:6,dmg:1});ring(b,c,8,{speed:210})},60),creepPuddle:attacks.creepPuddle,summonSwarm:call('maggot',3)})
   const heart={move:still,atk:{
     ringShot:(b,dt,s,c)=>{if(!tele(b,s,.5))return false;if(at(s,dt,.5))ring(b,c,12,{off:aim(b,c),speed:230});if(at(s,dt,.78)){ring(b,c,12,{off:aim(b,c)+.26,speed:230});IS.fx&&IS.fx.shake(2,.15)}return s.t>1.1},
     spreadShot:(b,dt,s,c)=>{if(!tele(b,s,.45))return false;if(once(s,'f'))fire(b,c,{count:7,spread:.22,speed:290});return s.t>.8}
@@ -287,6 +359,48 @@
       spawnMinions:(b,dt,s,c)=>{if(once(s,'f'))summon(b,c,2,()=>doorSpot(c));return s.t>.8}
     }
   }
+
+  // ---- Womb, Corpse and Mausoleum ----
+  BESPOKE['colostomia']=S(wanderMove(.3),{vomitStream:attacks.vomitStream,spawnMinions:call('maggot',3),ringShot:timedRing(10)})
+  BESPOKE['chimera']=S(weave(.6,.5),{chargeDash:bounceDash(3,540,(b,c)=>ring(b,c,8,{speed:230})),spreadShot:spit(5,.25,{speed:290}),ringShot:timedRing(10)})
+  BESPOKE['rotgut']=S(still,{vomitStream:attacks.vomitStream,spawnMinions:call('maggot',3),ringShot:timedRing(12)},{setup:(b,c)=>{const R=room(c);b.x=R.pxW/2;b.y=R.pxH*.4}})
+  BESPOKE['mother']=S(still,{stompLine:attacks.stompLine,ringShot:timedRing(14),spreadShot:spit(7,.2,{speed:290}),laserSweep:attacks.laserSweep,spawnMinions:call('moms-hand',2)},{setup:(b,c)=>{const R=room(c);b.x=R.pxW/2;b.y=R.pxH*.38}})
+  BESPOKE['the-heretic']=S(weave(.35,.3),{teleportSlam:blink((b,c)=>fire(b,c,{count:5,spread:.22,speed:290,r:10})),spreadShot:spit(5,.22),ringShot:timedRing(10),summonSwarm:call('holy-keeper',1)})
+  BESPOKE['the-visage']=S(wanderMove(.45),{homingShots:attacks.homingShots,ringShot:timedRing(12),summonSwarm:call('attackfly',3)})
+  BESPOKE['the-adversary']=S(weave(.4,.4),{teleportSlam:blink((b,c)=>fire(b,c,{count:3,spread:.3,speed:300,r:10})),spreadShot:spit(5,.22),brimstoneBeam:attacks.brimstoneBeam})
+  BESPOKE['brownie']=S(wanderMove(.5),{spreadShot:spit(5,.25),spawnMinions:call('dip',3),ringShot:timedRing(10)})
+  BESPOKE['the-forsaken']=S(weave(.5,.4),{chargeDash:multiDash(2,560),spreadShot:spit(3,.3),ringShot:timedRing(10)})
+  BESPOKE['the-scourge']=S(weave(.5,.5),{tentacleWhip:attacks.tentacleWhip,spawnMinions:call('deaths-head',2),ringShot:timedRing(12)})
+  // twin bosses
+  BESPOKE['sisters-vis']=Object.assign(pair(['elder','younger'],160),{move:wanderMove(.5),atk:{spreadShot:spit(3,.3),chargeDash:multiDash(1,540),ringShot:timedRing(10)}})
+  BESPOKE['tuff-twins']=Object.assign(pair(['tuff','twin'],160),{move:weave(.6,.4),atk:{chargeDash:bounceDash(2,560,(b,c)=>ring(b,c,6,{speed:230})),spreadShot:spit(3,.3),ringShot:timedRing(10)}})
+  BESPOKE['horny-boys']=Object.assign(pair(['horn','boy'],160),{move:weave(.6,.4),atk:{chargeDash:multiDash(2,580),spreadShot:spit(3,.3),ringShot:timedRing(10)}})
+  BESPOKE['the-shell']=S(weave(.5,.4),{chargeDash:bounceDash(3,520,(b,c)=>ring(b,c,8,{speed:230})),ringShot:timedRing(10)})
+  BESPOKE['clutch']=S(wanderMove(.5),{wallBounceShots:attacks.wallBounceShots,spawnMinions:call('attackfly',3),ringShot:timedRing(12)})
+  BESPOKE['the-fallen']=S(weave(.6,.4),{chargeDash:multiDash(2,580),spreadShot:spit(3,.3,{speed:300}),ringShot:timedRing(10)})
+  BESPOKE['krampus']=S(weave(.6,.4),{chargeDash:multiDash(2,600),spreadShot:spit(3,.3,{speed:320}),ringShot:timedRing(10)})
+
+  // ---- the final bosses, mostly big and rooted ----
+  BESPOKE['satan']=S(still,{spreadShot:spit(3,.3,{speed:300,r:11}),brimstoneBeam:attacks.brimstoneBeam,spawnMinions:call('imp',2)},{setup:(b,c)=>{const R=room(c);b.x=R.pxW/2;b.y=R.pxH*.3}})
+  BESPOKE['the-lamb']=S(still,{ringShot:timedRing(12),laserSweep:attacks.laserSweep,beamRing:attacks.beamRing,spawnMinions:call('deaths-head',2)})
+  BESPOKE['isaac']=S(weave(.5,.4),{spreadShot:spit(5,.25,{speed:290}),ringShot:timedRing(12),summonSwarm:call('attackfly',4),chargeDash:multiDash(2,560)})
+  BESPOKE['blue-baby']=S(wanderMove(.45),{spreadShot:spit(5,.25,{speed:290}),ringShot:timedRing(12),spinShot:attacks.spinShot,homingShots:attacks.homingShots,summonSwarm:call('attackfly',4)})
+  BESPOKE['hush']=S(wanderMove(.5),{spinShot:attacks.spinShot,ringShot:timedRing(14),laserSweep:attacks.laserSweep,summonSwarm:call('attackfly',4),chaseFast:attacks.chaseFast})
+  BESPOKE['mega-satan']=S(still,{fistSlam:attacks.fistSlam,ringShot:timedRing(14),laserSweep:attacks.laserSweep,brimstoneBeam:attacks.brimstoneBeam,spawnMinions:call('imp',2)},{setup:(b,c)=>{const R=room(c);b.x=R.pxW/2;b.y=R.pxH*.3}})
+  BESPOKE['the-beast']=S(weave(.35,.3),{stompLine:attacks.stompLine,beamRing:attacks.beamRing,brimstoneBeam:attacks.brimstoneBeam,summonSwarm:call('attackfly',4)})
+  BESPOKE['dogma']=S(wanderMove(.45),{spinShot:attacks.spinShot,laserSweep:attacks.laserSweep,laserCross:attacks.laserCross,ringShot:timedRing(14),homingShots:attacks.homingShots})
+  BESPOKE['ultra-famine']=S(weave(.8,.4),{chargeDash:multiDash(3,560),spreadShot:spit(5,.25,{speed:300}),summonSwarm:call('locust-of-famine',3)})
+  BESPOKE['ultra-pestilence']=S(wanderMove(.5),{summonSwarm:call('locust-of-pestilence',3),spreadShot:spit(5,.25),spinShot:attacks.spinShot})
+  BESPOKE['ultra-war']=S(weave(.7,.4),{bombDrop:attacks.bombDrop,chargeDash:multiDash(2,580),spreadShot:spit(5,.25,{speed:300})})
+  BESPOKE['ultra-death']=S(weave(.6,.4),{chargeDash:multiDash(2,580),spreadShot:spit(5,.25,{speed:300}),spawnMinions:call('bony',2)})
+  BESPOKE['ultra-greed']=S(still,{rockThrow:spit(5,.3,{speed:260,r:14}),ringShot:timedRing(14),summonSwarm:call('ultra-coin',3)})
+  BESPOKE['ultra-greedier']=S(still,{rockThrow:spit(7,.25,{speed:280,r:14}),ringShot:timedRing(16),summonSwarm:call('ultra-coin',3)})
+
+  // ---- Delirium: forever turning into other bosses and fighting with their moves ----
+  const FORMS=['monstro','larry-jr','famine','gurdy-jr','widow','pin','chub','peep','loki','little-horn','baby-plum','the-husk','the-hollow','fistula','the-haunt','gish','the-bloat','teratoma']
+  const mimic=name=>(b,dt,s,c)=>{if(s.t<=dt*1.5&&!s.f){s.f=1;b.ai.mim=c.pick(FORMS);b.tint='hsl('+c.int(360)+',55%,70%)'}const M=BESPOKE[b.ai.mim],f=(M&&M.atk&&M.atk[name])||attacks[name];return f(b,dt,s,c)}
+  BESPOKE['delirium']={move:(b,dt,c)=>{const M=BESPOKE[b.ai.mim];(M&&M.move&&M.move!==still?M.move:drift)(b,dt,c)},atk:{}}
+  ;['chargeDash','spreadShot','ringShot','teleportSlam','hop','stompLine','spawnMinions','brimstoneBeam','bombDrop','summonSwarm','dashRingCombo'].forEach(n=>{BESPOKE['delirium'].atk[n]=mimic(n)})
 
   IS.ATTACK_LIST.forEach(n=>IS.defineAttack(n,attacks[n]||shots(4,.2)))
 })(typeof window !== 'undefined' ? (window.IS = window.IS || {}) : (globalThis.IS = globalThis.IS || {}))

@@ -46,22 +46,26 @@
     holy: ['angelic-baby','vassal','holy-keeper','big-bony','soul-sucker'],
     greed: ['keeper','greed','super-greed','ultra-coin','pincushion','grilled-clotty']
   }
+  // Repentance floor boss pools (from memory of the wiki; a few placements are best guesses).
+  // The two Devil Room guardians (The Fallen, Krampus) are not floor bosses and sit in no pool.
   var bosses = {
-    early: ['monstro','larry-jr','the-duke-of-flies','gemini','dingle','the-haunt','little-horn','baby-plum'],
+    early: ['monstro','larry-jr','the-duke-of-flies','gemini','steven','blighted-ovum','dingle','the-haunt','little-horn','baby-plum','famine'],
     rain: ['the-turdlings','turdlet','wormwood','dangle'],
-    cave: ['gurdy-jr','fistula','widow','pin','chub','the-husk','the-hollow','the-wretched'],
+    cave: ['gurdy-jr','fistula','widow','pin','chub','the-husk','the-hollow','the-wretched','teratoma','the-bloat','c-h-a-d','peep','carrion-queen','frail'],
     mine: ['tuff-twins','the-shell','the-pile','horny-boys'],
-    depth: ['gurdy','monstro-ii','gish','loki','the-stain','mom'],
-    maus: ['the-heretic','the-visage','the-adversary','sisters-vis'],
-    womb: ['moms-heart','it-lives','the-bloat','the-matriarch','mama-gurdy'],
-    corpse: ['colostomia','chimera','rotgut','mother'],
+    depth: ['gurdy','monstro-ii','gish','loki','lokii','the-stain','rag-man','rag-mega','big-horn','the-gate','the-cage','mega-maw','reap-creep'],
+    maus: ['the-heretic','the-visage','the-adversary','sisters-vis','brownie','the-forsaken','the-scourge'],
+    womb: ['the-matriarch','mama-gurdy'],
+    corpse: ['colostomia','chimera','rotgut'],
+    // the second floor of Depths, Womb and Corpse ends on the chapter boss
+    depth2: ['mom'], womb2: ['moms-heart','it-lives'], corpse2: ['mother'],
     end: ['satan','isaac','blue-baby','hush','delirium','mega-satan','the-lamb'],
     greed: ['ultra-greed','ultra-greedier']
   }
   var defs = []
   function add (id, name, depth, key, enemyKey, bossKey, variants, altPath, roomRange, music, hazards, curses) {
     defs.push({ id:id, name:name, depth:depth, variants:variants || [], altPath:altPath || null,
-      rooms:roomRange || [7,11], bosses:bosses[bossKey], enemyPool:pools[enemyKey], palette:palette(key),
+      rooms:roomRange || [7,11], bosses:(/-2$/.test(id) && bosses[bossKey + '2']) || bosses[bossKey], enemyPool:pools[enemyKey], palette:palette(key),
       music:music, hazards:hazards || ['spikes'], curseWeights:curses || { darkness:1, lost:1, unknown:1, maze:1, blind:1 } })
   }
   var calm={root:'A',mode:'aeolian',tempo:96,mood:'calm'}, wet={root:'D',mode:'dorian',tempo:82,mood:'melancholy'},
