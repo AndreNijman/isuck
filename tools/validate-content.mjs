@@ -250,7 +250,7 @@ for (const d of IS.rooms || []) {
   for (const f of d.floors || []) {
     const fd = IS.floorsById && IS.floorsById[f]
     if (!fd || !fd.enemyPool) continue
-    for (const id of Object.values(legend)) if (!fd.enemyPool.includes(String(id))) warn(w, `"${id}" is not in the enemyPool of floor ${f}`)
+    for (const id of Object.values(legend)) if (!fd.enemyPool.includes(String(id))) err(w, `"${id}" is not in the enemyPool of floor ${f}`)
   }
   layoutKeys.set(d.layout.join('|') + JSON.stringify(legend), d.id)
 }
@@ -262,6 +262,16 @@ for (const d of IS.rooms || []) {
     const have = {}
     for (const d of IS.rooms || []) if (d.type === 'default' && (d.floors || []).includes(f.id)) have[d.shape] = (have[d.shape] || 0) + 1
     for (const [shape, min] of Object.entries(need)) if ((have[shape] || 0) < min) err(`floor ${f.id}`, `only ${have[shape] || 0} default ${shape} rooms, needs ${min}`)
+  }
+  // every enemy in a floor's pool must actually show up: at least two default rooms of that floor use it
+  for (const f of IS.floors || []) {
+    if (/^greed-/.test(f.id)) continue
+    const uses = {}
+    for (const d of IS.rooms || []) {
+      if (d.type !== 'default' || !(d.floors || []).includes(f.id)) continue
+      for (const id of new Set(Object.values(d.legend || {}))) uses[id] = (uses[id] || 0) + 1
+    }
+    for (const id of f.enemyPool || []) if ((uses[id] || 0) < 2) err(`floor ${f.id}`, `pool enemy "${id}" appears in only ${uses[id] || 0} default rooms, needs 2`)
   }
   const defaults = (IS.rooms || []).filter(d => d.type === 'default')
   if (layoutKeys.size < defaults.length) err('rooms', `${defaults.length - layoutKeys.size} default rooms are exact duplicates of another`)
