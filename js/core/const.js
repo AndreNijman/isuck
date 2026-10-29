@@ -71,7 +71,7 @@
     'onInit', 'onRemove', 'onStats', 'onUpdate',
     'onTearFire', 'onTearHit', 'onTearDeath',
     'onEnemyDamage', 'onEnemyKill',
-    'onPlayerDamage', 'onPlayerDeath',
+    'onPlayerDamage', 'onPlayerHurt', 'onPlayerDeath',
     'onRoomEnter', 'onRoomClear', 'onNewFloor', 'onFloorClear',
     'onPickup', 'onBombExplode', 'onGridBreak',
     'onUse', 'onCardUse', 'onPillUse', 'onPurchase', 'onDoorOpen', 'onCurseEval'

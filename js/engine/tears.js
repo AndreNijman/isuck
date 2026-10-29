@@ -10,6 +10,8 @@
   // Bombs hurt everything in the blast, the player included, as they should.
   IS.bombExplode=(x,y,o,ctx)=>{o=o||{};const room=ctx.room,R=o.r||120;for(const e of IS.roomEnemies(room))if(IS.dist(x,y,e.x,e.y)<R+e.r){IS.damageEnemy(e,o.dmg||60,{src:o.src,flags:o.flags,silent:true},ctx);IS.knockback(e,x,y,e.boss?0:520)}for(const g of room.grid||[])if(IS.dist(x,y,g.x,g.y)<R)IS.destroyGrid(room,g,ctx);const p=ctx.player;if(p&&!p.dead&&!o.playerSafe&&!p.flags?.has('bombImmune')&&!p.flags?.has('pyromaniac')&&IS.dist(x,y,p.x,p.y)<R*.85+p.r){if(IS.damagePlayer(p,o.playerDmg||2,{name:'a bomb',kind:'bomb'},ctx))IS.knockback(p,x,y,700)}if(IS.fx){IS.fx.burst(x,y,'#f2b24a',22);IS.fx.ring(x,y,{colour:'#fff1c4',r0:20,r1:R*1.15,life:.3,width:8});IS.fx.decal&&IS.fx.decal(x,y,R*.55,'rgba(20,14,12,.6)');IS.fx.shake(9,.35);IS.fx.flash&&IS.fx.flash('rgba(255,236,190,.35)',.08)}ctx.sfx&&ctx.sfx('bomb-explode');return true}
   IS.spawnLaser=(o,ctx)=>put('lasers',Object.assign({x:0,y:0,angle:0,len:600,dmg:3.5,width:12,life:.3,friendly:true,dead:false,hit:new Map()},o,{hit:new Map()}),ctx)
+  // a friendly damaging puddle (Holy Water, Mysterious Liquid, Aquarius): hurts enemies standing in it every half second
+  IS.spawnPuddle=(o,ctx)=>{const u=put('puddles',Object.assign({x:0,y:0,r:50,dmg:0,life:3,tick:0,status:[]},o),ctx);IS.fx?.creep&&IS.fx.creep(u.x,u.y,u.r,{life:u.life,colour:u.colour});return u}
   IS.spawnKnife=(o,ctx)=>put('knives',Object.assign({x:0,y:0,vx:0,vy:0,dmg:10,r:14,life:.6,friendly:true,dead:false},o),ctx)
   // Multishot patterns as in Isaac: The Inner Eye is a tight fan, Mutant Spider a
   // wide one, 20/20 two parallel tears, The Wiz two diagonals. Anything else fans.
@@ -25,7 +27,7 @@
 
   // ---- weapons -------------------------------------------------------------
   // Isaac's weapon-replacing items, in the game's priority order.
-  IS.playerWeapon=p=>{const has=id=>IS.hasItem(p,id);return has('epic-fetus')?'epic':has('moms-knife')||p.flags.has('knife')?'knife':has('brimstone')||p.flags.has('brimstone')?'brimstone':has('dr-fetus')?'fetus':has('technology')||has('technology-2')||has('tech-x')||p.flags.has('laser')?'tech':'tears'}
+  IS.playerWeapon=p=>{const has=id=>IS.hasItem(p,id);return has('epic-fetus')?'epic':has('moms-knife')||p.flags.has('knife')?'knife':has('brimstone')||p.flags.has('brimstone')?'brimstone':has('dr-fetus')?'fetus':has('technology')||has('technology-2')||has('tech-x')||p.flags.has('laser')?'tech':has('the-ludovico-technique')?'ludo':'tears'}
   const cooldown=(p,held,dt,fn)=>{p.nextShot=(p.nextShot||0)-dt;if(held&&p.nextShot<=0){fn();p.nextShot=p.stats.fireDelay}else if(!held)p.nextShot=Math.max(0,p.nextShot)}
   const dirOf=(p,d)=>(d.x||d.y)?d:(p.head||{x:1,y:0})
   IS.updateWeapon=(p,d,dt,ctx)=>{const w=IS.playerWeapon(p),held=!!(d.x||d.y),room=ctx.room||ctx.run.room;p.weapon=w
@@ -47,6 +49,9 @@
       const dmg=p.stats.damage*(k.state==='held'?2:2+4*(k.power||0))
       for(const e of IS.roomEnemies(room)){if(IS.dist(k.x,k.y,e.x,e.y)>e.r+16)continue;const last=k.hit.get(e)||-9;if(room.time-last<(k.state==='held'?.25:.1))continue;k.hit.set(e,room.time);IS.damageEnemy(e,dmg,{src:{vx:k.dx*500,vy:k.dy*500}},ctx)}
       return}
+    // Ludovico Technique: one big spectral tear that stays and drifts where the fire keys point, hurting what it overlaps
+    if(w==='ludo'){let t=p.ludo;const live=t&&!t.dead&&(room.tears||[]).includes(t);if(!live){if(!held)return;t=p.ludo=IS.spawnTear({x:p.x+d.x*50,y:p.y+d.y*50,vx:0,vy:0,dmg:p.stats.damage,r:20*p.stats.tearSize,life:1e9,flags:new Set(['spectral','piercing','ludo'])},ctx);IS.applyTearFlags(t,p);t.ludoV=IS.TEAR_SPEED*.9;t.flags.add('ludo');IS.audio?.sfx('tear-fire')}
+      const v=t.ludoV;t.vx=IS.approach(t.vx,d.x*v,v*5*dt);t.vy=IS.approach(t.vy,d.y*v,v*5*dt);t.dmg=p.stats.damage;t.hitT=(t.hitT||0)+dt;if(t.hitT>.25){t.hitT=0;t.hitSet=null}return}
     if(w==='epic'){p.missiles=p.missiles||[]
       if(held){const t=p.target||(p.target={x:p.x,y:p.y});t.x=IS.clamp(t.x+d.x*620*dt,0,room.pxW);t.y=IS.clamp(t.y+d.y*620*dt,0,room.pxH);p.nextShot=(p.nextShot||0)-dt;if(p.nextShot<=0){p.nextShot=Math.max(.8,p.stats.fireDelay*2.5);p.missiles.push({x:t.x,y:t.y,t:0,room});(room.markers||(room.markers=[])).push({x:t.x,y:t.y,r:70,t:0,dur:.55})}}
       else p.target=null
@@ -63,6 +68,8 @@
   IS.updateProjectiles=(room,dt,ctx)=>{const player=ctx.player
     for(const key of ['tears','shots','knives'])for(const p of room[key]||[]){if(p.dead)continue
       if(p.homing&&player){const want=IS.angleTo(p.x,p.y,player.x,player.y),cur=Math.atan2(p.vy,p.vx),sp=IS.len(p.vx,p.vy),na=cur+IS.clamp(IS.angleDiff(cur,want),-p.homing*dt,p.homing*dt);p.vx=Math.cos(na)*sp;p.vy=Math.sin(na)*sp}
+      if(p.friendly&&p.flags.has('lump')){p.dmg0=p.dmg0||p.dmg;p.dmg=p.dmg0*(1+(1-p.life/(p.life0||p.life||1)))}
+      if(p.friendly&&p.flags.has('magnetize')){const k=1+(1-p.life/(p.life0||1))*2.5;for(const e of IS.roomEnemies(room))if(!e.boss&&IS.dist(p.x,p.y,e.x,e.y)<150){const n=IS.norm(p.x-e.x,p.y-e.y);e.x+=n.x*90*k*dt;e.y+=n.y*90*k*dt}for(const u of room.pickups||[])if(!u.shop&&!u.price&&IS.dist(p.x,p.y,u.x,u.y)<150){const n=IS.norm(p.x-u.x,p.y-u.y);u.x+=n.x*120*k*dt;u.y+=n.y*120*k*dt}}
       if(p.accel){const sp=IS.len(p.vx,p.vy),k=(sp+p.accel*dt)/(sp||1);p.vx*=k;p.vy*=k}
       if(p.friendly&&p.flags.has('homing')){const t=IS.roomEnemies(room).reduce((b,e)=>{const d=IS.dist(p.x,p.y,e.x,e.y);return d<(b?b.d:320)?{e,d}:b},null);if(t){const want=IS.angleTo(p.x,p.y,t.e.x,t.e.y),cur=Math.atan2(p.vy,p.vx),sp=IS.len(p.vx,p.vy),na=cur+IS.clamp(IS.angleDiff(cur,want),-5*dt,5*dt);p.vx=Math.cos(na)*sp;p.vy=Math.sin(na)*sp}}
       if(p.orbit!=null&&player){p.orbit+=dt*5;p.orbitR+=dt*40;p.x=player.x+Math.cos(p.orbit)*p.orbitR;p.y=player.y+Math.sin(p.orbit)*p.orbitR;p.vx=-Math.sin(p.orbit)*300;p.vy=Math.cos(p.orbit)*300}
@@ -76,7 +83,8 @@
       else if(IS.entityHit(p,player)){if(IS.damagePlayer(player,p.dmg,p,ctx))IS.knockback(player,p.x-p.vx,p.y-p.vy,380);p.dead=true;splash(p,ctx,'#c74a3a')}
       if(!p.dead&&p.bounce>0&&!IS.inBounds(room,p.x,p.y,p.r)){p.bounce--;if(p.x<p.r||p.x>room.pxW-p.r)p.vx=-p.vx;if(p.y<p.r||p.y>room.pxH-p.r)p.vy=-p.vy;IS.clampToRoom(room,p)}
       if(!p.dead&&p.bounce>0&&p.life>0&&hitGrid(p,room,ctx)){p.bounce--;p.x-=p.vx*dt;p.y-=p.vy*dt;const T=IS.TILE;if(IS.solidAt(room,p.x+p.vx*dt,p.y,{ignorePits:true}))p.vx=-p.vx;else p.vy=-p.vy}
-      if(!p.dead&&(p.life<=0||!IS.inBounds(room,p.x,p.y,p.r)||hitGrid(p,room,ctx))){p.dead=true;splash(p,ctx,p.friendly?(p.lob?'#9fd46a':'#a8d4f0'):'#c74a3a');if(p.friendly&&p.flags.has('explosive'))IS.bombExplode(p.x,p.y,{dmg:p.dmg+30,r:90,playerSafe:true},ctx);else if(p.friendly&&p.flags.has('splitting')&&!p.split)splitTear(p,ctx);if(p.friendly&&IS.audio)IS.audio.sfx('tear-splat')}}
+      if(!p.dead&&(p.life<=0||!IS.inBounds(room,p.x,p.y,p.r)||hitGrid(p,room,ctx))){p.dead=true;splash(p,ctx,p.friendly?(p.lob?'#9fd46a':'#a8d4f0'):'#c74a3a');if(p.friendly&&p.flags.has('explosive'))IS.bombExplode(p.x,p.y,{dmg:p.dmg+30,r:90,playerSafe:true},ctx);else if(p.friendly&&p.flags.has('splitting')&&!p.split)splitTear(p,ctx);if(p.friendly&&IS.audio)IS.audio.sfx('tear-splat');if(p.friendly&&!p.split&&!p.noDeathHook)IS.fireHook(player,'onTearDeath',[p],ctx)}}
+    for(const u of room.puddles||[]){u.life-=dt;u.tick=(u.tick||0)-dt;if(u.tick<=0){u.tick=.5;for(const e of IS.roomEnemies(room))if(!e.hidden&&IS.dist(u.x,u.y,e.x,e.y)<u.r+e.r*.5){u.dmg>0&&IS.damageEnemy(e,u.dmg,{silent:true},ctx);(u.status||[]).forEach(([s,n])=>IS.applyStatus(e,s,n,ctx))}}}room.puddles=(room.puddles||[]).filter(u=>u.life>0)
     for(const b of room.bombs||[]){b.fuse-=dt;if(b.vx||b.vy){const k=Math.exp(-dt*2.5);b.r0=b.r0||14;const e={x:b.x,y:b.y,r:b.r0,vx:b.vx,vy:b.vy};IS.moveEntity(e,dt,room);if(e.bumped){b.vx=-b.vx*.5;b.vy=-b.vy*.5}b.x=e.x;b.y=e.y;b.vx*=k;b.vy*=k}
       if(b.contact&&!b.dead&&IS.roomEnemies(room).some(e=>IS.dist(b.x,b.y,e.x,e.y)<e.r+16))b.fuse=0
       if(b.fuse<=0&&!b.dead){b.dead=true;IS.bombExplode(b.x,b.y,b,ctx)}}
