@@ -37,7 +37,8 @@
         "js/engine/floor.js",
         "js/engine/interact.js",
         "js/engine/progress.js",
-        "js/engine/ctx.js"
+        "js/engine/ctx.js",
+        "js/engine/characters.js"
       ]
     },
     {
